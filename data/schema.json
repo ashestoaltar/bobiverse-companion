@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Bobiverse replicant genealogy",
+  "type": "object",
+  "required": ["bobs"],
+  "properties": {
+    "bobs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "src"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$",
+            "description": "Stable internal key. Never displayed; safe to keep when a name is corrected."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name as spelled in the primary text where possible."
+          },
+          "parent": {
+            "type": "string",
+            "description": "id of the source Bob. Omit entirely for tier C (no lineage on record). For tier P this is an ancestor, not necessarily a direct parent."
+          },
+          "src": {
+            "type": "string",
+            "enum": ["t", "a", "b", "p", "c"],
+            "description": "How well we know this Bob's PARENTAGE, and nothing else. t=parent confirmed in the books; a=Taylor's 2017 tree; b=fandom wiki registry; p=an ancestor is known but the generations between are not; c=no ancestor on record. A tier C Bob can still be richly documented \u2014 Herschel states his own generation on the page and has twenty POV chapters; we just don't know who made him."
+          },
+          "cite": {
+            "type": "string",
+            "description": "Chapter reference for whatever this record's strongest textual claim is. Required for tier T, where it must support the parent link. Welcome on any tier \u2014 a tier C Bob may still have a citable generation, death, or first appearance. Format: 'Bk<n> ch<n> \u00b7 <POV>, <date>'."
+          },
+          "gen": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Generation as stated in a source. May disagree with drawn tree depth when the parent is unknown; the app shows both."
+          },
+          "desig": { "type": "string", "description": "In-universe designation, e.g. HIC71683-14." },
+          "vessel": { "type": "string" },
+          "born": { "type": "string", "description": "Creation date as given, e.g. 'Sep 2205'." },
+          "origin": { "type": "string", "description": "System where this Bob was built." },
+          "visited": { "type": "string", "description": "Comma-separated systems." },
+          "status": { "type": "string", "enum": ["active", "lost", "unknown"] },
+          "lostAt": { "type": "string", "description": "Where destroyed or last known, when status is lost." },
+          "faction": {
+            "type": "string",
+            "description": "Affiliation, not lineage. Starfleet, Skippies, Gamers. Deliberately separate from the tree because factions cut across branches — Starfleet took joiners from other lines and purged its own genealogy records."
+          },
+          "ref": { "type": "string", "description": "Namesake. Reader inference, not canon." },
+          "conflict": { "type": "string", "description": "Describe the disagreement between sources and which one the tree follows." },
+          "partialNote": { "type": "string", "description": "For tier P: exactly what the source does and doesn't say about the gap." },
+          "note": { "type": "string", "description": "Prose shown in the detail panel." }
+        }
+      }
+    }
+  }
+}

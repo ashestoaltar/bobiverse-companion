@@ -1,0 +1,718 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BobNet — Lineage Registry</title>
+<style>
+  /* ======================================================================
+     BobNet Lineage Registry
+     An amber console. Tiers are rendered as record integrity, not as a
+     legend: a lineage we can't source reads as missing data, because
+     in-world that is exactly what it is.
+     ====================================================================== */
+
+  :root{
+    --void:#0A0704;
+    --panel:#120D07;
+    --panel-hi:#1B1309;
+    --amber:#FFB454;
+    --amber-hi:#FFE3B8;
+    --amber-dim:#A87C46;
+    --ash:#5C462A;
+    --rule:#2E2312;
+    --phos:#7CE8A4;      /* confirmed in the primary text */
+    --alert:#FF6A55;     /* destroyed or missing */
+    --mono:ui-monospace,'SF Mono','Cascadia Mono','JetBrains Mono','IBM Plex Mono',Menlo,Consolas,'DejaVu Sans Mono',monospace;
+    --gap:14px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--void); color:var(--amber);
+    font-family:var(--mono); font-size:13px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    text-shadow:0 0 9px rgba(255,180,84,.18);
+    overflow:hidden;
+  }
+
+  /* --- CRT atmosphere ------------------------------------------------- */
+  .crt-scan,.crt-vig{position:fixed; inset:0; pointer-events:none; z-index:90}
+  .crt-scan{
+    background:repeating-linear-gradient(to bottom,
+      rgba(0,0,0,.26) 0 1px, rgba(0,0,0,0) 1px 3px);
+    mix-blend-mode:multiply; opacity:.7;
+  }
+  .crt-vig{
+    background:radial-gradient(118% 96% at 50% 46%,
+      rgba(255,180,84,.05) 0%, rgba(0,0,0,0) 42%, rgba(0,0,0,.72) 100%);
+  }
+
+  /* --- shell ---------------------------------------------------------- */
+  .shell{
+    position:fixed; inset:0; display:grid; z-index:1;
+    grid-template-rows:auto auto minmax(0,1fr) auto;
+    padding:var(--gap); gap:0;
+  }
+
+  /* --- masthead ------------------------------------------------------- */
+  .masthead{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:20px; border-bottom:1px solid var(--rule); padding-bottom:9px;
+  }
+  .banner{
+    margin:0; font-size:clamp(4px,1.32vw,9px); line-height:1.06;
+    color:var(--amber-hi); letter-spacing:0;
+    text-shadow:0 0 14px rgba(255,180,84,.45); white-space:pre;
+  }
+  .mast-meta{text-align:right; font-size:10px; letter-spacing:.16em; color:var(--amber-dim); white-space:nowrap}
+  .mast-meta b{display:block; color:var(--amber-hi); font-weight:500; letter-spacing:.2em}
+
+  /* --- toolbar -------------------------------------------------------- */
+  .toolbar{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:9px 0; border-bottom:1px solid var(--rule);
+  }
+  .prompt{display:flex; align-items:center; gap:7px; flex:1 1 240px; min-width:190px}
+  .prompt span{color:var(--phos); font-weight:600}
+  .prompt input{
+    flex:1; background:transparent; border:0; outline:0; padding:3px 0;
+    font:inherit; color:var(--amber-hi); text-shadow:inherit;
+    border-bottom:1px solid var(--rule);
+  }
+  .prompt input::placeholder{color:var(--ash)}
+  .prompt input:focus{border-bottom-color:var(--amber)}
+
+  .tabs{display:flex; gap:0; border:1px solid var(--rule)}
+  .tab{
+    background:transparent; border:0; border-right:1px solid var(--rule);
+    font:inherit; font-size:11px; letter-spacing:.15em; color:var(--amber-dim);
+    padding:5px 13px; cursor:pointer; text-shadow:inherit;
+  }
+  .tab:last-child{border-right:0}
+  .tab:hover{color:var(--amber-hi); background:var(--panel-hi)}
+  .tab[aria-selected="true"]{background:var(--amber); color:var(--void); text-shadow:none}
+
+  .chips{display:flex; gap:5px; flex-wrap:wrap}
+  .chip{
+    background:transparent; border:1px solid var(--rule); font:inherit;
+    font-size:10px; letter-spacing:.13em; color:var(--amber-dim);
+    padding:3px 8px; cursor:pointer; text-shadow:inherit;
+  }
+  .chip:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
+  .chip[aria-pressed="true"]{background:var(--amber-dim); color:var(--void); border-color:var(--amber-dim); text-shadow:none}
+
+  /* --- main ----------------------------------------------------------- */
+  .main{display:grid; grid-template-columns:minmax(0,1fr) 372px; gap:var(--gap); min-height:0; padding-top:var(--gap)}
+  .stage{min-height:0; overflow:auto; scrollbar-width:thin; scrollbar-color:var(--rule) transparent}
+  .stage::-webkit-scrollbar{width:9px;height:9px}
+  .stage::-webkit-scrollbar-thumb{background:var(--rule)}
+
+  /* --- register table ------------------------------------------------- */
+  table.reg{width:100%; border-collapse:collapse; font-size:12px}
+  .reg thead th{
+    position:sticky; top:0; z-index:2; background:var(--void);
+    text-align:left; font-weight:400; font-size:10px; letter-spacing:.16em;
+    color:var(--amber-dim); padding:0 10px 7px 0; white-space:nowrap;
+    border-bottom:1px solid var(--rule); cursor:pointer; user-select:none;
+  }
+  .reg thead th:hover{color:var(--amber-hi)}
+  .reg thead th .dir{color:var(--amber)}
+  .reg tbody tr{border-bottom:1px solid rgba(46,35,18,.55); cursor:pointer}
+  .reg tbody tr:hover{background:var(--panel-hi)}
+  .reg tbody tr[aria-selected="true"]{background:var(--amber); color:var(--void); text-shadow:none}
+  .reg tbody tr[aria-selected="true"] .dim,
+  .reg tbody tr[aria-selected="true"] .nm{color:var(--void)}
+  .reg tbody tr:focus-visible{outline:1px solid var(--amber-hi); outline-offset:-1px}
+  .reg td{padding:5px 10px 5px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .nm{color:var(--amber-hi); letter-spacing:.06em}
+  .dim{color:var(--amber-dim)}
+  .reg td.max{max-width:0; width:22%}
+
+  /* provenance + status marks */
+  .prov{letter-spacing:.1em; font-size:11px; white-space:nowrap}
+  .prov.t{color:var(--phos)}
+  .prov.a{color:var(--amber)}
+  .prov.b,.prov.p{color:var(--amber-dim)}
+  .prov.c{color:var(--ash)}
+  tr[aria-selected="true"] .prov{color:var(--void)}
+  .st-active{color:var(--phos)}
+  .st-lost{color:var(--alert)}
+  .st-unknown{color:var(--ash)}
+  tr[aria-selected="true"] .st-active,
+  tr[aria-selected="true"] .st-lost,
+  tr[aria-selected="true"] .st-unknown{color:var(--void)}
+
+  /* --- lineage tree --------------------------------------------------- */
+  .tree{font-size:12.5px; line-height:1.62; white-space:pre; padding-bottom:40px}
+  .tree .branch{color:var(--ash)}
+  .tree .node{
+    background:transparent; border:0; padding:0; font:inherit; cursor:pointer;
+    color:var(--amber-hi); letter-spacing:.06em; text-shadow:inherit;
+  }
+  .tree .node:hover{color:var(--void); background:var(--amber)}
+  .tree .node[aria-selected="true"]{color:var(--void); background:var(--amber)}
+  .tree .node:focus-visible{outline:1px solid var(--amber-hi)}
+  .tree .meta{color:var(--ash); font-size:11px}
+
+  /* --- unresolved register -------------------------------------------- */
+  .unres{padding-bottom:40px}
+  .unres-lead{color:var(--amber-dim); font-size:11.5px; max-width:74ch; margin:0 0 16px; line-height:1.62}
+  .card{border-left:2px solid var(--rule); padding:0 0 0 12px; margin-bottom:15px}
+  .card h3{margin:0; font-size:13px; font-weight:500; letter-spacing:.1em; color:var(--amber-hi)}
+  .card .card-sub{font-size:10px; letter-spacing:.14em; color:var(--ash); margin:1px 0 5px}
+  .card p{margin:0; font-size:11.5px; color:var(--amber-dim); line-height:1.6; max-width:72ch}
+  .card button{
+    background:transparent; border:1px solid var(--rule); font:inherit; font-size:10px;
+    letter-spacing:.13em; color:var(--amber-dim); padding:2px 8px; margin-top:6px;
+    cursor:pointer; text-shadow:inherit;
+  }
+  .card button:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
+
+  .empty{color:var(--ash); font-size:11.5px; letter-spacing:.12em; padding:26px 0}
+
+  /* --- dossier -------------------------------------------------------- */
+  .dossier{
+    border:1px solid var(--rule); background:var(--panel);
+    display:flex; flex-direction:column; min-height:0;
+  }
+  .dossier-head{
+    padding:11px 13px; border-bottom:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+  }
+  .dossier-head h2{margin:0; font-size:16px; font-weight:500; letter-spacing:.1em; color:var(--amber-hi)}
+  .dossier-head .sub{font-size:10px; letter-spacing:.15em; color:var(--ash); margin-top:2px}
+  .dossier-close{
+    background:transparent; border:1px solid var(--rule); color:var(--amber-dim);
+    font:inherit; font-size:11px; width:22px; height:22px; cursor:pointer;
+    flex:none; text-shadow:inherit;
+  }
+  .dossier-close:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
+  .dossier-body{padding:12px 13px 22px; overflow:auto; scrollbar-width:thin; scrollbar-color:var(--rule) transparent}
+  .dossier-body::-webkit-scrollbar{width:9px}
+  .dossier-body::-webkit-scrollbar-thumb{background:var(--rule)}
+
+  .fields{margin:0}
+  .fields .f{display:grid; grid-template-columns:78px minmax(0,1fr); gap:9px; padding:2.5px 0}
+  .fields dt{font-size:9.5px; letter-spacing:.15em; color:var(--ash); padding-top:2px}
+  .fields dd{margin:0; font-size:12px; color:var(--amber); word-break:break-word}
+
+  .sec{margin-top:17px; padding-top:11px; border-top:1px solid var(--rule)}
+  .sec-label{font-size:9.5px; letter-spacing:.18em; color:var(--ash); margin-bottom:8px}
+
+  /* signature: hop-by-hop route back to Bob-1 */
+  .trace{font-size:11.5px; line-height:1.72}
+  .hop{display:grid; grid-template-columns:20px minmax(0,1fr) auto; gap:8px; align-items:baseline}
+  .hop .n{color:var(--ash); text-align:right}
+  .hop button{
+    background:transparent; border:0; padding:0; font:inherit; text-align:left;
+    color:var(--amber-hi); letter-spacing:.07em; cursor:pointer; text-shadow:inherit;
+  }
+  .hop button:hover{text-decoration:underline}
+  .hop .edge{font-size:10px; letter-spacing:.11em; white-space:nowrap}
+  .hop-cite{grid-column:2/4; color:var(--ash); font-size:10px; margin:-2px 0 3px}
+  .trace-end{color:var(--ash); font-size:10.5px; padding-left:28px; line-height:1.6; max-width:44ch}
+
+  .note{font-size:11.5px; line-height:1.65; color:var(--amber-dim); margin:0}
+  .flag{
+    display:inline-block; font-size:9.5px; letter-spacing:.14em;
+    border:1px solid var(--rule); padding:1px 7px; margin:0 5px 5px 0; color:var(--amber-dim);
+  }
+  .flag.warn{color:var(--alert); border-color:rgba(255,106,85,.4)}
+  .kids{display:flex; flex-wrap:wrap; gap:0 5px}
+  .kids button{
+    background:transparent; border:0; padding:0; font:inherit; font-size:11.5px;
+    color:var(--amber); cursor:pointer; text-shadow:inherit;
+  }
+  .kids button:hover{color:var(--amber-hi); text-decoration:underline}
+
+  .idle{padding:34px 13px; color:var(--ash); font-size:11.5px; line-height:1.75}
+  .idle b{display:block; color:var(--amber-dim); font-weight:400; letter-spacing:.14em; margin-bottom:9px}
+
+  /* --- status bar ----------------------------------------------------- */
+  .statusbar{
+    border-top:1px solid var(--rule); margin-top:var(--gap); padding-top:8px;
+    display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    font-size:10px; letter-spacing:.15em; color:var(--ash);
+  }
+  .statusbar .keys{color:var(--rule)}
+  .cursor{color:var(--phos)}
+
+  /* --- boot ----------------------------------------------------------- */
+  .boot{
+    position:fixed; inset:0; z-index:120; background:var(--void);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .boot pre{margin:0; font-size:11px; line-height:1.85; color:var(--phos)}
+  .boot.done{opacity:0; pointer-events:none; transition:opacity .32s ease}
+
+  /* --- responsive ----------------------------------------------------- */
+  @media (max-width:1080px){
+    .main{grid-template-columns:minmax(0,1fr) 316px}
+    .fields .f{grid-template-columns:70px minmax(0,1fr)}
+  }
+  @media (max-width:860px){
+    :root{--gap:10px}
+    body{font-size:12.5px}
+    .main{grid-template-columns:minmax(0,1fr)}
+    .dossier{
+      position:fixed; inset:auto var(--gap) var(--gap); z-index:60;
+      max-height:64vh; box-shadow:0 -18px 44px rgba(0,0,0,.8);
+    }
+    .dossier[hidden]{display:none}
+    .mast-meta{display:none}
+    .reg .opt{display:none}
+    .statusbar .keys{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important; animation:none !important}
+  }
+  :focus-visible{outline:1px solid var(--amber-hi); outline-offset:2px}
+</style>
+
+<div class="crt-scan"></div>
+<div class="crt-vig"></div>
+
+<div class="boot" id="boot" aria-hidden="true"><pre id="boot-text"></pre></div>
+
+<div class="shell">
+
+  <header class="masthead">
+    <pre class="banner" aria-label="BobNet">██████   ██████  ██████  ███    ██ ███████ ████████
+██   ██ ██    ██ ██   ██ ████   ██ ██         ██
+██████  ██    ██ ██████  ██ ██  ██ █████      ██
+██   ██ ██    ██ ██   ██ ██  ██ ██ ██         ██
+██████   ██████  ██████  ██   ████ ███████    ██</pre>
+    <div class="mast-meta">
+      <b>LINEAGE REGISTRY</b>
+      MAINTAINED BY BILL · EPSILON ERIDANI<br>
+      SOURCES: BK1–5 / TAYLOR 2017 / WIKI
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <label class="prompt">
+      <span>&gt;</span>
+      <input id="q" autocomplete="off" spellcheck="false"
+             placeholder="search name, designation, system, namesake, notes">
+    </label>
+
+    <div class="tabs" role="tablist" aria-label="View">
+      <button class="tab" role="tab" id="tab-register"   aria-selected="true"  data-view="register">REGISTER</button>
+      <button class="tab" role="tab" id="tab-lineage"    aria-selected="false" data-view="lineage">LINEAGE</button>
+      <button class="tab" role="tab" id="tab-unresolved" aria-selected="false" data-view="unresolved">UNRESOLVED</button>
+    </div>
+
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="main">
+    <div class="stage" id="stage"></div>
+    <aside class="dossier" id="dossier" aria-live="polite"></aside>
+  </div>
+
+  <footer class="statusbar">
+    <div id="status"></div>
+    <div class="keys">↑↓ MOVE · ENTER OPEN · ESC CLEAR · / SEARCH</div>
+  </footer>
+</div>
+
+<script>
+/* =========================================================================
+   DATA — one row per replicant, each carrying its own provenance.
+
+   src grades PARENTAGE ONLY, and nothing else:
+       't'  parent confirmed in the primary text (cite supports the link)
+       'a'  Dennis E. Taylor's published genealogy (Apr 2017), good to book 2
+       'b'  Bobiverse Fandom "List of Bobs" registry, reader-compiled
+       'p'  an ancestor is named, the generations between are not
+       'c'  no ancestor on record
+
+   A tier C Bob may still be richly documented — Herschel has twenty POV
+   chapters and states his own generation out loud. We just never learn who
+   built him, so his trace terminates.
+   ========================================================================= */
+const BOBS = /*__BOBS__*/[];
+
+/* ---- indexes ---------------------------------------------------------- */
+const byId = Object.create(null);
+BOBS.forEach(b => byId[b.id] = b);
+const kids = Object.create(null);
+BOBS.forEach(b => { if (b.parent) (kids[b.parent] || (kids[b.parent] = [])).push(b); });
+
+const TIER = {
+  t:{mark:'◆', label:'TEXT',   full:'confirmed in the books'},
+  a:{mark:'◆', label:'AUTHOR', full:"Taylor's tree, 2017"},
+  b:{mark:'◇', label:'WIKI',   full:'fandom registry'},
+  p:{mark:'◈', label:'PARTIAL',full:'ancestor known, path is not'},
+  c:{mark:'✕', label:'NONE',   full:'no ancestor on record'}
+};
+const STATUS = {active:'● ACTIVE', lost:'✕ LOST', unknown:'○ UNKNOWN'};
+
+const FILTERS = [
+  {id:'t',         label:'TEXT',      test:b => b.src === 't'},
+  {id:'a',         label:'AUTHOR',    test:b => b.src === 'a'},
+  {id:'b',         label:'WIKI',      test:b => b.src === 'b'},
+  {id:'c',         label:'NO SOURCE', test:b => b.src === 'c'},
+  {id:'lost',      label:'LOST',      test:b => b.status === 'lost'},
+  {id:'cited',     label:'CITED',     test:b => !!b.cite},
+  {id:'conflict',  label:'DISPUTED',  test:b => !!b.conflict},
+  {id:'starfleet', label:'STARFLEET', test:b => b.faction === 'Starfleet'},
+  {id:'gamers',    label:'GAMERS',    test:b => b.faction === 'Gamers'}
+];
+
+const COLS = [
+  {key:'name',   label:'NAME',       get:b => b.name,                     cls:'nm'},
+  {key:'desig',  label:'DESIGNATION',get:b => b.desig || '—',             cls:'dim', opt:true},
+  {key:'gen',    label:'GEN',        get:b => b.gen == null ? '—' : b.gen, cls:'dim'},
+  {key:'parent', label:'SOURCE BOB', get:b => b.parent ? byId[b.parent].name : '—', cls:'dim'},
+  {key:'origin', label:'ORIGIN',     get:b => b.origin || b.visited || '—', cls:'dim max', opt:true},
+  {key:'status', label:'STATUS',     get:b => b.status || 'unknown'},
+  {key:'src',    label:'PROVENANCE', get:b => b.src}
+];
+
+const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1, selected:null};
+
+/* ---- helpers ---------------------------------------------------------- */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const year = b => { const m = /(\d{4})/.exec(b.born || ''); return m ? +m[1] : 9999; };
+
+function sortVal(b, key){
+  if (key === 'gen')    return b.gen == null ? 999 : b.gen;
+  if (key === 'src')    return 'tabpc'.indexOf(b.src);
+  if (key === 'parent') return b.parent ? byId[b.parent].name.toLowerCase() : '~';
+  if (key === 'status') return b.status || 'unknown';
+  if (key === 'origin') return (b.origin || b.visited || '~').toLowerCase();
+  if (key === 'desig')  return (b.desig || '~').toLowerCase();
+  return b.name.toLowerCase();
+}
+
+function visible(){
+  const q = state.q.trim().toLowerCase();
+  return BOBS.filter(b => {
+    for (const f of state.filters) {
+      const spec = FILTERS.find(x => x.id === f);
+      if (spec && !spec.test(b)) return false;
+    }
+    if (!q) return true;
+    return [b.name, b.desig, b.origin, b.visited, b.vessel, b.ref, b.note,
+            b.cite, b.faction, b.conflict, b.partialNote]
+      .some(v => v && String(v).toLowerCase().includes(q));
+  }).sort((x, y) => {
+    const a = sortVal(x, state.sort), b = sortVal(y, state.sort);
+    if (a < b) return -1 * state.dir;
+    if (a > b) return  1 * state.dir;
+    return x.name.localeCompare(y.name);
+  });
+}
+
+/* the signature: hop-by-hop route from a Bob back to Bob-1 ---------------- */
+function trace(bob){
+  const hops = []; const seen = new Set(); let cur = bob;
+  while (cur && !seen.has(cur.id)) {
+    seen.add(cur.id);
+    hops.push(cur);
+    cur = cur.parent ? byId[cur.parent] : null;
+  }
+  return hops;
+}
+
+/* ---- views ------------------------------------------------------------ */
+function renderRegister(rows){
+  if (!rows.length) return `<p class="empty">NO RECORDS MATCH THAT QUERY.</p>`;
+  const head = COLS.map(c => {
+    const on = state.sort === c.key;
+    return `<th data-sort="${c.key}"${c.opt ? ' class="opt"' : ''}>${c.label}${
+      on ? ` <span class="dir">${state.dir > 0 ? '▲' : '▼'}</span>` : ''}</th>`;
+  }).join('');
+
+  const body = rows.map(b => {
+    const cells = COLS.map(c => {
+      if (c.key === 'src') {
+        const t = TIER[b.src];
+        return `<td class="prov ${b.src}">${t.mark} ${t.label}</td>`;
+      }
+      if (c.key === 'status') {
+        const s = b.status || 'unknown';
+        return `<td class="st-${s}">${STATUS[s]}</td>`;
+      }
+      return `<td class="${c.cls || ''}${c.opt ? ' opt' : ''}">${esc(c.get(b))}</td>`;
+    }).join('');
+    const sel = state.selected === b.id;
+    return `<tr tabindex="0" data-id="${b.id}" aria-selected="${sel}">${cells}</tr>`;
+  }).join('');
+
+  return `<table class="reg"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+}
+
+function renderLineage(rows){
+  const keep = new Set(rows.map(b => b.id));
+  const root = byId.bob1;
+  if (!root) return `<p class="empty">NO ROOT RECORD.</p>`;
+
+  // keep any ancestor needed to reach a matching descendant
+  const show = new Set(keep);
+  rows.forEach(b => { let c = b; while (c && c.parent) { show.add(c.parent); c = byId[c.parent]; } });
+
+  const out = [];
+  (function walk(node, prefix, last, depth){
+    if (!show.has(node.id)) return;
+    const t = TIER[node.src];
+    const branch = depth === 0 ? '' : prefix + (last ? '└─ ' : '├─ ');
+    const dim = keep.has(node.id) ? '' : ' style="opacity:.42"';
+    const bits = [];
+    if (node.gen != null) bits.push('gen ' + node.gen);
+    if (node.status === 'lost') bits.push('lost' + (node.lostAt ? ' · ' + node.lostAt : ''));
+    if (node.faction) bits.push(node.faction);
+    out.push(
+      `<div${dim}><span class="branch">${branch}</span>` +
+      `<button class="node" data-id="${node.id}" aria-selected="${state.selected === node.id}">${esc(node.name)}</button>` +
+      `<span class="prov ${node.src}"> ${t.mark}</span>` +
+      (bits.length ? `<span class="meta">  ${esc(bits.join(' · '))}</span>` : '') +
+      `</div>`
+    );
+    const ch = (kids[node.id] || []).filter(c => show.has(c.id))
+      .sort((a, b) => (a.gen || 99) - (b.gen || 99) || a.name.localeCompare(b.name));
+    ch.forEach((c, i) => walk(c, depth === 0 ? '' : prefix + (last ? '   ' : '│  '), i === ch.length - 1, depth + 1));
+  })(root, '', true, 0);
+
+  const orphans = rows.filter(b => !b.parent && b.id !== 'bob1');
+  let tail = '';
+  if (orphans.length) {
+    tail = `<div style="margin-top:22px"><span class="meta">── ${orphans.length} RECORD(S) WITH NO ANCESTOR — TRACE CANNOT REACH THE ROOT ──</span></div>` +
+      orphans.map(b =>
+        `<div><span class="branch">   </span><button class="node" data-id="${b.id}" aria-selected="${state.selected === b.id}">${esc(b.name)}</button>` +
+        `<span class="prov c"> ✕</span>${b.gen != null ? `<span class="meta">  gen ${b.gen}</span>` : ''}</div>`).join('');
+  }
+
+  if (!out.length && !tail) return `<p class="empty">NO RECORDS MATCH THAT QUERY.</p>`;
+  return `<div class="tree">${out.join('')}${tail}</div>`;
+}
+
+function renderUnresolved(rows){
+  const list = rows.filter(b => b.src === 'c');
+  if (!list.length) return `<p class="empty">NO UNRESOLVED RECORDS MATCH THAT QUERY.</p>`;
+  const cards = list
+    .sort((a, b) => (b.cite ? 1 : 0) - (a.cite ? 1 : 0) || a.name.localeCompare(b.name))
+    .map(b => {
+      const bits = [];
+      if (b.gen != null) bits.push('GENERATION ' + b.gen);
+      if (b.cite) bits.push(esc(b.cite));
+      if (b.faction) bits.push(esc(b.faction.toUpperCase()));
+      if (b.visited) bits.push(esc(b.visited));
+      return `<div class="card">
+        <h3>${esc(b.name)}</h3>
+        <div class="card-sub">${bits.join(' · ') || 'NO SOURCE ON FILE'}</div>
+        ${b.note ? `<p>${esc(b.note)}</p>` : ''}
+        <button data-id="${b.id}">OPEN DOSSIER</button>
+      </div>`;
+    }).join('');
+  return `<div class="unres">
+    <p class="unres-lead">These Bobs are named in the books but no source — text, author or wiki — records who built them.
+    Several are heavily documented otherwise: Herschel and Neil state their own generation on the page, Will and Marcus
+    carry POV chapters. What's missing is the parent, so their trace terminates here.</p>${cards}</div>`;
+}
+
+/* ---- dossier ---------------------------------------------------------- */
+function renderDossier(){
+  const el = document.getElementById('dossier');
+  const b = state.selected && byId[state.selected];
+  if (!b) {
+    el.innerHTML = `<div class="idle"><b>NO RECORD SELECTED</b>
+      Choose a replicant to pull its dossier and trace its descent back to Bob-1.<br><br>
+      Every link in that trace is graded on its own evidence, so a chain can be solid
+      for two hops and then run out of sources.</div>`;
+    return;
+  }
+
+  const t = TIER[b.src];
+  const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
+  const ch = (kids[b.id] || []).sort((x, y) => x.name.localeCompare(y.name));
+
+  const hops = trace(b);
+  const traceRows = hops.map((h, i) => {
+    const ht = TIER[h.src];
+    const isRoot = !h.parent;
+    const edge = isRoot
+      ? `<span class="prov a">○ ORIGIN</span>`
+      : `<span class="prov ${h.src}">${ht.mark} ${ht.label}</span>`;
+    return `<div class="hop">
+        <span class="n">${i + 1}</span>
+        <button data-id="${h.id}">${esc(h.name)}</button>
+        <span class="edge">${edge}</span>
+      </div>` +
+      (h.cite && !isRoot ? `<div class="hop-cite">${esc(h.cite)}</div>` : '');
+  }).join('');
+
+  const last = hops[hops.length - 1];
+  const broken = last && last.parent;               // cycle guard tripped
+  const terminates = last && !last.parent && last.id !== 'bob1';
+  const traceEnd = terminates
+    ? `<div class="trace-end">Trace terminates. No source records who built ${esc(last.name)}, so the route to Bob-1 cannot be completed.</div>`
+    : broken ? `<div class="trace-end">Trace incomplete — ancestry loops.</div>` : '';
+
+  const flags = [
+    b.conflict ? `<span class="flag warn">SOURCES DISAGREE</span>` : '',
+    b.status === 'lost' ? `<span class="flag warn">DESTROYED OR MISSING</span>` : '',
+    b.faction ? `<span class="flag">${esc(b.faction.toUpperCase())}</span>` : '',
+    b.cite ? `<span class="flag">CITED</span>` : ''
+  ].join('');
+
+  el.innerHTML = `
+    <div class="dossier-head">
+      <div>
+        <h2>${esc(b.name)}</h2>
+        <div class="sub">${b.desig ? esc(b.desig) + ' · ' : ''}${t.mark} ${t.label} — ${esc(t.full)}</div>
+      </div>
+      <button class="dossier-close" id="d-close" aria-label="Close dossier">✕</button>
+    </div>
+    <div class="dossier-body">
+      <dl class="fields">
+        ${f('GENERATION', b.gen)}
+        ${f('BUILT', b.born)}
+        ${f('ORIGIN', b.origin)}
+        ${f('VESSEL', b.vessel)}
+        ${f('VISITED', b.visited)}
+        ${f('STATUS', b.status ? STATUS[b.status].replace(/^\S+\s/, '') : '')}
+        ${f('LOST AT', b.lostAt)}
+        ${f('FACTION', b.faction)}
+        ${f('NAMESAKE', b.ref && b.ref !== '—' ? b.ref : '')}
+        ${f('CITATION', b.cite)}
+      </dl>
+
+      ${flags ? `<div class="sec"><div class="sec-label">FLAGS</div>${flags}</div>` : ''}
+
+      <div class="sec">
+        <div class="sec-label">TRACE TO ORIGIN</div>
+        <div class="trace">${traceRows}${traceEnd}</div>
+      </div>
+
+      ${ch.length ? `<div class="sec"><div class="sec-label">CLONES ON RECORD — ${ch.length}</div>
+        <div class="kids">${ch.map(c => `<button data-id="${c.id}">${esc(c.name)}</button>`).join('<span class="dim"> · </span>')}</div></div>` : ''}
+
+      ${b.partialNote ? `<div class="sec"><div class="sec-label">WHAT THE SOURCE DOES NOT SAY</div><p class="note">${esc(b.partialNote)}</p></div>` : ''}
+      ${b.conflict ? `<div class="sec"><div class="sec-label">DISAGREEMENT</div><p class="note">${esc(b.conflict)}</p></div>` : ''}
+      ${b.note ? `<div class="sec"><div class="sec-label">NOTES</div><p class="note">${esc(b.note)}</p></div>` : ''}
+    </div>`;
+}
+
+/* ---- shell ------------------------------------------------------------ */
+function renderChips(){
+  document.getElementById('chips').innerHTML = FILTERS.map(f =>
+    `<button class="chip" data-filter="${f.id}" aria-pressed="${state.filters.has(f.id)}">${f.label}</button>`).join('');
+}
+
+function renderStatus(rows){
+  const cited = BOBS.filter(b => b.cite).length;
+  const confirmed = BOBS.filter(b => b.src === 't').length;
+  const none = BOBS.filter(b => b.src === 'c').length;
+  const filtered = rows.length !== BOBS.length;
+  document.getElementById('status').innerHTML =
+    `${filtered ? `${rows.length} OF ${BOBS.length}` : `${BOBS.length} RECORDS`}` +
+    ` · ${confirmed} PARENTAGE CONFIRMED · ${cited} CITED · ${none} NO SOURCE ON FILE ` +
+    `<span class="cursor">█</span>`;
+}
+
+function render(){
+  const rows = visible();
+  const stage = document.getElementById('stage');
+  stage.innerHTML = state.view === 'register'   ? renderRegister(rows)
+                  : state.view === 'lineage'    ? renderLineage(rows)
+                  :                               renderUnresolved(rows);
+  document.querySelectorAll('.tab').forEach(t =>
+    t.setAttribute('aria-selected', String(t.dataset.view === state.view)));
+  const doss = document.getElementById('dossier');
+  doss.hidden = window.innerWidth <= 860 && !state.selected;
+  renderDossier();
+  renderStatus(rows);
+}
+
+function select(id){
+  state.selected = id;
+  render();
+  const row = document.querySelector(`[data-id="${id}"]`);
+  if (row && row.scrollIntoView) row.scrollIntoView({block:'nearest'});
+}
+
+/* ---- events ----------------------------------------------------------- */
+document.addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (tab) { state.view = tab.dataset.view; render(); return; }
+
+  const chip = e.target.closest('.chip');
+  if (chip) {
+    const id = chip.dataset.filter;
+    state.filters.has(id) ? state.filters.delete(id) : state.filters.add(id);
+    renderChips(); render(); return;
+  }
+
+  const th = e.target.closest('th[data-sort]');
+  if (th) {
+    const k = th.dataset.sort;
+    if (state.sort === k) state.dir *= -1; else { state.sort = k; state.dir = 1; }
+    render(); return;
+  }
+
+  if (e.target.closest('#d-close')) { state.selected = null; render(); return; }
+
+  const hit = e.target.closest('[data-id]');
+  if (hit) select(hit.dataset.id);
+});
+
+document.getElementById('q').addEventListener('input', e => {
+  state.q = e.target.value; render();
+});
+
+document.addEventListener('keydown', e => {
+  const q = document.getElementById('q');
+  if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); q.select(); return; }
+  if (e.key === 'Escape') {
+    if (document.activeElement === q && q.value) { q.value = ''; state.q = ''; }
+    else state.selected = null;
+    render(); return;
+  }
+  if (e.key === 'Enter' && document.activeElement.dataset && document.activeElement.dataset.id) {
+    select(document.activeElement.dataset.id); return;
+  }
+  if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && document.activeElement !== q) {
+    const rows = visible();
+    if (!rows.length) return;
+    e.preventDefault();
+    const i = rows.findIndex(b => b.id === state.selected);
+    const next = e.key === 'ArrowDown'
+      ? (i < 0 ? 0 : Math.min(rows.length - 1, i + 1))
+      : (i < 0 ? rows.length - 1 : Math.max(0, i - 1));
+    select(rows[next].id);
+    const el = document.querySelector(`[data-id="${rows[next].id}"]`);
+    if (el && el.focus) el.focus({preventScroll:true});
+  }
+});
+
+window.addEventListener('resize', () => {
+  document.getElementById('dossier').hidden = window.innerWidth <= 860 && !state.selected;
+});
+
+/* ---- boot ------------------------------------------------------------- */
+(function boot(){
+  const el = document.getElementById('boot');
+  const out = document.getElementById('boot-text');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lines = [
+    'BOBNET LINK ESTABLISHED · EPSILON ERIDANI RELAY',
+    'MOUNTING LINEAGE REGISTRY ........... OK',
+    `INDEXING ${BOBS.length} REPLICANT RECORDS ..... OK`,
+    `${BOBS.filter(b => b.src === 'c').length} RECORDS WITH NO SOURCE ON FILE`,
+    'READY'
+  ];
+  const finish = () => { el.classList.add('done'); setTimeout(() => el.remove(), 380); };
+  if (reduce) { el.remove(); return; }
+  let i = 0;
+  const tick = () => {
+    out.textContent = lines.slice(0, ++i).join('\n');
+    if (i < lines.length) setTimeout(tick, 105); else setTimeout(finish, 260);
+  };
+  tick();
+  el.addEventListener('click', finish);
+})();
+
+renderChips();
+render();
+</script>
