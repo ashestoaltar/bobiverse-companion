@@ -386,7 +386,7 @@ const FILTERS = [
 const COLS = [
   {key:'name',   label:'NAME',       get:b => b.alias ? `${b.name} / ${b.alias}` : b.name, cls:'nm'},
   {key:'desig',  label:'DESIGNATION',get:b => b.desig || '—',             cls:'dim', opt:true},
-  {key:'gen',    label:'GEN',        get:b => b.gen == null ? '—' : b.gen, cls:'dim'},
+  {key:'gen',    label:'GEN',        get:b => { const g = generation(b); return g ? (g.stated ? g.n + '*' : g.n) : '—'; }, cls:'dim'},
   {key:'parent', label:'SOURCE BOB', get:b => b.parent ? byId[b.parent].name : '—', cls:'dim'},
   {key:'origin', label:'ORIGIN',     get:b => b.origin || b.visited || '—', cls:'dim max', opt:true},
   {key:'status', label:'STATUS',     get:b => b.status || 'unknown'},
@@ -400,7 +400,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':
 const year = b => { const m = /(\d{4})/.exec(b.born || ''); return m ? +m[1] : 9999; };
 
 function sortVal(b, key){
-  if (key === 'gen')    return b.gen == null ? 999 : b.gen;
+  if (key === 'gen')    { const g = generation(b); return g ? g.n : 999; }
   if (key === 'src')    return 'otpcx'.indexOf(b.src);
   if (key === 'parent') return b.parent ? byId[b.parent].name.toLowerCase() : '~';
   if (key === 'status') return b.status || 'unknown';
@@ -426,6 +426,15 @@ function visible(){
     if (a > b) return  1 * state.dir;
     return x.name.localeCompare(y.name);
   });
+}
+
+/* Generation is stored only where the books state it and the tree can't work
+   it out. Everywhere else it's counted down the chain, so the two can't drift. */
+function generation(bob){
+  if (bob.gen != null) return {n: bob.gen, stated: true};
+  let n = 1, cur = bob, guard = 0;
+  while (cur.parent && guard++ < 50) { cur = byId[cur.parent]; if (!cur) return null; n++; }
+  return cur.id === 'bob1' ? {n, stated: false} : null;
 }
 
 /* the signature: hop-by-hop route from a Bob back to Bob-1 ---------------- */
@@ -483,7 +492,7 @@ function renderLineage(rows){
     const branch = depth === 0 ? '' : prefix + (last ? '└─ ' : '├─ ');
     const dim = keep.has(node.id) ? '' : ' style="opacity:.42"';
     const bits = [];
-    if (node.gen != null) bits.push('gen ' + node.gen);
+    const ng = generation(node); if (ng) bits.push('gen ' + ng.n + (ng.stated ? '*' : ''));
     if (node.status === 'lost') bits.push('lost' + (node.lostAt ? ' · ' + node.lostAt : ''));
     if (node.faction) bits.push(node.faction);
     out.push(
@@ -518,7 +527,7 @@ function renderUnresolved(rows){
     .sort((a, b) => (b.cite ? 1 : 0) - (a.cite ? 1 : 0) || a.name.localeCompare(b.name))
     .map(b => {
       const bits = [];
-      if (b.gen != null) bits.push('GENERATION ' + b.gen);
+      { const g = generation(b); if (g) bits.push('GENERATION ' + g.n + (g.stated ? ' (STATED)' : '')); }
       if (b.cite) bits.push(esc(b.cite));
       if (b.faction) bits.push(esc(b.faction.toUpperCase()));
       if (b.visited) bits.push(esc(b.visited));
@@ -605,7 +614,7 @@ function renderDossier(){
       <div class="sec-label" style="margin-bottom:7px">METADATA</div>
       <div class="metablock">
       <dl class="fields">
-        ${f('GENERATION', b.gen)}
+        ${(() => { const g = generation(b); return g ? f('GENERATION', g.stated ? `${g.n} — stated in the books` : `${g.n} — counted down the tree`) : ''; })()}
         ${f('BUILT', b.born)}
         ${f('ORIGIN', b.origin)}
         ${f('VESSEL', b.vessel)}

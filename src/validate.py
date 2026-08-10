@@ -107,11 +107,6 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
             errors.append(f"{bob['id']}: tier O is only for {ROOT_ID}")
         if bob.get("src") == "o" and bob.get("parent"):
             errors.append(f"{bob['id']}: tier O means there is no parent")
-    for bob in bobs:
-        if bob.get("src") == "o" and bob["id"] != ROOT_ID:
-            errors.append(f"{bob['id']}: tier O is only for {ROOT_ID}")
-        if bob.get("src") == "o" and bob.get("parent"):
-            errors.append(f"{bob['id']}: tier O means there is no parent")
     if len(roots) != 1:
         errors.append(f"expected exactly one root ({ROOT_ID}), found {len(roots)}")
 
@@ -170,6 +165,21 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     # rather than errors: the corpus is optional, and another edition could
     # legitimately number its chapters differently.
     warnings += _check_cites(bobs)
+
+    # `gen` is only independent information when the parent chain is broken.
+    # Where the chain reaches Bob-1 it's derivable, so any disagreement means one
+    # of the two is stale — as happened when Loki was reparented a level down.
+    for bob in bobs:
+        if bob.get("gen") is None:
+            continue
+        depth, cur, guard = 1, bob, 0
+        while cur.get("parent") and guard < 50:
+            cur = by_id.get(cur["parent"])
+            if cur is None:
+                break
+            depth, guard = depth + 1, guard + 1
+        if cur is not None and cur["id"] == ROOT_ID and depth != bob["gen"]:
+            errors.append(f"{bob['id']}: gen {bob['gen']} but the tree makes it {depth}")
 
     # name collisions are legal but worth surfacing
     names: dict[str, list[str]] = {}

@@ -156,6 +156,21 @@ is the one expected divergence.
 `make validate` re-checks every citation against the corpus whenever `.cache/`
 exists, so a chapter number that drifts gets caught rather than believed.
 
+## Field policy
+
+The books are the only source for biography too, not just lineage. `desig`
+survives intact — all eleven values appear verbatim. `vessel`, `born` and `gen`
+were swept: 3 vessels, 17 birth dates and 43 generation numbers came out,
+because they came from the dropped sources or from nowhere identifiable.
+
+`gen` is the one worth understanding. It's only independent information when the
+parent chain is broken — where the chain reaches Bob-1 it's just tree depth, and
+storing it twice invites drift. Reparenting Loki to Khan moved him a generation
+down and left his stored `gen` stale, which is exactly that failure. So it's now
+stored only where the books say it out loud *and* the tree can't derive it:
+Herschel, Neil and Hector. The console counts the rest, and the validator errors
+if a stored value disagrees with the tree.
+
 ## Open questions
 
 - Thor, Jeffrey, Milton, Zeke — parentage still unconfirmed by text. Jeffrey,
