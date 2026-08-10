@@ -54,7 +54,9 @@ designations, systems, notes and citations:
   absence distinguished: never recorded, versus deleted.
 - **Chart** — the star chart. Real positions from real astrometry, drag to
   rotate, wheel to zoom, and a year scrubber from 2133 to 2345 that lights each
-  system as the Bobs first reach it.
+  system as the Bobs first reach it. Stars are drawn in their true spectral
+  colour and sized by absolute magnitude, so an F2 dwarf really does outshine an
+  M3. The backdrop starfield is the one decorative element and says so.
 - **To-do** — the research backlog, reported the way Guppy reports Bob's:
   a bracketed count divided into categories. It has never once got shorter.
 

@@ -189,6 +189,13 @@
   .star.future .star-label{fill:var(--rule)}
   .sol-mark{stroke:var(--phos); stroke-width:1.2; fill:none}
   .chart-empty{fill:var(--ash); font-size:12px}
+  .sky{pointer-events:none}
+  .sky-eq{fill:none; stroke:var(--rule); stroke-width:1; stroke-dasharray:3 5; opacity:.75}
+  .sky-pole{fill:var(--ash); font-size:9px; letter-spacing:.14em; text-anchor:middle}
+  .spike{stroke-width:.9; opacity:.42}
+  body.plain .sky circle{display:none}
+  body.plain .spike{display:none}
+
 
   /* --- unresolved register -------------------------------------------- */
   .unres{padding-bottom:40px}
@@ -661,6 +668,75 @@ function ringPath(radius, w, h){
   return pts.join(' ');
 }
 
+
+/* ---- atmosphere -------------------------------------------------------
+   Everything below is DECORATION, and is kept separate from the measured
+   cloud on purpose. We have no catalogue of the whole sky, so the backdrop
+   field is invented — seeded, so it is at least the same invented sky every
+   time. The celestial equator and poles are real directions.            */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const SKY = (() => {
+  const rand = mulberry32(0x50B0B), out = [];
+  for (let i = 0; i < 340; i++){
+    const u = rand() * 2 - 1, th = rand() * Math.PI * 2, k = Math.sqrt(1 - u*u);
+    out.push({v: [k*Math.cos(th), k*Math.sin(th), u], m: rand()});
+  }
+  return out;
+})();
+
+function rot(p){
+  const cy = Math.cos(CHART.yaw), sy = Math.sin(CHART.yaw);
+  const cp = Math.cos(CHART.pitch), sp = Math.sin(CHART.pitch);
+  const x1 = p[0]*cy - p[1]*sy, y1 = p[0]*sy + p[1]*cy, z1 = p[2];
+  return [x1, y1*cp - z1*sp, y1*sp + z1*cp];
+}
+
+function skyLayer(w, h){
+  const R = Math.hypot(w, h) / 2 * 1.02, cx = w/2, cy = h/2, out = [];
+  for (const st of SKY){
+    const r = rot(st.v);
+    if (r[1] < 0) continue;                       // front hemisphere only
+    const x = cx + r[0]*R, y = cy - r[2]*R;
+    if (x < -4 || x > w+4 || y < -4 || y > h+4) continue;
+    const rad = (0.35 + st.m*0.75).toFixed(2);
+    const op  = (0.14 + st.m*0.40 * (0.35 + 0.65*r[1])).toFixed(2);
+    out.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${rad}" fill="var(--amber-hi)" opacity="${op}"/>`);
+  }
+  // celestial equator and poles — real directions, not decoration
+  const eq = [];
+  for (let i = 0; i <= 96; i++){
+    const a = i/96 * Math.PI*2, r = rot([Math.cos(a), Math.sin(a), 0]);
+    if (r[1] < -0.02) { eq.push(null); continue; }
+    eq.push(`${(cx + r[0]*R).toFixed(1)},${(cy - r[2]*R).toFixed(1)}`);
+  }
+  let run = [];
+  for (const pt of eq.concat([null])){
+    if (pt) run.push(pt);
+    else { if (run.length > 1) out.push(`<polyline class="sky-eq" points="${run.join(' ')}"/>`); run = []; }
+  }
+  for (const [pole, lab] of [[[0,0,1],'NCP'], [[0,0,-1],'SCP']]){
+    const r = rot(pole);
+    if (r[1] < 0) continue;
+    const x = cx + r[0]*R, y = cy - r[2]*R;
+    out.push(`<text class="sky-pole" x="${x.toFixed(1)}" y="${y.toFixed(1)}">${lab}</text>`);
+  }
+  return `<g class="sky">${out.join('')}</g>`;
+}
+
+/* Diffraction spikes: a rendering convention for a bright star, not a
+   measurement — earned by absolute magnitude so at least the right ones get them. */
+function spikes(x, y, r, col){
+  const a = (r * 3.4).toFixed(1);
+  return `<path class="spike" d="M${x-a},${y} H${(+x)+ +a} M${x},${y-a} V${(+y)+ +a}" stroke="${col}"/>`;
+}
+
 function chartDefs(){
   return '<defs>' + Object.entries(SPECTRAL_COLOUR).map(([k, c]) =>
     `<radialGradient id="glow-${k}">` +
@@ -672,7 +748,7 @@ function chartDefs(){
 
 function chartSvg(w, h){
   if (!PLACED.length) return `<text class="chart-empty" x="20" y="30">[no system coordinates on file]</text>`;
-  const out = [chartDefs()];
+  const out = [chartDefs(), skyLayer(w, h)];
   for (const r of [10, 20, 30, 40, 50]){
     if (r > FARTHEST + 6) continue;
     out.push(`<polyline class="ring" points="${ringPath(r, w, h)}"/>`);
@@ -695,8 +771,11 @@ function chartSvg(w, h){
     const r = starRadius(sys), k = starClass(sys), col = starColour(sys);
     const x = p.x.toFixed(1), y = p.y.toFixed(1);
     out.push(`<line class="stalk" x1="${base.x.toFixed(1)}" y1="${base.y.toFixed(1)}" x2="${x}" y2="${y}"/>`);
-    out.push(`<g class="${cls}" data-sys="${sys.id}" opacity="${reached ? 1 : 0.28}">` +
+    // nearer to the camera reads slightly brighter, which is what sells the rotation
+    const near = 0.80 + 0.20 * (0.5 + 0.5 * (p.depth / (FARTHEST || 1)));
+    out.push(`<g class="${cls}" data-sys="${sys.id}" opacity="${(reached ? near : 0.26).toFixed(2)}">` +
       `<circle cx="${x}" cy="${y}" r="${(r*4.2).toFixed(1)}" fill="url(#glow-${k})"/>` +
+      (reached && sys.abs_mag != null && sys.abs_mag < 5.0 ? spikes(x, y, r, col) : '') +
       (CHART.sel === sys.id ? `<circle class="halo" cx="${x}" cy="${y}" r="${(r+6).toFixed(1)}"/>` : '') +
       `<circle cx="${x}" cy="${y}" r="${r.toFixed(1)}" fill="${col}"/>` +
       (sys.components.length ? `<circle cx="${(p.x + r + 2.6).toFixed(1)}" cy="${(p.y - r - 1).toFixed(1)}" r="${Math.max(1.6, r*0.42).toFixed(1)}" fill="${col}" opacity=".8"/>` : '') +
@@ -730,10 +809,11 @@ function renderChart(){
         <input id="chart-slider" type="range" min="${YEAR_MIN}" max="${YEAR_MAX}" value="${CHART.year}" aria-label="Year">
         <span class="hint" id="chart-stat"></span>
         <button data-cam="in">+</button><button data-cam="out">&minus;</button><button data-cam="reset">RESET</button>
-        <span class="hint">DRAG ROTATE · WHEEL ZOOM</span>
+        <span class="hint">DRAG ROTATE · WHEEL ZOOM · SHIFT-DRAG PAN</span>
       </div>
       <svg class="chart-svg" id="chart" xmlns="http://www.w3.org/2000/svg"></svg>
       ${rows}
+      <div class="hint" style="padding-top:6px">Star positions, colours and sizes are real — SIMBAD astrometry, spectral class and absolute magnitude. The backdrop field is decorative: there is no whole-sky catalogue in here. The celestial equator and poles are real directions.</div>
     </div>`;
 }
 
