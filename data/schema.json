@@ -27,7 +27,7 @@
           "src": {
             "type": "string",
             "enum": ["t", "a", "b", "p", "c"],
-            "description": "How well we know this Bob's PARENTAGE, and nothing else. t=parent confirmed in the books; a=Taylor's 2017 tree; b=fandom wiki registry; p=an ancestor is known but the generations between are not; c=no ancestor on record. A tier C Bob can still be richly documented \u2014 Herschel states his own generation on the page and has twenty POV chapters; we just don't know who made him."
+            "description": "How well we know this Bob's PARENTAGE, and nothing else. t=parent confirmed in the books; a=Taylor's 2017 tree; b=fandom wiki registry; p=an ancestor is known but the generations between are not; c=no ancestor on record. A tier C Bob can still be richly documented — Herschel states his own generation on the page and has twenty POV chapters; we just don't know who made him."
           },
           "cite": {
             "type": "string",
@@ -47,7 +47,8 @@
           "lostAt": { "type": "string", "description": "Where destroyed or last known, when status is lost." },
           "faction": {
             "type": "string",
-            "description": "Affiliation, not lineage. Starfleet, Skippies, Gamers. Deliberately separate from the tree because factions cut across branches — Starfleet took joiners from other lines and purged its own genealogy records."
+            "enum": ["Starfleet", "Skippies", "Gamers", "Borg"],
+            "description": "Affiliation, not lineage. The four mutual-interest groups Bill describes as forming once replicative drift made Bobs into 'joiners'. Deliberately separate from the tree because factions cut across branches — Starfleet took joiners from other lines and purged its own genealogy records, so it can never be drawn as a subtree."
           },
           "ref": { "type": "string", "description": "Namesake. Reader inference, not canon." },
           "conflict": { "type": "string", "description": "Describe the disagreement between sources and which one the tree follows." },

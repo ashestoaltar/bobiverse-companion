@@ -356,7 +356,9 @@ const FILTERS = [
   {id:'cited',     label:'CITED',     test:b => !!b.cite},
   {id:'conflict',  label:'DISPUTED',  test:b => !!b.conflict},
   {id:'starfleet', label:'STARFLEET', test:b => b.faction === 'Starfleet'},
-  {id:'gamers',    label:'GAMERS',    test:b => b.faction === 'Gamers'}
+  {id:'skippies',  label:'SKIPPIES',  test:b => b.faction === 'Skippies'},
+  {id:'gamers',    label:'GAMERS',    test:b => b.faction === 'Gamers'},
+  {id:'borg',      label:'BORG',      test:b => b.faction === 'Borg'}
 ];
 
 const COLS = [

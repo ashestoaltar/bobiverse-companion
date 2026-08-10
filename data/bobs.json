@@ -403,9 +403,10 @@
    "src": "p",
    "visited": "Skippyland",
    "status": "active",
+   "faction": "Skippies",
    "ref": "—",
    "partialNote": "Source says only \"a descendant of Bill\" — generations between are unstated.",
-   "note": "The Skippies' representative on the Bender rescue, and an earlier generation than the rest of them, which is why they picked him to deal with the older Bobs. Prefers an IP-address-style designation to a name."
+   "note": "The Skippies' representative on the Heaven's River expedition, in a grey coverall. His group has dropped names for numeric designations and speech for packetized communication, but they still answer to nicknames when dealing with everyone else."
   },
   {
    "id": "bart",
@@ -811,8 +812,11 @@
    "id": "locutus",
    "name": "Locutus",
    "src": "c",
+   "cite": "Bk4 ch9 · Bob, 2333",
    "status": "active",
-   "ref": "Locutus of Borg, Star Trek: TNG"
+   "faction": "Borg",
+   "ref": "Locutus of Borg, Star Trek: TNG",
+   "note": "Represented the Borg on the Heaven's River expedition, in a getup with considerably more armour than the TNG originals. Wanted Hugh as a handle, but it was already taken."
   },
   {
    "id": "gandalf",
@@ -953,10 +957,12 @@
    "id": "fearless",
    "name": "Fearless Leader",
    "src": "c",
+   "cite": "Bk5 ch6 · Bill, Feb 2336",
    "visited": "Skippyland",
    "status": "active",
+   "faction": "Skippies",
    "ref": "Rocky & Bullwinkle",
-   "note": "A Skippy, and evidently one with a sense of humor about hierarchy."
+   "note": "Leads the Skippies, and gives the speech before they switch on the super AI. Evidently a Bob with a sense of humour about hierarchy."
   },
   {
    "id": "will",

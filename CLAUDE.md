@@ -30,10 +30,20 @@ disagreement and which source the tree follows. Don't silently pick a winner.
 Taylor's own 2017 tree is wrong about Loki (it puts him under Khan; the text
 puts him in Bill's June 2185 cohort), so "the author said so" is not decisive.
 
-**Factions are not lineage.** Starfleet, the Skippies and the Gamers cut across
-branches. Starfleet in particular took joiners from other lines and purged its
-genealogy from the databases, so it can never be drawn as a subtree. Use the
-`faction` field.
+**Factions are not lineage.** They cut across branches, so they can never be
+drawn as subtrees. Use the `faction` field. There are four, and they appear once
+replicative drift has gone far enough that Bill starts calling Bobs "joiners"
+(Bk4 ch5):
+
+| faction | what they are | named members on file |
+|---|---|---|
+| Starfleet | Morlock's group. Treat the Prime Directive as gospel, want no further contact with humans. Purged their own genealogy from the databases, and the Pangean Council eventually declared war on them (Bk4 ch42). | Homer, Gerry, Lenny |
+| Skippies | Formally the **Singularity Project** — building a super AI. Dropped names for numeric designations and speech for packetized communication, but still answer to nicknames. | Hugh, Fearless Leader |
+| Gamers | Run live-action D&D campaigns in virt. Solved the problem of getting into the Heaven's River megastructure. | Gandalf, Kevin, Tim, Verne, Pete |
+| Borg | Bobs who went full-time Borg avatar. Joined the android design effort. | Locutus |
+
+Starfleet's purge is the reason its members are so thin on lineage — that gap is
+in-world, not a hole in our research.
 
 **Not every name in the books is a Bob.** The text is full of humans, Deltans,
 Quinlans and Pav who sit in sentences right next to replicants. Bridget is Dr.
@@ -119,3 +129,32 @@ Don't re-run these expecting new names; they're exhausted.
   name they turned up, and he's now in.
 - **Name co-occurrence** — capitalised names appearing in lists alongside two or
   more known Bobs. Everything it surfaced was either added or ruled non-Bob.
+- **Faction enumeration** — swept for the mutual-interest groups. Four exist:
+  Starfleet, Skippies, Gamers, Borg. No fifth appears in the text.
+
+## Planned: companion registers
+
+Once the genealogy is settled, the same machinery — corpus, extractor,
+validator, console — should carry other registers from the same books. The
+parser and `extract.py` are already generic; what each needs is its own data
+file, schema and view.
+
+**Planetary / system map.** Systems, who surveyed them, what was found, who
+was lost there. `data/bobs.json` already carries `origin`, `visited` and
+`lostAt`, so a first pass can be derived from the genealogy rather than
+re-parsed. Sol, Epsilon Eridani, Delta Eridani, 82 Eridani, Omicron² Eridani,
+Delta Pavonis, Gamma Pavonis, Eta Cassiopeiae, Poseidon, Gliese 877,
+HIP 84051, Alpha Centauri, Ragnarök/Valhalla.
+
+**Bestiary.** Well attested in the corpus already, by rough mention count:
+gorilloids (166), landers (92), boojums (47), snarks (38 — later renamed
+Quinlans), spits (36), raptors (48), krakens (11), hexghi (6), plus the
+Deltans' fauna and the Heaven's River river life. Note that "manny" (370) is
+an android body, not a creature — easy false positive.
+
+**Peoples and polities**, if wanted: Deltans, Quinlans, Pav, the Others,
+Zjentfen (Bk2 ch60), and the non-Bob organisations — the Pangean Council, the
+Quinlan Resistance and Crew, and the Bawbes, which is what the locals call us.
+
+Same ground rules apply to all of them: derived text stays in `.cache/`, facts
+are publishable, and every claim carries where it came from.
