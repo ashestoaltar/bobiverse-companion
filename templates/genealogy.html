@@ -133,7 +133,9 @@
   .prov.a{color:var(--amber)}
   .prov.b,.prov.p{color:var(--amber-dim)}
   .prov.c{color:var(--ash)}
+  .prov.x{color:var(--alert)}
   tr[aria-selected="true"] .prov{color:var(--void)}
+  .redacted{color:var(--alert); letter-spacing:.14em}
   .st-active{color:var(--phos)}
   .st-lost{color:var(--alert)}
   .st-unknown{color:var(--ash)}
@@ -343,7 +345,8 @@ const TIER = {
   a:{mark:'◆', label:'AUTHOR', full:"Taylor's tree, 2017"},
   b:{mark:'◇', label:'WIKI',   full:'fandom registry'},
   p:{mark:'◈', label:'PARTIAL',full:'ancestor known, path is not'},
-  c:{mark:'✕', label:'NONE',   full:'no ancestor on record'}
+  c:{mark:'✕', label:'NONE',   full:'no ancestor on record'},
+  x:{mark:'▨', label:'EXPUNGED',full:'record deliberately removed'}
 };
 const STATUS = {active:'● ACTIVE', lost:'✕ LOST', unknown:'○ UNKNOWN'};
 
@@ -352,6 +355,7 @@ const FILTERS = [
   {id:'a',         label:'AUTHOR',    test:b => b.src === 'a'},
   {id:'b',         label:'WIKI',      test:b => b.src === 'b'},
   {id:'c',         label:'NO SOURCE', test:b => b.src === 'c'},
+  {id:'x',         label:'EXPUNGED',  test:b => b.src === 'x'},
   {id:'lost',      label:'LOST',      test:b => b.status === 'lost'},
   {id:'cited',     label:'CITED',     test:b => !!b.cite},
   {id:'conflict',  label:'DISPUTED',  test:b => !!b.conflict},
@@ -362,7 +366,7 @@ const FILTERS = [
 ];
 
 const COLS = [
-  {key:'name',   label:'NAME',       get:b => b.name,                     cls:'nm'},
+  {key:'name',   label:'NAME',       get:b => b.alias ? `${b.name} / ${b.alias}` : b.name, cls:'nm'},
   {key:'desig',  label:'DESIGNATION',get:b => b.desig || '—',             cls:'dim', opt:true},
   {key:'gen',    label:'GEN',        get:b => b.gen == null ? '—' : b.gen, cls:'dim'},
   {key:'parent', label:'SOURCE BOB', get:b => b.parent ? byId[b.parent].name : '—', cls:'dim'},
@@ -395,7 +399,7 @@ function visible(){
       if (spec && !spec.test(b)) return false;
     }
     if (!q) return true;
-    return [b.name, b.desig, b.origin, b.visited, b.vessel, b.ref, b.note,
+    return [b.name, b.alias, b.desig, b.origin, b.visited, b.vessel, b.ref, b.note,
             b.cite, b.faction, b.conflict, b.partialNote]
       .some(v => v && String(v).toLowerCase().includes(q));
   }).sort((x, y) => {
@@ -490,7 +494,7 @@ function renderLineage(rows){
 }
 
 function renderUnresolved(rows){
-  const list = rows.filter(b => b.src === 'c');
+  const list = rows.filter(b => b.src === 'c' || b.src === 'x');
   if (!list.length) return `<p class="empty">NO UNRESOLVED RECORDS MATCH THAT QUERY.</p>`;
   const cards = list
     .sort((a, b) => (b.cite ? 1 : 0) - (a.cite ? 1 : 0) || a.name.localeCompare(b.name))
@@ -500,17 +504,20 @@ function renderUnresolved(rows){
       if (b.cite) bits.push(esc(b.cite));
       if (b.faction) bits.push(esc(b.faction.toUpperCase()));
       if (b.visited) bits.push(esc(b.visited));
+      if (b.src === 'x') bits.unshift('<span class="redacted">▨ RECORD EXPUNGED</span>');
       return `<div class="card">
         <h3>${esc(b.name)}</h3>
         <div class="card-sub">${bits.join(' · ') || 'NO SOURCE ON FILE'}</div>
+        ${b.partialNote ? `<p>${esc(b.partialNote)}</p>` : ''}
         ${b.note ? `<p>${esc(b.note)}</p>` : ''}
         <button data-id="${b.id}">OPEN DOSSIER</button>
       </div>`;
     }).join('');
   return `<div class="unres">
-    <p class="unres-lead">These Bobs are named in the books but no source — text, author or wiki — records who built them.
-    Several are heavily documented otherwise: Herschel and Neil state their own generation on the page, Will and Marcus
-    carry POV chapters. What's missing is the parent, so their trace terminates here.</p>${cards}</div>`;
+    <p class="unres-lead">Bobs whose trace cannot reach Bob-1. Most are simply never accounted for — Herschel and Neil
+    state their own generation on the page, Will and Marcus carry POV chapters, but no source names a parent.
+    A ▨ marks the other kind of gap: a record that existed and was removed. Starfleet stripped its own genealogy
+    and location data from the databases during the war, so for its members the silence is the evidence.</p>${cards}</div>`;
 }
 
 /* ---- dossier ---------------------------------------------------------- */
@@ -548,7 +555,9 @@ function renderDossier(){
   const broken = last && last.parent;               // cycle guard tripped
   const terminates = last && !last.parent && last.id !== 'bob1';
   const traceEnd = terminates
-    ? `<div class="trace-end">Trace terminates. No source records who built ${esc(last.name)}, so the route to Bob-1 cannot be completed.</div>`
+    ? (last.src === 'x'
+        ? `<div class="trace-end">Trace terminates. ${esc(last.name)}'s ancestry is not missing from the registry — it was taken out of it. Starfleet stripped their own genealogy and location data from the databases, so this route was severed deliberately.</div>`
+        : `<div class="trace-end">Trace terminates. No source records who built ${esc(last.name)}, so the route to Bob-1 cannot be completed.</div>`)
     : broken ? `<div class="trace-end">Trace incomplete — ancestry loops.</div>` : '';
 
   const flags = [
@@ -562,7 +571,7 @@ function renderDossier(){
     <div class="dossier-head">
       <div>
         <h2>${esc(b.name)}</h2>
-        <div class="sub">${b.desig ? esc(b.desig) + ' · ' : ''}${t.mark} ${t.label} — ${esc(t.full)}</div>
+        <div class="sub">${b.alias ? 'GOES BY ' + esc(b.alias.toUpperCase()) + ' · ' : ''}${b.desig ? esc(b.desig) + ' · ' : ''}${t.mark} ${t.label} — ${esc(t.full)}</div>
       </div>
       <button class="dossier-close" id="d-close" aria-label="Close dossier">✕</button>
     </div>

@@ -65,6 +65,20 @@ welcome on any tier.
 | `b` | Bobiverse Fandom wiki registry | reader-compiled; supplies designations, dates, vessels |
 | `p` | an ancestor is named, generations are not | `parent` = ancestor; explain in `partialNote` |
 | `c` | no ancestor on record | no `parent`; renders in the unresolved register |
+| `x` | the record was deliberately expunged | no `parent`; `cite` **and** `partialNote` both required |
+
+**On tier X.** C and X are both "we can't reach Bob-1," but they are different
+facts. C is silence. X is a deletion, and we can name who did it: Bill reports
+that Starfleet "removed as much public information about themselves as they'd
+been able," with large swaths of their genealogy and their location data simply
+gone from the databases (Bk4 ch32), and he was still hitting manufactured dead
+ends in his own genealogy work a decade later (Bk5 ch51). For a Starfleet member
+with no lineage, the absence *is* the evidence.
+
+Don't reach for X just because a record is empty and the Bob happens to be
+Starfleet-adjacent. It asserts a cause, so the text has to account for it —
+hence the mandatory cite and partialNote. Homer and Gerry are both Starfleet and
+both tier T, because their parentage survives on the page regardless.
 
 ## Layout
 
@@ -152,9 +166,51 @@ Quinlans), spits (36), raptors (48), krakens (11), hexghi (6), plus the
 Deltans' fauna and the Heaven's River river life. Note that "manny" (370) is
 an android body, not a creature — easy false positive.
 
-**Peoples and polities**, if wanted: Deltans, Quinlans, Pav, the Others,
-Zjentfen (Bk2 ch60), and the non-Bob organisations — the Pangean Council, the
-Quinlan Resistance and Crew, and the Bawbes, which is what the locals call us.
+**Peoples and polities.** Confirmed for build. Species — Deltans, Quinlans,
+Pav, the Others, Zjentfen (Bk2 ch60), and the gorilloids. Polities — the
+Pangean Council, the UFS, the Quinlan Resistance and the Crew, the Newholme and
+Pangea colonies, and the Bawbes, which is what the locals call us. Note that
+these need a different provenance model than the Bobs: species and governments
+don't have parents, so tiers T/A/B/P/C/X won't transfer directly. Design that
+schema fresh rather than bending this one.
 
 Same ground rules apply to all of them: derived text stays in `.cache/`, facts
 are publishable, and every claim carries where it came from.
+
+## The long game: BobNet
+
+The end state is not a genealogy page with extra tabs. It's BobNet — the
+in-world network Bill actually runs — with the registry as one service on it.
+Blog posts, status updates, and eventually images.
+
+Worth knowing: **Bill's blog is canon.** In Bk4 ch5 he needles Bob with "You
+still haven't read my blog yet, have you?" So dated posts in Bill's voice are
+not a framing device we invented; they're a thing the character does. Site
+updates should be written as BobNet posts, not as changelogs.
+
+### Voice
+
+The point of the project is that it's fun, so the writing has to carry Bob's
+register or the whole thing reads like a database with a skin on it. What that
+means concretely, from the text:
+
+- **First person, past tense, conversational.** Contractions, sentence
+  fragments, asides in parentheses. Never corporate, never breathless.
+- **The joke is usually on the narrator.** Bill gets run over by his own
+  fleeing NPC troops. Bob concedes points he was losing anyway. Self-deprecation
+  over cleverness at someone else's expense.
+- **Pop culture is the native vocabulary, not decoration.** Every Bob's name is
+  already a joke — Riker, Bender, Marvin, Locutus, Gandalf, Fearless Leader,
+  Homer and Lenny. Reference at that density and don't explain the joke.
+- **Deadpan about the absurd, understated about the catastrophic.** Losing a
+  system gets a dry sentence; a bad pun in a dungeon name gets a paragraph.
+- **Use the in-world lexicon** — moot, manny, virt, roamer, autofactory, buster,
+  SUDDAR, SCUT, replicative drift, Original Bob, Von Neumann-ing, Skippies. Two
+  are deliberately loaded: *ephemeral* and *meatspace* are derogatory in-world
+  and Bill objects to both, so only use them in a voice that would.
+- **Jokes about being a computer.** Coffee and beer in VR that nobody needs,
+  Guppy's flat AMI deadpan, arguing with your own backup.
+
+Where the tone would cost accuracy, accuracy wins — but note fields are prose,
+and prose in this project is allowed to be funny. What it is never allowed to be
+is quoted book text; paraphrase and cite, same as everywhere else.

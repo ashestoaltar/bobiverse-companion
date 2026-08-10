@@ -16,10 +16,16 @@ each edge came from. This one grades every claim:
 | B | dashed | Bobiverse Fandom wiki registry — reader-compiled, supplies designations and dates |
 | P | dotted, violet | an ancestor is named but the generations between are not |
 | C | dotted, grey | no ancestor on record; drawn in a separate register block |
+| X | struck through | the record was deliberately expunged |
 
 The tier grades **parentage only**. A tier C Bob can still be thoroughly
 documented — Herschel has twenty POV chapters and announces his own generation
 on the page; we simply never learn who built him.
+
+Tier X is the interesting one. Starfleet stripped its own genealogy and location
+data out of the databases during the war, so for its members the missing lineage
+isn't a gap in anyone's reading — it's the deletion itself, and the registry says
+so rather than shrugging.
 
 Where sources disagree, the disagreement is recorded rather than resolved
 silently. Taylor's own tree turns out to be wrong about Loki.
@@ -57,5 +63,6 @@ gitignored and should remain so.
 
 ## Status
 
-87 replicants, 38 with primary-text citations, 21 with a parent confirmed in
-the books. Known gaps are listed at the bottom of CLAUDE.md.
+87 replicants, 41 with primary-text citations, 21 with a parent confirmed in
+the books, 2 with their lineage deliberately expunged. Known gaps are listed at
+the bottom of CLAUDE.md.

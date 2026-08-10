@@ -877,19 +877,25 @@
   {
    "id": "lenny",
    "name": "Lenny",
-   "src": "c",
+   "src": "x",
    "cite": "Bk4 ch61 · Bill",
    "status": "active",
    "faction": "Starfleet",
    "ref": "The Simpsons",
-   "note": "Appears flanked by other Starfleet members. Lineage unrecorded — which is the point of the purge."
+   "partialNote": "No lineage on record. Starfleet removed as much public information about themselves as they could manage, genealogy and location alike (Bk4 ch32), so this gap is the purge rather than a hole in our reading.",
+   "note": "Appears flanked by other Starfleet members, and negotiates with Bill during the war."
   },
   {
    "id": "jeremy",
    "name": "Jeremy",
-   "src": "c",
+   "alias": "Morlock",
+   "src": "x",
+   "cite": "Bk4 ch3 · Bob, Sep 2331",
    "status": "active",
-   "ref": "—"
+   "faction": "Starfleet",
+   "ref": "The Morlocks, The Time Machine",
+   "partialNote": "No lineage on record, and for Starfleet that absence is deliberate rather than accidental: Bill reports large swaths of the Starfleet genealogy simply gone from the databases (Bk4 ch32), and his own investigations still running into manufactured dead ends a decade later (Bk5 ch51).",
+   "note": "Founded the group Bill started calling Starfleet, for their treatment of the Prime Directive as gospel. Named himself Jeremy and later went by Morlock — replicative drift in a single handle."
   },
   {
    "id": "randall",

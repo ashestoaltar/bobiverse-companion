@@ -23,6 +23,7 @@ TIERS = {
     "b": "Bobiverse Fandom wiki registry",
     "p": "ancestor named, generations unstated",
     "c": "no ancestor on record",
+    "x": "record deliberately expunged",
 }
 STATUSES = {"active", "lost", "unknown"}
 REQUIRED = ("id", "name", "src")
@@ -81,6 +82,15 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
             errors.append(f"{bob['id']}: tier P means an ancestor is known — set parent")
         if src == "c" and bob.get("parent"):
             errors.append(f"{bob['id']}: tier C means no lineage — should have no parent")
+        # Tier X claims the absence was deliberate, which is a stronger claim than
+        # tier C. It has to be backed by the text, not by vibes.
+        if src == "x":
+            if bob.get("parent"):
+                errors.append(f"{bob['id']}: tier X means the lineage was expunged — should have no parent")
+            if not bob.get("cite"):
+                errors.append(f"{bob['id']}: tier X requires a cite")
+            if not bob.get("partialNote"):
+                errors.append(f"{bob['id']}: tier X requires a partialNote saying who removed it and how we know")
         if src == "p" and not bob.get("partialNote"):
             warnings.append(f"{bob['id']}: tier P without partialNote explaining the gap")
         # Only lineage disputes need a citation to adjudicate them. Spelling and

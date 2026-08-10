@@ -20,14 +20,18 @@
             "type": "string",
             "description": "Display name as spelled in the primary text where possible."
           },
+          "alias": {
+            "type": "string",
+            "description": "A second name the Bob actually goes by in the text. Jeremy goes by Morlock; use this rather than renaming the record, so both are searchable."
+          },
           "parent": {
             "type": "string",
             "description": "id of the source Bob. Omit entirely for tier C (no lineage on record). For tier P this is an ancestor, not necessarily a direct parent."
           },
           "src": {
             "type": "string",
-            "enum": ["t", "a", "b", "p", "c"],
-            "description": "How well we know this Bob's PARENTAGE, and nothing else. t=parent confirmed in the books; a=Taylor's 2017 tree; b=fandom wiki registry; p=an ancestor is known but the generations between are not; c=no ancestor on record. A tier C Bob can still be richly documented — Herschel states his own generation on the page and has twenty POV chapters; we just don't know who made him."
+            "enum": ["t", "a", "b", "p", "c", "x"],
+            "description": "How well we know this Bob's PARENTAGE, and nothing else. t=parent confirmed in the books; a=Taylor's 2017 tree; b=fandom wiki registry; p=an ancestor is known but the generations between are not; c=no ancestor on record; x=the record was deliberately expunged. A tier C Bob can still be richly documented \u2014 Herschel states his own generation on the page and has twenty POV chapters; we just don't know who made him. Tier X is narrower and stronger: we know why the data is missing, because somebody removed it on purpose. Reserve it for cases the text actually accounts for; requires a cite and a partialNote."
           },
           "cite": {
             "type": "string",
