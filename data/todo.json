@@ -9,6 +9,11 @@
  ],
  "items": [
   {
+   "cat": "Sources",
+   "text": "Guard books/ and .cache/ against destructive rebuilds",
+   "note": "The five ebooks were deleted by a commit-splitting script that ran rm -rf on directories before restoring them from git archive — books/ is gitignored, so nothing came back but .gitkeep. It went unnoticed for hours because .cache/corpus.json survived and every build and test kept passing. Two fixes: never let a restore-from-archive step touch gitignored paths, and make `make corpus` refuse to overwrite a good cache with an empty parse. Until the ebooks are restored, do not run `make clean` — it deletes .cache/, currently the only copy of the parsed text."
+  },
+  {
    "cat": "BobNet",
    "text": "Star chart: three labels still drop, and two judgement calls open",
    "note": "Gliese 54, Zeta Tucanae and Gliese 877 sit almost on top of each other at the default angle and lose their names to decluttering; rotating separates them. Open questions from the first look: whether the glow is now cut too far, and whether the backdrop at magnitude 6 is too busy behind the systems (5.5 would thin it by 40%). Both are one-line changes."
