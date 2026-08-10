@@ -180,7 +180,7 @@
   .chart-svg{position:absolute; inset:0; width:100%; height:100%; cursor:grab; touch-action:none; display:block}
   .chart-svg.drag{cursor:grabbing}
   .ring{fill:none; stroke:var(--rule); stroke-width:1}
-  .ring-label{fill:var(--ash); font-size:9px; letter-spacing:.1em}
+  .ring-label{fill:var(--ash); font-size:9px; letter-spacing:.1em; text-anchor:middle}
   .stalk{stroke:var(--rule); stroke-width:1}
   .star{cursor:pointer}
   .star .halo{fill:none; stroke:var(--amber); stroke-width:1; opacity:.55}
@@ -190,11 +190,12 @@
   .star.future circle{fill:var(--rule)}
   .star.future .star-label{fill:var(--rule)}
   .sol-mark{stroke:var(--phos); stroke-width:1.2; fill:none}
+  .sol-ring{fill:none; stroke:var(--phos); stroke-width:1; opacity:.55}
   .chart-empty{fill:var(--ash); font-size:12px}
   .sky{pointer-events:none}
   .sky-eq{fill:none; stroke:var(--rule); stroke-width:1; stroke-dasharray:3 5; opacity:.75}
   .sky-pole{fill:var(--ash); font-size:9px; letter-spacing:.14em; text-anchor:middle}
-  .spike{stroke-width:.9; opacity:.42}
+  .spike{stroke-width:.9; opacity:.30}
   body.plain .chart-sky{display:none}
   body.plain .spike{display:none}
 
@@ -765,8 +766,8 @@ function spikes(x, y, r, col){
 function chartDefs(){
   return '<defs>' + Object.entries(SPECTRAL_COLOUR).map(([k, c]) =>
     `<radialGradient id="glow-${k}">` +
-      `<stop offset="0%" stop-color="${c}" stop-opacity=".85"/>` +
-      `<stop offset="28%" stop-color="${c}" stop-opacity=".30"/>` +
+      `<stop offset="0%" stop-color="${c}" stop-opacity=".40"/>` +
+      `<stop offset="30%" stop-color="${c}" stop-opacity=".13"/>` +
       `<stop offset="100%" stop-color="${c}" stop-opacity="0"/>` +
     '</radialGradient>').join('') + '</defs>';
 }
@@ -777,11 +778,18 @@ function chartSvg(w, h){
   for (const r of [10, 20, 30, 40, 50]){
     if (r > FARTHEST + 6) continue;
     out.push(`<polyline class="ring" points="${ringPath(r, w, h)}"/>`);
-    const lab = project([r, 0, 0], w, h);
-    out.push(`<text class="ring-label" x="${lab.x.toFixed(1)}" y="${(lab.y-4).toFixed(1)}">${r} ly</text>`);
+    // put the label at the lowest point of the projected ring, below the crowd
+    let low = null;
+    for (let i = 0; i < 72; i++){
+      const a = i/72 * Math.PI*2;
+      const q = project([r*Math.cos(a), r*Math.sin(a), 0], w, h);
+      if (!low || q.y > low.y) low = q;
+    }
+    out.push(`<text class="ring-label" x="${low.x.toFixed(1)}" y="${(low.y+11).toFixed(1)}">${r} ly</text>`);
   }
   const origin = project([0,0,0], w, h);
-  out.push(`<path class="sol-mark" d="M${origin.x-7},${origin.y} h14 M${origin.x},${origin.y-7} v14"/>`);
+  out.push(`<circle class="sol-ring" cx="${origin.x.toFixed(1)}" cy="${origin.y.toFixed(1)}" r="9"/>`);
+  out.push(`<path class="sol-mark" d="M${origin.x-13},${origin.y} h7 M${origin.x+6},${origin.y} h7 M${origin.x},${origin.y-13} v7 M${origin.x},${origin.y+6} v7"/>`);
 
   const drawn = PLACED.map(sys => {
     const p = project(sys.xyz_ly, w, h);
@@ -789,6 +797,43 @@ function chartSvg(w, h){
     const reached = sys.first_year != null && sys.first_year <= CHART.year;
     return {sys, p, base, reached};
   }).sort((a, b) => a.p.depth - b.p.depth);      // far to near
+
+  /* Label decluttering. Everything is drawn, but a name is only placed if its
+     box is still clear — otherwise the inner cluster becomes unreadable. The
+     ones that matter to the story win: selected first, then scene count, then
+     brightness. Monospace, so width can be estimated from character count. */
+  const placed = [];
+  const free = (x, y, wpx) => {
+    const box = {x1: x, y1: y - 9.8, x2: x + wpx, y2: y + 4.6};
+    for (const q of placed)
+      if (box.x1 < q.x2 && box.x2 > q.x1 && box.y1 < q.y2 && box.y2 > q.y1) return null;
+    return box;
+  };
+  /* Try the four sides before giving up on a name — dropping a 34-scene system
+     because its neighbour got there first is worse than moving the text. */
+  const claim = (px, py, r, txt) => {
+    const wpx = txt.length * 6.4 + 10;
+    const spots = [
+      {x: px + r + 7,       y: py + 4,        anchor: 'start'},
+      {x: px - r - 7 - wpx, y: py + 4,        anchor: 'start'},
+      {x: px - wpx/2,       y: py - r - 7,    anchor: 'start'},
+      {x: px - wpx/2,       y: py + r + 15,   anchor: 'start'},
+    ];
+    for (const sp of spots){
+      const box = free(sp.x, sp.y, wpx);
+      if (box) { placed.push(box); return sp; }
+    }
+    return null;
+  };
+  const priority = [...drawn].sort((a, b) =>
+    (CHART.sel === b.sys.id) - (CHART.sel === a.sys.id) ||
+    (b.sys.scenes || 0) - (a.sys.scenes || 0) ||
+    ((a.sys.abs_mag ?? 99) - (b.sys.abs_mag ?? 99)));
+  const labelAt = new Map();
+  for (const d of priority){
+    const spot = claim(d.p.x, d.p.y, starRadius(d.sys), d.sys.name);
+    if (spot) labelAt.set(d.sys.id, spot);
+  }
 
   for (const d of drawn){
     const {sys, p, base, reached} = d;
@@ -799,13 +844,15 @@ function chartSvg(w, h){
     // nearer to the camera reads slightly brighter, which is what sells the rotation
     const near = 0.80 + 0.20 * (0.5 + 0.5 * (p.depth / (FARTHEST || 1)));
     out.push(`<g class="${cls}" data-sys="${sys.id}" opacity="${(reached ? near : 0.26).toFixed(2)}">` +
-      `<circle cx="${x}" cy="${y}" r="${(r*4.2).toFixed(1)}" fill="url(#glow-${k})"/>` +
+      `<circle cx="${x}" cy="${y}" r="${(r*2.6).toFixed(1)}" fill="url(#glow-${k})"/>` +
       (reached && sys.abs_mag != null && sys.abs_mag < 5.0 ? spikes(x, y, r, col) : '') +
       (CHART.sel === sys.id ? `<circle class="halo" cx="${x}" cy="${y}" r="${(r+6).toFixed(1)}"/>` : '') +
       `<circle cx="${x}" cy="${y}" r="${r.toFixed(1)}" fill="${col}"/>` +
       (sys.components.length ? `<circle cx="${(p.x + r + 2.6).toFixed(1)}" cy="${(p.y - r - 1).toFixed(1)}" r="${Math.max(1.6, r*0.42).toFixed(1)}" fill="${col}" opacity=".8"/>` : '') +
       `<circle cx="${x}" cy="${y}" r="${(r+8).toFixed(1)}" fill="transparent"/>` +
-      `<text class="star-label" x="${(p.x+r+7).toFixed(1)}" y="${(p.y+4).toFixed(1)}">${esc(sys.name)}</text></g>`);
+      (labelAt.has(sys.id)
+        ? `<text class="star-label" x="${labelAt.get(sys.id).x.toFixed(1)}" y="${labelAt.get(sys.id).y.toFixed(1)}">${esc(sys.name)}</text>`
+        : '') + `</g>`);
   }
   return out.join('');
 }

@@ -9,6 +9,21 @@
  ],
  "items": [
   {
+   "cat": "BobNet",
+   "text": "Star chart: three labels still drop, and two judgement calls open",
+   "note": "Gliese 54, Zeta Tucanae and Gliese 877 sit almost on top of each other at the default angle and lose their names to decluttering; rotating separates them. Open questions from the first look: whether the glow is now cut too far, and whether the backdrop at magnitude 6 is too busy behind the systems (5.5 would thin it by 40%). Both are one-line changes."
+  },
+  {
+   "cat": "BobNet",
+   "text": "Galaxy scale view — later",
+   "note": "Everything the Bobs reach fits inside 48.8 ly; the galaxy is ~100,000 ly across, so at that scale the whole story is smaller than a pixel. That's the point of it rather than an obstacle — but any Milky Way rendering is an artist's impression, so it belongs in the decoration bucket, clearly marked. Defer until the local chart is finished."
+  },
+  {
+   "cat": "BobNet",
+   "text": "Restructure before register five",
+   "note": "The console hardcodes every view into one template. Fine at five (register, lineage, unresolved, chart, to-do), won't be at eight once the bestiary and the peoples register land. Worth doing deliberately rather than discovering it halfway through."
+  },
+  {
    "cat": "Lineage",
    "text": "Chase the 30 dropped-source leads through the text",
    "note": "Each carries a priorClaim from Taylor's tree or the wiki. The claim isn't drawn, but it says where to look. Anything the books confirm gets promoted; anything they contradict is worth writing up."
