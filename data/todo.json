@@ -1,0 +1,82 @@
+{
+ "_comment": "Bob keeps a TO-DO list and it never gets shorter (Bk1 ch2, ch12, ch13, ch21). Ours is the research backlog, rendered the way Guppy reports his: a bracketed count, divided into categories. Add freely; that's the joke.",
+ "categories": [
+  "Lineage",
+  "Biography",
+  "Sources",
+  "Companion registers",
+  "BobNet"
+ ],
+ "items": [
+  {
+   "cat": "Lineage",
+   "text": "Chase the 30 dropped-source leads through the text",
+   "note": "Each carries a priorClaim from Taylor's tree or the wiki. The claim isn't drawn, but it says where to look. Anything the books confirm gets promoted; anything they contradict is worth writing up."
+  },
+  {
+   "cat": "Lineage",
+   "text": "Marcus — parentage",
+   "note": "Ten POV chapters across books 3 and 4, and no source anywhere names who built him. The last major POV character still unaccounted for."
+  },
+  {
+   "cat": "Lineage",
+   "text": "Thor, Jeffrey, Milton, Zeke — parentage",
+   "note": "Jeffrey, Milton and Zeke have a citation for their deaths at 82 Eridani. Nothing names who made them."
+  },
+  {
+   "cat": "Lineage",
+   "text": "Resolve the Hector collision",
+   "note": "A third-generation Hector lost at 82 Eridani and an ~18th-generation Hector emailing Bill in 2343. Either the naming convention broke down or they're two Bobs. Currently two records and the only standing validator warning."
+  },
+  {
+   "cat": "Lineage",
+   "text": "Verne — parentage beyond the appendix",
+   "note": "Settled as Bill's clone by the Cast of Characters. The narrative only ever put him on Loki's crew at 82 Eridani, which was suggestive and never stated. Worth a look for a narrative confirmation."
+  },
+  {
+   "cat": "Biography",
+   "text": "Light biographical sweep, name by name",
+   "note": "Rebuild born, vessel and designation from the text rather than from the sources we dropped. 17 birth dates, 3 vessels and 43 generation numbers came out in the sweep; some are certainly recoverable by reading around each name."
+  },
+  {
+   "cat": "Biography",
+   "text": "Systems: check origin and visited the same way",
+   "note": "Neither field has been verified against the text. Starfleet's location data was purged in-world (Bk4 ch32), so expect real gaps there rather than research failures."
+  },
+  {
+   "cat": "Sources",
+   "text": "Confirm books 4 and 5 have no Cast of Characters",
+   "note": "Book 2's appendix rescued ten records and turned up Surly. A quick check of the other volumes' back matter is cheap."
+  },
+  {
+   "cat": "Sources",
+   "text": "Second pass on the moot scenes for later generations",
+   "note": "Swept once and declared exhausted, but that was before the parser recovered six chapters. Worth one more pass now the corpus is complete."
+  },
+  {
+   "cat": "Companion registers",
+   "text": "System map",
+   "note": "Largely derivable from origin, visited and lostAt. Sol, Epsilon Eridani, Delta Eridani, 82 Eridani, Omicron² Eridani, Delta and Gamma Pavonis, Eta Cassiopeiae, Poseidon, Gliese 877, HIP 84051, Alpha Centauri, Ragnarök/Valhalla."
+  },
+  {
+   "cat": "Companion registers",
+   "text": "Bestiary",
+   "note": "Well attested already: gorilloids (166 mentions), landers (92), raptors (48), boojums (47), snarks (38, later renamed Quinlans), spits (36), krakens (11), hexghi (6). Watch out for manny — that's an android body, not a creature."
+  },
+  {
+   "cat": "Companion registers",
+   "text": "Peoples and polities",
+   "note": "Deltans, Quinlans, Pav, the Others, Zjentfen; the Pangean Council, the UFS, the Quinlan Resistance and Crew, and the Bawbes. Needs its own schema — species and governments don't have parents, so the tier system won't transfer."
+  },
+  {
+   "cat": "BobNet",
+   "text": "Blog posts in Bill's voice",
+   "note": "Bill's blog is canon — he needles Bob about not reading it in Bk4 ch5. Site updates belong as dated posts, not changelogs. See the voice guide in CLAUDE.md."
+  },
+  {
+   "cat": "BobNet",
+   "text": "Images",
+   "note": "Later. Whatever we do has to survive the no-external-requests rule, so anything visual gets inlined."
+  }
+ ]
+}

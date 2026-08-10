@@ -23,9 +23,6 @@ we can't point at a page for shouldn't be drawn as though we know it. Those
 claims aren't lost — each sits on its record as an unverified lead, visible in
 the dossier and never drawn as an edge.
 
-Ten tier-T records come from an unexpected place: the Cast of Characters
-appendix at the back of book 2, which states parentage outright.
-
 The tier grades **parentage only**. A tier C Bob can still be thoroughly
 documented — Herschel has eighteen POV chapters and announces his own generation
 on the page; we simply never learn who built him.
@@ -34,6 +31,11 @@ Tier X is the interesting one. Starfleet stripped its own genealogy and location
 data out of the databases during the war, so for its members the missing lineage
 isn't a gap in anyone's reading — it's the deletion itself, and the registry says
 so rather than shrugging.
+
+Ten tier-T records come from an unexpected place: the **Cast of Characters
+appendix at the back of book 2**, which states parentage outright. Back matter
+rather than story, but Taylor's own words printed in the novel — and it turned
+up a Bob the narrative never introduces.
 
 Where sources disagree, the disagreement is recorded rather than resolved
 silently — including when the disagreement turns out to be our own fault. We had
@@ -50,12 +52,14 @@ designations, systems, notes and citations:
   a match, so branches never float free of the root.
 - **Unresolved** — the Bobs whose trace can't reach Bob-1, with the two kinds of
   absence distinguished: never recorded, versus deleted.
+- **To-do** — the research backlog, reported the way Guppy reports Bob's:
+  a bracketed count divided into categories. It has never once got shorter.
 
 Selecting a record pulls its dossier and traces the route back to Bob-1
 hop by hop, **grading each link separately**. A chain can be solid for two hops
 and then run out of sources, and that's visible rather than smoothed over.
-34 of the 87 traces reach Bob-1; 53 terminate — an honest number rather than
-a flattering one.
+34 of the 87 traces reach Bob-1; 53 terminate — an honest number rather than a
+flattering one.
 
 Two details follow the books rather than taste. Bobs all wear the same face, so
 the registry identifies them the way Guppy does — by serial number, with the
@@ -106,5 +110,8 @@ gitignored and should remain so.
 
 87 replicants, 52 with citations, 32 with a parent stated in the books, 2 with
 their lineage deliberately expunged, and 30 carrying an unverified lead from a
-dropped source. Known gaps and the
-research backlog are at the bottom of CLAUDE.md.
+dropped source. Biography is held to the same standard as lineage: `desig`,
+`born` and `vessel` only where the books print them, and generation counted down
+the tree except for the three the text states out loud.
+
+The research backlog lives in `data/todo.json` and is a view in the console.

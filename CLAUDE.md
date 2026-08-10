@@ -81,9 +81,11 @@ remove the field.
 | `x` | the record was deliberately expunged | no `parent`; `cite` **and** `partialNote` both required |
 
 **Two kinds of tier T.** Most come from narrative chapters. Ten come from the
-Cast of Characters appendix at the back of book 2, cited `Bk2 · Cast of
-Characters`. Back matter rather than story, but Taylor's own words printed in
-the novel. It only covers book 2, so it says nothing about later generations.
+**Cast of Characters appendix at the back of book 2**, which states parentage
+outright — Garfield as Bill's first clone, Homer as Riker's first. It is back
+matter rather than story, but it is Taylor's own words printed in the novel, so
+it counts. Its cite is `Bk2 · Cast of Characters`. It only covers book 2, so it
+says nothing about later generations.
 
 **On tier X.** C and X are both "we can't reach Bob-1," but they are different
 facts. C is silence. X is a deletion, and we can name who did it: Bill reports
@@ -105,6 +107,7 @@ books/           your DRM-free ebooks (gitignored, never committed)
 .cache/          parsed corpus (gitignored)
 data/bobs.json   source of truth
 data/schema.json field documentation and constraints
+data/todo.json   the research backlog, rendered as a view in the console
 src/parse_ebook.py  MOBI + EPUB -> chapters, refuses DRM
 src/corpus.py       build/load the cached corpus
 src/extract.py      surface candidate passages for review (never auto-writes)
@@ -171,22 +174,22 @@ stored only where the books say it out loud *and* the tree can't derive it:
 Herschel, Neil and Hector. The console counts the rest, and the validator errors
 if a stored value disagrees with the tree.
 
+## The TO-DO
+
+Bob starts a TO-DO list in his first hour as a replicant and it never gets
+shorter — he adds to it in Bk1 ch2, ch3, ch12 and ch21, and by ch13 Guppy reports
+it back as "[2,386 items, divided into the following categories: ...]". Ours is
+`data/todo.json`, rendered as a view in the console in that same format.
+
+**Keep the backlog there, not here.** This file carried an Open Questions list
+that drifted out of date twice in one sitting. One home only.
+
 ## Open questions
 
-- Thor, Jeffrey, Milton, Zeke — parentage still unconfirmed by text. Jeffrey,
-  Milton and Zeke now carry a citation for their *deaths* at 82 Eridani
-  (Bk2 ch48), but nothing in the books names who built them.
-- 51 Bobs at tier C, plus 2 at tier X. 30 of those arrived there when the
-  secondary sources were dropped and carry a `priorClaim` worth chasing in the
-  text. The richest with no lead at all are Neil and Herschel (both stated
-  eighth-generation), Gandalf, Marcus and Mack.
-- Marcus — a major POV character absent from every published tree. Will is no
-  longer on this list: he is Riker, who renamed himself in Bk3 ch57.
-- Hector name collision: a 3rd-generation Hector lost at 82 Eridani, and an
-  ~18th-generation Hector emailing Bill in 2343
-- Gerry's exact relation to Charles: Charles himself says "Gerry was my
-  descendant" (Bk5 ch51), which is what the tree follows; Benny calls him a
-  collateral descendant from several generations up
+Moved to `data/todo.json`, so there's a single copy and the console can show it.
+Standing items at the time of writing: Marcus's parentage, the Hector collision,
+the 30 dropped-source leads, and a biographical sweep to rebuild what the field
+policy above swept out.
 
 ## Sources already worked
 
@@ -204,11 +207,11 @@ Don't re-run these expecting new names; they're exhausted.
   was either an original naming or an idiom — "call me Shirley" is a joke.
 
 - **Book 2's Cast of Characters appendix** — mined. 26 parentage claims, every
-  one agreeing with what we had and none contradicting. It settled Verne as
-  Bill's clone (the narrative only hinted), put ten records on primary-text
-  footing, and turned up **Surly**, a Bob we didn't have at all. The parser
-  rejects it as back matter, so it has to be read by hand. Books 4 and 5 have
-  no equivalent.
+  one agreeing with what we had and none contradicting. It rescued ten records
+  onto primary-text footing when the secondary sources were dropped, settled
+  Verne as Bill's clone (the narrative only hinted), and turned up **Surly**, a
+  Bob we didn't have at all. The parser rejects it as back matter, so it has to
+  be read by hand. Books 4 and 5 have no equivalent.
 
 ## Planned: companion registers
 

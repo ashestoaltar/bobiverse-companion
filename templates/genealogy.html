@@ -317,6 +317,7 @@
       <button class="tab" role="tab" id="tab-register"   aria-selected="true"  data-view="register">REGISTER</button>
       <button class="tab" role="tab" id="tab-lineage"    aria-selected="false" data-view="lineage">LINEAGE</button>
       <button class="tab" role="tab" id="tab-unresolved" aria-selected="false" data-view="unresolved">UNRESOLVED</button>
+      <button class="tab" role="tab" id="tab-todo" aria-selected="false" data-view="todo">TO-DO</button>
     </div>
 
     <button class="chip" id="crt" aria-pressed="true"
@@ -352,6 +353,9 @@
    built him, so his trace terminates.
    ========================================================================= */
 const BOBS = /*__BOBS__*/[];
+
+/* The research backlog. Bob's TO-DO never gets shorter either. */
+const TODO = /*__TODO__*/null;
 
 /* ---- indexes ---------------------------------------------------------- */
 const byId = Object.create(null);
@@ -547,6 +551,25 @@ function renderUnresolved(rows){
     and location data from the databases during the war, so for its members the silence is the evidence.</p>${cards}</div>`;
 }
 
+function renderTodo(){
+  if (!TODO || !TODO.items) return `<p class="empty">[TO-DO UNAVAILABLE]</p>`;
+  const cats = TODO.categories.filter(c => TODO.items.some(i => i.cat === c));
+  const head = `<p class="unres-lead"><span class="redacted">[</span>${TODO.items.length} items, ` +
+    `divided into the following categories: ${cats.join(', ')}<span class="redacted">]</span><br><br>` +
+    `Bob kept one of these from his first hour as a replicant and it never got shorter. ` +
+    `Neither will this. Everything here is work the books can still settle.</p>`;
+  const body = cats.map(c => {
+    const items = TODO.items.filter(i => i.cat === c).map(i => `
+      <div class="card">
+        <h3>${esc(i.text)}</h3>
+        ${i.note ? `<p>${esc(i.note)}</p>` : ''}
+      </div>`).join('');
+    return `<div class="sec"><div class="sec-label">${esc(c.toUpperCase())} — ${
+      TODO.items.filter(i => i.cat === c).length}</div>${items}</div>`;
+  }).join('');
+  return `<div class="unres">${head}${body}</div>`;
+}
+
 /* ---- dossier ---------------------------------------------------------- */
 function renderDossier(){
   const el = document.getElementById('dossier');
@@ -669,6 +692,7 @@ function render(){
   const stage = document.getElementById('stage');
   stage.innerHTML = state.view === 'register'   ? renderRegister(rows)
                   : state.view === 'lineage'    ? renderLineage(rows)
+                  : state.view === 'todo'       ? renderTodo()
                   :                               renderUnresolved(rows);
   document.querySelectorAll('.tab').forEach(t =>
     t.setAttribute('aria-selected', String(t.dataset.view === state.view)));
