@@ -8,8 +8,12 @@
    "desig": "Bob-1",
    "vessel": "HEAVEN-1B",
    "born": "24 Jun 2133",
-   "origin": "Sol",
-   "visited": "Sol, Epsilon Eridani, Delta Eridani",
+   "origin": "sol",
+   "visited": [
+    "sol",
+    "epsilon_eridani",
+    "delta_eridani"
+   ],
    "status": "active",
    "ref": "Robert Johansson, the original",
    "note": "Robert Johansson, killed in a traffic accident in 2133 and woken as a replicant a century later. The root of the tree: he has no parent because there isn't one. Made first contact with the Deltans and adopted Archimedes' hexghi as family, then organised the expedition that went looking for Bender."
@@ -24,8 +28,11 @@
    "desig": "Bob-2",
    "vessel": "Heaven-2",
    "born": "Jul 2145",
-   "origin": "Epsilon Eridani",
-   "visited": "Sol, Epsilon Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "sol",
+    "epsilon_eridani"
+   ],
    "status": "active",
    "ref": "Cmdr. William Riker, Star Trek: TNG",
    "note": "Bob-1's second clone, and by tacit agreement the face of Bob to their sister's descendants — the others found those calls too painful to make. Inherited the least fun job in the series, evacuating Earth. Dropped the name Riker in Apr 2257, in the middle of the Others' assault on Sol, saying only that he wanted to leave the Star Trek thing behind him; Herschel spends a while catching himself mid-sentence over it. By the 2340s he is the Bobiverse's resident cynic about humanity, which turns out to be useful when the fight is with lawyers."
@@ -39,8 +46,10 @@
    "desig": "Bob-3",
    "vessel": "Heaven-3",
    "born": "Jul 2145",
-   "origin": "Epsilon Eridani",
-   "visited": "Epsilon Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "epsilon_eridani"
+   ],
    "status": "active",
    "ref": "Never explained by Taylor",
    "note": "The Bobiverse's R&D department. Built BobNet, runs the moots, keeps the genealogy — which is exactly what makes Starfleet's purge of those records sting."
@@ -53,10 +62,13 @@
    "cite": "Bk1 ch60 · Khan, Apr 2185",
    "desig": "Bob-4",
    "born": "Jul 2145",
-   "origin": "Epsilon Eridani",
-   "visited": "Omicron² Eridani, 82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "omicron2_eridani",
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "Milo Minderbinder? Milo of Croton?",
    "note": "First cohort off Bob-1. Killed by Medeiros; the 82 Eridani assault is Bill making good on a promise to avenge him."
   },
@@ -68,8 +80,10 @@
    "cite": "Bk1 ch17 · Bob, Jul 2145",
    "desig": "Bob-5",
    "born": "Jul 2145",
-   "origin": "Epsilon Eridani",
-   "visited": "Beta Hydri",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "beta_hydri"
+   ],
    "status": "active",
    "ref": "Super Mario",
    "note": "First cohort off Bob-1. Wanted out of the sphere early — Bob describes him as having drawn a double dose of the antisocial streak."
@@ -82,7 +96,7 @@
    "cite": "Bk1 ch37 · Bob, Aug 2165",
    "desig": "HIC17378-1",
    "born": "Apr 2165",
-   "origin": "Delta Eridani",
+   "origin": "delta_eridani",
    "status": "active",
    "ref": "Marvin the Paranoid Android, Hitchhiker’s Guide",
    "note": "Built by Bob-1 at Delta Eridani with Luke and Bender; stayed on as Bob’s partner through the gorilloid war."
@@ -94,7 +108,7 @@
    "src": "t",
    "cite": "Bk1 ch37 · Bob, Aug 2165",
    "born": "Apr 2165",
-   "origin": "Delta Eridani",
+   "origin": "delta_eridani",
    "status": "active",
    "ref": "Luke Skywalker",
    "note": "Built by Bob-1 at Delta Eridani with Marvin and Bender."
@@ -106,7 +120,7 @@
    "src": "t",
    "cite": "Bk2 ch24 · Bob, Mar 2174",
    "born": "Mar 2174",
-   "origin": "Delta Eridani",
+   "origin": "delta_eridani",
    "status": "unknown",
    "ref": "—",
    "note": "Named by Bob-1 as one of his two newest clones, alongside Pete. Volunteered to follow either Luke's or Bender's trail and took Bender's departure vector; decades on he had found nothing and would not backtrack, which is what prompted the search expedition."
@@ -118,9 +132,8 @@
    "src": "t",
    "cite": "Bk1 ch37 · Bob, Aug 2165",
    "born": "Apr 2165",
-   "origin": "Delta Eridani",
+   "origin": "delta_eridani",
    "status": "lost",
-   "lostAt": "missing, later located",
    "ref": "Bender Bending Rodríguez, Futurama",
    "note": "Set out for the stars and went dark for over a century. The search for him is the whole engine of Heaven's River — and the trail ends inside a topopolis full of otters."
   },
@@ -131,7 +144,7 @@
    "src": "t",
    "cite": "Bk1 ch20 · Bill, Dec 2145",
    "born": "Dec 2145",
-   "origin": "Epsilon Eridani",
+   "origin": "epsilon_eridani",
    "status": "active",
    "ref": "Garfield the cat",
    "note": "Bill's research partner and a fixture at Epsilon Eridani."
@@ -144,8 +157,10 @@
    "cite": "Bk1 ch22 · Bill, Sep 2150",
    "vessel": "Heaven-9",
    "born": "Sep 2150",
-   "origin": "Epsilon Eridani",
-   "visited": "Alpha Centauri",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "alpha_centauri"
+   ],
    "status": "active",
    "ref": "Calvin & Hobbes",
    "note": "Bill’s cohort, first to use the version-3 ship design, sent to Alpha Centauri with Goku."
@@ -158,8 +173,10 @@
    "cite": "Bk1 ch22 · Bill, Sep 2150",
    "vessel": "Heaven-10",
    "born": "Sep 2150",
-   "origin": "Epsilon Eridani",
-   "visited": "Alpha Centauri",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "alpha_centauri"
+   ],
    "status": "active",
    "ref": "Dragon Ball",
    "note": "Bill’s cohort with Calvin. The two fought constantly and were inseparable."
@@ -171,7 +188,7 @@
    "src": "t",
    "cite": "Bk2 · Cast of Characters",
    "born": "Sep 2150",
-   "origin": "Epsilon Eridani",
+   "origin": "epsilon_eridani",
    "status": "active",
    "ref": "Linus van Pelt, Peanuts"
   },
@@ -181,8 +198,10 @@
    "parent": "bill",
    "src": "t",
    "cite": "Bk2 ch4 · Mulder, Oct 2170",
-   "origin": "Epsilon Eridani",
-   "visited": "Eta Cassiopeiae, Poseidon",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "eta_cassiopeiae"
+   ],
    "status": "active",
    "ref": "Fox Mulder, The X-Files",
    "note": "Identifies himself as part of Bill's third cohort, and says the good nearby systems were already claimed by the time he got a pick."
@@ -195,7 +214,7 @@
    "cite": "Bk2 ch61 · Oliver, Sep 2205",
    "desig": "HIC71683-14",
    "born": "Sep 2205",
-   "origin": "Alpha Centauri",
+   "origin": "alpha_centauri",
    "status": "active",
    "ref": "Bloom County — he picked it to match the theme",
    "note": "Wakes up as a fresh copy of Bill and has to pick a name on the spot. He recalls doing this once before during Bob-1's first cohort — an inherited memory of being Bill, not evidence he is one of the originals."
@@ -206,8 +225,10 @@
    "parent": "bill",
    "src": "t",
    "cite": "Bk1 ch60 · Khan, Apr 2185",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "active",
    "ref": "Khan Noonien Singh, Star Trek — Taylor’s own tree spells it \"Kahn\"",
    "note": "One of eight version-3 Bobs staged outside 82 Eridani for the assault on Medeiros."
@@ -216,10 +237,12 @@
    "id": "elmer",
    "name": "Elmer",
    "src": "c",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "Elmer Fudd",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
@@ -227,10 +250,12 @@
    "id": "hannibal",
    "name": "Hannibal",
    "src": "c",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "The general or the Lecter, take your pick",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
@@ -238,10 +263,12 @@
    "id": "tom",
    "name": "Tom",
    "src": "c",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "Tom & Jerry",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
@@ -249,10 +276,12 @@
    "id": "barney",
    "name": "Barney",
    "src": "c",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "Barney Gumble, The Simpsons",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
@@ -262,10 +291,12 @@
    "parent": "bill",
    "src": "t",
    "cite": "Bk1 ch60 · Khan, Apr 2185",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "Unresolved — a reader asked Taylor and even he couldn’t reconstruct it",
    "note": "Lost at 82 Eridani. Took enough damage that his dead-man triggered a reactor overload."
   },
@@ -273,8 +304,10 @@
    "id": "kyle",
    "name": "Kyle",
    "src": "c",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "active",
    "ref": "South Park",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -283,8 +316,10 @@
    "id": "ned",
    "name": "Ned",
    "src": "c",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "active",
    "ref": "Ned Flanders, The Simpsons",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -295,10 +330,12 @@
    "parent": "bill",
    "src": "t",
    "cite": "Bk1 ch60 · Khan, Apr 2185",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "—",
    "note": "Lost at 82 Eridani alongside Fred, dead-man reactor overload."
   },
@@ -307,10 +344,12 @@
    "name": "Jeffrey",
    "src": "c",
    "cite": "Bk2 ch50 · Loki, Nov 2195",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "—",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
    "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
@@ -320,10 +359,12 @@
    "name": "Milton",
    "src": "c",
    "cite": "Bk2 ch50 · Loki, Nov 2195",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "Office Space?",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
    "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
@@ -333,10 +374,12 @@
    "name": "Zeke",
    "src": "c",
    "cite": "Bk2 ch50 · Loki, Nov 2195",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "—",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
    "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
@@ -346,20 +389,24 @@
    "name": "Icarus",
    "src": "c",
    "cite": "Bk3 ch6 · Bill",
-   "origin": "Epsilon Eridani",
-   "visited": "Gliese 877, galactic core",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "gliese_877"
+   ],
    "status": "active",
    "ref": "Icarus, who flew too close",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
-   "note": "Bill says outright that he cloned Icarus and Daedalus, and that he felt uneasy doing it for what might be a one-way trip. Bill finds him similar in temperament — happy to leave the fighting to others and get on with research."
+   "note": "Bill says outright that he cloned Icarus and Daedalus, and that he felt uneasy doing it for what might be a one-way trip. Bill finds him similar in temperament — happy to leave the fighting to others and get on with research. Sent with Daedalus on the long run toward the galactic core."
   },
   {
    "id": "daedalus",
    "name": "Daedalus",
    "src": "c",
    "cite": "Bk3 ch6 · Bill",
-   "origin": "Epsilon Eridani",
-   "visited": "Gliese 877, galactic core",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "gliese_877"
+   ],
    "status": "active",
    "ref": "Daedalus, who built the wings",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
@@ -369,7 +416,6 @@
    "id": "hugh",
    "name": "Hugh",
    "src": "c",
-   "visited": "Skippyland",
    "status": "active",
    "faction": "Skippies",
    "ref": "—",
@@ -383,7 +429,7 @@
    "src": "t",
    "cite": "Bk1 ch45 · Bill, Jan 2165",
    "born": "Jan 2165",
-   "origin": "Alpha Centauri",
+   "origin": "alpha_centauri",
    "status": "active",
    "ref": "Bart Simpson",
    "note": "Product of the clone run Calvin and Goku decided on at Alpha Centauri after Medeiros. Had his own clones by the first moot."
@@ -401,8 +447,10 @@
    "name": "Owen",
    "src": "c",
    "vessel": "Colony ship",
-   "origin": "Alpha Centauri",
-   "visited": "82 Eridani",
+   "origin": "alpha_centauri",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "active",
    "ref": "—",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -412,8 +460,10 @@
    "name": "Jack",
    "src": "c",
    "vessel": "Colony ship",
-   "origin": "Alpha Centauri",
-   "visited": "82 Eridani",
+   "origin": "alpha_centauri",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "active",
    "ref": "—",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -424,8 +474,10 @@
    "src": "c",
    "desig": "HIC71683-8",
    "vessel": "Colony ship",
-   "origin": "Alpha Centauri",
-   "visited": "82 Eridani",
+   "origin": "alpha_centauri",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "active",
    "ref": "Asimov, presumably",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -435,7 +487,7 @@
    "name": "Skinner",
    "src": "c",
    "desig": "HIC3821-1",
-   "origin": "Eta Cassiopeiae",
+   "origin": "eta_cassiopeiae",
    "status": "active",
    "ref": "Walter Skinner, The X-Files",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Mulder. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -445,7 +497,7 @@
    "name": "Jonny",
    "src": "c",
    "desig": "HIC3821-2",
-   "origin": "Eta Cassiopeiae",
+   "origin": "eta_cassiopeiae",
    "status": "active",
    "ref": "—",
    "conflict": "The text spells him Jonny, four times and never otherwise, so that is what we use. Taylor's tree spelled him \"Johnny\" — noted only because the tree was a source we've since dropped.",
@@ -458,8 +510,10 @@
    "src": "t",
    "cite": "Bk2 ch34 · Bill, Jun 2185",
    "born": "Jun 2185",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "active",
    "ref": "Norse trickster god",
    "conflict": "Our own earlier reading was the wrong one. Bill assembles ten new Bobs as the second strike force for 82 Eridani, which is where Loki appears — but that is the unit, not the source. In the same chapter Bill says he loaded Khan's backup at Khan's request, and the Bob who came up named himself Loki, adding that this branch of the tree liked villains. Taylor's 2017 tree put Loki under Khan and agrees with the text; the wiki registry does not. Reparented to Khan.",
@@ -507,7 +561,9 @@
    "parent": "mario",
    "src": "t",
    "cite": "Bk2 · Cast of Characters",
-   "visited": "Gliese 877",
+   "visited": [
+    "gliese_877"
+   ],
    "status": "active",
    "ref": "HAL 9000, 2001"
   },
@@ -523,7 +579,10 @@
    "id": "jacques",
    "name": "Jacques",
    "src": "c",
-   "visited": "Delta Pavonis, HIP 84051",
+   "visited": [
+    "delta_pavonis",
+    "hip_84051"
+   ],
    "status": "active",
    "ref": "—",
    "conflict": "Taylor’s tree spells him \"Jaques\".",
@@ -534,7 +593,7 @@
    "id": "phineas",
    "name": "Phineas",
    "src": "c",
-   "origin": "Delta Pavonis",
+   "origin": "delta_pavonis",
    "status": "active",
    "ref": "Phineas & Ferb",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Jacques. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -543,7 +602,7 @@
    "id": "ferb",
    "name": "Ferb",
    "src": "c",
-   "origin": "Delta Pavonis",
+   "origin": "delta_pavonis",
    "status": "active",
    "ref": "Phineas & Ferb",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Jacques. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -557,9 +616,9 @@
    "desig": "Bob-6",
    "vessel": "Heaven-6",
    "born": "Dec 2145",
-   "origin": "Epsilon Eridani",
+   "origin": "epsilon_eridani",
    "status": "lost",
-   "lostAt": "Sol",
+   "lostAt": "sol",
    "faction": "Starfleet",
    "ref": "Homer Simpson",
    "note": "Lost at Sol. Bill states outright that Starfleet are Homer's descendants — a backup he believed he had destroyed survived, was found by Gerry, and the line that grew out of it became the faction."
@@ -571,7 +630,7 @@
    "src": "t",
    "cite": "Bk2 · Cast of Characters",
    "born": "Jan 2158",
-   "origin": "Sol",
+   "origin": "sol",
    "status": "active",
    "ref": "—"
   },
@@ -582,16 +641,16 @@
    "src": "t",
    "cite": "Bk2 · Cast of Characters",
    "born": "Jan 2158",
-   "origin": "Sol",
+   "origin": "sol",
    "status": "lost",
-   "lostAt": "Sol",
+   "lostAt": "sol",
    "ref": "Arthur Dent? King Arthur?"
   },
   {
    "id": "ralph",
    "name": "Ralph",
    "src": "c",
-   "origin": "Sol",
+   "origin": "sol",
    "status": "active",
    "ref": "Ralph Wiggum, The Simpsons",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -601,8 +660,10 @@
    "name": "Bert",
    "src": "c",
    "vessel": "Exodus-1",
-   "origin": "Sol",
-   "visited": "Omicron² Eridani",
+   "origin": "sol",
+   "visited": [
+    "omicron2_eridani"
+   ],
    "status": "active",
    "ref": "Sesame Street",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -612,8 +673,10 @@
    "name": "Ernie",
    "src": "c",
    "vessel": "Exodus-2",
-   "origin": "Sol",
-   "visited": "Omicron² Eridani",
+   "origin": "sol",
+   "visited": [
+    "omicron2_eridani"
+   ],
    "status": "active",
    "ref": "Sesame Street",
    "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -623,8 +686,10 @@
    "name": "Sam",
    "src": "c",
    "vessel": "Exodus-3",
-   "origin": "Sol",
-   "visited": "Omicron² Eridani",
+   "origin": "sol",
+   "visited": [
+    "omicron2_eridani"
+   ],
    "status": "active",
    "ref": "—",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -633,8 +698,10 @@
    "id": "monty",
    "name": "Monty",
    "src": "c",
-   "origin": "Sol",
-   "visited": "Eta Cassiopeiae A",
+   "origin": "sol",
+   "visited": [
+    "eta_cassiopeiae"
+   ],
    "status": "active",
    "ref": "Monty Burns? Monty Python?",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -643,7 +710,9 @@
    "id": "harvey",
    "name": "Harvey",
    "src": "c",
-   "visited": "Sol",
+   "visited": [
+    "sol"
+   ],
    "status": "active",
    "ref": "—",
    "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
@@ -670,8 +739,10 @@
    "parent": "charles",
    "src": "t",
    "cite": "Bk2 · Cast of Characters",
-   "origin": "Sol",
-   "visited": "Omicron² Eridani",
+   "origin": "sol",
+   "visited": [
+    "omicron2_eridani"
+   ],
    "status": "active",
    "ref": "—",
    "note": "Anchored the Vulcan colony and fell for Bridget Salzman — the closest thing the series has to a love story, and the reason a Howard-and-Bridget novel keeps getting mentioned."
@@ -683,8 +754,10 @@
    "src": "t",
    "cite": "Bk2 · Cast of Characters",
    "vessel": "Exodus-7",
-   "origin": "Sol",
-   "visited": "Omicron² Eridani",
+   "origin": "sol",
+   "visited": [
+    "omicron2_eridani"
+   ],
    "status": "active",
    "ref": "Dexter's Laboratory"
   },
@@ -694,7 +767,7 @@
    "parent": "charles",
    "src": "p",
    "cite": "Bk5 ch51 · Bill, Sep 2343",
-   "origin": "Sol",
+   "origin": "sol",
    "status": "unknown",
    "faction": "Starfleet",
    "ref": "—",
@@ -706,10 +779,12 @@
    "id": "hector",
    "name": "Hector",
    "src": "c",
-   "origin": "Epsilon Eridani",
-   "visited": "82 Eridani",
+   "origin": "epsilon_eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "lost",
-   "lostAt": "82 Eridani",
+   "lostAt": "82_eridani",
    "ref": "The Iliad"
   },
   {
@@ -730,7 +805,9 @@
    "cite": "Bk3 ch22 · Herschel",
    "gen": 8,
    "vessel": "Version-5 HEAVEN",
-   "visited": "Delta Pavonis",
+   "visited": [
+    "delta_pavonis"
+   ],
    "status": "active",
    "ref": "Neil Armstrong?",
    "note": "Half of the Neil-and-Herschel double act. They took a captured Others cargo ship, the Bellerophon, from Delta Pavonis to Sol and evacuated most of the remaining humans ahead of the Others' arrival. They call themselves pond scum anyway."
@@ -742,7 +819,9 @@
    "cite": "Bk3 · 11 POV chapters; Bk4 · 3; Bk5 · 4",
    "gen": 8,
    "vessel": "Version-5 HEAVEN",
-   "visited": "Delta Pavonis",
+   "visited": [
+    "delta_pavonis"
+   ],
    "status": "active",
    "ref": "William Herschel, astronomer",
    "note": "Neil's partner. Between them: the Bellerophon evacuation, spacefaring mannys with miniature SURGE drives, and the all-nanobot shapeshifting manny they named Mannequin Skywalker."
@@ -752,7 +831,9 @@
    "name": "Conan",
    "src": "c",
    "cite": "Bk3",
-   "visited": "Omicron² Eridani",
+   "visited": [
+    "omicron2_eridani"
+   ],
    "status": "active",
    "ref": "Barbarian or talk show host",
    "note": "Worked with Riker, Neil and Herschel to set up the Ever Onward foundation, which recruited Romulans to colonize a distant planet."
@@ -793,7 +874,9 @@
    "parent": "bill",
    "src": "t",
    "cite": "Bk2 · Cast of Characters",
-   "visited": "82 Eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "active",
    "faction": "Gamers",
    "ref": "Jules Verne",
@@ -805,7 +888,9 @@
    "parent": "bill",
    "src": "t",
    "cite": "Bk2 · Cast of Characters",
-   "visited": "82 Eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "active",
    "ref": "—",
    "note": "One of Bill's clones, and part of the second expedition to 82 Eridani to oust Medeiros."
@@ -814,7 +899,9 @@
    "id": "hank",
    "name": "Hank",
    "src": "c",
-   "visited": "P Eridani",
+   "visited": [
+    "p_eridani"
+   ],
    "status": "active",
    "ref": "—"
   },
@@ -822,7 +909,9 @@
    "id": "steve",
    "name": "Steve",
    "src": "c",
-   "visited": "Sol",
+   "visited": [
+    "sol"
+   ],
    "status": "active",
    "ref": "—"
   },
@@ -831,7 +920,9 @@
    "name": "Mack",
    "src": "c",
    "cite": "Bk3 · POV chapter",
-   "visited": "82 Eridani",
+   "visited": [
+    "82_eridani"
+   ],
    "status": "active",
    "ref": "—"
   },
@@ -882,7 +973,7 @@
    "src": "t",
    "cite": "Bk2 ch24 · Bob, Mar 2174",
    "born": "Mar 2174",
-   "origin": "Delta Eridani",
+   "origin": "delta_eridani",
    "status": "active",
    "faction": "Gamers",
    "ref": "—",
@@ -899,7 +990,9 @@
    "id": "benny",
    "name": "Benny",
    "src": "c",
-   "visited": "Sol",
+   "visited": [
+    "sol"
+   ],
    "status": "active",
    "ref": "—"
   },
@@ -907,7 +1000,6 @@
    "id": "harry",
    "name": "Harry",
    "src": "c",
-   "visited": "Skippyland",
    "status": "active",
    "ref": "—"
   },
@@ -915,7 +1007,9 @@
    "id": "xavier",
    "name": "Xavier Charles",
    "src": "c",
-   "visited": "Gamma Pavonis",
+   "visited": [
+    "gamma_pavonis"
+   ],
    "status": "active",
    "ref": "—"
   },
@@ -924,7 +1018,6 @@
    "name": "Fearless Leader",
    "src": "c",
    "cite": "Bk5 ch6 · Bill, Feb 2336",
-   "visited": "Skippyland",
    "status": "active",
    "faction": "Skippies",
    "ref": "Rocky & Bullwinkle",

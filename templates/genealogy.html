@@ -357,7 +357,15 @@ const BOBS = /*__BOBS__*/[];
 /* The research backlog. Bob's TO-DO never gets shorter either. */
 const TODO = /*__TODO__*/null;
 
+/* Star systems, with real astrometry. Bobs reference these by id. */
+const SYSTEMS = /*__SYSTEMS__*/null;
+
 /* ---- indexes ---------------------------------------------------------- */
+const SYS = Object.create(null);
+if (SYSTEMS) SYSTEMS.systems.forEach(s => SYS[s.id] = s);
+const sysName = id => (SYS[id] && SYS[id].name) || id || '';
+const sysList = ids => (ids || []).map(sysName).join(', ');
+
 const byId = Object.create(null);
 BOBS.forEach(b => byId[b.id] = b);
 const kids = Object.create(null);
@@ -392,7 +400,7 @@ const COLS = [
   {key:'desig',  label:'DESIGNATION',get:b => b.desig || '—',             cls:'dim', opt:true},
   {key:'gen',    label:'GEN',        get:b => { const g = generation(b); return g ? (g.stated ? g.n + '*' : g.n) : '—'; }, cls:'dim'},
   {key:'parent', label:'SOURCE BOB', get:b => b.parent ? byId[b.parent].name : '—', cls:'dim'},
-  {key:'origin', label:'ORIGIN',     get:b => b.origin || b.visited || '—', cls:'dim max', opt:true},
+  {key:'origin', label:'ORIGIN',     get:b => sysName(b.origin) || sysList(b.visited) || '—', cls:'dim max', opt:true},
   {key:'status', label:'STATUS',     get:b => b.status || 'unknown'},
   {key:'src',    label:'PROVENANCE', get:b => b.src}
 ];
@@ -408,7 +416,7 @@ function sortVal(b, key){
   if (key === 'src')    return 'otpcx'.indexOf(b.src);
   if (key === 'parent') return b.parent ? byId[b.parent].name.toLowerCase() : '~';
   if (key === 'status') return b.status || 'unknown';
-  if (key === 'origin') return (b.origin || b.visited || '~').toLowerCase();
+  if (key === 'origin') return (sysName(b.origin) || sysList(b.visited) || '~').toLowerCase();
   if (key === 'desig')  return (b.desig || '~').toLowerCase();
   return b.name.toLowerCase();
 }
@@ -421,7 +429,7 @@ function visible(){
       if (spec && !spec.test(b)) return false;
     }
     if (!q) return true;
-    return [b.name, b.alias, b.desig, b.origin, b.visited, b.vessel, b.ref, b.note,
+    return [b.name, b.alias, b.desig, sysName(b.origin), sysList(b.visited), sysName(b.lostAt), b.vessel, b.ref, b.note,
             b.cite, b.faction, b.conflict, b.partialNote]
       .some(v => v && String(v).toLowerCase().includes(q));
   }).sort((x, y) => {
@@ -497,7 +505,7 @@ function renderLineage(rows){
     const dim = keep.has(node.id) ? '' : ' style="opacity:.42"';
     const bits = [];
     const ng = generation(node); if (ng) bits.push('gen ' + ng.n + (ng.stated ? '*' : ''));
-    if (node.status === 'lost') bits.push('lost' + (node.lostAt ? ' · ' + node.lostAt : ''));
+    if (node.status === 'lost') bits.push('lost' + (node.lostAt ? ' · ' + sysName(node.lostAt) : ''));
     if (node.faction) bits.push(node.faction);
     out.push(
       `<div${dim}><span class="branch">${branch}</span>` +
@@ -534,7 +542,7 @@ function renderUnresolved(rows){
       { const g = generation(b); if (g) bits.push('GENERATION ' + g.n + (g.stated ? ' (STATED)' : '')); }
       if (b.cite) bits.push(esc(b.cite));
       if (b.faction) bits.push(esc(b.faction.toUpperCase()));
-      if (b.visited) bits.push(esc(b.visited));
+      if (b.visited) bits.push(esc(sysList(b.visited)));
       if (b.src === 'x') bits.unshift('<span class="redacted">▨ RECORD EXPUNGED</span>');
       return `<div class="card">
         <h3>${esc(b.name)}</h3>
@@ -590,7 +598,9 @@ function renderDossier(){
   // Bk1 ch15: the Hipparcos number in a designation names the build system.
   const hic = /^HIC(\d+)-\d+$/.exec(b.desig || '');
   const cat = hic && b.origin
-    ? `Catalogue number HIC${hic[1]} is ${esc(b.origin)} — the designation states where this Bob was built.`
+    ? `Catalogue number HIC${hic[1]} is ${esc(sysName(b.origin))}${
+        SYS[b.origin] && SYS[b.origin].hip === +hic[1] ? ' — HIP ' + hic[1] + ' in the real catalogue' : ''
+      }. The designation states where this Bob was built.`
     : '';
 
   const hops = trace(b);
@@ -639,11 +649,11 @@ function renderDossier(){
       <dl class="fields">
         ${(() => { const g = generation(b); return g ? f('GENERATION', g.stated ? `${g.n} — stated in the books` : `${g.n} — counted down the tree`) : ''; })()}
         ${f('BUILT', b.born)}
-        ${f('ORIGIN', b.origin)}
+        ${f('ORIGIN', sysName(b.origin))}
         ${f('VESSEL', b.vessel)}
-        ${f('VISITED', b.visited)}
+        ${f('VISITED', sysList(b.visited))}
         ${f('STATUS', b.status ? STATUS[b.status].replace(/^\S+\s/, '') : '')}
-        ${f('LOST AT', b.lostAt)}
+        ${f('LOST AT', sysName(b.lostAt))}
         ${f('FACTION', b.faction)}
         ${f('NAMESAKE', b.ref && b.ref !== '—' ? b.ref : '')}
         ${f('CITATION', b.cite)}

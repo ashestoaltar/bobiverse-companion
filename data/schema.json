@@ -45,10 +45,10 @@
           "desig": { "type": "string", "description": "In-universe designation, and the Bob's actual identity — they all wear the same face, so Guppy identifies them by serial number or not at all (Bk3 ch21). Two schemes: 'Bob-<n>' for the early global numbering, abandoned once coordinating numbers between star systems got unwieldy (Bk1 ch28); and 'HIC<catalogue>-<n>' after, where the Hipparcos Catalog number names the system the Bob was built in and <n> is the index within it (Bk1 ch15). The validator checks HIC prefixes against origin." },
           "vessel": { "type": "string", "description": "The hull the Bob's matrix flies in, e.g. 'Heaven-2'. Only values printed verbatim in the books — three pattern-extrapolated ones were swept out." },
           "born": { "type": "string", "description": "Activation date, e.g. 'Sep 2205'. Only kept where a chapter of that date names the Bob; dates inherited from the dropped sources were swept out rather than left looking like findings." },
-          "origin": { "type": "string", "description": "System where this Bob was built." },
-          "visited": { "type": "string", "description": "Comma-separated systems." },
+          "origin": { "type": "string", "description": "id of the system where this Bob was built, keyed into data/systems.json. The validator rejects an id that isn't there." },
+          "visited": { "type": "array", "items": { "type": "string" }, "description": "System ids, keyed into data/systems.json. Was a comma-separated string; became a list when the systems file gave the ids somewhere to point." },
           "status": { "type": "string", "enum": ["active", "lost", "unknown"] },
-          "lostAt": { "type": "string", "description": "Where destroyed or last known, when status is lost." },
+          "lostAt": { "type": "string", "description": "id of the system where this Bob was destroyed or last known, when status is lost. Places that aren't systems don't belong here — Bender's old value was the phrase \"missing, later located\", which is a note, not a location." },
           "faction": {
             "type": "string",
             "enum": ["Starfleet", "Skippies", "Gamers", "Borg"],

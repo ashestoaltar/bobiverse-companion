@@ -17,11 +17,13 @@ from validate import validate  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "bobs.json")
 TODO = os.path.join(ROOT, "data", "todo.json")
+SYSTEMS = os.path.join(ROOT, "data", "systems.json")
 TEMPLATE = os.path.join(ROOT, "templates", "genealogy.html")
 OUT = os.path.join(ROOT, "dist", "index.html")
 
 PLACEHOLDER = "/*__BOBS__*/[]"
 TODO_PLACEHOLDER = "/*__TODO__*/null"
+SYS_PLACEHOLDER = "/*__SYSTEMS__*/null"
 
 # field order in the emitted literal — keeps diffs readable
 ORDER = ["id", "name", "parent", "src", "cite", "gen", "desig", "vessel", "born",
@@ -64,12 +66,21 @@ def main() -> None:
         print(f"ERROR: placeholder {TODO_PLACEHOLDER} missing from template")
         sys.exit(1)
     html = html.replace(TODO_PLACEHOLDER, json.dumps(todo, ensure_ascii=False), 1)
+
+    with open(SYSTEMS) as fh:
+        systems = json.load(fh)
+    systems.pop("_comment", None)
+    if SYS_PLACEHOLDER not in html:
+        print(f"ERROR: placeholder {SYS_PLACEHOLDER} missing from template")
+        sys.exit(1)
+    html = html.replace(SYS_PLACEHOLDER, json.dumps(systems, ensure_ascii=False), 1)
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as fh:
         fh.write(html)
 
     print(f"built {os.path.relpath(OUT, ROOT)} — {len(bobs)} records, "
-          f"{len(todo['items'])} to-do items, {len(html):,} bytes")
+          f"{len(todo['items'])} to-do items, "
+          f"{len(systems['systems'])} systems, {len(html):,} bytes")
 
 
 if __name__ == "__main__":

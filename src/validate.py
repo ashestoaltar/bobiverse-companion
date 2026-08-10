@@ -122,6 +122,12 @@ def _check_systems(bobs: list[dict]) -> tuple[list[str], list[str]]:
             if abs(got - said) > 1.0:
                 warnings.append(f"{sid} is {got:.2f} ly from 82 Eridani; Bk3 ch21 says about {said}")
 
+    # every system a Bob claims must exist
+    for bob in bobs:
+        refs = [bob.get("origin"), bob.get("lostAt")] + list(bob.get("visited") or [])
+        for ref in [r for r in refs if r]:
+            if ref not in systems:
+                errors.append(f"{bob['id']}: unknown system {ref!r}")
     return errors, warnings
 
 

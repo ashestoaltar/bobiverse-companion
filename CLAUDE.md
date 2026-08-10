@@ -178,8 +178,9 @@ The books check our arithmetic. In Bk3 ch21 Bill lists distances from 82 Eridani
 Our coordinates give 12.42, 11.87 and 12.00. Taylor computed real 3D separations,
 so `make validate` re-runs that comparison and warns if it drifts.
 
-Scope is books 1–4: the book 5 wormhole network is a topology, not a distance
-graph, and needs its own model.
+`origin`, `lostAt` and `visited` on a Bob are **ids into this file**, and the
+validator rejects one that doesn't resolve. Scope is books 1–4: the book 5
+wormhole network is a topology, not a distance graph, and needs its own model.
 
 ## Field policy
 
