@@ -22,7 +22,7 @@
           },
           "alias": {
             "type": "string",
-            "description": "A second name the Bob actually goes by in the text. Jeremy goes by Morlock; use this rather than renaming the record, so both are searchable."
+            "description": "The name this Bob left behind. `name` is what he goes by now, `alias` is what he was called before — Will was Riker, Morlock was Jeremy. Recorded rather than overwritten so both stay searchable, and so the id can stay stable when other records point at it as a parent."
           },
           "parent": {
             "type": "string",

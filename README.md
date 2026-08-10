@@ -32,7 +32,7 @@ silently. Taylor's own tree turns out to be wrong about Loki.
 
 ## The console
 
-Three views over the same 87 records, with live search across names, aliases,
+Three views over the same 86 records, with live search across names, aliases,
 designations, systems, notes and citations:
 
 - **Register** — the full list, sortable on every column.
@@ -44,7 +44,7 @@ designations, systems, notes and citations:
 Selecting a record pulls its dossier and traces the route back to Bob-1
 hop by hop, **grading each link separately**. A chain can be solid for two hops
 and then run out of sources, and that's visible rather than smoothed over.
-62 of the 87 traces reach Bob-1; 25 terminate.
+62 of the 86 traces reach Bob-1; 24 terminate.
 
 Two details follow the books rather than taste. Bobs all wear the same face, so
 the registry identifies them the way Guppy does — by serial number, with the
@@ -93,6 +93,6 @@ gitignored and should remain so.
 
 ## Status
 
-87 replicants, 41 with primary-text citations, 21 with a parent confirmed in
+86 replicants, 40 with primary-text citations, 21 with a parent confirmed in
 the books, 2 with their lineage deliberately expunged. Known gaps and the
 research backlog are at the bottom of CLAUDE.md.

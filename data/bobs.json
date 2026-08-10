@@ -16,7 +16,8 @@
   },
   {
    "id": "riker",
-   "name": "Riker",
+   "name": "Will",
+   "alias": "Riker",
    "parent": "bob1",
    "src": "t",
    "cite": "Bk1 ch17 · Bob, Jul 2145",
@@ -25,10 +26,10 @@
    "vessel": "Heaven-2",
    "born": "Jul 2145",
    "origin": "Epsilon Eridani",
-   "visited": "Sol",
+   "visited": "Sol, Epsilon Eridani",
    "status": "active",
    "ref": "Cmdr. William Riker, Star Trek: TNG",
-   "note": "Returned to Sol and inherited the least fun job in the series: evacuating Earth."
+   "note": "Bob-1's second clone, and by tacit agreement the face of Bob to their sister's descendants — the others found those calls too painful to make. Inherited the least fun job in the series, evacuating Earth. Dropped the name Riker in Apr 2257, in the middle of the Others' assault on Sol, saying only that he wanted to leave the Star Trek thing behind him; Herschel spends a while catching himself mid-sentence over it. By the 2340s he is the Bobiverse's resident cynic about humanity, which turns out to be useful when the fight is with lawyers."
   },
   {
    "id": "bill",
@@ -887,8 +888,8 @@
   },
   {
    "id": "jeremy",
-   "name": "Jeremy",
-   "alias": "Morlock",
+   "name": "Morlock",
+   "alias": "Jeremy",
    "src": "x",
    "cite": "Bk4 ch3 · Bob, Sep 2331",
    "status": "active",
@@ -969,15 +970,6 @@
    "faction": "Skippies",
    "ref": "Rocky & Bullwinkle",
    "note": "Leads the Skippies, and gives the speech before they switch on the super AI. Evidently a Bob with a sense of humour about hierarchy."
-  },
-  {
-   "id": "will",
-   "name": "Will",
-   "src": "c",
-   "cite": "Bk4 · 7 POV chapters; Bk5 · 2",
-   "status": "active",
-   "ref": "—",
-   "note": "A POV Bob across books 4 and 5. Not present in any published tree; lineage unrecorded."
   },
   {
    "id": "marcus",

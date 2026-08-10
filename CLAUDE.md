@@ -122,10 +122,11 @@ numbering.
 - Thor, Jeffrey, Milton, Zeke — parentage still unconfirmed by text. Jeffrey,
   Milton and Zeke now carry a citation for their *deaths* at 82 Eridani
   (Bk2 ch48), but nothing in the books names who built them.
-- 23 Bobs at tier C, plus 2 at tier X. The richest are Will (501 mentions), Neil and Herschel
-  (both stated eighth-generation), Gandalf, Marcus and Mack — all well
-  documented, all missing a parent.
-- Will and Marcus — major POV characters absent from every published tree
+- 22 Bobs at tier C, plus 2 at tier X. The richest are Neil and Herschel (both
+  stated eighth-generation), Gandalf, Marcus and Mack — all well documented,
+  all missing a parent.
+- Marcus — a major POV character absent from every published tree. Will is no
+  longer on this list: he is Riker, who renamed himself in Bk3 ch57.
 - Verne's parentage: he served on Loki's crew at 82 Eridani, and Loki's cohort
   is Bill's June 2185 batch. Suggestive, never stated. Left at tier C.
 - Hector name collision: a 3rd-generation Hector lost at 82 Eridani, and an
