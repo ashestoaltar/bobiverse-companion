@@ -15,9 +15,9 @@
     --panel-hi:#1B1309;
     --amber:#FFB454;
     --amber-hi:#FFE3B8;
-    --amber-dim:#A87C46;
-    --ash:#5C462A;
-    --rule:#2E2312;
+    --amber-dim:#C29358;
+    --ash:#94734A;
+    --rule:#5E4B2B;
     --phos:#7CE8A4;      /* confirmed in the primary text */
     --alert:#FF6A55;     /* destroyed or missing */
     --mono:ui-monospace,'SF Mono','Cascadia Mono','JetBrains Mono','IBM Plex Mono',Menlo,Consolas,'DejaVu Sans Mono',monospace;
@@ -28,9 +28,8 @@
   html,body{height:100%}
   body{
     margin:0; background:var(--void); color:var(--amber);
-    font-family:var(--mono); font-size:13px; line-height:1.5;
+    font-family:var(--mono); font-size:15px; line-height:1.58;
     -webkit-font-smoothing:antialiased;
-    text-shadow:0 0 9px rgba(255,180,84,.18);
     overflow:hidden;
   }
 
@@ -38,12 +37,12 @@
   .crt-scan,.crt-vig{position:fixed; inset:0; pointer-events:none; z-index:90}
   .crt-scan{
     background:repeating-linear-gradient(to bottom,
-      rgba(0,0,0,.26) 0 1px, rgba(0,0,0,0) 1px 3px);
-    mix-blend-mode:multiply; opacity:.7;
+      rgba(0,0,0,.18) 0 1px, rgba(0,0,0,0) 1px 3px);
+    mix-blend-mode:multiply; opacity:.42;
   }
   .crt-vig{
     background:radial-gradient(118% 96% at 50% 46%,
-      rgba(255,180,84,.05) 0%, rgba(0,0,0,0) 42%, rgba(0,0,0,.72) 100%);
+      rgba(255,180,84,.04) 0%, rgba(0,0,0,0) 52%, rgba(0,0,0,.5) 100%);
   }
 
   /* --- shell ---------------------------------------------------------- */
@@ -59,11 +58,11 @@
     gap:20px; border-bottom:1px solid var(--rule); padding-bottom:9px;
   }
   .banner{
-    margin:0; font-size:clamp(4px,1.32vw,9px); line-height:1.06;
+    margin:0; font-size:clamp(4px,1.3vw,9px); line-height:1.06;
     color:var(--amber-hi); letter-spacing:0;
-    text-shadow:0 0 14px rgba(255,180,84,.45); white-space:pre;
+    text-shadow:0 0 16px rgba(255,180,84,.5); white-space:pre;
   }
-  .mast-meta{text-align:right; font-size:10px; letter-spacing:.16em; color:var(--amber-dim); white-space:nowrap}
+  .mast-meta{text-align:right; font-size:11px; letter-spacing:.16em; color:var(--amber-dim); white-space:nowrap}
   .mast-meta b{display:block; color:var(--amber-hi); font-weight:500; letter-spacing:.2em}
 
   /* --- toolbar -------------------------------------------------------- */
@@ -81,37 +80,41 @@
   .prompt input::placeholder{color:var(--ash)}
   .prompt input:focus{border-bottom-color:var(--amber)}
 
-  .tabs{display:flex; gap:0; border:1px solid var(--rule)}
+  .tabs{display:flex; gap:0; border:1px solid var(--ash)}
   .tab{
-    background:transparent; border:0; border-right:1px solid var(--rule);
-    font:inherit; font-size:11px; letter-spacing:.15em; color:var(--amber-dim);
-    padding:5px 13px; cursor:pointer; text-shadow:inherit;
+    background:transparent; border:0; border-right:1px solid var(--ash);
+    font:inherit; font-size:12px; letter-spacing:.13em; color:var(--amber-dim);
+    padding:6px 14px; cursor:pointer; text-shadow:inherit;
   }
   .tab:last-child{border-right:0}
   .tab:hover{color:var(--amber-hi); background:var(--panel-hi)}
   .tab[aria-selected="true"]{background:var(--amber); color:var(--void); text-shadow:none}
 
+  body.plain .crt-scan,body.plain .crt-vig{display:none}
+  body.plain{text-shadow:none}
+  body.plain .banner{text-shadow:none}
+
   .chips{display:flex; gap:5px; flex-wrap:wrap}
   .chip{
-    background:transparent; border:1px solid var(--rule); font:inherit;
-    font-size:10px; letter-spacing:.13em; color:var(--amber-dim);
-    padding:3px 8px; cursor:pointer; text-shadow:inherit;
+    background:transparent; border:1px solid var(--ash); font:inherit;
+    font-size:11.5px; letter-spacing:.11em; color:var(--amber-dim);
+    padding:4px 9px; cursor:pointer; text-shadow:inherit;
   }
   .chip:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
   .chip[aria-pressed="true"]{background:var(--amber-dim); color:var(--void); border-color:var(--amber-dim); text-shadow:none}
 
   /* --- main ----------------------------------------------------------- */
-  .main{display:grid; grid-template-columns:minmax(0,1fr) 372px; gap:var(--gap); min-height:0; padding-top:var(--gap)}
+  .main{display:grid; grid-template-columns:minmax(0,1fr) 404px; gap:var(--gap); min-height:0; padding-top:var(--gap)}
   .stage{min-height:0; overflow:auto; scrollbar-width:thin; scrollbar-color:var(--rule) transparent}
   .stage::-webkit-scrollbar{width:9px;height:9px}
   .stage::-webkit-scrollbar-thumb{background:var(--rule)}
 
   /* --- register table ------------------------------------------------- */
-  table.reg{width:100%; border-collapse:collapse; font-size:12px}
+  table.reg{width:100%; border-collapse:collapse; font-size:13.5px}
   .reg thead th{
     position:sticky; top:0; z-index:2; background:var(--void);
-    text-align:left; font-weight:400; font-size:10px; letter-spacing:.16em;
-    color:var(--amber-dim); padding:0 10px 7px 0; white-space:nowrap;
+    text-align:left; font-weight:400; font-size:11px; letter-spacing:.13em;
+    color:var(--amber-dim); padding:0 10px 8px 0; white-space:nowrap;
     border-bottom:1px solid var(--rule); cursor:pointer; user-select:none;
   }
   .reg thead th:hover{color:var(--amber-hi)}
@@ -128,7 +131,7 @@
   .reg td.max{max-width:0; width:22%}
 
   /* provenance + status marks */
-  .prov{letter-spacing:.1em; font-size:11px; white-space:nowrap}
+  .prov{letter-spacing:.08em; font-size:12px; white-space:nowrap}
   .prov.t{color:var(--phos)}
   .prov.a{color:var(--amber)}
   .prov.b,.prov.p{color:var(--amber-dim)}
@@ -144,7 +147,7 @@
   tr[aria-selected="true"] .st-unknown{color:var(--void)}
 
   /* --- lineage tree --------------------------------------------------- */
-  .tree{font-size:12.5px; line-height:1.62; white-space:pre; padding-bottom:40px}
+  .tree{font-size:14px; line-height:1.66; white-space:pre; padding-bottom:40px}
   .tree .branch{color:var(--ash)}
   .tree .node{
     background:transparent; border:0; padding:0; font:inherit; cursor:pointer;
@@ -153,23 +156,23 @@
   .tree .node:hover{color:var(--void); background:var(--amber)}
   .tree .node[aria-selected="true"]{color:var(--void); background:var(--amber)}
   .tree .node:focus-visible{outline:1px solid var(--amber-hi)}
-  .tree .meta{color:var(--ash); font-size:11px}
+  .tree .meta{color:var(--ash); font-size:12px}
 
   /* --- unresolved register -------------------------------------------- */
   .unres{padding-bottom:40px}
-  .unres-lead{color:var(--amber-dim); font-size:11.5px; max-width:74ch; margin:0 0 16px; line-height:1.62}
+  .unres-lead{color:var(--amber-dim); font-size:13.5px; max-width:74ch; margin:0 0 16px; line-height:1.62}
   .card{border-left:2px solid var(--rule); padding:0 0 0 12px; margin-bottom:15px}
-  .card h3{margin:0; font-size:13px; font-weight:500; letter-spacing:.1em; color:var(--amber-hi)}
-  .card .card-sub{font-size:10px; letter-spacing:.14em; color:var(--ash); margin:1px 0 5px}
-  .card p{margin:0; font-size:11.5px; color:var(--amber-dim); line-height:1.6; max-width:72ch}
+  .card h3{margin:0; font-size:14.5px; font-weight:500; letter-spacing:.1em; color:var(--amber-hi)}
+  .card .card-sub{font-size:11.5px; letter-spacing:.11em; color:var(--ash); margin:1px 0 5px}
+  .card p{margin:0; font-size:13px; color:var(--amber-dim); line-height:1.6; max-width:72ch}
   .card button{
-    background:transparent; border:1px solid var(--rule); font:inherit; font-size:10px;
-    letter-spacing:.13em; color:var(--amber-dim); padding:2px 8px; margin-top:6px;
+    background:transparent; border:1px solid var(--rule); font:inherit; font-size:11.5px;
+    letter-spacing:.11em; color:var(--amber-dim); padding:3px 9px; margin-top:7px;
     cursor:pointer; text-shadow:inherit;
   }
   .card button:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
 
-  .empty{color:var(--ash); font-size:11.5px; letter-spacing:.12em; padding:26px 0}
+  .empty{color:var(--ash); font-size:13.5px; letter-spacing:.12em; padding:26px 0}
 
   /* --- dossier -------------------------------------------------------- */
   .dossier{
@@ -180,11 +183,11 @@
     padding:11px 13px; border-bottom:1px solid var(--rule);
     display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
   }
-  .dossier-head h2{margin:0; font-size:16px; font-weight:500; letter-spacing:.1em; color:var(--amber-hi)}
-  .dossier-head .sub{font-size:10px; letter-spacing:.15em; color:var(--ash); margin-top:2px}
+  .dossier-head h2{margin:0; font-size:18px; font-weight:500; letter-spacing:.1em; color:var(--amber-hi)}
+  .dossier-head .sub{font-size:11.5px; letter-spacing:.12em; color:var(--ash); margin-top:2px}
   .dossier-close{
-    background:transparent; border:1px solid var(--rule); color:var(--amber-dim);
-    font:inherit; font-size:11px; width:22px; height:22px; cursor:pointer;
+    background:transparent; border:1px solid var(--ash); color:var(--amber-dim);
+    font:inherit; font-size:12px; width:24px; height:24px; cursor:pointer;
     flex:none; text-shadow:inherit;
   }
   .dossier-close:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
@@ -193,15 +196,15 @@
   .dossier-body::-webkit-scrollbar-thumb{background:var(--rule)}
 
   .fields{margin:0}
-  .fields .f{display:grid; grid-template-columns:78px minmax(0,1fr); gap:9px; padding:2.5px 0}
-  .fields dt{font-size:9.5px; letter-spacing:.15em; color:var(--ash); padding-top:2px}
-  .fields dd{margin:0; font-size:12px; color:var(--amber); word-break:break-word}
+  .fields .f{display:grid; grid-template-columns:88px minmax(0,1fr); gap:9px; padding:2.5px 0}
+  .fields dt{font-size:11px; letter-spacing:.12em; color:var(--ash); padding-top:2px}
+  .fields dd{margin:0; font-size:13.5px; color:var(--amber); word-break:break-word}
 
   .sec{margin-top:17px; padding-top:11px; border-top:1px solid var(--rule)}
-  .sec-label{font-size:9.5px; letter-spacing:.18em; color:var(--ash); margin-bottom:8px}
+  .sec-label{font-size:11px; letter-spacing:.15em; color:var(--ash); margin-bottom:8px}
 
   /* signature: hop-by-hop route back to Bob-1 */
-  .trace{font-size:11.5px; line-height:1.72}
+  .trace{font-size:13px; line-height:1.78}
   .hop{display:grid; grid-template-columns:20px minmax(0,1fr) auto; gap:8px; align-items:baseline}
   .hop .n{color:var(--ash); text-align:right}
   .hop button{
@@ -209,31 +212,31 @@
     color:var(--amber-hi); letter-spacing:.07em; cursor:pointer; text-shadow:inherit;
   }
   .hop button:hover{text-decoration:underline}
-  .hop .edge{font-size:10px; letter-spacing:.11em; white-space:nowrap}
-  .hop-cite{grid-column:2/4; color:var(--ash); font-size:10px; margin:-2px 0 3px}
-  .trace-end{color:var(--ash); font-size:10.5px; padding-left:28px; line-height:1.6; max-width:44ch}
+  .hop .edge{font-size:11.5px; letter-spacing:.09em; white-space:nowrap}
+  .hop-cite{grid-column:2/4; color:var(--ash); font-size:11.5px; margin:-2px 0 3px}
+  .trace-end{color:var(--ash); font-size:12.5px; padding-left:28px; line-height:1.6; max-width:44ch}
 
-  .note{font-size:11.5px; line-height:1.65; color:var(--amber-dim); margin:0}
+  .note{font-size:13px; line-height:1.7; color:var(--amber-dim); margin:0}
   .flag{
-    display:inline-block; font-size:9.5px; letter-spacing:.14em;
+    display:inline-block; font-size:11px; letter-spacing:.11em;
     border:1px solid var(--rule); padding:1px 7px; margin:0 5px 5px 0; color:var(--amber-dim);
   }
   .flag.warn{color:var(--alert); border-color:rgba(255,106,85,.4)}
   .kids{display:flex; flex-wrap:wrap; gap:0 5px}
   .kids button{
-    background:transparent; border:0; padding:0; font:inherit; font-size:11.5px;
+    background:transparent; border:0; padding:0; font:inherit; font-size:13px;
     color:var(--amber); cursor:pointer; text-shadow:inherit;
   }
   .kids button:hover{color:var(--amber-hi); text-decoration:underline}
 
-  .idle{padding:34px 13px; color:var(--ash); font-size:11.5px; line-height:1.75}
+  .idle{padding:34px 13px; color:var(--ash); font-size:13px; line-height:1.75}
   .idle b{display:block; color:var(--amber-dim); font-weight:400; letter-spacing:.14em; margin-bottom:9px}
 
   /* --- status bar ----------------------------------------------------- */
   .statusbar{
     border-top:1px solid var(--rule); margin-top:var(--gap); padding-top:8px;
     display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
-    font-size:10px; letter-spacing:.15em; color:var(--ash);
+    font-size:11.5px; letter-spacing:.12em; color:var(--ash);
   }
   .statusbar .keys{color:var(--rule)}
   .cursor{color:var(--phos)}
@@ -243,7 +246,7 @@
     position:fixed; inset:0; z-index:120; background:var(--void);
     display:flex; align-items:center; justify-content:center; cursor:pointer;
   }
-  .boot pre{margin:0; font-size:11px; line-height:1.85; color:var(--phos)}
+  .boot pre{margin:0; font-size:13px; line-height:1.85; color:var(--phos)}
   .boot.done{opacity:0; pointer-events:none; transition:opacity .32s ease}
 
   /* --- responsive ----------------------------------------------------- */
@@ -302,6 +305,9 @@
       <button class="tab" role="tab" id="tab-lineage"    aria-selected="false" data-view="lineage">LINEAGE</button>
       <button class="tab" role="tab" id="tab-unresolved" aria-selected="false" data-view="unresolved">UNRESOLVED</button>
     </div>
+
+    <button class="chip" id="crt" aria-pressed="true"
+            title="Bobs each build their own VR to taste. Turn the CRT off if you'd rather just read.">CRT</button>
 
     <div class="chips" id="chips"></div>
   </div>
@@ -648,7 +654,7 @@ document.addEventListener('click', e => {
   const tab = e.target.closest('.tab');
   if (tab) { state.view = tab.dataset.view; render(); return; }
 
-  const chip = e.target.closest('.chip');
+  const chip = e.target.closest('.chip[data-filter]');   // the CRT toggle shares the look, not the behaviour
   if (chip) {
     const id = chip.dataset.filter;
     state.filters.has(id) ? state.filters.delete(id) : state.filters.add(id);
@@ -722,6 +728,23 @@ window.addEventListener('resize', () => {
   };
   tick();
   el.addEventListener('click', finish);
+})();
+
+/* display preference — persisted, harmless if storage is unavailable */
+(function display(){
+  const btn = document.getElementById('crt');
+  let on = true;
+  try { on = localStorage.getItem('bobnet-crt') !== 'off'; } catch (e) {}
+  const apply = () => {
+    document.body.classList.toggle('plain', !on);
+    btn.setAttribute('aria-pressed', String(on));
+    btn.textContent = on ? 'CRT' : 'CRT OFF';
+  };
+  btn.addEventListener('click', () => {
+    on = !on; apply();
+    try { localStorage.setItem('bobnet-crt', on ? 'on' : 'off'); } catch (e) {}
+  });
+  apply();
 })();
 
 renderChips();
