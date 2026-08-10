@@ -109,6 +109,7 @@ data/bobs.json   source of truth
 data/schema.json field documentation and constraints
 data/todo.json   the research backlog, rendered as a view in the console
 data/systems.json star systems with real astrometry, and the places in them
+data/skyfield.json the naked-eye sky for the chart backdrop (HYG, CC BY-SA 4.0)
 templates/genealogy.html   the console — register, lineage, unresolved, chart, to-do
 src/parse_ebook.py  MOBI + EPUB -> chapters, refuses DRM
 src/corpus.py       build/load the cached corpus

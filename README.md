@@ -56,7 +56,8 @@ designations, systems, notes and citations:
   rotate, wheel to zoom, and a year scrubber from 2133 to 2345 that lights each
   system as the Bobs first reach it. Stars are drawn in their true spectral
   colour and sized by absolute magnitude, so an F2 dwarf really does outshine an
-  M3. The backdrop starfield is the one decorative element and says so.
+  M3. The backdrop is the real naked-eye sky — 5,070 stars to magnitude 6 from the
+  HYG Database, in their true colours. Nothing on the chart is invented.
 - **To-do** — the research backlog, reported the way Guppy reports Bob's:
   a bracketed count divided into categories. It has never once got shorter.
 
@@ -103,6 +104,13 @@ narrating his parent's. See CLAUDE.md.
 `make validate` gates the build. Besides the tier rules it checks referential
 integrity, ancestry cycles, and that Bobs sharing a Hipparcos catalogue number
 agree about which system they were built in — since the designation states it.
+
+## Credits
+
+Star positions, spectral types and magnitudes for the Bobiverse systems come from
+[SIMBAD](https://simbad.u-strasbg.fr/). The backdrop sky is the
+[HYG Database v4.4](https://codeberg.org/astronexus/hyg) by David Nash, used under
+CC BY-SA 4.0 — note that ShareAlike propagates to anything that embeds it.
 
 ## What's publishable
 
