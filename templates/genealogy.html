@@ -166,7 +166,7 @@
   .card .card-sub{font-size:11.5px; letter-spacing:.11em; color:var(--ash); margin:1px 0 5px}
   .card p{margin:0; font-size:13px; color:var(--amber-dim); line-height:1.6; max-width:72ch}
   .card button{
-    background:transparent; border:1px solid var(--rule); font:inherit; font-size:11.5px;
+    background:transparent; border:1px solid var(--ash); font:inherit; font-size:11.5px;
     letter-spacing:.11em; color:var(--amber-dim); padding:3px 9px; margin-top:7px;
     cursor:pointer; text-shadow:inherit;
   }
@@ -194,6 +194,18 @@
   .dossier-body{padding:12px 13px 22px; overflow:auto; scrollbar-width:thin; scrollbar-color:var(--rule) transparent}
   .dossier-body::-webkit-scrollbar{width:9px}
   .dossier-body::-webkit-scrollbar-thumb{background:var(--rule)}
+
+  /* Serial first, name second — Guppy identifies Bobs by number or not at all,
+     and Oliver gets his designation before he picks a name. */
+  .serial{font-size:15px; letter-spacing:.13em; color:var(--phos); margin:0 0 2px}
+  .serial .none{color:var(--ash); letter-spacing:.1em}
+  .catnote{font-size:11px; color:var(--ash); margin:5px 0 0; line-height:1.5; max-width:40ch}
+
+  /* Bracketed = emitted by the registry. Unbracketed = a person talking. */
+  .metablock{position:relative; border-left:1px solid var(--ash); padding-left:13px}
+  .metablock::before,.metablock::after{content:''; position:absolute; left:0; width:7px; height:1px; background:var(--ash)}
+  .metablock::before{top:0}
+  .metablock::after{bottom:0}
 
   .fields{margin:0}
   .fields .f{display:grid; grid-template-columns:88px minmax(0,1fr); gap:9px; padding:2.5px 0}
@@ -531,16 +543,23 @@ function renderDossier(){
   const el = document.getElementById('dossier');
   const b = state.selected && byId[state.selected];
   if (!b) {
-    el.innerHTML = `<div class="idle"><b>NO RECORD SELECTED</b>
-      Choose a replicant to pull its dossier and trace its descent back to Bob-1.<br><br>
-      Every link in that trace is graded on its own evidence, so a chain can be solid
-      for two hops and then run out of sources.</div>`;
+    el.innerHTML = `<div class="idle"><b>[NO RECORD SELECTED]</b>
+      Pick a replicant to pull its metadata and trace its descent back to Bob-1.<br><br>
+      Bobs all wear the same face, so the registry identifies them the way Guppy does —
+      by serial number. Bracketed values are the registry's; the annotation at the foot
+      of each record is ours.</div>`;
     return;
   }
 
   const t = TIER[b.src];
   const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
   const ch = (kids[b.id] || []).sort((x, y) => x.name.localeCompare(y.name));
+
+  // Bk1 ch15: the Hipparcos number in a designation names the build system.
+  const hic = /^HIC(\d+)-\d+$/.exec(b.desig || '');
+  const cat = hic && b.origin
+    ? `Catalogue number HIC${hic[1]} is ${esc(b.origin)} — the designation states where this Bob was built.`
+    : '';
 
   const hops = trace(b);
   const traceRows = hops.map((h, i) => {
@@ -576,12 +595,15 @@ function renderDossier(){
   el.innerHTML = `
     <div class="dossier-head">
       <div>
-        <h2>${esc(b.name)}</h2>
-        <div class="sub">${b.alias ? 'GOES BY ' + esc(b.alias.toUpperCase()) + ' · ' : ''}${b.desig ? esc(b.desig) + ' · ' : ''}${t.mark} ${t.label} — ${esc(t.full)}</div>
+        <div class="serial">${b.desig ? '[' + esc(b.desig) + ']' : '<span class="none">[no serial on file]</span>'}</div>
+        <h2>${esc(b.name)}${b.alias ? ` <span class="dim">/ ${esc(b.alias)}</span>` : ''}</h2>
+        <div class="sub">${t.mark} ${t.label} — ${esc(t.full)}</div>
       </div>
       <button class="dossier-close" id="d-close" aria-label="Close dossier">✕</button>
     </div>
     <div class="dossier-body">
+      <div class="sec-label" style="margin-bottom:7px">METADATA</div>
+      <div class="metablock">
       <dl class="fields">
         ${f('GENERATION', b.gen)}
         ${f('BUILT', b.born)}
@@ -594,6 +616,8 @@ function renderDossier(){
         ${f('NAMESAKE', b.ref && b.ref !== '—' ? b.ref : '')}
         ${f('CITATION', b.cite)}
       </dl>
+      </div>
+      ${cat ? `<p class="catnote">${cat}</p>` : ''}
 
       ${flags ? `<div class="sec"><div class="sec-label">FLAGS</div>${flags}</div>` : ''}
 
@@ -607,7 +631,7 @@ function renderDossier(){
 
       ${b.partialNote ? `<div class="sec"><div class="sec-label">WHAT THE SOURCE DOES NOT SAY</div><p class="note">${esc(b.partialNote)}</p></div>` : ''}
       ${b.conflict ? `<div class="sec"><div class="sec-label">DISAGREEMENT</div><p class="note">${esc(b.conflict)}</p></div>` : ''}
-      ${b.note ? `<div class="sec"><div class="sec-label">NOTES</div><p class="note">${esc(b.note)}</p></div>` : ''}
+      ${b.note ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div><p class="note">${esc(b.note)}</p></div>` : ''}
     </div>`;
 }
 
@@ -621,10 +645,12 @@ function renderStatus(rows){
   const cited = BOBS.filter(b => b.cite).length;
   const confirmed = BOBS.filter(b => b.src === 't').length;
   const none = BOBS.filter(b => b.src === 'c').length;
+  const purged = BOBS.filter(b => b.src === 'x').length;
   const filtered = rows.length !== BOBS.length;
   document.getElementById('status').innerHTML =
-    `${filtered ? `${rows.length} OF ${BOBS.length}` : `${BOBS.length} RECORDS`}` +
-    ` · ${confirmed} PARENTAGE CONFIRMED · ${cited} CITED · ${none} NO SOURCE ON FILE ` +
+    `[${filtered ? `${rows.length} of ${BOBS.length} records` : `${BOBS.length} records`}` +
+    ` · ${confirmed} parentage confirmed · ${cited} cited · ${none} no source on file` +
+    `${purged ? ` · ${purged} expunged` : ''}] ` +
     `<span class="cursor">█</span>`;
 }
 
@@ -713,11 +739,12 @@ window.addEventListener('resize', () => {
   const out = document.getElementById('boot-text');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const lines = [
-    'BOBNET LINK ESTABLISHED · EPSILON ERIDANI RELAY',
-    'MOUNTING LINEAGE REGISTRY ........... OK',
-    `INDEXING ${BOBS.length} REPLICANT RECORDS ..... OK`,
-    `${BOBS.filter(b => b.src === 'c').length} RECORDS WITH NO SOURCE ON FILE`,
-    'READY'
+    '[BobNet link established · Epsilon Eridani relay]',
+    '[Mounting lineage registry: OK]',
+    `[Indexing ${BOBS.length} replicant records: OK]`,
+    `[${BOBS.filter(b => b.src === 'c').length} with no source on file, ` +
+      `${BOBS.filter(b => b.src === 'x').length} expunged]`,
+    '[STATUS: Ready]'
   ];
   const finish = () => { el.classList.add('done'); setTimeout(() => el.remove(), 380); };
   if (reduce) { el.remove(); return; }

@@ -42,7 +42,7 @@
             "minimum": 1,
             "description": "Generation as stated in a source. May disagree with drawn tree depth when the parent is unknown; the app shows both."
           },
-          "desig": { "type": "string", "description": "In-universe designation, e.g. HIC71683-14." },
+          "desig": { "type": "string", "description": "In-universe designation, and the Bob's actual identity — they all wear the same face, so Guppy identifies them by serial number or not at all (Bk3 ch21). Two schemes: 'Bob-<n>' for the early global numbering, abandoned once coordinating numbers between star systems got unwieldy (Bk1 ch28); and 'HIC<catalogue>-<n>' after, where the Hipparcos Catalog number names the system the Bob was built in and <n> is the index within it (Bk1 ch15). The validator checks HIC prefixes against origin." },
           "vessel": { "type": "string" },
           "born": { "type": "string", "description": "Creation date as given, e.g. 'Sep 2205'." },
           "origin": { "type": "string", "description": "System where this Bob was built." },

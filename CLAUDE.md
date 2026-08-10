@@ -188,6 +188,35 @@ still haven't read my blog yet, have you?" So dated posts in Bill's voice are
 not a framing device we invented; they're a thing the character does. Site
 updates should be written as BobNet posts, not as changelogs.
 
+### What the books actually establish about BobNet
+
+Checked against the corpus, because it's easy to invent this and then believe it.
+
+**There is no BobNet lobby, and no shared look.** BobNet is the network, not a
+place — Bill coins "Bobiverse" and "BobNet" in the same breath at the first moot
+(Bk1 ch57). Connecting means popping into someone else's VR and standing inside
+*their* metaphor: Bart's log cabin, Homer's space station. Doing it uninvited is
+"a little rude" (Bk1 ch43), which tells you there's no neutral ground. An
+undecorated VR is a bare blue room with no window and a hard floor (Bk1 ch11).
+The Moot VR is the one shared venue and even that gets reconfigured per occasion
+— Bill sets it up as a pub for an emergency moot (Bk3 ch21).
+
+So the console's amber-console styling is **our** invention, and legitimately so:
+canon is consistent that presentation is always somebody's personal choice. Two
+things, though, are canon and worth keeping faithful:
+
+**Square brackets are machine speech.** `[STATUS: Ready]`, `[HIC16537-1]`,
+`[Incoming call]`, `[Bart]`, and Guppy's whole reports. Unbracketed text is a Bob
+talking. The UI observes this: the metadata block is bracketed, and the `note`
+field renders under "ANNOTATION — REGISTRY EDITOR, NOT BOBNET" because it's our
+prose, not the registry's.
+
+**Identity is the serial number.** Every Bob wears the same face, so they tell
+each other apart by metadata tags (Bk2 ch33, Bk3 ch21), and Guppy flatly refuses
+to use names — "It was their serial number or nothing." Oliver even gets his
+designation before he's picked a name (Bk2 ch58). Hence the dossier leads with
+the designation and demotes the name.
+
 ### Voice
 
 The point of the project is that it's fun, so the writing has to carry Bob's

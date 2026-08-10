@@ -100,6 +100,19 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
             if about_lineage:
                 warnings.append(f"{bob['id']}: lineage conflict recorded without a citation")
 
+    # A Hipparcos Catalog designation encodes the system the Bob was built in
+    # — Bk1 ch15, where Bob reads his own origin straight off his serial. So two
+    # Bobs sharing a HIC prefix must agree about where they were built.
+    systems: dict[str, dict[str, list[str]]] = {}
+    for bob in bobs:
+        m = re.match(r"HIC(\d+)-\d+$", bob.get("desig", "") or "")
+        if m and bob.get("origin"):
+            systems.setdefault(m.group(1), {}).setdefault(bob["origin"], []).append(bob["id"])
+    for cat, origins in systems.items():
+        if len(origins) > 1:
+            detail = "; ".join(f"{o} ({', '.join(ids)})" for o, ids in origins.items())
+            errors.append(f"HIC{cat}: one catalogue number, disagreeing origins — {detail}")
+
     # name collisions are legal but worth surfacing
     names: dict[str, list[str]] = {}
     for bob in bobs:
