@@ -18,12 +18,23 @@ import zipfile
 
 # NB: keep the non-capturing group. Without it the alternation binds loosely
 # when interpolated below and the pattern degrades to "any bare month name".
+# Abbreviations are optional but necessary: book 2 ch18 is dated "Sept 2172",
+# and requiring full month names dropped the chapter and knocked every later
+# chapter number in that book one out of step with the printed book.
 MONTHS = (
-    "(?:January|February|March|April|May|June|July|August|September|October|"
-    "November|December)"
+    "(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|"
+    "Jul(?:y)?|Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|"
+    "Dec(?:ember)?)"
 )
+# Three shapes in the wild: "July 15, 2133", "July 2133", and "September, 2182"
+# — that last one, month-comma-year with no day, silently cost us two chapters
+# of book 2 and shifted every chapter number after them.
+# Book 4 ch30 dates itself "Same Day" instead of giving a date. It's the only
+# relative header in the five books, but dropping it lost a chapter and put
+# every later book 4 number out of step.
+RELATIVE = r"Same Day|Next Day|Later That (?:Day|Evening|Night)"
 DATE = re.compile(
-    rf"^(?:{MONTHS}\s+\d{{1,2}},\s*\d{{4}}|{MONTHS}\s+\d{{4}}|\d{{4}})$"
+    rf"^(?:{MONTHS}\s+\d{{1,2}},\s*\d{{4}}|{MONTHS},?\s+\d{{4}}|\d{{4}}|{RELATIVE})$"
 )
 POV_NAME = re.compile(r"^[A-Z][A-Za-z0-9'\-]{1,18}(?: [A-Z][A-Za-z'\-]+)?$")
 
@@ -218,8 +229,12 @@ def parse(path: str, book: int) -> list[dict]:
     return chapters
 
 
+# Book 1's dated chapters read "Bob \u2013 July 15, 2133", but its first two are
+# "Bob Version 1.0" and "Bob Version 2.0" with no dash at all. Requiring the
+# separator silently dropped both, which pushed every book 1 chapter number two
+# out of step with the printed book. Allow bare whitespace before "Version".
 FLAT_HEAD = re.compile(
-    rf"^([A-Z][A-Za-z0-9'\-]{{1,18}})\s*[\u2013\u2014-]\s*"
+    rf"^([A-Z][A-Za-z0-9'\-]{{1,18}})(?:\s*[\u2013\u2014-]\s*|\s+(?=Version\b))"
     rf"((?:{MONTHS}\s+\d{{1,2}},\s*\d{{4}})|(?:{MONTHS}\s+\d{{4}})|(?:Version \d\.\d))"
     r"(?:\s*[\u2013\u2014-]\s*([A-Za-z0-9 \u00b2']{3,28}?))?(?=\s+[A-Z\u201c\[])"
 )

@@ -31,6 +31,48 @@ REQUIRED = ("id", "name", "src")
 ROOT_ID = "bob1"
 
 
+CITE = re.compile(r"Bk(\d+) ch(\d+) · ([A-Za-z\-']+), ([^;]+?)(?=$|;)")
+_MONTHS = "jan feb mar apr may jun jul aug sep oct nov dec".split()
+
+
+def _when(text: str) -> tuple | None:
+    """Reduce a date to (month, year) so 'Apr 2185' and 'April 2185' compare equal."""
+    m = re.search(r"([A-Za-z]+)?\s*(\d{4})", text)
+    if not m:
+        return None
+    mon = (m.group(1) or "")[:3].lower()
+    return (_MONTHS.index(mon) + 1 if mon in _MONTHS else None, int(m.group(2)))
+
+
+def _check_cites(bobs: list[dict]) -> list[str]:
+    """Verify each citation names a chapter that exists, with the right POV and date."""
+    path = os.path.join(ROOT, ".cache", "corpus.json")
+    if not os.path.exists(path):
+        return []
+    with open(path) as fh:
+        chapters = json.load(fh)
+    if not chapters:
+        return []
+    index = {(c["book"], c["seq"]): c for c in chapters}
+
+    out = []
+    for bob in bobs:
+        for bk, sq, pov, when in CITE.findall(bob.get("cite", "") or ""):
+            bk, sq, when = int(bk), int(sq), when.strip()
+            chapter = index.get((bk, sq))
+            if chapter is None:
+                out.append(f"{bob['id']}: cites Bk{bk} ch{sq}, which the corpus doesn't have")
+                continue
+            if chapter["pov"] == pov and _when(chapter["when"]) == _when(when):
+                continue
+            match = [c for c in chapters
+                     if c["book"] == bk and c["pov"] == pov and _when(c["when"]) == _when(when)]
+            fix = f"; looks like ch{match[0]['seq']}" if len(match) == 1 else ""
+            out.append(f"{bob['id']}: cite Bk{bk} ch{sq} is {chapter['pov']}, "
+                       f"{chapter['when']} — not {pov}, {when}{fix}")
+    return out
+
+
 def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -112,6 +154,11 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
         if len(origins) > 1:
             detail = "; ".join(f"{o} ({', '.join(ids)})" for o, ids in origins.items())
             errors.append(f"HIC{cat}: one catalogue number, disagreeing origins — {detail}")
+
+    # Check citations against the parsed books when they're available. Warnings
+    # rather than errors: the corpus is optional, and another edition could
+    # legitimately number its chapters differently.
+    warnings += _check_cites(bobs)
 
     # name collisions are legal but worth surfacing
     names: dict[str, list[str]] = {}

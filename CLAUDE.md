@@ -117,6 +117,27 @@ in MOBI has no paragraph tags and falls back to a flat regex. Book 5 uses word
 numerals ("Chapter One"), which is why the parser doesn't rely on chapter
 numbering.
 
+Because the anchor is the date, anything that doesn't look like a date silently
+costs a whole chapter — and every chapter after it in that book shifts, which
+quietly corrupts citations. Four such cases were found and fixed; the corpus went
+from 345 chapters to 351:
+
+| what | where | effect |
+|---|---|---|
+| "Bob Version 1.0" — no dash before the version | Bk1 ch1–2 | book 1 was 2 out of step |
+| "Sept 2172" — abbreviated month | Bk2 ch18 | book 2 was 1 out |
+| "September, 2182" — month, comma, year, no day | Bk2 ch47, ch54 | book 2 was 3 out by the end |
+| "Same Day" — a relative date, not a date | Bk4 ch30 | book 4 was 1 out |
+
+**The regression test is the books' own chapter numbers.** Books 2 and 4 print
+them in the chapter titles, so `seq` should equal the printed number with no
+gaps. Books 1, 2, 3 and 5 now match exactly. Book 4 legitimately restarts
+numbering at part 2, so our `seq` is a global index there and won't match — that
+is the one expected divergence.
+
+`make validate` re-checks every citation against the corpus whenever `.cache/`
+exists, so a chapter number that drifts gets caught rather than believed.
+
 ## Open questions
 
 - Thor, Jeffrey, Milton, Zeke — parentage still unconfirmed by text. Jeffrey,
@@ -146,6 +167,13 @@ Don't re-run these expecting new names; they're exhausted.
   more known Bobs. Everything it surfaced was either added or ruled non-Bob.
 - **Faction enumeration** — swept for the mutual-interest groups. Four exist:
   Starfleet, Skippies, Gamers, Borg. No fifth appears in the text.
+- **Renames** — swept for Bobs who changed their name. Two: Riker to Will
+  (Bk3 ch57) and Jeremy to Morlock (Bk4 ch3). Everything else the sweep caught
+  was either an original naming or an idiom — "call me Shirley" is a joke.
+
+Not yet worked: **book 2 ships a Cast of Characters appendix**. It is back
+matter, so the parser rejects it, but it is a compiled list of who's who and
+may be worth mining by hand.
 
 ## Planned: companion registers
 
