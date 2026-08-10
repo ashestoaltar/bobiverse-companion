@@ -3,7 +3,8 @@
   {
    "id": "bob1",
    "name": "Bob-1",
-   "src": "a",
+   "src": "o",
+   "cite": "Bk1 ch1 · Bob, Version 1.0",
    "gen": 1,
    "desig": "Bob-1",
    "vessel": "HEAVEN-1B",
@@ -12,7 +13,7 @@
    "visited": "Sol, Epsilon Eridani, Delta Eridani",
    "status": "active",
    "ref": "Robert Johansson, the original",
-   "note": "The original replicant. Made first contact with the Deltans and adopted Archimedes' hexghi as family. Later organized the expedition that found Bender."
+   "note": "Robert Johansson, killed in a traffic accident in 2133 and woken as a replicant a century later. The root of the tree: he has no parent because there isn't one. Made first contact with the Deltans and adopted Archimedes' hexghi as family, then organised the expedition that went looking for Bender."
   },
   {
    "id": "riker",
@@ -232,50 +233,50 @@
   {
    "id": "elmer",
    "name": "Elmer",
-   "parent": "bill",
-   "src": "a",
+   "src": "c",
    "gen": 3,
    "origin": "Epsilon Eridani",
    "visited": "82 Eridani",
    "status": "lost",
    "lostAt": "82 Eridani",
-   "ref": "Elmer Fudd"
+   "ref": "Elmer Fudd",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "hannibal",
    "name": "Hannibal",
-   "parent": "bill",
-   "src": "a",
+   "src": "c",
    "gen": 3,
    "origin": "Epsilon Eridani",
    "visited": "82 Eridani",
    "status": "lost",
    "lostAt": "82 Eridani",
-   "ref": "The general or the Lecter, take your pick"
+   "ref": "The general or the Lecter, take your pick",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "tom",
    "name": "Tom",
-   "parent": "bill",
-   "src": "a",
+   "src": "c",
    "gen": 3,
    "origin": "Epsilon Eridani",
    "visited": "82 Eridani",
    "status": "lost",
    "lostAt": "82 Eridani",
-   "ref": "Tom & Jerry"
+   "ref": "Tom & Jerry",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "barney",
    "name": "Barney",
-   "parent": "bill",
-   "src": "a",
+   "src": "c",
    "gen": 3,
    "origin": "Epsilon Eridani",
    "visited": "82 Eridani",
    "status": "lost",
    "lostAt": "82 Eridani",
-   "ref": "Barney Gumble, The Simpsons"
+   "ref": "Barney Gumble, The Simpsons",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "fred",
@@ -294,24 +295,24 @@
   {
    "id": "kyle",
    "name": "Kyle",
-   "parent": "bill",
-   "src": "a",
+   "src": "c",
    "gen": 3,
    "origin": "Epsilon Eridani",
    "visited": "82 Eridani",
    "status": "active",
-   "ref": "South Park"
+   "ref": "South Park",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "ned",
    "name": "Ned",
-   "parent": "bill",
-   "src": "a",
+   "src": "c",
    "gen": 3,
    "origin": "Epsilon Eridani",
    "visited": "82 Eridani",
    "status": "active",
-   "ref": "Ned Flanders, The Simpsons"
+   "ref": "Ned Flanders, The Simpsons",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "jackson",
@@ -330,8 +331,7 @@
   {
    "id": "jeffrey",
    "name": "Jeffrey",
-   "parent": "bill",
-   "src": "b",
+   "src": "c",
    "cite": "Bk2 ch50 · Loki, Nov 2195",
    "gen": 3,
    "born": "Jun 2185",
@@ -340,13 +340,13 @@
    "status": "lost",
    "lostAt": "82 Eridani",
    "ref": "—",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
    "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
   },
   {
    "id": "milton",
    "name": "Milton",
-   "parent": "bill",
-   "src": "b",
+   "src": "c",
    "cite": "Bk2 ch50 · Loki, Nov 2195",
    "gen": 3,
    "born": "Jun 2185",
@@ -355,13 +355,13 @@
    "status": "lost",
    "lostAt": "82 Eridani",
    "ref": "Office Space?",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
    "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
   },
   {
    "id": "zeke",
    "name": "Zeke",
-   "parent": "bill",
-   "src": "b",
+   "src": "c",
    "cite": "Bk2 ch50 · Loki, Nov 2195",
    "gen": 3,
    "born": "Jun 2185",
@@ -370,44 +370,44 @@
    "status": "lost",
    "lostAt": "82 Eridani",
    "ref": "—",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
    "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
   },
   {
    "id": "icarus",
    "name": "Icarus",
-   "parent": "bill",
-   "src": "b",
+   "src": "c",
    "cite": "Bk3 ch6 · Bill",
    "born": "2221",
    "origin": "Epsilon Eridani",
    "visited": "Gliese 877, galactic core",
    "status": "active",
    "ref": "Icarus, who flew too close",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
    "note": "Bill says outright that he cloned Icarus and Daedalus, and that he felt uneasy doing it for what might be a one-way trip. Bill finds him similar in temperament — happy to leave the fighting to others and get on with research."
   },
   {
    "id": "daedalus",
    "name": "Daedalus",
-   "parent": "bill",
-   "src": "b",
+   "src": "c",
    "cite": "Bk3 ch6 · Bill",
    "born": "2221",
    "origin": "Epsilon Eridani",
    "visited": "Gliese 877, galactic core",
    "status": "active",
    "ref": "Daedalus, who built the wings",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
    "note": "Cloned by Bill alongside Icarus for the run at the galactic core. Named by a Bob who knew how that myth ends."
   },
   {
    "id": "hugh",
    "name": "Hugh",
-   "parent": "bill",
-   "src": "p",
+   "src": "c",
    "visited": "Skippyland",
    "status": "active",
    "faction": "Skippies",
    "ref": "—",
-   "partialNote": "Source says only \"a descendant of Bill\" — generations between are unstated.",
+   "priorClaim": "an unnamed secondary source put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
    "note": "The Skippies' representative on the Heaven's River expedition, in a grey coverall. His group has dropped names for numeric designations and speech for packetized communication, but they still answer to nicknames when dealing with everyone else."
   },
   {
@@ -426,74 +426,74 @@
   {
    "id": "thor",
    "name": "Thor",
-   "parent": "calvin",
-   "src": "a",
+   "src": "c",
    "status": "active",
-   "ref": "Norse thunder god"
+   "ref": "Norse thunder god",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Calvin. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "owen",
    "name": "Owen",
-   "parent": "bart",
-   "src": "b",
+   "src": "c",
    "gen": 5,
    "vessel": "Colony ship",
    "born": "2165",
    "origin": "Alpha Centauri",
    "visited": "82 Eridani",
    "status": "active",
-   "ref": "—"
+   "ref": "—",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "jack",
    "name": "Jack",
-   "parent": "bart",
-   "src": "b",
+   "src": "c",
    "gen": 5,
    "vessel": "Colony ship",
    "born": "2165",
    "origin": "Alpha Centauri",
    "visited": "82 Eridani",
    "status": "active",
-   "ref": "—"
+   "ref": "—",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "isaac",
    "name": "Isaac",
-   "parent": "bart",
-   "src": "b",
+   "src": "c",
    "gen": 5,
    "desig": "HIC71683-8",
    "vessel": "Colony ship",
    "origin": "Alpha Centauri",
    "visited": "82 Eridani",
    "status": "active",
-   "ref": "Asimov, presumably"
+   "ref": "Asimov, presumably",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "skinner",
    "name": "Skinner",
-   "parent": "mulder",
-   "src": "a",
+   "src": "c",
    "gen": 4,
    "desig": "HIC3821-1",
    "born": "Oct 2170",
    "origin": "Eta Cassiopeiae",
    "status": "active",
-   "ref": "Walter Skinner, The X-Files"
+   "ref": "Walter Skinner, The X-Files",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Mulder. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "jonny",
    "name": "Jonny",
-   "parent": "mulder",
-   "src": "a",
+   "src": "c",
    "gen": 4,
    "desig": "HIC3821-2",
    "born": "Oct 2170",
    "origin": "Eta Cassiopeiae",
    "status": "active",
    "ref": "—",
-   "conflict": "Taylor’s tree spells him \"Johnny\"; the wiki registry has \"Jonny\"."
+   "conflict": "The text spells him Jonny, four times and never otherwise, so that is what we use. Taylor's tree spelled him \"Johnny\" — noted only because the tree was a source we've since dropped.",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Mulder. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "loki",
@@ -559,41 +559,41 @@
   {
    "id": "claude",
    "name": "Claude",
-   "parent": "mario",
-   "src": "a",
+   "src": "c",
    "status": "active",
-   "ref": "—"
+   "ref": "—",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Mario. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "jacques",
    "name": "Jacques",
-   "parent": "mario",
-   "src": "a",
+   "src": "c",
    "visited": "Delta Pavonis, HIP 84051",
    "status": "active",
    "ref": "—",
    "conflict": "Taylor’s tree spells him \"Jaques\".",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Mario. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
    "note": "Brokered the deal that handed the Pav spaceflight technology in exchange for raw materials."
   },
   {
    "id": "phineas",
    "name": "Phineas",
-   "parent": "jacques",
-   "src": "a",
+   "src": "c",
    "born": "2216",
    "origin": "Delta Pavonis",
    "status": "active",
-   "ref": "Phineas & Ferb"
+   "ref": "Phineas & Ferb",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Jacques. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "ferb",
    "name": "Ferb",
-   "parent": "jacques",
-   "src": "a",
+   "src": "c",
    "born": "2216",
    "origin": "Delta Pavonis",
    "status": "active",
-   "ref": "Phineas & Ferb"
+   "ref": "Phineas & Ferb",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Jacques. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "homer",
@@ -640,87 +640,87 @@
   {
    "id": "ralph",
    "name": "Ralph",
-   "parent": "riker",
-   "src": "a",
+   "src": "c",
    "gen": 3,
    "born": "Oct 2170",
    "origin": "Sol",
    "status": "active",
-   "ref": "Ralph Wiggum, The Simpsons"
+   "ref": "Ralph Wiggum, The Simpsons",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "bert",
    "name": "Bert",
-   "parent": "riker",
-   "src": "a",
+   "src": "c",
    "gen": 3,
    "vessel": "Exodus-1",
    "born": "Oct 2170",
    "origin": "Sol",
    "visited": "Omicron² Eridani",
    "status": "active",
-   "ref": "Sesame Street"
+   "ref": "Sesame Street",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "ernie",
    "name": "Ernie",
-   "parent": "riker",
-   "src": "a",
+   "src": "c",
    "gen": 3,
    "vessel": "Exodus-2",
    "born": "Oct 2170",
    "origin": "Sol",
    "visited": "Omicron² Eridani",
    "status": "active",
-   "ref": "Sesame Street"
+   "ref": "Sesame Street",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "sam",
    "name": "Sam",
-   "parent": "riker",
-   "src": "b",
+   "src": "c",
    "gen": 3,
    "vessel": "Exodus-3",
    "born": "Oct 2170",
    "origin": "Sol",
    "visited": "Omicron² Eridani",
    "status": "active",
-   "ref": "—"
+   "ref": "—",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "monty",
    "name": "Monty",
-   "parent": "riker",
-   "src": "b",
+   "src": "c",
    "origin": "Sol",
    "visited": "Eta Cassiopeiae A",
    "status": "active",
-   "ref": "Monty Burns? Monty Python?"
+   "ref": "Monty Burns? Monty Python?",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "harvey",
    "name": "Harvey",
-   "parent": "riker",
-   "src": "b",
+   "src": "c",
    "visited": "Sol",
    "status": "active",
-   "ref": "—"
+   "ref": "—",
+   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "rudy",
    "name": "Rudy",
-   "parent": "riker",
-   "src": "a",
+   "src": "c",
    "status": "active",
-   "ref": "—"
+   "ref": "—",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "edwin",
    "name": "Edwin",
-   "parent": "riker",
-   "src": "a",
+   "src": "c",
    "status": "active",
-   "ref": "—"
+   "ref": "—",
+   "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
   },
   {
    "id": "howard",
@@ -753,14 +753,14 @@
    "id": "gerry",
    "name": "Gerry",
    "parent": "charles",
-   "src": "t",
-   "cite": "Bk5 ch41 & ch51 · Bill, 2343",
+   "src": "p",
+   "cite": "Bk5 ch51 · Bill, Sep 2343",
    "origin": "Sol",
    "status": "unknown",
    "faction": "Starfleet",
    "ref": "—",
-   "conflict": "Spelled \"Gerry\" in the text; the wiki registry has \"Jerry\".",
-   "partialNote": "Generations between are unstated, and the two accounts differ: Bill calls him one of Charles’ descendants, while Benny describes him as a collateral descendant from several generations up — i.e. a cousin branch rather than a direct line.",
+   "conflict": "The text spells him Gerry, eighteen times and never otherwise. The wiki registry had \"Jerry\"; the text wins.",
+   "partialNote": "Charles calls Gerry his descendant rather than his clone, and Benny puts him several generations up as a collateral line. Ancestor known, generations not.",
    "note": "Found the surviving Homer backup that Homer believed he had destroyed. Hadn't been heard from in decades by 2343, and among Sol-system Bobs the whole story is written off as an urban myth."
   },
   {

@@ -14,14 +14,15 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "bobs.json")
 
-# Tiers grade PARENTAGE confidence only. They say nothing about how well a Bob
-# is documented otherwise — plenty of tier C Bobs have citations, generations
-# and POV chapters; what they lack is a known parent.
+# Tiers grade PARENTAGE only, and the books are the only source. Taylor's 2017
+# genealogy and the fandom wiki were dropped: a claim we can't point at a page
+# for is not asserted, it's recorded in priorClaim as a lead. Tiers say nothing
+# about how well documented a Bob is otherwise — plenty of tier C Bobs have
+# citations, generations and POV chapters; what they lack is a parent.
 TIERS = {
-    "t": "parent confirmed in the primary text",
-    "a": "Dennis E. Taylor's published genealogy, Apr 2017",
-    "b": "Bobiverse Fandom wiki registry",
-    "p": "ancestor named, generations unstated",
+    "o": "the original — no parent exists",
+    "t": "parent stated in the books",
+    "p": "ancestor stated, generations not",
     "c": "no ancestor on record",
     "x": "record deliberately expunged",
 }
@@ -101,6 +102,16 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
 
     # exactly one root
     roots = [b for b in bobs if not b.get("parent") and b["id"] == ROOT_ID]
+    for bob in bobs:
+        if bob.get("src") == "o" and bob["id"] != ROOT_ID:
+            errors.append(f"{bob['id']}: tier O is only for {ROOT_ID}")
+        if bob.get("src") == "o" and bob.get("parent"):
+            errors.append(f"{bob['id']}: tier O means there is no parent")
+    for bob in bobs:
+        if bob.get("src") == "o" and bob["id"] != ROOT_ID:
+            errors.append(f"{bob['id']}: tier O is only for {ROOT_ID}")
+        if bob.get("src") == "o" and bob.get("parent"):
+            errors.append(f"{bob['id']}: tier O means there is no parent")
     if len(roots) != 1:
         errors.append(f"expected exactly one root ({ROOT_ID}), found {len(roots)}")
 

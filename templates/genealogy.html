@@ -134,7 +134,8 @@
   .prov{letter-spacing:.08em; font-size:12px; white-space:nowrap}
   .prov.t{color:var(--phos)}
   .prov.a{color:var(--amber)}
-  .prov.b,.prov.p{color:var(--amber-dim)}
+  .prov.p{color:var(--amber-dim)}
+  .prov.o{color:var(--amber)}
   .prov.c{color:var(--ash)}
   .prov.x{color:var(--alert)}
   tr[aria-selected="true"] .prov{color:var(--void)}
@@ -359,10 +360,9 @@ const kids = Object.create(null);
 BOBS.forEach(b => { if (b.parent) (kids[b.parent] || (kids[b.parent] = [])).push(b); });
 
 const TIER = {
-  t:{mark:'◆', label:'TEXT',   full:'confirmed in the books'},
-  a:{mark:'◆', label:'AUTHOR', full:"Taylor's tree, 2017"},
-  b:{mark:'◇', label:'WIKI',   full:'fandom registry'},
-  p:{mark:'◈', label:'PARTIAL',full:'ancestor known, path is not'},
+  o:{mark:'○', label:'ORIGIN', full:'the original — no parent to find'},
+  t:{mark:'◆', label:'TEXT',   full:'parent stated in the books'},
+  p:{mark:'◈', label:'PARTIAL',full:'ancestor stated, generations not'},
   c:{mark:'✕', label:'NONE',   full:'no ancestor on record'},
   x:{mark:'▨', label:'EXPUNGED',full:'record deliberately removed'}
 };
@@ -370,9 +370,9 @@ const STATUS = {active:'● ACTIVE', lost:'✕ LOST', unknown:'○ UNKNOWN'};
 
 const FILTERS = [
   {id:'t',         label:'TEXT',      test:b => b.src === 't'},
-  {id:'a',         label:'AUTHOR',    test:b => b.src === 'a'},
-  {id:'b',         label:'WIKI',      test:b => b.src === 'b'},
+  {id:'p',         label:'PARTIAL',   test:b => b.src === 'p'},
   {id:'c',         label:'NO SOURCE', test:b => b.src === 'c'},
+  {id:'lead',      label:'HAS LEAD',  test:b => !!b.priorClaim},
   {id:'x',         label:'EXPUNGED',  test:b => b.src === 'x'},
   {id:'lost',      label:'LOST',      test:b => b.status === 'lost'},
   {id:'cited',     label:'CITED',     test:b => !!b.cite},
@@ -401,7 +401,7 @@ const year = b => { const m = /(\d{4})/.exec(b.born || ''); return m ? +m[1] : 9
 
 function sortVal(b, key){
   if (key === 'gen')    return b.gen == null ? 999 : b.gen;
-  if (key === 'src')    return 'tabpc'.indexOf(b.src);
+  if (key === 'src')    return 'otpcx'.indexOf(b.src);
   if (key === 'parent') return b.parent ? byId[b.parent].name.toLowerCase() : '~';
   if (key === 'status') return b.status || 'unknown';
   if (key === 'origin') return (b.origin || b.visited || '~').toLowerCase();
@@ -630,6 +630,7 @@ function renderDossier(){
         <div class="kids">${ch.map(c => `<button data-id="${c.id}">${esc(c.name)}</button>`).join('<span class="dim"> · </span>')}</div></div>` : ''}
 
       ${b.partialNote ? `<div class="sec"><div class="sec-label">WHAT THE SOURCE DOES NOT SAY</div><p class="note">${esc(b.partialNote)}</p></div>` : ''}
+      ${b.priorClaim ? `<div class="sec"><div class="sec-label">UNVERIFIED LEAD — NOT DRAWN</div><p class="note">${esc(b.priorClaim)}</p></div>` : ''}
       ${b.conflict ? `<div class="sec"><div class="sec-label">DISAGREEMENT</div><p class="note">${esc(b.conflict)}</p></div>` : ''}
       ${b.note ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div><p class="note">${esc(b.note)}</p></div>` : ''}
     </div>`;

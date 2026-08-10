@@ -11,12 +11,20 @@ each edge came from. This one grades every claim:
 
 | tier | mark | source |
 |---|---|---|
-| T | ◆ green | parent confirmed in the primary text, with a chapter citation |
-| A | ◆ amber | Taylor's own genealogy (April 2017) — accurate through book 2 only |
-| B | ◇ dim | Bobiverse Fandom wiki registry — reader-compiled, supplies designations and dates |
-| P | ◈ dim | an ancestor is named but the generations between are not |
+| O | ○ amber | the original, Bob-1 — there is no parent to find |
+| T | ◆ green | parent stated in the books, with a citation |
+| P | ◈ dim | an ancestor is stated but the generations between are not |
 | C | ✕ grey | no ancestor on record; listed in the unresolved register |
 | X | ▨ red | the record was deliberately expunged |
+
+**The books are the only source.** Taylor's 2017 genealogy and the fandom wiki
+used to supply 30 of these parentages; they've been dropped, because a lineage
+we can't point at a page for shouldn't be drawn as though we know it. Those
+claims aren't lost — each sits on its record as an unverified lead, visible in
+the dossier and never drawn as an edge.
+
+Ten tier-T records come from an unexpected place: the Cast of Characters
+appendix at the back of book 2, which states parentage outright.
 
 The tier grades **parentage only**. A tier C Bob can still be thoroughly
 documented — Herschel has eighteen POV chapters and announces his own generation
@@ -46,7 +54,8 @@ designations, systems, notes and citations:
 Selecting a record pulls its dossier and traces the route back to Bob-1
 hop by hop, **grading each link separately**. A chain can be solid for two hops
 and then run out of sources, and that's visible rather than smoothed over.
-64 of the 87 traces reach Bob-1; 23 terminate.
+34 of the 87 traces reach Bob-1; 53 terminate — an honest number rather than
+a flattering one.
 
 Two details follow the books rather than taste. Bobs all wear the same face, so
 the registry identifies them the way Guppy does — by serial number, with the
@@ -95,6 +104,7 @@ gitignored and should remain so.
 
 ## Status
 
-87 replicants, 51 with primary-text citations, 33 with a parent confirmed in
-the books, 2 with their lineage deliberately expunged. Known gaps and the
+87 replicants, 52 with citations, 32 with a parent stated in the books, 2 with
+their lineage deliberately expunged, and 30 carrying an unverified lead from a
+dropped source. Known gaps and the
 research backlog are at the bottom of CLAUDE.md.

@@ -65,14 +65,25 @@ is otherwise — Herschel is tier C with eighteen POV chapters and a generation 
 states out loud. We just don't know who made him. `cite`, `gen` and the rest are
 welcome on any tier.
 
+**The books are the only source.** Taylor's 2017 genealogy and the fandom wiki
+were dropped: a lineage claim we can't point at a page for should not be drawn
+as though we know it. That cost 30 parentages and it was worth it. Dropped
+claims aren't deleted — they move to `priorClaim`, recorded as a research lead
+and never rendered as an edge. If the books later settle one, promote it and
+remove the field.
+
 | tier | meaning | requirements |
 |---|---|---|
-| `t` | parent confirmed in the primary text | `cite` required, and it must support the parent link |
-| `a` | Taylor's published genealogy, Apr 2017 | accurate only through book 2 |
-| `b` | Bobiverse Fandom wiki registry | reader-compiled; supplies designations, dates, vessels |
-| `p` | an ancestor is named, generations are not | `parent` = ancestor; explain in `partialNote` |
+| `o` | the original — no parent exists to find | `bob1` only; no `parent` |
+| `t` | parent stated in the books | `cite` required, and it must support the parent link |
+| `p` | an ancestor is stated, generations are not | `parent` = ancestor; explain in `partialNote` |
 | `c` | no ancestor on record | no `parent`; listed in the unresolved register |
 | `x` | the record was deliberately expunged | no `parent`; `cite` **and** `partialNote` both required |
+
+**Two kinds of tier T.** Most come from narrative chapters. Ten come from the
+Cast of Characters appendix at the back of book 2, cited `Bk2 · Cast of
+Characters`. Back matter rather than story, but Taylor's own words printed in
+the novel. It only covers book 2, so it says nothing about later generations.
 
 **On tier X.** C and X are both "we can't reach Bob-1," but they are different
 facts. C is silence. X is a deletion, and we can name who did it: Bill reports
@@ -150,9 +161,10 @@ exists, so a chapter number that drifts gets caught rather than believed.
 - Thor, Jeffrey, Milton, Zeke — parentage still unconfirmed by text. Jeffrey,
   Milton and Zeke now carry a citation for their *deaths* at 82 Eridani
   (Bk2 ch48), but nothing in the books names who built them.
-- 22 Bobs at tier C, plus 2 at tier X. The richest are Neil and Herschel (both
-  stated eighth-generation), Gandalf, Marcus and Mack — all well documented,
-  all missing a parent.
+- 51 Bobs at tier C, plus 2 at tier X. 30 of those arrived there when the
+  secondary sources were dropped and carry a `priorClaim` worth chasing in the
+  text. The richest with no lead at all are Neil and Herschel (both stated
+  eighth-generation), Gandalf, Marcus and Mack.
 - Marcus — a major POV character absent from every published tree. Will is no
   longer on this list: he is Riker, who renamed himself in Bk3 ch57.
 - Hector name collision: a 3rd-generation Hector lost at 82 Eridani, and an

@@ -30,8 +30,8 @@
           },
           "src": {
             "type": "string",
-            "enum": ["t", "a", "b", "p", "c", "x"],
-            "description": "How well we know this Bob's PARENTAGE, and nothing else. t=parent confirmed in the books; a=Taylor's 2017 tree; b=fandom wiki registry; p=an ancestor is known but the generations between are not; c=no ancestor on record; x=the record was deliberately expunged. A tier C Bob can still be richly documented \u2014 Herschel states his own generation on the page and has eighteen POV chapters; we just don't know who made him. Tier X is narrower and stronger: we know why the data is missing, because somebody removed it on purpose. Reserve it for cases the text actually accounts for; requires a cite and a partialNote."
+            "enum": ["o", "t", "p", "c", "x"],
+            "description": "How well the BOOKS establish this Bob's parentage. They are the only source: Taylor's 2017 genealogy and the fandom wiki were dropped, because a claim we cannot point at a page for should not be asserted. o=the original, Bob-1, who has no parent to find; t=parent stated in the books, narrative or the Cast of Characters appendix; p=an ancestor is stated but the generations between are not; c=no ancestor on record; x=the record was deliberately expunged. Tier says nothing about how well documented a Bob is otherwise — Herschel is tier C with eighteen POV chapters and a generation he states out loud. Tier X is the narrow, stronger case: we know why the data is missing, because somebody removed it on purpose; it requires a cite and a partialNote."
           },
           "cite": {
             "type": "string",
@@ -56,7 +56,8 @@
           },
           "ref": { "type": "string", "description": "Namesake. Reader inference, not canon." },
           "conflict": { "type": "string", "description": "Describe the disagreement between sources and which one the tree follows." },
-          "partialNote": { "type": "string", "description": "Required for tiers P and X. For P, exactly what the source does and doesn't say about the gap. For X, who removed the record and how we know." },
+          "partialNote": { "type": "string", "description": "Required for tiers P and X. For P, exactly what the books do and don't say about the gap. For X, who removed the record and how we know." },
+          "priorClaim": { "type": "string", "description": "A parentage claim from a source we dropped — Taylor's 2017 tree or the fandom wiki. Recorded as a research lead so the work isn't lost, and deliberately NOT a parent link: the tree only draws what the books support. Delete it if the books ever settle the question." },
           "note": { "type": "string", "description": "Our prose, shown in the dossier under ANNOTATION and deliberately unbracketed — in the books, square brackets mark machine output, so the registry's own fields are bracketed and this is not." }
         }
       }
