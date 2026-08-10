@@ -115,3 +115,8 @@ dropped source. Biography is held to the same standard as lineage: `desig`,
 the tree except for the three the text states out loud.
 
 The research backlog lives in `data/todo.json` and is a view in the console.
+
+`data/systems.json` maps the 22 star systems the Bobs reach. They're real stars —
+Taylor used Hipparcos catalogue numbers, which is why a Bob can read his own
+origin off his serial number — so the astrometry is real too, from SIMBAD, with
+distances and Cartesian positions computed from parallax rather than copied.

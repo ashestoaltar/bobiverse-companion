@@ -7,12 +7,14 @@ provenance honest. Exits non-zero on any error so it can gate a build.
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "bobs.json")
+SYSTEMS = os.path.join(ROOT, "data", "systems.json")
 
 # Tiers grade PARENTAGE only, and the books are the only source. Taylor's 2017
 # genealogy and the fandom wiki were dropped: a claim we can't point at a page
@@ -72,6 +74,55 @@ def _check_cites(bobs: list[dict]) -> list[str]:
             out.append(f"{bob['id']}: cite Bk{bk} ch{sq} is {chapter['pov']}, "
                        f"{chapter['when']} — not {pov}, {when}{fix}")
     return out
+
+
+PC_TO_LY = 3.261563777
+
+# Bill lists distances from 82 Eridani in Bk3 ch21. Our coordinates should
+# reproduce them — if a parallax ever gets fat-fingered, this is what catches it.
+STATED_FROM_82 = [("epsilon_eridani", 12.5), ("omicron2_eridani", 12.0), ("tau_ceti", 12.0)]
+
+
+def _load_systems() -> dict:
+    if not os.path.exists(SYSTEMS):
+        return {}
+    with open(SYSTEMS) as fh:
+        return {s["id"]: s for s in json.load(fh)["systems"]}
+
+
+def _check_systems(bobs: list[dict]) -> tuple[list[str], list[str]]:
+    """Systems file integrity, and that every Bob points at a system that exists."""
+    systems = _load_systems()
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not systems:
+        return errors, warnings
+
+    for sid, sysm in systems.items():
+        plx, dist, xyz = sysm.get("parallax_mas"), sysm.get("distance_ly"), sysm.get("xyz_ly")
+        if plx:
+            want = (1000.0 / plx) * PC_TO_LY
+            if dist is None or abs(dist - want) > 0.01:
+                errors.append(f"system {sid}: distance {dist} doesn't follow from parallax {plx} (expected {want:.3f})")
+        if xyz and dist:
+            r = math.sqrt(sum(v * v for v in xyz))
+            if abs(r - dist) > 0.02:
+                errors.append(f"system {sid}: xyz magnitude {r:.3f} disagrees with distance {dist}")
+        if plx is None and sysm.get("xyz_ly") and sid != "sol":
+            warnings.append(f"system {sid}: has coordinates but no parallax to justify them")
+
+    # the fiction's own distances, as a check on the astrometry
+    e82 = systems.get("82_eridani", {}).get("xyz_ly")
+    if e82:
+        for sid, said in STATED_FROM_82:
+            xyz = systems.get(sid, {}).get("xyz_ly")
+            if not xyz:
+                continue
+            got = math.dist(e82, xyz)
+            if abs(got - said) > 1.0:
+                warnings.append(f"{sid} is {got:.2f} ly from 82 Eridani; Bk3 ch21 says about {said}")
+
+    return errors, warnings
 
 
 def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
@@ -165,6 +216,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     # rather than errors: the corpus is optional, and another edition could
     # legitimately number its chapters differently.
     warnings += _check_cites(bobs)
+
+    sys_errors, sys_warnings = _check_systems(bobs)
+    errors += sys_errors
+    warnings += sys_warnings
 
     # `gen` is only independent information when the parent chain is broken.
     # Where the chain reaches Bob-1 it's derivable, so any disagreement means one

@@ -1,0 +1,589 @@
+{
+ "_comment": "Star systems of the Bobiverse. Taylor used real catalogue stars, and the HIC numbers in the Bobs' designations are real Hipparcos IDs — Bob reads his own origin off his serial in Bk1 ch15, and HIP 16537 really is Epsilon Eridani. Astrometry is from SIMBAD (ICRS J2000); distance and xyz are computed from parallax here, never transcribed. Books 1-4 only: the book 5 wormhole network is not a distance graph and needs its own model.",
+ "frame": "Equatorial (ICRS) Cartesian, light-years, Sol at the origin. +x toward RA 0h Dec 0, +z toward the north celestial pole.",
+ "source": "SIMBAD, simbad.u-strasbg.fr",
+ "systems": [
+  {
+   "id": "sol",
+   "name": "Sol",
+   "hip": null,
+   "ra_deg": null,
+   "dec_deg": null,
+   "parallax_mas": null,
+   "distance_ly": 0.0,
+   "xyz_ly": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "places": [
+    {
+     "name": "Earth",
+     "kind": "planet",
+     "cite": "throughout"
+    }
+   ],
+   "role": "Home. Bob-1 launches from here and Riker comes back to it.",
+   "scenes": 45,
+   "first_year": 2157,
+   "last_year": 2343,
+   "povs": [
+    "Bill",
+    "Bob",
+    "Herschel",
+    "Homer",
+    "Riker"
+   ]
+  },
+  {
+   "id": "alpha_centauri",
+   "name": "Alpha Centauri",
+   "hip": 71683,
+   "ra_deg": 219.902058,
+   "dec_deg": -60.833993,
+   "parallax_mas": 742.12,
+   "distance_ly": 4.395,
+   "xyz_ly": [
+    -1.6431,
+    -1.3739,
+    -3.8377
+   ],
+   "places": [],
+   "role": "Calvin and Goku beat Medeiros here; later Bart, then Oliver.",
+   "scenes": 4,
+   "first_year": 2163,
+   "last_year": 2329,
+   "povs": [
+    "Calvin",
+    "Icarus",
+    "Oliver"
+   ]
+  },
+  {
+   "id": "epsilon_eridani",
+   "name": "Epsilon Eridani",
+   "hip": 16537,
+   "ra_deg": 53.232685,
+   "dec_deg": -9.458261,
+   "parallax_mas": 310.5773,
+   "distance_ly": 10.502,
+   "xyz_ly": [
+    6.2005,
+    8.2982,
+    -1.7257
+   ],
+   "places": [
+    {
+     "name": "Ragnarök",
+     "kind": "planet",
+     "note": "EE-2. Bill names it while planning to drop icebergs on it.",
+     "cite": "Bk1 ch17 · Bob, Jul 2145"
+    }
+   ],
+   "role": "Bill's Skunk Works and the hub of BobNet for two centuries.",
+   "scenes": 39,
+   "first_year": 2144,
+   "last_year": 2345,
+   "povs": [
+    "Bill",
+    "Bob",
+    "Howard",
+    "Linus"
+   ]
+  },
+  {
+   "id": "epsilon_indi",
+   "name": "Epsilon Indi",
+   "hip": 108870,
+   "ra_deg": 330.840223,
+   "dec_deg": -56.785979,
+   "parallax_mas": 274.8431,
+   "distance_ly": 11.867,
+   "xyz_ly": [
+    5.6765,
+    -3.1673,
+    -9.9283
+   ],
+   "places": [],
+   "role": "",
+   "scenes": 1,
+   "first_year": 2190,
+   "last_year": 2190,
+   "povs": [
+    "Rudy"
+   ]
+  },
+  {
+   "id": "tau_ceti",
+   "name": "Tau Ceti",
+   "hip": 8102,
+   "ra_deg": 26.017013,
+   "dec_deg": -15.93748,
+   "parallax_mas": 273.8097,
+   "distance_ly": 11.912,
+   "xyz_ly": [
+    10.2932,
+    5.0241,
+    -3.2708
+   ],
+   "places": [],
+   "role": "",
+   "scenes": 0,
+   "first_year": null,
+   "last_year": null,
+   "povs": []
+  },
+  {
+   "id": "omicron2_eridani",
+   "name": "Omicron² Eridani",
+   "hip": 19849,
+   "ra_deg": 63.817998,
+   "dec_deg": -7.65287,
+   "parallax_mas": 199.608,
+   "distance_ly": 16.34,
+   "xyz_ly": [
+    7.1453,
+    14.5327,
+    -2.176
+   ],
+   "places": [
+    {
+     "name": "Vulcan",
+     "kind": "planet",
+     "note": "First human colony outside Sol; Howard resident."
+    },
+    {
+     "name": "Romulus",
+     "kind": "planet",
+     "note": "The other half of the double planet Milo found."
+    }
+   ],
+   "role": "Milo's double planet, and where humanity actually lands.",
+   "scenes": 34,
+   "first_year": 2152,
+   "last_year": 2345,
+   "povs": [
+    "Herschel",
+    "Howard",
+    "Milo",
+    "Riker",
+    "Will"
+   ]
+  },
+  {
+   "id": "eta_cassiopeiae",
+   "name": "Eta Cassiopeiae",
+   "hip": 3821,
+   "ra_deg": 12.276227,
+   "dec_deg": 57.815177,
+   "parallax_mas": 168.8322,
+   "distance_ly": 19.318,
+   "xyz_ly": [
+    10.0547,
+    2.1879,
+    16.3498
+   ],
+   "places": [
+    {
+     "name": "Poseidon",
+     "kind": "planet",
+     "note": "Water world. Mulder's posting.",
+     "cite": "Bk2 · location header 'Poseidon (Eta Cassiopeiae)'"
+    }
+   ],
+   "role": "",
+   "scenes": 13,
+   "first_year": 2170,
+   "last_year": 2334,
+   "povs": [
+    "Marcus",
+    "Mulder"
+   ]
+  },
+  {
+   "id": "82_eridani",
+   "name": "82 Eridani",
+   "hip": 15510,
+   "ra_deg": 49.981879,
+   "dec_deg": -43.069782,
+   "parallax_mas": 165.5242,
+   "distance_ly": 19.704,
+   "xyz_ly": [
+    9.2561,
+    11.0239,
+    -13.4559
+   ],
+   "places": [
+    {
+     "name": "Valhalla",
+     "kind": "planet",
+     "note": "Terraformed after Medeiros was driven out."
+    }
+   ],
+   "role": "Medeiros. Milo lost here; two expeditions to take it back.",
+   "scenes": 9,
+   "first_year": 2165,
+   "last_year": 2336,
+   "povs": [
+    "Bill",
+    "Bob",
+    "Khan",
+    "Loki",
+    "Mack",
+    "Milo"
+   ]
+  },
+  {
+   "id": "delta_pavonis",
+   "name": "Delta Pavonis",
+   "hip": 99240,
+   "ra_deg": 302.181704,
+   "dec_deg": -66.182067,
+   "parallax_mas": 163.9544,
+   "distance_ly": 19.893,
+   "xyz_ly": [
+    4.2787,
+    -6.7992,
+    -18.1989
+   ],
+   "places": [
+    {
+     "name": "New Pav",
+     "kind": "planet",
+     "note": "Pav resettlement after the Others."
+    }
+   ],
+   "role": "The Pav, and the Others' arrival.",
+   "scenes": 12,
+   "first_year": 2207,
+   "last_year": 2332,
+   "povs": [
+    "Bill",
+    "Herschel",
+    "Jacques",
+    "Phineas"
+   ]
+  },
+  {
+   "id": "beta_hydri",
+   "name": "Beta Hydri",
+   "hip": 2021,
+   "ra_deg": 6.437793,
+   "dec_deg": -77.254246,
+   "parallax_mas": 134.07,
+   "distance_ly": 24.327,
+   "xyz_ly": [
+    5.3334,
+    0.6018,
+    -23.7279
+   ],
+   "places": [],
+   "role": "",
+   "scenes": 1,
+   "first_year": 2169,
+   "last_year": 2169,
+   "povs": [
+    "Mario"
+   ]
+  },
+  {
+   "id": "p_eridani",
+   "name": "p Eridani",
+   "hip": 7751,
+   "ra_deg": 24.948081,
+   "dec_deg": -56.196417,
+   "parallax_mas": 127.84,
+   "distance_ly": 25.513,
+   "xyz_ly": [
+    12.8696,
+    5.987,
+    -21.1999
+   ],
+   "places": [],
+   "role": "Hank's posting. Bill lists it when working out who is nearest to Alpha Centauri.",
+   "scenes": 0,
+   "first_year": null,
+   "last_year": null,
+   "povs": []
+  },
+  {
+   "id": "gliese_54",
+   "name": "Gliese 54",
+   "hip": 5496,
+   "ra_deg": 17.595337,
+   "dec_deg": -67.444986,
+   "parallax_mas": 121.4487,
+   "distance_ly": 26.855,
+   "xyz_ly": [
+    9.819,
+    3.1139,
+    -24.8014
+   ],
+   "places": [],
+   "role": "",
+   "scenes": 4,
+   "first_year": 2180,
+   "last_year": 2204,
+   "povs": [
+    "Bill",
+    "Hal",
+    "Mario"
+   ]
+  },
+  {
+   "id": "gliese_877",
+   "name": "Gliese 877",
+   "hip": 113229,
+   "ra_deg": 343.939636,
+   "dec_deg": -75.458668,
+   "parallax_mas": 116.3134,
+   "distance_ly": 28.041,
+   "xyz_ly": [
+    6.7657,
+    -1.9478,
+    -27.1429
+   ],
+   "places": [],
+   "role": "",
+   "scenes": 3,
+   "first_year": 2187,
+   "last_year": 2196,
+   "povs": [
+    "Bashful",
+    "Hal"
+   ]
+  },
+  {
+   "id": "zeta_tucanae",
+   "name": "Zeta Tucanae",
+   "hip": 1599,
+   "ra_deg": 5.017744,
+   "dec_deg": -64.874794,
+   "parallax_mas": 116.1826,
+   "distance_ly": 28.073,
+   "xyz_ly": [
+    11.8739,
+    1.0425,
+    -25.4166
+   ],
+   "places": [],
+   "role": "",
+   "scenes": 1,
+   "first_year": 2176,
+   "last_year": 2176,
+   "povs": [
+    "Mario"
+   ]
+  },
+  {
+   "id": "delta_eridani",
+   "name": "Delta Eridani",
+   "hip": 17378,
+   "ra_deg": 55.812086,
+   "dec_deg": -9.763392,
+   "parallax_mas": 110.0254,
+   "distance_ly": 29.644,
+   "xyz_ly": [
+    16.4158,
+    24.1661,
+    -5.027
+   ],
+   "places": [
+    {
+     "name": "Eden",
+     "kind": "planet",
+     "note": "The Deltans' world.",
+     "cite": "Bk1 · location headers give 'Delta Eridani (Eden)'"
+    },
+    {
+     "name": "Camelot",
+     "kind": "settlement",
+     "note": "Deltan village on Eden, named by Bob-1."
+    }
+   ],
+   "role": "First contact. Bob-1 finds the Deltans and stays.",
+   "scenes": 36,
+   "first_year": 2165,
+   "last_year": 2233,
+   "povs": [
+    "Bob"
+   ]
+  },
+  {
+   "id": "gamma_pavonis",
+   "name": "Gamma Pavonis",
+   "hip": 105858,
+   "ra_deg": 321.610854,
+   "dec_deg": -65.366198,
+   "parallax_mas": 108.0102,
+   "distance_ly": 30.197,
+   "xyz_ly": [
+    9.8655,
+    -7.8162,
+    -27.4486
+   ],
+   "places": [
+    {
+     "name": "Newholme",
+     "kind": "planet",
+     "note": "Colony. Xavier Charles lives there undercover as a writer."
+    }
+   ],
+   "role": "",
+   "scenes": 3,
+   "first_year": 2205,
+   "last_year": 2334,
+   "povs": [
+    "Bill",
+    "Claude"
+   ]
+  },
+  {
+   "id": "kappa_ceti",
+   "name": "Kappa Ceti",
+   "hip": 15457,
+   "ra_deg": 49.840402,
+   "dec_deg": 3.370199,
+   "parallax_mas": 107.8023,
+   "distance_ly": 30.255,
+   "xyz_ly": [
+    19.4783,
+    23.0825,
+    1.7786
+   ],
+   "places": [],
+   "role": "",
+   "scenes": 0,
+   "first_year": null,
+   "last_year": null,
+   "povs": []
+  },
+  {
+   "id": "hip_14101",
+   "name": "HIP 14101",
+   "hip": 14101,
+   "ra_deg": 45.464123,
+   "dec_deg": -16.593364,
+   "parallax_mas": 106.16,
+   "distance_ly": 30.723,
+   "xyz_ly": [
+    20.6505,
+    20.9878,
+    -8.7738
+   ],
+   "places": [
+    {
+     "name": "Odin",
+     "kind": "planet",
+     "note": "Jovian. Howard flies drones into its cloud layers.",
+     "cite": "Bk3 ch20 · Howard, 2230"
+    }
+   ],
+   "role": "Howard's long survey of the Jovian Odin.",
+   "scenes": 9,
+   "first_year": 2210,
+   "last_year": 2230,
+   "povs": [
+    "Howard"
+   ]
+  },
+  {
+   "id": "hip_84051",
+   "name": "HIP 84051",
+   "hip": 84051,
+   "ra_deg": 257.746475,
+   "dec_deg": -52.515511,
+   "parallax_mas": 78.2621,
+   "distance_ly": 41.675,
+   "xyz_ly": [
+    -5.3826,
+    -24.7833,
+    -33.0698
+   ],
+   "places": [],
+   "role": "",
+   "scenes": 3,
+   "first_year": 2247,
+   "last_year": 2257,
+   "povs": [
+    "Jacques"
+   ]
+  },
+  {
+   "id": "eta_leporis",
+   "name": "Eta Leporis",
+   "hip": 28103,
+   "ra_deg": 89.101223,
+   "dec_deg": -14.1677,
+   "parallax_mas": 66.8573,
+   "distance_ly": 48.784,
+   "xyz_ly": [
+    0.7419,
+    47.2943,
+    -11.9404
+   ],
+   "places": [
+    {
+     "name": "Heaven's River",
+     "kind": "topopolis",
+     "note": "The megastructure. Its interior segments — Garack's Spine, Three Lagoons, Arcadia, Nirvana and Utopia rivers, Misty Falls, Six Hills — are positions along a ribbon, not points in space, so they need their own model."
+    },
+    {
+     "name": "Quin",
+     "kind": "place",
+     "note": "Tentative. Appears as a location but is never tied to a system in so many words."
+    }
+   ],
+   "role": "Heaven's River. The whole of book 4.",
+   "scenes": 34,
+   "first_year": 2331,
+   "last_year": 2342,
+   "povs": [
+    "Bob",
+    "Will"
+   ]
+  },
+  {
+   "id": "trantor",
+   "name": "Trantor",
+   "hip": null,
+   "ra_deg": null,
+   "dec_deg": null,
+   "parallax_mas": null,
+   "distance_ly": null,
+   "xyz_ly": null,
+   "places": [
+    {
+     "name": "Big Top",
+     "kind": "planet",
+     "note": "Jovian, renamed Trantor after Howard's carping."
+    }
+   ],
+   "role": "Unplaceable: the books never say which system Big Top orbits.",
+   "scenes": 7,
+   "first_year": 2334,
+   "last_year": 2344,
+   "povs": [
+    "Howard"
+   ]
+  },
+  {
+   "id": "jabberwocky",
+   "name": "Jabberwocky",
+   "hip": null,
+   "ra_deg": null,
+   "dec_deg": null,
+   "parallax_mas": null,
+   "distance_ly": null,
+   "xyz_ly": null,
+   "places": [],
+   "role": "Bob-named system found late; no catalogue identity, so no coordinates.",
+   "scenes": 9,
+   "first_year": 2343,
+   "last_year": 2344,
+   "povs": [
+    "Howard"
+   ]
+  }
+ ]
+}

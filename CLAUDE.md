@@ -108,6 +108,7 @@ books/           your DRM-free ebooks (gitignored, never committed)
 data/bobs.json   source of truth
 data/schema.json field documentation and constraints
 data/todo.json   the research backlog, rendered as a view in the console
+data/systems.json star systems with real astrometry, and the places in them
 src/parse_ebook.py  MOBI + EPUB -> chapters, refuses DRM
 src/corpus.py       build/load the cached corpus
 src/extract.py      surface candidate passages for review (never auto-writes)
@@ -158,6 +159,27 @@ is the one expected divergence.
 
 `make validate` re-checks every citation against the corpus whenever `.cache/`
 exists, so a chapter number that drifts gets caught rather than believed.
+
+## Systems
+
+`data/systems.json` holds the star systems, and they are real ones. Taylor built
+the Bobiverse on the actual sky: **the HIC numbers in the Bobs' designations are
+Hipparcos Catalogue numbers.** HIP 16537 really is Epsilon Eridani, which is why
+Bob can read his own origin off his serial in Bk1 ch15. Verified against SIMBAD
+for Delta Eridani, Alpha Centauri, Eta Cassiopeiae and Epsilon Eridani.
+
+Astrometry comes from SIMBAD (ICRS J2000). **Distance and xyz are computed from
+parallax, never transcribed** — one source summary called Alpha Centauri's 742
+mas "1.35 light-years" when it is 1.35 parsecs, and that is exactly the kind of
+error that produces a convincing wrong map.
+
+The books check our arithmetic. In Bk3 ch21 Bill lists distances from 82 Eridani
+— Epsilon Eridani at "twelve point five", Tau Ceti and Vulcan at "about twelve".
+Our coordinates give 12.42, 11.87 and 12.00. Taylor computed real 3D separations,
+so `make validate` re-runs that comparison and warns if it drifts.
+
+Scope is books 1–4: the book 5 wormhole network is a topology, not a distance
+graph, and needs its own model.
 
 ## Field policy
 
