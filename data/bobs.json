@@ -497,7 +497,7 @@
   {
    "id": "loki",
    "name": "Loki",
-   "parent": "bill",
+   "parent": "khan",
    "src": "t",
    "cite": "Bk2 ch34 · Bill, Jun 2185",
    "gen": 3,
@@ -506,8 +506,8 @@
    "visited": "82 Eridani",
    "status": "active",
    "ref": "Norse trickster god",
-   "conflict": "RESOLVED. Taylor’s 2017 tree put Loki under Khan; the text puts him in Bill’s ten-Bob cohort at Epsilon Eridani, agreeing with the wiki registry. Reparented to Bill.",
-   "note": "One of ten Bobs Bill raised as the second strike force for 82 Eridani, after the first attempt left only Khan alive in-system."
+   "conflict": "Our own earlier reading was the wrong one. Bill assembles ten new Bobs as the second strike force for 82 Eridani, which is where Loki appears — but that is the unit, not the source. In the same chapter Bill says he loaded Khan's backup at Khan's request, and the Bob who came up named himself Loki, adding that this branch of the tree liked villains. Taylor's 2017 tree put Loki under Khan and agrees with the text; the wiki registry does not. Reparented to Khan.",
+   "note": "Instantiated from Khan's own backup and promptly picked a trickster's name, to Bill's visible delight. Flew with Bill's ten-Bob second strike force to retake 82 Eridani."
   },
   {
    "id": "bashful",

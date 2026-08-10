@@ -26,9 +26,16 @@ clones, Pete and Victor" from Bob-1 settles Pete and Victor cleanly. Prefer
 that, or a second independent mention, before setting tier T.
 
 **Preserve disagreement.** When sources conflict, set `conflict` describing the
-disagreement and which source the tree follows. Don't silently pick a winner.
-Taylor's own 2017 tree is wrong about Loki (it puts him under Khan; the text
-puts him in Bill's June 2185 cohort), so "the author said so" is not decisive.
+disagreement and which source the tree follows. Don't silently pick a winner —
+and record it when *we* turn out to be the wrong one. Loki is the cautionary
+example. This file used to cite him as proof that "the author said so" isn't
+decisive, on the grounds that Taylor put him under Khan while the text put him
+in Bill's June 2185 cohort. Both halves are in Bk2 ch34, and we read them
+wrongly: Bill assembles ten Bobs as the second strike force for 82 Eridani, but
+that is the unit, not the source. In the same chapter Bill loads Khan's backup
+at Khan's request, and the Bob who comes up names himself Loki — Bill notes that
+this branch of the tree likes villains. Taylor was right. We reparented Loki to
+Bill on our own bad reasoning, and have put him back under Khan.
 
 **Factions are not lineage.** They cut across branches, so they can never be
 drawn as subtrees. Use the `faction` field. There are four, and they appear once

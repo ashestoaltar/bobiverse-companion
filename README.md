@@ -28,7 +28,9 @@ isn't a gap in anyone's reading — it's the deletion itself, and the registry s
 so rather than shrugging.
 
 Where sources disagree, the disagreement is recorded rather than resolved
-silently. Taylor's own tree turns out to be wrong about Loki.
+silently — including when the disagreement turns out to be our own fault. We had
+Loki reparented away from Khan on a misreading, and the `conflict` field on his
+record now says so.
 
 ## The console
 
