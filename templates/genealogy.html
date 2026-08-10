@@ -93,6 +93,7 @@
   body.plain .crt-scan,body.plain .crt-vig{display:none}
   body.plain{text-shadow:none}
   body.plain .banner{text-shadow:none}
+  body.plain .star circle[fill^="url"]{display:none}
 
   .chips{display:flex; gap:5px; flex-wrap:wrap}
   .chip{
@@ -614,6 +615,25 @@ function renderTodo(){
    Real positions, so the camera is a plain turntable over the actual xyz:
    yaw about the z axis, then pitch, then an orthographic drop to screen.
    Nothing here fakes a projection — what you rotate is the measured cloud. */
+/* Blackbody approximations of apparent stellar colour by spectral class — the
+   same table star atlases use. The letter is what matters; D is a white dwarf. */
+const SPECTRAL_COLOUR = {
+  O:'#9bb0ff', B:'#aabfff', A:'#cad7ff', F:'#f8f7ff',
+  G:'#fff4ea', K:'#ffd2a1', M:'#ffb46b', D:'#dfe8ff', T:'#c07a4a'
+};
+const starClass = sys => {
+  const m = /([OBAFGKMDT])/.exec((sys.spectral || '').toUpperCase());
+  return m ? m[1] : 'G';
+};
+const starColour = sys => SPECTRAL_COLOUR[starClass(sys)] || SPECTRAL_COLOUR.G;
+/* Radius from absolute magnitude, so a bright F2 dwarf really does outshine an
+   M3. Compressed hard — true luminosity spans a factor of about 1500 here. */
+const starRadius = sys => {
+  const M = sys.abs_mag;
+  if (M == null) return 3.4;
+  return Math.max(2.4, Math.min(7.6, 7.6 - (M - 2.8) * 0.6));
+};
+
 const CHART = {yaw: -0.62, pitch: 0.50, zoom: 1, panx: 0, pany: 0, year: 2345, sel: null};
 const YEAR_MIN = 2133, YEAR_MAX = 2345;
 
@@ -641,9 +661,18 @@ function ringPath(radius, w, h){
   return pts.join(' ');
 }
 
+function chartDefs(){
+  return '<defs>' + Object.entries(SPECTRAL_COLOUR).map(([k, c]) =>
+    `<radialGradient id="glow-${k}">` +
+      `<stop offset="0%" stop-color="${c}" stop-opacity=".85"/>` +
+      `<stop offset="28%" stop-color="${c}" stop-opacity=".30"/>` +
+      `<stop offset="100%" stop-color="${c}" stop-opacity="0"/>` +
+    '</radialGradient>').join('') + '</defs>';
+}
+
 function chartSvg(w, h){
   if (!PLACED.length) return `<text class="chart-empty" x="20" y="30">[no system coordinates on file]</text>`;
-  const out = [];
+  const out = [chartDefs()];
   for (const r of [10, 20, 30, 40, 50]){
     if (r > FARTHEST + 6) continue;
     out.push(`<polyline class="ring" points="${ringPath(r, w, h)}"/>`);
@@ -663,14 +692,16 @@ function chartSvg(w, h){
   for (const d of drawn){
     const {sys, p, base, reached} = d;
     const cls = 'star' + (reached ? ' on' : ' future') + (CHART.sel === sys.id ? ' sel' : '');
-    const r = reached ? (sys.scenes > 20 ? 5 : sys.scenes > 5 ? 4 : 3) : 2.5;
-    out.push(`<line class="stalk" x1="${base.x.toFixed(1)}" y1="${base.y.toFixed(1)}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}"/>`);
-    out.push(`<g class="${cls}" data-sys="${sys.id}">` +
-      (CHART.sel === sys.id ? `<circle class="halo" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r+5}"/>` : '') +
-      `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" fill="${
-        reached ? (sys.id === 'sol' ? 'var(--phos)' : 'var(--amber)') : 'var(--rule)'}"/>` +
-      `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r+7}" fill="transparent"/>` +
-      `<text class="star-label" x="${(p.x+r+5).toFixed(1)}" y="${(p.y+4).toFixed(1)}">${esc(sys.name)}</text></g>`);
+    const r = starRadius(sys), k = starClass(sys), col = starColour(sys);
+    const x = p.x.toFixed(1), y = p.y.toFixed(1);
+    out.push(`<line class="stalk" x1="${base.x.toFixed(1)}" y1="${base.y.toFixed(1)}" x2="${x}" y2="${y}"/>`);
+    out.push(`<g class="${cls}" data-sys="${sys.id}" opacity="${reached ? 1 : 0.28}">` +
+      `<circle cx="${x}" cy="${y}" r="${(r*4.2).toFixed(1)}" fill="url(#glow-${k})"/>` +
+      (CHART.sel === sys.id ? `<circle class="halo" cx="${x}" cy="${y}" r="${(r+6).toFixed(1)}"/>` : '') +
+      `<circle cx="${x}" cy="${y}" r="${r.toFixed(1)}" fill="${col}"/>` +
+      (sys.components.length ? `<circle cx="${(p.x + r + 2.6).toFixed(1)}" cy="${(p.y - r - 1).toFixed(1)}" r="${Math.max(1.6, r*0.42).toFixed(1)}" fill="${col}" opacity=".8"/>` : '') +
+      `<circle cx="${x}" cy="${y}" r="${(r+8).toFixed(1)}" fill="transparent"/>` +
+      `<text class="star-label" x="${(p.x+r+7).toFixed(1)}" y="${(p.y+4).toFixed(1)}">${esc(sys.name)}</text></g>`);
   }
   return out.join('');
 }
@@ -731,9 +762,16 @@ function renderSystemDossier(sys){
         ${f('PARALLAX', sys.parallax_mas ? sys.parallax_mas + ' mas' : '')}
         ${f('RA / DEC', sys.ra_deg != null ? sys.ra_deg.toFixed(4) + '° / ' + sys.dec_deg.toFixed(4) + '°' : '')}
         ${f('XYZ', sys.xyz_ly ? sys.xyz_ly.map(v => v.toFixed(1)).join(', ') + ' ly' : '')}
+        ${f('SPECTRAL', sys.spectral)}
+        ${f('APPARENT V', sys.vmag != null ? sys.vmag : '')}
+        ${f('ABSOLUTE V', sys.abs_mag != null ? sys.abs_mag : '')}
         ${f('SCENES', sys.scenes || '')}
         ${f('YEARS', sys.first_year ? sys.first_year + '–' + sys.last_year : '')}
       </dl></div>
+      ${sys.components.length ? `<div class="sec"><div class="sec-label">COMPANIONS</div>${
+        sys.components.map(c => `<p class="note"><b style="color:var(--amber-hi);font-weight:400">${esc(c.name)}</b>${
+          c.spectral ? ` <span class="dim">${esc(c.spectral)}</span>` : ''}${
+          c.note ? '<br>' + esc(c.note) : ''}</p>`).join('<div style="height:7px"></div>')}</div>` : ''}
       ${sys.places.length ? `<div class="sec"><div class="sec-label">PLACES</div>${
         sys.places.map(pl => `<p class="note"><b style="color:var(--amber-hi);font-weight:400">${esc(pl.name)}</b>${
           pl.kind ? ` <span class="dim">(${esc(pl.kind)})</span>` : ''}${

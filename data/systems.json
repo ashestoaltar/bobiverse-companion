@@ -1,5 +1,5 @@
 {
- "_comment": "Star systems of the Bobiverse. Taylor used real catalogue stars, and the HIC numbers in the Bobs' designations are real Hipparcos IDs — Bob reads his own origin off his serial in Bk1 ch15, and HIP 16537 really is Epsilon Eridani. Astrometry is from SIMBAD (ICRS J2000); distance and xyz are computed from parallax here, never transcribed. Books 1-4 only: the book 5 wormhole network is not a distance graph and needs its own model.",
+ "_comment": "Star systems of the Bobiverse. Taylor used real catalogue stars, and the HIC numbers in the Bobs' designations are real Hipparcos IDs — Bob reads his own origin off his serial in Bk1 ch15, and HIP 16537 really is Epsilon Eridani. Astrometry, spectral types and V magnitudes are from SIMBAD (ICRS J2000); distance and xyz are computed from parallax here, never transcribed. Books 1-4 only: the book 5 wormhole network is not a distance graph and needs its own model. abs_mag is computed from V and parallax (M = V - 5log10(d_pc) + 5), so the chart can size stars by real luminosity rather than by guess.",
  "frame": "Equatorial (ICRS) Cartesian, light-years, Sol at the origin. +x toward RA 0h Dec 0, +z toward the north celestial pole.",
  "source": "SIMBAD, simbad.u-strasbg.fr",
  "systems": [
@@ -33,7 +33,11 @@
     "Herschel",
     "Homer",
     "Riker"
-   ]
+   ],
+   "spectral": "G2V",
+   "vmag": null,
+   "components": [],
+   "abs_mag": 4.83
   },
   {
    "id": "alpha_centauri",
@@ -57,7 +61,22 @@
     "Calvin",
     "Icarus",
     "Oliver"
-   ]
+   ],
+   "spectral": "G2V",
+   "vmag": 0.01,
+   "components": [
+    {
+     "name": "Alpha Centauri B",
+     "spectral": "K1V",
+     "note": "Close companion; the pair orbit in 80 years."
+    },
+    {
+     "name": "Proxima Centauri",
+     "spectral": "M5.5Ve",
+     "note": "Distant third component, and the closest star to Sol."
+    }
+   ],
+   "abs_mag": 4.362
   },
   {
    "id": "epsilon_eridani",
@@ -89,7 +108,11 @@
     "Bob",
     "Howard",
     "Linus"
-   ]
+   ],
+   "spectral": "K2V",
+   "vmag": 3.73,
+   "components": [],
+   "abs_mag": 6.191
   },
   {
    "id": "epsilon_indi",
@@ -111,7 +134,17 @@
    "last_year": 2190,
    "povs": [
     "Rudy"
-   ]
+   ],
+   "spectral": "K5V",
+   "vmag": 4.69,
+   "components": [
+    {
+     "name": "Epsilon Indi Ba/Bb",
+     "spectral": "T1+T6",
+     "note": "A pair of brown dwarfs orbiting far out."
+    }
+   ],
+   "abs_mag": 6.885
   },
   {
    "id": "tau_ceti",
@@ -131,7 +164,11 @@
    "scenes": 0,
    "first_year": null,
    "last_year": null,
-   "povs": []
+   "povs": [],
+   "spectral": "G8V",
+   "vmag": 3.5,
+   "components": [],
+   "abs_mag": 5.687
   },
   {
    "id": "omicron2_eridani",
@@ -168,7 +205,22 @@
     "Milo",
     "Riker",
     "Will"
-   ]
+   ],
+   "spectral": "K0V",
+   "vmag": 4.43,
+   "components": [
+    {
+     "name": "40 Eridani B",
+     "spectral": "DA2.9",
+     "note": "A white dwarf — among the first ever identified, and the reason this system is famous."
+    },
+    {
+     "name": "40 Eridani C",
+     "spectral": "M4.5eV",
+     "note": "A red dwarf flare star bound to the white dwarf."
+    }
+   ],
+   "abs_mag": 5.931
   },
   {
    "id": "eta_cassiopeiae",
@@ -198,7 +250,17 @@
    "povs": [
     "Marcus",
     "Mulder"
-   ]
+   ],
+   "spectral": "F9V",
+   "vmag": 3.44,
+   "components": [
+    {
+     "name": "Eta Cassiopeiae B",
+     "spectral": "K7V",
+     "note": "Orange companion; the pair are a well-known visual double."
+    }
+   ],
+   "abs_mag": 4.577
   },
   {
    "id": "82_eridani",
@@ -231,7 +293,11 @@
     "Loki",
     "Mack",
     "Milo"
-   ]
+   ],
+   "spectral": "G6V",
+   "vmag": 4.27,
+   "components": [],
+   "abs_mag": 5.364
   },
   {
    "id": "delta_pavonis",
@@ -262,7 +328,11 @@
     "Herschel",
     "Jacques",
     "Phineas"
-   ]
+   ],
+   "spectral": "G8IV",
+   "vmag": 3.56,
+   "components": [],
+   "abs_mag": 4.634
   },
   {
    "id": "beta_hydri",
@@ -284,7 +354,11 @@
    "last_year": 2169,
    "povs": [
     "Mario"
-   ]
+   ],
+   "spectral": "G0V",
+   "vmag": 2.79,
+   "components": [],
+   "abs_mag": 3.427
   },
   {
    "id": "p_eridani",
@@ -304,7 +378,17 @@
    "scenes": 0,
    "first_year": null,
    "last_year": null,
-   "povs": []
+   "povs": [],
+   "spectral": "K2V+K2V",
+   "vmag": null,
+   "components": [
+    {
+     "name": "p Eridani B",
+     "spectral": "K2V",
+     "note": "Near-twin companion; WDS J01398-5612AB."
+    }
+   ],
+   "abs_mag": null
   },
   {
    "id": "gliese_54",
@@ -328,7 +412,11 @@
     "Bill",
     "Hal",
     "Mario"
-   ]
+   ],
+   "spectral": "M2.5V",
+   "vmag": 9.824,
+   "components": [],
+   "abs_mag": 10.246
   },
   {
    "id": "gliese_877",
@@ -351,7 +439,11 @@
    "povs": [
     "Bashful",
     "Hal"
-   ]
+   ],
+   "spectral": "M3V",
+   "vmag": 10.377,
+   "components": [],
+   "abs_mag": 10.705
   },
   {
    "id": "zeta_tucanae",
@@ -373,7 +465,11 @@
    "last_year": 2176,
    "povs": [
     "Mario"
-   ]
+   ],
+   "spectral": "F9.5V",
+   "vmag": 4.23,
+   "components": [],
+   "abs_mag": 4.556
   },
   {
    "id": "delta_eridani",
@@ -407,7 +503,11 @@
    "last_year": 2233,
    "povs": [
     "Bob"
-   ]
+   ],
+   "spectral": "K0+IV",
+   "vmag": 3.54,
+   "components": [],
+   "abs_mag": 3.747
   },
   {
    "id": "gamma_pavonis",
@@ -436,7 +536,11 @@
    "povs": [
     "Bill",
     "Claude"
-   ]
+   ],
+   "spectral": "F9V",
+   "vmag": 4.22,
+   "components": [],
+   "abs_mag": 4.387
   },
   {
    "id": "kappa_ceti",
@@ -456,7 +560,11 @@
    "scenes": 0,
    "first_year": null,
    "last_year": null,
-   "povs": []
+   "povs": [],
+   "spectral": "G5V",
+   "vmag": 4.85,
+   "components": [],
+   "abs_mag": 5.013
   },
   {
    "id": "hip_14101",
@@ -485,7 +593,17 @@
    "last_year": 2230,
    "povs": [
     "Howard"
-   ]
+   ],
+   "spectral": "M3.5+M3.0",
+   "vmag": 9.97,
+   "components": [
+    {
+     "name": "LTT 1445 B/C",
+     "spectral": "M3",
+     "note": "The system is a triple of red dwarfs; a transiting planet is known here."
+    }
+   ],
+   "abs_mag": 10.1
   },
   {
    "id": "hip_84051",
@@ -507,7 +625,11 @@
    "last_year": 2257,
    "povs": [
     "Jacques"
-   ]
+   ],
+   "spectral": "M1V",
+   "vmag": 10.017,
+   "components": [],
+   "abs_mag": 9.485
   },
   {
    "id": "eta_leporis",
@@ -541,7 +663,11 @@
    "povs": [
     "Bob",
     "Will"
-   ]
+   ],
+   "spectral": "F2V",
+   "vmag": 3.72,
+   "components": [],
+   "abs_mag": 2.846
   },
   {
    "id": "trantor",
@@ -565,7 +691,11 @@
    "last_year": 2344,
    "povs": [
     "Howard"
-   ]
+   ],
+   "spectral": null,
+   "vmag": null,
+   "abs_mag": null,
+   "components": []
   },
   {
    "id": "jabberwocky",
@@ -583,7 +713,11 @@
    "last_year": 2344,
    "povs": [
     "Howard"
-   ]
+   ],
+   "spectral": null,
+   "vmag": null,
+   "abs_mag": null,
+   "components": []
   }
  ]
 }
