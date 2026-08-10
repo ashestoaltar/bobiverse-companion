@@ -155,8 +155,6 @@ exists, so a chapter number that drifts gets caught rather than believed.
   all missing a parent.
 - Marcus — a major POV character absent from every published tree. Will is no
   longer on this list: he is Riker, who renamed himself in Bk3 ch57.
-- Verne's parentage: he served on Loki's crew at 82 Eridani, and Loki's cohort
-  is Bill's June 2185 batch. Suggestive, never stated. Left at tier C.
 - Hector name collision: a 3rd-generation Hector lost at 82 Eridani, and an
   ~18th-generation Hector emailing Bill in 2343
 - Gerry's exact relation to Charles: Charles himself says "Gerry was my
@@ -178,9 +176,12 @@ Don't re-run these expecting new names; they're exhausted.
   (Bk3 ch57) and Jeremy to Morlock (Bk4 ch3). Everything else the sweep caught
   was either an original naming or an idiom — "call me Shirley" is a joke.
 
-Not yet worked: **book 2 ships a Cast of Characters appendix**. It is back
-matter, so the parser rejects it, but it is a compiled list of who's who and
-may be worth mining by hand.
+- **Book 2's Cast of Characters appendix** — mined. 26 parentage claims, every
+  one agreeing with what we had and none contradicting. It settled Verne as
+  Bill's clone (the narrative only hinted), put ten records on primary-text
+  footing, and turned up **Surly**, a Bob we didn't have at all. The parser
+  rejects it as back matter, so it has to be read by hand. Books 4 and 5 have
+  no equivalent.
 
 ## Planned: companion registers
 
