@@ -159,6 +159,36 @@
   .tree .node:focus-visible{outline:1px solid var(--amber-hi)}
   .tree .meta{color:var(--ash); font-size:12px}
 
+
+  /* --- star chart ------------------------------------------------------ */
+  .chart-wrap{display:flex; flex-direction:column; height:100%; min-height:0}
+  .chart-bar{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding-bottom:9px; border-bottom:1px solid var(--rule); margin-bottom:6px;
+  }
+  .chart-bar .yr{font-size:17px; letter-spacing:.1em; color:var(--phos); min-width:4.4em}
+  .chart-bar input[type=range]{flex:1 1 200px; min-width:150px; accent-color:var(--amber)}
+  .chart-bar .hint{font-size:11px; letter-spacing:.1em; color:var(--ash)}
+  .chart-bar button{
+    background:transparent; border:1px solid var(--ash); font:inherit; font-size:11.5px;
+    letter-spacing:.11em; color:var(--amber-dim); padding:3px 9px; cursor:pointer; text-shadow:inherit;
+  }
+  .chart-bar button:hover{color:var(--amber-hi)}
+  .chart-svg{flex:1; min-height:0; width:100%; cursor:grab; touch-action:none; display:block}
+  .chart-svg.drag{cursor:grabbing}
+  .ring{fill:none; stroke:var(--rule); stroke-width:1}
+  .ring-label{fill:var(--ash); font-size:9px; letter-spacing:.1em}
+  .stalk{stroke:var(--rule); stroke-width:1}
+  .star{cursor:pointer}
+  .star .halo{fill:none; stroke:var(--amber); stroke-width:1; opacity:.55}
+  .star-label{fill:var(--amber-dim); font-size:11px; letter-spacing:.06em; pointer-events:none}
+  .star.on .star-label{fill:var(--amber-hi)}
+  .star.sel .star-label{fill:var(--phos)}
+  .star.future circle{fill:var(--rule)}
+  .star.future .star-label{fill:var(--rule)}
+  .sol-mark{stroke:var(--phos); stroke-width:1.2; fill:none}
+  .chart-empty{fill:var(--ash); font-size:12px}
+
   /* --- unresolved register -------------------------------------------- */
   .unres{padding-bottom:40px}
   .unres-lead{color:var(--amber-dim); font-size:13.5px; max-width:74ch; margin:0 0 16px; line-height:1.62}
@@ -317,6 +347,7 @@
       <button class="tab" role="tab" id="tab-register"   aria-selected="true"  data-view="register">REGISTER</button>
       <button class="tab" role="tab" id="tab-lineage"    aria-selected="false" data-view="lineage">LINEAGE</button>
       <button class="tab" role="tab" id="tab-unresolved" aria-selected="false" data-view="unresolved">UNRESOLVED</button>
+      <button class="tab" role="tab" id="tab-chart" aria-selected="false" data-view="chart">CHART</button>
       <button class="tab" role="tab" id="tab-todo" aria-selected="false" data-view="todo">TO-DO</button>
     </div>
 
@@ -578,9 +609,148 @@ function renderTodo(){
   return `<div class="unres">${head}${body}</div>`;
 }
 
+
+/* ---- star chart -------------------------------------------------------
+   Real positions, so the camera is a plain turntable over the actual xyz:
+   yaw about the z axis, then pitch, then an orthographic drop to screen.
+   Nothing here fakes a projection — what you rotate is the measured cloud. */
+const CHART = {yaw: -0.62, pitch: 0.50, zoom: 1, panx: 0, pany: 0, year: 2345, sel: null};
+const YEAR_MIN = 2133, YEAR_MAX = 2345;
+
+const PLACED = (SYSTEMS ? SYSTEMS.systems : []).filter(s => s.xyz_ly);
+const UNPLACED = (SYSTEMS ? SYSTEMS.systems : []).filter(s => !s.xyz_ly);
+const FARTHEST = PLACED.reduce((m, s) => Math.max(m, s.distance_ly), 1);
+
+function project(p, w, h){
+  const cy = Math.cos(CHART.yaw), sy = Math.sin(CHART.yaw);
+  const cp = Math.cos(CHART.pitch), sp = Math.sin(CHART.pitch);
+  const x1 = p[0]*cy - p[1]*sy, y1 = p[0]*sy + p[1]*cy, z1 = p[2];
+  const y2 = y1*cp - z1*sp,      z2 = y1*sp + z1*cp;
+  const unit = (Math.min(w, h) / 2 - 34) / FARTHEST;   // fit the farthest system
+  const k = unit * CHART.zoom;
+  return {x: w/2 + CHART.panx + x1*k, y: h/2 + CHART.pany - z2*k, depth: y2};
+}
+
+function ringPath(radius, w, h){
+  const pts = [];
+  for (let i = 0; i <= 72; i++){
+    const a = i/72 * Math.PI*2;
+    const q = project([radius*Math.cos(a), radius*Math.sin(a), 0], w, h);
+    pts.push(`${q.x.toFixed(1)},${q.y.toFixed(1)}`);
+  }
+  return pts.join(' ');
+}
+
+function chartSvg(w, h){
+  if (!PLACED.length) return `<text class="chart-empty" x="20" y="30">[no system coordinates on file]</text>`;
+  const out = [];
+  for (const r of [10, 20, 30, 40, 50]){
+    if (r > FARTHEST + 6) continue;
+    out.push(`<polyline class="ring" points="${ringPath(r, w, h)}"/>`);
+    const lab = project([r, 0, 0], w, h);
+    out.push(`<text class="ring-label" x="${lab.x.toFixed(1)}" y="${(lab.y-4).toFixed(1)}">${r} ly</text>`);
+  }
+  const origin = project([0,0,0], w, h);
+  out.push(`<path class="sol-mark" d="M${origin.x-7},${origin.y} h14 M${origin.x},${origin.y-7} v14"/>`);
+
+  const drawn = PLACED.map(sys => {
+    const p = project(sys.xyz_ly, w, h);
+    const base = project([sys.xyz_ly[0], sys.xyz_ly[1], 0], w, h);
+    const reached = sys.first_year != null && sys.first_year <= CHART.year;
+    return {sys, p, base, reached};
+  }).sort((a, b) => a.p.depth - b.p.depth);      // far to near
+
+  for (const d of drawn){
+    const {sys, p, base, reached} = d;
+    const cls = 'star' + (reached ? ' on' : ' future') + (CHART.sel === sys.id ? ' sel' : '');
+    const r = reached ? (sys.scenes > 20 ? 5 : sys.scenes > 5 ? 4 : 3) : 2.5;
+    out.push(`<line class="stalk" x1="${base.x.toFixed(1)}" y1="${base.y.toFixed(1)}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}"/>`);
+    out.push(`<g class="${cls}" data-sys="${sys.id}">` +
+      (CHART.sel === sys.id ? `<circle class="halo" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r+5}"/>` : '') +
+      `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" fill="${
+        reached ? (sys.id === 'sol' ? 'var(--phos)' : 'var(--amber)') : 'var(--rule)'}"/>` +
+      `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r+7}" fill="transparent"/>` +
+      `<text class="star-label" x="${(p.x+r+5).toFixed(1)}" y="${(p.y+4).toFixed(1)}">${esc(sys.name)}</text></g>`);
+  }
+  return out.join('');
+}
+
+function paintChart(){
+  const svg = document.getElementById('chart');
+  if (!svg) return;
+  const w = svg.clientWidth || 800, h = svg.clientHeight || 520;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.innerHTML = chartSvg(w, h);
+  const yr = document.getElementById('chart-year');
+  if (yr) yr.textContent = CHART.year >= YEAR_MAX ? 'ALL' : CHART.year;
+  const n = PLACED.filter(s => s.first_year != null && s.first_year <= CHART.year).length;
+  const f = PLACED.filter(s => s.first_year != null && s.first_year <= CHART.year)
+                  .reduce((m, s) => Math.max(m, s.distance_ly), 0);
+  const st = document.getElementById('chart-stat');
+  if (st) st.textContent = `[${n} systems reached · frontier ${f.toFixed(1)} ly]`;
+}
+
+function renderChart(){
+  const rows = UNPLACED.length
+    ? `<div class="hint">${UNPLACED.length} without coordinates: ${UNPLACED.map(s => esc(s.name)).join(', ')}</div>` : '';
+  return `<div class="chart-wrap">
+      <div class="chart-bar">
+        <span class="yr" id="chart-year">ALL</span>
+        <input id="chart-slider" type="range" min="${YEAR_MIN}" max="${YEAR_MAX}" value="${CHART.year}" aria-label="Year">
+        <span class="hint" id="chart-stat"></span>
+        <button data-cam="in">+</button><button data-cam="out">&minus;</button><button data-cam="reset">RESET</button>
+        <span class="hint">DRAG ROTATE · WHEEL ZOOM</span>
+      </div>
+      <svg class="chart-svg" id="chart" xmlns="http://www.w3.org/2000/svg"></svg>
+      ${rows}
+    </div>`;
+}
+
 /* ---- dossier ---------------------------------------------------------- */
+function renderSystemDossier(sys){
+  const bobs = BOBS.filter(b => b.origin === sys.id || b.lostAt === sys.id ||
+                                (b.visited || []).includes(sys.id));
+  const born = bobs.filter(b => b.origin === sys.id);
+  const lost = bobs.filter(b => b.lostAt === sys.id);
+  const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
+  const link = list => list.map(b =>
+    `<button data-id="${b.id}">${esc(b.name)}</button>`).join('<span class="dim"> · </span>');
+  return `
+    <div class="dossier-head">
+      <div>
+        <div class="serial">${sys.hip ? '[HIP ' + sys.hip + ']' : '<span class="none">[no catalogue entry]</span>'}</div>
+        <h2>${esc(sys.name)}</h2>
+        <div class="sub">${sys.distance_ly != null ? sys.distance_ly + ' LY FROM SOL' : 'POSITION UNKNOWN'}</div>
+      </div>
+      <button class="dossier-close" id="d-close" aria-label="Close">✕</button>
+    </div>
+    <div class="dossier-body">
+      <div class="sec-label" style="margin-bottom:7px">ASTROMETRY</div>
+      <div class="metablock"><dl class="fields">
+        ${f('DISTANCE', sys.distance_ly != null ? sys.distance_ly + ' ly' : '')}
+        ${f('PARALLAX', sys.parallax_mas ? sys.parallax_mas + ' mas' : '')}
+        ${f('RA / DEC', sys.ra_deg != null ? sys.ra_deg.toFixed(4) + '° / ' + sys.dec_deg.toFixed(4) + '°' : '')}
+        ${f('XYZ', sys.xyz_ly ? sys.xyz_ly.map(v => v.toFixed(1)).join(', ') + ' ly' : '')}
+        ${f('SCENES', sys.scenes || '')}
+        ${f('YEARS', sys.first_year ? sys.first_year + '–' + sys.last_year : '')}
+      </dl></div>
+      ${sys.places.length ? `<div class="sec"><div class="sec-label">PLACES</div>${
+        sys.places.map(pl => `<p class="note"><b style="color:var(--amber-hi);font-weight:400">${esc(pl.name)}</b>${
+          pl.kind ? ` <span class="dim">(${esc(pl.kind)})</span>` : ''}${
+          pl.note ? '<br>' + esc(pl.note) : ''}</p>`).join('<div style="height:7px"></div>')}</div>` : ''}
+      ${born.length ? `<div class="sec"><div class="sec-label">BUILT HERE — ${born.length}</div><div class="kids">${link(born)}</div></div>` : ''}
+      ${lost.length ? `<div class="sec"><div class="sec-label">LOST HERE — ${lost.length}</div><div class="kids">${link(lost)}</div></div>` : ''}
+      ${sys.povs.length ? `<div class="sec"><div class="sec-label">NARRATED FROM HERE</div><p class="note">${esc(sys.povs.join(', '))}</p></div>` : ''}
+      ${sys.role ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div><p class="note">${esc(sys.role)}</p></div>` : ''}
+    </div>`;
+}
+
 function renderDossier(){
   const el = document.getElementById('dossier');
+  if (state.view === 'chart' && CHART.sel && SYS[CHART.sel]) {
+    el.innerHTML = renderSystemDossier(SYS[CHART.sel]);
+    return;
+  }
   const b = state.selected && byId[state.selected];
   if (!b) {
     el.innerHTML = `<div class="idle"><b>[NO RECORD SELECTED]</b>
@@ -702,6 +872,7 @@ function render(){
   const stage = document.getElementById('stage');
   stage.innerHTML = state.view === 'register'   ? renderRegister(rows)
                   : state.view === 'lineage'    ? renderLineage(rows)
+                  : state.view === 'chart'      ? renderChart()
                   : state.view === 'todo'       ? renderTodo()
                   :                               renderUnresolved(rows);
   document.querySelectorAll('.tab').forEach(t =>
@@ -710,6 +881,7 @@ function render(){
   doss.hidden = window.innerWidth <= 860 && !state.selected;
   renderDossier();
   renderStatus(rows);
+  if (state.view === 'chart') paintChart();
 }
 
 function select(id){
@@ -718,6 +890,59 @@ function select(id){
   const row = document.querySelector(`[data-id="${id}"]`);
   if (row && row.scrollIntoView) row.scrollIntoView({block:'nearest'});
 }
+
+/* ---- chart interaction ------------------------------------------------ */
+(function chartInput(){
+  let drag = null;
+  const svgOf = e => e.target.closest && e.target.closest('#chart');
+
+  document.addEventListener('pointerdown', e => {
+    const svg = svgOf(e);
+    if (!svg) return;
+    const star = e.target.closest('.star');
+    if (star) { CHART.sel = star.dataset.sys; paintChart(); renderDossier();
+                document.getElementById('dossier').hidden = false; return; }
+    drag = {x: e.clientX, y: e.clientY, pan: e.shiftKey};
+    svg.classList.add('drag');
+    svg.setPointerCapture && svg.setPointerCapture(e.pointerId);
+  });
+  document.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    drag.x = e.clientX; drag.y = e.clientY;
+    if (drag.pan) { CHART.panx += dx; CHART.pany += dy; }
+    else {
+      CHART.yaw += dx * 0.008;
+      CHART.pitch = Math.max(-1.5, Math.min(1.5, CHART.pitch + dy * 0.008));
+    }
+    paintChart();
+  });
+  document.addEventListener('pointerup', () => {
+    drag = null;
+    const svg = document.getElementById('chart');
+    if (svg) svg.classList.remove('drag');
+  });
+  document.addEventListener('wheel', e => {
+    if (!svgOf(e)) return;
+    e.preventDefault();
+    CHART.zoom = Math.max(0.35, Math.min(9, CHART.zoom * (e.deltaY < 0 ? 1.12 : 1/1.12)));
+    paintChart();
+  }, {passive: false});
+  document.addEventListener('input', e => {
+    if (e.target.id !== 'chart-slider') return;
+    CHART.year = +e.target.value; paintChart();
+  });
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.chart-bar button[data-cam]');
+    if (!b) return;
+    const k = b.dataset.cam;
+    if (k === 'in')  CHART.zoom = Math.min(9, CHART.zoom * 1.25);
+    if (k === 'out') CHART.zoom = Math.max(0.35, CHART.zoom / 1.25);
+    if (k === 'reset') Object.assign(CHART, {yaw: -0.62, pitch: 0.50, zoom: 1, panx: 0, pany: 0});
+    paintChart();
+  });
+  window.addEventListener('resize', () => { if (state.view === 'chart') paintChart(); });
+})();
 
 /* ---- events ----------------------------------------------------------- */
 document.addEventListener('click', e => {

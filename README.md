@@ -52,6 +52,9 @@ designations, systems, notes and citations:
   a match, so branches never float free of the root.
 - **Unresolved** — the Bobs whose trace can't reach Bob-1, with the two kinds of
   absence distinguished: never recorded, versus deleted.
+- **Chart** — the star chart. Real positions from real astrometry, drag to
+  rotate, wheel to zoom, and a year scrubber from 2133 to 2345 that lights each
+  system as the Bobs first reach it.
 - **To-do** — the research backlog, reported the way Guppy reports Bob's:
   a bracketed count divided into categories. It has never once got shorter.
 

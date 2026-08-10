@@ -109,6 +109,7 @@ data/bobs.json   source of truth
 data/schema.json field documentation and constraints
 data/todo.json   the research backlog, rendered as a view in the console
 data/systems.json star systems with real astrometry, and the places in them
+templates/genealogy.html   the console — register, lineage, unresolved, chart, to-do
 src/parse_ebook.py  MOBI + EPUB -> chapters, refuses DRM
 src/corpus.py       build/load the cached corpus
 src/extract.py      surface candidate passages for review (never auto-writes)
@@ -267,10 +268,22 @@ schema fresh rather than bending this one.
 Same ground rules apply to all of them: derived text stays in `.cache/`, facts
 are publishable, and every claim carries where it came from.
 
-## The long game: BobNet
+## The long game: a full Bobiverse companion
 
-The end state is not a genealogy page with extra tabs. It's BobNet — the
-in-world network Bill actually runs — with the registry as one service on it.
+This is not a genealogy with a star chart bolted on. The end state is a complete
+companion — lineage, star chart, bestiary, peoples and polities, ship designs,
+the lot — presented as BobNet, the in-world network Bill actually runs. Website,
+app, whatever it ends up being. The bar is the reference works Star Trek fans
+have had for decades; the aim is something that stands next to those.
+
+Two things follow from that, and they should shape decisions now rather than
+later. **Every register is a peer**, so none of them should be special-cased into
+the genealogy's plumbing — `bobs.json`, `systems.json` and whatever comes next
+are siblings. And **the single-file console will stop being the right shape**:
+it currently hardcodes every view into one template, which is fine for four and
+won't be for eight. Worth restructuring deliberately before the bestiary rather
+than discovering it halfway through.
+
 Blog posts, status updates, and eventually images.
 
 Worth knowing: **Bill's blog is canon.** In Bk4 ch5 he needles Bob with "You
