@@ -1,7 +1,7 @@
 """Render data/bobs.json into dist/index.html.
 
-The template is the drawing with its data literal replaced by a placeholder,
-so the visualization and the data evolve independently. Validation runs first;
+The template is the console with its data literal replaced by a placeholder,
+so the interface and the data evolve independently. Validation runs first;
 a failing dataset never reaches dist/.
 """
 

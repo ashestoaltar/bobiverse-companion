@@ -1,7 +1,7 @@
 # Project context
 
 An interactive genealogy of the replicants in Dennis E. Taylor's Bobiverse,
-rendered as an engineering drawing. The point of the project is **provenance**:
+presented as a BobNet console. The point of the project is **provenance**:
 every lineage claim carries a confidence tier, and disagreements between
 sources are surfaced rather than smoothed over.
 
@@ -54,7 +54,7 @@ species before adding the record.
 ## Confidence tiers
 
 Tiers grade **parentage only**. They say nothing about how well documented a Bob
-is otherwise — Herschel is tier C with twenty POV chapters and a generation he
+is otherwise — Herschel is tier C with eighteen POV chapters and a generation he
 states out loud. We just don't know who made him. `cite`, `gen` and the rest are
 welcome on any tier.
 
@@ -64,7 +64,7 @@ welcome on any tier.
 | `a` | Taylor's published genealogy, Apr 2017 | accurate only through book 2 |
 | `b` | Bobiverse Fandom wiki registry | reader-compiled; supplies designations, dates, vessels |
 | `p` | an ancestor is named, generations are not | `parent` = ancestor; explain in `partialNote` |
-| `c` | no ancestor on record | no `parent`; renders in the unresolved register |
+| `c` | no ancestor on record | no `parent`; listed in the unresolved register |
 | `x` | the record was deliberately expunged | no `parent`; `cite` **and** `partialNote` both required |
 
 **On tier X.** C and X are both "we can't reach Bob-1," but they are different
@@ -92,7 +92,7 @@ src/corpus.py       build/load the cached corpus
 src/extract.py      surface candidate passages for review (never auto-writes)
 src/validate.py     schema, referential integrity, tier rules
 src/build.py        bobs.json + template -> dist/index.html
-templates/genealogy.html   the drawing, with a data placeholder
+templates/genealogy.html   the console, with a data placeholder
 ```
 
 ## Workflow
@@ -102,7 +102,7 @@ make corpus      # once, after adding ebooks
 make validate    # before every commit
 make build       # writes dist/index.html
 python src/extract.py --name Thor       # research one Bob
-python src/extract.py --unresolved      # work the tier C backlog
+python src/extract.py --unresolved      # work the tier C and P backlog
 ```
 
 `extract.py` prints passages with citations; it never edits `data/bobs.json`.
@@ -122,7 +122,7 @@ numbering.
 - Thor, Jeffrey, Milton, Zeke — parentage still unconfirmed by text. Jeffrey,
   Milton and Zeke now carry a citation for their *deaths* at 82 Eridani
   (Bk2 ch48), but nothing in the books names who built them.
-- 25 Bobs at tier C. The richest are Will (501 mentions), Neil and Herschel
+- 23 Bobs at tier C, plus 2 at tier X. The richest are Will (501 mentions), Neil and Herschel
   (both stated eighth-generation), Gandalf, Marcus and Mack — all well
   documented, all missing a parent.
 - Will and Marcus — major POV characters absent from every published tree

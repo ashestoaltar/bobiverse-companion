@@ -15,7 +15,7 @@ anything to tier T.
 Usage:
     python src/extract.py                 # all lineage cues
     python src/extract.py --name Loki     # everything about one Bob
-    python src/extract.py --unresolved    # only Bobs whose lineage is unknown
+    python src/extract.py --unresolved    # only Bobs at tier C or P
 """
 
 from __future__ import annotations
@@ -99,7 +99,9 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--name", help="focus on a single Bob")
     ap.add_argument("--unresolved", action="store_true",
-                    help="only Bobs currently at tier C or P")
+                    help="only Bobs at tier C or P. Tier X is excluded on purpose: "
+                         "those records were expunged in-world, so there is no "
+                         "lineage left in the text to find")
     ap.add_argument("--json", action="store_true", help="emit JSON")
     args = ap.parse_args()
 

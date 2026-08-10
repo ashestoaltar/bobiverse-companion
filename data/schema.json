@@ -26,12 +26,12 @@
           },
           "parent": {
             "type": "string",
-            "description": "id of the source Bob. Omit entirely for tier C (no lineage on record). For tier P this is an ancestor, not necessarily a direct parent."
+            "description": "id of the source Bob. Omit entirely for tiers C and X, which have no ancestor on record. For tier P this is an ancestor, not necessarily a direct parent."
           },
           "src": {
             "type": "string",
             "enum": ["t", "a", "b", "p", "c", "x"],
-            "description": "How well we know this Bob's PARENTAGE, and nothing else. t=parent confirmed in the books; a=Taylor's 2017 tree; b=fandom wiki registry; p=an ancestor is known but the generations between are not; c=no ancestor on record; x=the record was deliberately expunged. A tier C Bob can still be richly documented \u2014 Herschel states his own generation on the page and has twenty POV chapters; we just don't know who made him. Tier X is narrower and stronger: we know why the data is missing, because somebody removed it on purpose. Reserve it for cases the text actually accounts for; requires a cite and a partialNote."
+            "description": "How well we know this Bob's PARENTAGE, and nothing else. t=parent confirmed in the books; a=Taylor's 2017 tree; b=fandom wiki registry; p=an ancestor is known but the generations between are not; c=no ancestor on record; x=the record was deliberately expunged. A tier C Bob can still be richly documented \u2014 Herschel states his own generation on the page and has eighteen POV chapters; we just don't know who made him. Tier X is narrower and stronger: we know why the data is missing, because somebody removed it on purpose. Reserve it for cases the text actually accounts for; requires a cite and a partialNote."
           },
           "cite": {
             "type": "string",
@@ -56,8 +56,8 @@
           },
           "ref": { "type": "string", "description": "Namesake. Reader inference, not canon." },
           "conflict": { "type": "string", "description": "Describe the disagreement between sources and which one the tree follows." },
-          "partialNote": { "type": "string", "description": "For tier P: exactly what the source does and doesn't say about the gap." },
-          "note": { "type": "string", "description": "Prose shown in the detail panel." }
+          "partialNote": { "type": "string", "description": "Required for tiers P and X. For P, exactly what the source does and doesn't say about the gap. For X, who removed the record and how we know." },
+          "note": { "type": "string", "description": "Our prose, shown in the dossier under ANNOTATION and deliberately unbracketed — in the books, square brackets mark machine output, so the registry's own fields are bracketed and this is not." }
         }
       }
     }
