@@ -204,6 +204,10 @@
   .unres{padding-bottom:40px}
   .unres-lead{color:var(--amber-dim); font-size:13.5px; max-width:74ch; margin:0 0 16px; line-height:1.62}
   .card{border-left:2px solid var(--rule); padding:0 0 0 12px; margin-bottom:15px}
+  /* cleared work stays legible — dimmed, not struck through, because the note
+     on a finished item is usually the part worth keeping */
+  .card.cleared{border-left-style:dotted}
+  .card.cleared h3{color:var(--ash)}
   .card h3{margin:0; font-size:14.5px; font-weight:500; letter-spacing:.1em; color:var(--amber-hi)}
   .card .card-sub{font-size:11.5px; letter-spacing:.11em; color:var(--ash); margin:1px 0 5px}
   .card p{margin:0; font-size:13px; color:var(--amber-dim); line-height:1.6; max-width:72ch}
@@ -608,18 +612,25 @@ function renderUnresolved(rows){
 function renderTodo(){
   if (!TODO || !TODO.items) return `<p class="empty">[TO-DO UNAVAILABLE]</p>`;
   const cats = TODO.categories.filter(c => TODO.items.some(i => i.cat === c));
-  const head = `<p class="unres-lead"><span class="redacted">[</span>${TODO.items.length} items, ` +
+  const open = TODO.items.filter(i => !i.done).length;
+  const cleared = TODO.items.length - open;
+  const head = `<p class="unres-lead"><span class="redacted">[</span>${open} items outstanding` +
+    `${cleared ? `, ${cleared} cleared` : ''}, ` +
     `divided into the following categories: ${cats.join(', ')}<span class="redacted">]</span><br><br>` +
     `Bob kept one of these from his first hour as a replicant and it never got shorter. ` +
     `Neither will this. Everything here is work the books can still settle.</p>`;
   const body = cats.map(c => {
-    const items = TODO.items.filter(i => i.cat === c).map(i => `
-      <div class="card">
-        <h3>${esc(i.text)}</h3>
+    // cleared items stay on the list, at the bottom — striking one out is the
+    // only reward the job offers
+    const mine = TODO.items.filter(i => i.cat === c)
+                           .sort((a, b) => (a.done ? 1 : 0) - (b.done ? 1 : 0));
+    const items = mine.map(i => `
+      <div class="card${i.done ? ' cleared' : ''}">
+        <h3>${i.done ? `<span class="redacted">[CLEARED]</span> ` : ''}${esc(i.text)}</h3>
         ${i.note ? `<p>${esc(i.note)}</p>` : ''}
       </div>`).join('');
     return `<div class="sec"><div class="sec-label">${esc(c.toUpperCase())} — ${
-      TODO.items.filter(i => i.cat === c).length}</div>${items}</div>`;
+      mine.filter(i => !i.done).length}</div>${items}</div>`;
   }).join('');
   return `<div class="unres">${head}${body}</div>`;
 }

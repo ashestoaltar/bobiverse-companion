@@ -1,102 +1,108 @@
 {
- "_comment": "Bob keeps a TO-DO list and it never gets shorter (Bk1 ch2, ch12, ch13, ch21). Ours is the research backlog, rendered the way Guppy reports his: a bracketed count, divided into categories. Add freely; that's the joke.",
- "categories": [
-  "Lineage",
-  "Biography",
-  "Sources",
-  "Companion registers",
-  "BobNet"
- ],
- "items": [
-  {
-   "cat": "Sources",
-   "text": "Guard books/ and .cache/ against destructive rebuilds",
-   "note": "The five ebooks were deleted by a commit-splitting script that ran rm -rf on directories before restoring them from git archive — books/ is gitignored, so nothing came back but .gitkeep. It went unnoticed for hours because .cache/corpus.json survived and every build and test kept passing. Two fixes: never let a restore-from-archive step touch gitignored paths, and make `make corpus` refuse to overwrite a good cache with an empty parse. Until the ebooks are restored, do not run `make clean` — it deletes .cache/, currently the only copy of the parsed text."
-  },
-  {
-   "cat": "BobNet",
-   "text": "Star chart: three labels still drop, and two judgement calls open",
-   "note": "Gliese 54, Zeta Tucanae and Gliese 877 sit almost on top of each other at the default angle and lose their names to decluttering; rotating separates them. Open questions from the first look: whether the glow is now cut too far, and whether the backdrop at magnitude 6 is too busy behind the systems (5.5 would thin it by 40%). Both are one-line changes."
-  },
-  {
-   "cat": "BobNet",
-   "text": "Galaxy scale view — later",
-   "note": "Everything the Bobs reach fits inside 48.8 ly; the galaxy is ~100,000 ly across, so at that scale the whole story is smaller than a pixel. That's the point of it rather than an obstacle — but any Milky Way rendering is an artist's impression, so it belongs in the decoration bucket, clearly marked. Defer until the local chart is finished."
-  },
-  {
-   "cat": "BobNet",
-   "text": "Restructure before register five",
-   "note": "The console hardcodes every view into one template. Fine at five (register, lineage, unresolved, chart, to-do), won't be at eight once the bestiary and the peoples register land. Worth doing deliberately rather than discovering it halfway through."
-  },
-  {
-   "cat": "Lineage",
-   "text": "Chase the 30 dropped-source leads through the text",
-   "note": "Each carries a priorClaim from Taylor's tree or the wiki. The claim isn't drawn, but it says where to look. Anything the books confirm gets promoted; anything they contradict is worth writing up."
-  },
-  {
-   "cat": "Lineage",
-   "text": "Marcus — parentage",
-   "note": "Ten POV chapters across books 3 and 4, and no source anywhere names who built him. The last major POV character still unaccounted for."
-  },
-  {
-   "cat": "Lineage",
-   "text": "Thor, Jeffrey, Milton, Zeke — parentage",
-   "note": "Jeffrey, Milton and Zeke have a citation for their deaths at 82 Eridani. Nothing names who made them."
-  },
-  {
-   "cat": "Lineage",
-   "text": "Resolve the Hector collision",
-   "note": "A third-generation Hector lost at 82 Eridani and an ~18th-generation Hector emailing Bill in 2343. Either the naming convention broke down or they're two Bobs. Currently two records and the only standing validator warning."
-  },
-  {
-   "cat": "Lineage",
-   "text": "Verne — parentage beyond the appendix",
-   "note": "Settled as Bill's clone by the Cast of Characters. The narrative only ever put him on Loki's crew at 82 Eridani, which was suggestive and never stated. Worth a look for a narrative confirmation."
-  },
-  {
-   "cat": "Biography",
-   "text": "Light biographical sweep, name by name",
-   "note": "Rebuild born, vessel and designation from the text rather than from the sources we dropped. 17 birth dates, 3 vessels and 43 generation numbers came out in the sweep; some are certainly recoverable by reading around each name."
-  },
-  {
-   "cat": "Biography",
-   "text": "Systems: check origin and visited the same way",
-   "note": "Neither field has been verified against the text. Starfleet's location data was purged in-world (Bk4 ch32), so expect real gaps there rather than research failures."
-  },
-  {
-   "cat": "Sources",
-   "text": "Confirm books 4 and 5 have no Cast of Characters",
-   "note": "Book 2's appendix rescued ten records and turned up Surly. A quick check of the other volumes' back matter is cheap."
-  },
-  {
-   "cat": "Sources",
-   "text": "Second pass on the moot scenes for later generations",
-   "note": "Swept once and declared exhausted, but that was before the parser recovered six chapters. Worth one more pass now the corpus is complete."
-  },
-  {
-   "cat": "Companion registers",
-   "text": "System map",
-   "note": "Largely derivable from origin, visited and lostAt. Sol, Epsilon Eridani, Delta Eridani, 82 Eridani, Omicron² Eridani, Delta and Gamma Pavonis, Eta Cassiopeiae, Poseidon, Gliese 877, HIP 84051, Alpha Centauri, Ragnarök/Valhalla."
-  },
-  {
-   "cat": "Companion registers",
-   "text": "Bestiary",
-   "note": "Well attested already: gorilloids (166 mentions), landers (92), raptors (48), boojums (47), snarks (38, later renamed Quinlans), spits (36), krakens (11), hexghi (6). Watch out for manny — that's an android body, not a creature."
-  },
-  {
-   "cat": "Companion registers",
-   "text": "Peoples and polities",
-   "note": "Deltans, Quinlans, Pav, the Others, Zjentfen; the Pangean Council, the UFS, the Quinlan Resistance and Crew, and the Bawbes. Needs its own schema — species and governments don't have parents, so the tier system won't transfer."
-  },
-  {
-   "cat": "BobNet",
-   "text": "Blog posts in Bill's voice",
-   "note": "Bill's blog is canon — he needles Bob about not reading it in Bk4 ch5. Site updates belong as dated posts, not changelogs. See the voice guide in CLAUDE.md."
-  },
-  {
-   "cat": "BobNet",
-   "text": "Images",
-   "note": "Later. Whatever we do has to survive the no-external-requests rule, so anything visual gets inlined."
-  }
- ]
+  "_comment": "Bob keeps a TO-DO list and it never gets shorter (Bk1 ch2, ch12, ch13, ch21). Ours is the research backlog, rendered the way Guppy reports his: a bracketed count, divided into categories. Add freely; that's the joke.",
+  "categories": [
+    "Lineage",
+    "Biography",
+    "Sources",
+    "Companion registers",
+    "BobNet"
+  ],
+  "items": [
+    {
+      "cat": "Sources",
+      "text": "Books restored and the cache guarded",
+      "note": "The five ebooks were deleted by a commit-splitting script that ran rm -rf on directories before restoring them from git archive — books/ is gitignored, so nothing came back but .gitkeep. It went unnoticed for hours because .cache/corpus.json survived and every build and test kept passing. Restored from backup 11 Aug 2026. `make corpus` now refuses to overwrite the cache when any book parses to fewer chapters than it already holds, and refuses an empty books/ rather than treating it as an empty corpus; --force overrides. The restored book 1 is the 2016 EPUB rather than the MOBI, which needed a third header detector — see the chapter-parsing notes.",
+      "done": true
+    },
+    {
+      "cat": "Sources",
+      "text": "Move the browser test harness into the repo",
+      "note": "The Node harness that exercises every view, filter, sort, projection angle and colour path lives only in a scratch directory, so it doesn't survive a session and its record-count assertions go stale silently. It caught real bugs — the dropped Omicron² Eridani label, Sol leaking into the backdrop — and belongs in tests/ behind a `make test` target."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Star chart: three labels still drop, and two judgement calls open",
+      "note": "Gliese 54, Zeta Tucanae and Gliese 877 sit almost on top of each other at the default angle and lose their names to decluttering; rotating separates them. Open questions from the first look: whether the glow is now cut too far, and whether the backdrop at magnitude 6 is too busy behind the systems (5.5 would thin it by 40%). Both are one-line changes."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Galaxy scale view — later",
+      "note": "Everything the Bobs reach fits inside 48.8 ly; the galaxy is ~100,000 ly across, so at that scale the whole story is smaller than a pixel. That's the point of it rather than an obstacle — but any Milky Way rendering is an artist's impression, so it belongs in the decoration bucket, clearly marked. Defer until the local chart is finished."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Restructure before register five",
+      "note": "The console hardcodes every view into one template. Fine at five (register, lineage, unresolved, chart, to-do), won't be at eight once the bestiary and the peoples register land. Worth doing deliberately rather than discovering it halfway through."
+    },
+    {
+      "cat": "Lineage",
+      "text": "Chase the 30 dropped-source leads through the text",
+      "note": "Each carries a priorClaim from Taylor's tree or the wiki. The claim isn't drawn, but it says where to look. Anything the books confirm gets promoted; anything they contradict is worth writing up."
+    },
+    {
+      "cat": "Lineage",
+      "text": "Marcus — parentage",
+      "note": "Ten POV chapters across books 3 and 4, and no source anywhere names who built him. The last major POV character still unaccounted for."
+    },
+    {
+      "cat": "Lineage",
+      "text": "Thor, Jeffrey, Milton, Zeke — parentage",
+      "note": "Jeffrey, Milton and Zeke have a citation for their deaths at 82 Eridani. Nothing names who made them."
+    },
+    {
+      "cat": "Lineage",
+      "text": "Resolve the Hector collision",
+      "note": "A third-generation Hector lost at 82 Eridani and an ~18th-generation Hector emailing Bill in 2343. Either the naming convention broke down or they're two Bobs. Currently two records and the only standing validator warning."
+    },
+    {
+      "cat": "Lineage",
+      "text": "Verne — parentage beyond the appendix",
+      "note": "Settled as Bill's clone by the Cast of Characters. The narrative only ever put him on Loki's crew at 82 Eridani, which was suggestive and never stated. Worth a look for a narrative confirmation."
+    },
+    {
+      "cat": "Biography",
+      "text": "Light biographical sweep, name by name",
+      "note": "Rebuild born, vessel and designation from the text rather than from the sources we dropped. 17 birth dates, 3 vessels and 43 generation numbers came out in the sweep; some are certainly recoverable by reading around each name."
+    },
+    {
+      "cat": "Biography",
+      "text": "Systems: check origin and visited the same way",
+      "note": "Neither field has been verified against the text. Starfleet's location data was purged in-world (Bk4 ch32), so expect real gaps there rather than research failures."
+    },
+    {
+      "cat": "Sources",
+      "text": "Confirm books 4 and 5 have no Cast of Characters",
+      "note": "Book 2's appendix rescued ten records and turned up Surly. A quick check of the other volumes' back matter is cheap."
+    },
+    {
+      "cat": "Sources",
+      "text": "Second pass on the moot scenes for later generations",
+      "note": "Swept once and declared exhausted, but that was before the parser recovered six chapters. Worth one more pass now the corpus is complete."
+    },
+    {
+      "cat": "Companion registers",
+      "text": "System map",
+      "note": "Largely derivable from origin, visited and lostAt. Sol, Epsilon Eridani, Delta Eridani, 82 Eridani, Omicron² Eridani, Delta and Gamma Pavonis, Eta Cassiopeiae, Poseidon, Gliese 877, HIP 84051, Alpha Centauri, Ragnarök/Valhalla."
+    },
+    {
+      "cat": "Companion registers",
+      "text": "Bestiary",
+      "note": "Well attested already: gorilloids (166 mentions), landers (92), raptors (48), boojums (47), snarks (38, later renamed Quinlans), spits (36), krakens (11), hexghi (6). Watch out for manny — that's an android body, not a creature."
+    },
+    {
+      "cat": "Companion registers",
+      "text": "Peoples and polities",
+      "note": "Deltans, Quinlans, Pav, the Others, Zjentfen; the Pangean Council, the UFS, the Quinlan Resistance and Crew, and the Bawbes. Needs its own schema — species and governments don't have parents, so the tier system won't transfer."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Blog posts in Bill's voice",
+      "note": "Bill's blog is canon — he needles Bob about not reading it in Bk4 ch5. Site updates belong as dated posts, not changelogs. See the voice guide in CLAUDE.md."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Images",
+      "note": "Later. Whatever we do has to survive the no-external-requests rule, so anything visual gets inlined."
+    }
+  ]
 }
