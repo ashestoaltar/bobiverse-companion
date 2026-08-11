@@ -26,6 +26,7 @@ OUT = os.path.join(ROOT, "dist", "index.html")
 
 BESTIARY = os.path.join(ROOT, "data", "bestiary.json")
 PEOPLES = os.path.join(ROOT, "data", "peoples.json")
+GUPPY = os.path.join(ROOT, "data", "guppy.json")
 ASSETS = os.path.join(ROOT, "assets")
 
 PLACEHOLDER = "/*__BOBS__*/[]"
@@ -34,6 +35,30 @@ SYS_PLACEHOLDER = "/*__SYSTEMS__*/null"
 SKY_PLACEHOLDER = "/*__SKY__*/null"
 BEST_PLACEHOLDER = "/*__BESTIARY__*/null"
 PEOPLE_PLACEHOLDER = "/*__PEOPLES__*/null"
+GUPPY_PLACEHOLDER = "/*__GUPPY__*/null"
+
+
+def _check_pixels(art: dict) -> None:
+    """A ragged pixel grid renders as a mess rather than an error, so check here.
+
+    Every row must be the declared width, every frame the declared height, and
+    every character either transparent or a palette entry. Cheap to verify and
+    impossible to eyeball once it's a JSON string.
+    """
+    w, h, palette = art["width"], art["height"], art["palette"]
+    for name, rows in art["frames"].items():
+        if len(rows) != h:
+            print(f"ERROR: guppy frame {name!r} has {len(rows)} rows, expected {h}")
+            sys.exit(1)
+        for i, row in enumerate(rows):
+            if len(row) != w:
+                print(f"ERROR: guppy frame {name!r} row {i} is {len(row)} wide, expected {w}")
+                sys.exit(1)
+            unknown = {c for c in row if c != "." and c not in palette}
+            if unknown:
+                print(f"ERROR: guppy frame {name!r} row {i} uses {sorted(unknown)}, "
+                      f"which are not in the palette")
+                sys.exit(1)
 
 
 def inject_register(html: str, path: str, key: str, register: str,
@@ -175,6 +200,16 @@ def main() -> None:
     html, peoples, drawn_p = inject_register(
         html, PEOPLES, "entries", "peoples", PEOPLE_PLACEHOLDER)
 
+    with open(GUPPY) as fh:
+        guppy = json.load(fh)
+    for key in [k for k in guppy if k.startswith("_")]:
+        guppy.pop(key)
+    _check_pixels(guppy)
+    if GUPPY_PLACEHOLDER not in html:
+        print(f"ERROR: placeholder {GUPPY_PLACEHOLDER} missing from template")
+        sys.exit(1)
+    html = html.replace(GUPPY_PLACEHOLDER, json.dumps(guppy, ensure_ascii=False), 1)
+
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as fh:
         fh.write(html)
@@ -184,6 +219,7 @@ def main() -> None:
           f"{len(systems['systems'])} systems, {sky['count']} backdrop stars, "
           f"{len(bestiary['creatures'])} creatures ({drawn} illustrated), "
           f"{len(peoples['entries'])} peoples and polities ({drawn_p} illustrated), "
+          f"guppy {guppy['width']}x{guppy['height']} in {len(guppy['frames'])} frames, "
           f"{len(html):,} bytes")
 
 

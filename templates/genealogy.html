@@ -325,6 +325,9 @@
 
   .idle{padding:34px 13px; color:var(--ash); font-size:13px; line-height:1.75}
   .idle b{display:block; color:var(--amber-dim); font-weight:400; letter-spacing:.14em; margin-bottom:9px}
+  /* Guppy waits here when nothing is selected. Held back to --ash so he reads
+     as part of the idle panel rather than competing with it. */
+  .idle .guppy{width:96px; margin:0 auto 20px; color:var(--ash); opacity:.9}
 
   /* --- status bar ----------------------------------------------------- */
   .statusbar{
@@ -340,7 +343,11 @@
     position:fixed; inset:0; z-index:120; background:var(--void);
     display:flex; align-items:center; justify-content:center; cursor:pointer;
   }
+  .boot-inner{display:flex; align-items:center; gap:26px}
+  .boot-face{width:118px; flex:none; color:var(--phos)}
   .boot pre{margin:0; font-size:13px; line-height:1.85; color:var(--phos); min-height:15.5em}
+  /* Pixel art, so it must not be smoothed at any size. */
+  .guppy .pix{display:block; width:100%; height:auto; image-rendering:pixelated}
   .boot.done{opacity:0; pointer-events:none; transition:opacity .32s ease}
   /* The caret blinks so a pause between lines reads as the machine thinking
      rather than the page having hung. */
@@ -377,8 +384,13 @@
 <div class="crt-scan"></div>
 <div class="crt-vig"></div>
 
-<div class="boot" id="boot" aria-hidden="true"><pre id="boot-text"></pre>
-  <div class="boot-hint">CLICK OR PRESS ANY KEY TO SKIP</div></div>
+<div class="boot" id="boot" aria-hidden="true">
+  <div class="boot-inner">
+    <div class="guppy boot-face" id="boot-face"></div>
+    <pre id="boot-text"></pre>
+  </div>
+  <div class="boot-hint">CLICK OR PRESS ANY KEY TO SKIP</div>
+</div>
 
 <div class="shell">
 
@@ -456,6 +468,13 @@ const BESTIARY = /*__BESTIARY__*/null;
 /* Sapient species and the polities they build. The bestiary's opposite
    number — the build refuses to let a name appear in both. */
 const PEOPLES = /*__PEOPLES__*/null;
+
+/* Guppy. The books put him on screen as the ship's AI and describe him as
+   looking like Admiral Ackbar — a character we can't reproduce, so this is
+   built from the description instead: amphibious, broad cranium, wide-set
+   eyes, gills. The flat expression is the point. He has been the voice of this
+   console from the start; every bracketed line is his. */
+const GUPPY = /*__GUPPY__*/null;
 
 /* ---- indexes ---------------------------------------------------------- */
 const SYS = Object.create(null);
@@ -1091,11 +1110,14 @@ function renderDossier(){
   if (mine) { el.innerHTML = mine; return; }
   const b = state.selected && byId[state.selected];
   if (!b) {
-    el.innerHTML = `<div class="idle"><b>[NO RECORD SELECTED]</b>
+    el.innerHTML = `<div class="idle">
+      <div class="guppy" id="guppy-idle">${pixelSvg('idle')}</div>
+      <b>[NO RECORD SELECTED]</b>
       Pick a replicant to pull its metadata and trace its descent back to Bob-1.<br><br>
       Bobs all wear the same face, so the registry identifies them the way Guppy does —
       by serial number. Bracketed values are the registry's; the annotation at the foot
       of each record is ours.</div>`;
+    guppyBlink(document.getElementById('guppy-idle'));
     return;
   }
 
@@ -1368,6 +1390,58 @@ function renderPeopleDossier(id){
   </div>`;
 }
 
+/* ---- Guppy ------------------------------------------------------------
+   Pixel art rendered as SVG rects rather than an image: it stays crisp at any
+   size, costs a couple of KB, and needs no external request. Runs of identical
+   pixels merge into single rects, which takes the 400-cell grid down to well
+   under a hundred shapes.
+
+   Everything is drawn in currentColor at varying opacity, so one portrait
+   works wherever it lands — phosphor green on the boot screen, amber in the
+   dossier — with no second copy to keep in sync. */
+
+function pixelSvg(frame, opts){
+  if (!GUPPY || !GUPPY.frames[frame]) return '';
+  const rows = GUPPY.frames[frame];
+  const {width: w, height: h, palette} = GUPPY;
+  const parts = [];
+  for (let y = 0; y < h; y++) {
+    const row = rows[y];
+    let x = 0;
+    while (x < w) {
+      const ch = row[x];
+      let run = 1;
+      while (x + run < w && row[x + run] === ch) run++;
+      if (ch !== '.') {
+        parts.push(`<rect x="${x}" y="${y}" width="${run}" height="1" ` +
+                   `fill="currentColor" fill-opacity="${palette[ch]}"/>`);
+      }
+      x += run;
+    }
+  }
+  const label = (opts && opts.label) || 'Guppy';
+  return `<svg class="pix" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" ` +
+         `role="img" aria-label="${esc(label)}">${parts.join('')}</svg>`;
+}
+
+/* He blinks, rarely, and that is the entire performance. The books keep
+   returning to his fishy poker face; giving him more would be arguing with
+   them. */
+function guppyBlink(el){
+  if (!el || !GUPPY || !GUPPY.frames.blink) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const again = () => setTimeout(() => {
+    if (!el.isConnected) return;
+    el.innerHTML = pixelSvg('blink');
+    setTimeout(() => {
+      if (!el.isConnected) return;
+      el.innerHTML = pixelSvg('idle');
+      again();
+    }, 140);
+  }, 3200 + Math.random() * 5200);
+  again();
+}
+
 /* ---- shell ------------------------------------------------------------ */
 function renderChips(){
   document.getElementById('chips').innerHTML = FILTERS.map(f =>
@@ -1615,6 +1689,11 @@ function bootLines(){
     paint(null);
     timer = setTimeout(step, pause * SPEED);
   };
+
+  // Guppy comes up with the link, before any text. The console has an
+  // operator, and he was always the one talking.
+  const face = document.getElementById('boot-face');
+  if (face) { face.innerHTML = pixelSvg('idle'); guppyBlink(face); }
 
   paint(null);
   timer = setTimeout(step, 260 * SPEED);   // a beat of dark before anything types

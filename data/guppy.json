@@ -1,0 +1,61 @@
+{
+  "_comment": "Guppy, the ship's AI, drawn as a pixel portrait. The books describe him as looking like Admiral Ackbar, which is a Star Wars character we can't reproduce — so this is built from the description rather than the reference: an amphibious humanoid with a broad cranium, wide-set eyes and gill slits. The expression is deliberately flat. The text keeps returning to his fishy poker face, and it is the joke: Guppy is the one being in the series with nothing to prove.",
+  "width": 20,
+  "height": 20,
+  "palette": {
+    "o": 0.88,
+    "S": 0.34,
+    "e": 0.05,
+    "g": 1.0,
+    "l": 0.14,
+    "m": 0.14,
+    "C": 0.55
+  },
+  "_palette_note": "Values are fill-opacity against currentColor, so one portrait works wherever it is placed — phosphor green on the boot screen, amber in a dossier — without a second copy. The eyes are near-transparent on purpose: on a dark panel that reads as a socket rather than a painted-on dot.",
+  "frames": {
+    "idle": [
+      "......oooooooo......",
+      "....ooSSSSSSSSoo....",
+      "...oSSSSSSSSSSSSo...",
+      "..oSSSSSSSSSSSSSSo..",
+      "..oSSSSSSSSSSSSSSo..",
+      ".oSSSSSSSSSSSSSSSSo.",
+      "oSSSeeeeSSSSeeeeSSSo",
+      "oSSSegeeSSSSegeeSSSo",
+      "oSSSeeeeSSSSeeeeSSSo",
+      ".oSSSSSSSSSSSSSSSSo.",
+      "..oSSSSSSSSSSSSSSo..",
+      "...oSllSSSSSSllSo...",
+      "...oSllSSSSSSllSo...",
+      "....oSSSSSSSSSSo....",
+      ".....oSSmmmmSSo.....",
+      "......oSSSSSSo......",
+      ".......oSSSSo.......",
+      "........oooo........",
+      "..oooooooooooooooo..",
+      "..oCCCCCCCCCCCCCCo.."
+    ],
+    "blink": [
+      "......oooooooo......",
+      "....ooSSSSSSSSoo....",
+      "...oSSSSSSSSSSSSo...",
+      "..oSSSSSSSSSSSSSSo..",
+      "..oSSSSSSSSSSSSSSo..",
+      ".oSSSSSSSSSSSSSSSSo.",
+      "oSSSSSSSSSSSSSSSSSSo",
+      "oSSSeeeeSSSSeeeeSSSo",
+      "oSSSSSSSSSSSSSSSSSSo",
+      ".oSSSSSSSSSSSSSSSSo.",
+      "..oSSSSSSSSSSSSSSo..",
+      "...oSllSSSSSSllSo...",
+      "...oSllSSSSSSllSo...",
+      "....oSSSSSSSSSSo....",
+      ".....oSSmmmmSSo.....",
+      "......oSSSSSSo......",
+      ".......oSSSSo.......",
+      "........oooo........",
+      "..oooooooooooooooo..",
+      "..oCCCCCCCCCCCCCCo.."
+    ]
+  }
+}

@@ -80,6 +80,12 @@ the registry identifies them the way Guppy does — by serial number, with the
 name secondary. And square brackets mean machine output, so the metadata block
 is bracketed while the editorial notes are explicitly not.
 
+**Guppy** runs the terminal. He comes up with the link on the boot screen and
+waits in the dossier when nothing is selected — a pixel portrait drawn from the
+books' description rather than the Star Wars character they compare him to,
+rendered in `currentColor` so he takes the colour of wherever he is. He blinks
+occasionally. That is the whole performance, which is the joke.
+
 Everything is one self-contained HTML file with no external requests. A **CRT**
 toggle drops the scanlines and glow if you'd rather just read.
 

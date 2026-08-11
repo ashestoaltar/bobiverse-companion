@@ -114,6 +114,7 @@ data/systems.json star systems with real astrometry, and the places in them
 data/skyfield.json the naked-eye sky for the chart backdrop (HYG, CC BY-SA 4.0)
 data/bestiary.json non-sapient fauna; data/bestiary.schema.json documents it
 data/peoples.json  sapient species and their polities; peoples.schema.json too
+data/guppy.json   Guppy's pixel portrait — palette plus one grid per frame
 assets/<register>/ <id>.svg illustrations, inlined into the page by the build
 templates/genealogy.html   the console — register, lineage, unresolved, chart,
                  bestiary, peoples, to-do
@@ -179,6 +180,33 @@ replaced: five views' worth of special cases scattered across the dispatch, the
 dossier, the resize handler and the tab markup. `tests/registers.test.js` adds a
 synthetic register at runtime and asserts every hook fires, so a new special
 case that bypasses the list will fail it.
+
+## Guppy
+
+He has been the voice of this console from the start — every bracketed line is
+his, and the registry identifies Bobs by serial number because that is how he
+does it. `data/guppy.json` gives him a face: a 20x20 pixel grid per frame, plus
+a palette.
+
+**The likeness is deliberately ours.** The books describe him as looking like
+Admiral Ackbar, which is a Star Wars character we can't reproduce, so the
+portrait is built from the description instead — amphibious, broad cranium,
+wide-set eyes, gill slits. Don't "improve" it toward the reference.
+
+Palette values are **fill-opacity against `currentColor`**, not colours. That is
+what lets one portrait be phosphor green on the boot screen and ash in the
+dossier without a second copy; `pixelSvg()` merges horizontal runs into single
+rects, so the 400-cell grid ships as about 80 shapes.
+
+He blinks every few seconds and does nothing else. The text keeps returning to
+his fishy poker face, so giving him more expression would be arguing with the
+books. `guppyBlink()` sits out entirely under reduced motion.
+
+A ragged grid renders as a mess rather than an error, so both `build.py` and
+`tests/guppy.test.js` check that every row is the declared width, every frame
+the declared height, and every character a palette key. The blink frame is
+additionally checked not to move the silhouette — a shifting outline reads as a
+flinch rather than a blink.
 
 ## Testing
 
