@@ -105,9 +105,15 @@ gitignored, so git cannot bring them back. Keep your ebooks backed up elsewhere.
 
 ```bash
 make validate                        # schema, referential integrity, tier rules
+make test                            # build, then run the console's test suites
 python src/extract.py --unresolved   # candidate passages for the tier C and P backlog
 python src/extract.py --name Thor    # research one Bob
 ```
+
+`make test` needs Node. It runs the shipped script from `dist/index.html` against
+a stub DOM — data integrity, every view under every filter, the chart's
+projection geometry and astrophysics, label legibility, and a golden-master
+snapshot of 95 rendered states.
 
 `src/extract.py` finds passages and prints them with citations. It never writes
 to `data/bobs.json` — deciding what a passage establishes is a judgement call,

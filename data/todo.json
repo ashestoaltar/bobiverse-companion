@@ -16,8 +16,9 @@
     },
     {
       "cat": "Sources",
-      "text": "Move the browser test harness into the repo",
-      "note": "The Node harness that exercises every view, filter, sort, projection angle and colour path lives only in a scratch directory, so it doesn't survive a session and its record-count assertions go stale silently. It caught real bugs — the dropped Omicron² Eridani label, Sol leaking into the backdrop — and belongs in tests/ behind a `make test` target."
+      "text": "Browser test harness moved into the repo",
+      "note": "Lived in a scratch directory, so it didn't survive a session and its record-count assertions went stale unnoticed — it asserted 86 records for a whole session after the 87th landed. Now tests/ behind `make test`, run against the shipped dist/index.html rather than the template. Expectations are derived from data/*.json instead of hardcoded. Its first run found two live bugs: build.py's ORDER whitelist was silently dropping `alias` and `priorClaim`, so the HAS LEAD chip matched nothing and Will's \"/ Riker\" never rendered. Includes a golden-master snapshot of 95 states, so the console restructure can be verified by diff.",
+      "done": true
     },
     {
       "cat": "BobNet",

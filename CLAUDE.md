@@ -121,7 +121,8 @@ src/verify_books.py check books/ against the manifest
 src/extract.py      surface candidate passages for review (never auto-writes)
 src/validate.py     schema, referential integrity, tier rules
 src/build.py        bobs.json + template -> dist/index.html
-templates/genealogy.html   the console, with a data placeholder
+tests/              suites run against the shipped dist/index.html
+tests/__snapshots__/  golden master, committed
 ```
 
 **`build.py`'s `ORDER` list is a whitelist.** A field missing from it never
@@ -143,6 +144,51 @@ python src/extract.py --unresolved      # work the tier C and P backlog
 
 `extract.py` prints passages with citations; it never edits `data/bobs.json`.
 Reading the passage and deciding what it establishes is the human's job.
+
+## Testing
+
+```
+make test        # build, then run every suite
+make snapshots   # re-record the golden master, on purpose only
+node tests/run.js chart          # one suite
+```
+
+The suites run the console's **shipped** script — extracted from `dist/index.html`,
+not from the template — inside a VM context with a stub DOM, so the app's
+top-level `const` declarations are in scope and what gets tested is what gets
+served. (`eval()` can't do this: lexical declarations inside a direct eval stay
+scoped to the eval.)
+
+| suite | covers |
+|---|---|
+| `core` | data integrity, ancestry traces, every view × filter × search, dossiers, sorting |
+| `chart` | projection invariants, the fiction's own distances, astrophysics |
+| `legibility` | label decluttering, ring labels, spectral colour survival, WCAG contrast |
+| `backdrop` | the HYG starfield, unit-vector invariants, NaN sweeps |
+| `snapshot` | golden master — exact HTML of 95 states |
+
+**Assertions derive their expectations from `data/*.json` rather than hardcoding
+counts.** The old scratch harness asserted "86 records" for a whole session after
+the 87th landed; a test that must be hand-updated is a test that will be wrong.
+Literals stay only where the literal *is* the point — the tier letters, Sol's
+absolute magnitude of 4.83, Bill's stated distances.
+
+### The golden master
+
+`tests/__snapshots__/views.json` holds the exact HTML for 95 states — every view,
+filter, search, sort direction, a sample of dossiers, and the chart at pinned
+cameras. It exists so a refactor can be checked by diff instead of by eye, which
+is what makes restructuring safe to do aggressively.
+
+It captures **every pane `render()` writes to**, not just `#stage`. That was a
+real gap: the first version watched only the stage, and a changed filter-chip
+label sailed straight through a passing run. A blind spot in the safety net is
+worse than no safety net.
+
+When output changes on purpose: read the reported diff, run `make snapshots`,
+and commit the snapshot **with** the change that caused it. A snapshot updated in
+its own commit tells you nothing. If a run is ever flaky, the flake is the bug —
+nothing captured may vary between runs.
 
 ## Chapter parsing
 
