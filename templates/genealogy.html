@@ -1544,6 +1544,12 @@ window.addEventListener('resize', () => {
    date the way a hardcoded splash would. Each line carries the pause that
    follows it — uniform timing reads as an animation, but varied timing reads as
    a machine doing work of different sizes, which is the effect we want. */
+/* Pacing for the whole boot sequence, as one multiplier. 1 was about 3.4
+   seconds and read as hurried; 1.4 gives roughly 4.8, which is long enough to
+   watch the machine work rather than just catch that it did. Any key or click
+   skips, so the cost of erring slow is small. */
+const BOOT_SPEED = 1.4;
+
 function bootLines(){
   const systems = (SYSTEMS && SYSTEMS.systems) || [];
   const beasts  = (BESTIARY && BESTIARY.creatures) || [];
@@ -1583,10 +1589,7 @@ function bootLines(){
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.remove(); return; }
 
   const lines = bootLines();
-  // One knob for the whole sequence. 1 is about 3.4 seconds end to end, which
-  // is long enough to read eight lines and short enough to sit through on a
-  // reload. Raise it to linger, lower it to hurry.
-  const SPEED = 1;
+  const SPEED = BOOT_SPEED;
   const CHAR_MS = 5 * SPEED;   // typing speed; the pauses do most of the pacing
   let li = 0, ci = 0;
   const done = [];

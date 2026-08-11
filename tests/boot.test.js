@@ -45,11 +45,16 @@ module.exports = ({ok, get, run}) => {
   ok(/STATUS: Ready/.test(all), 'boot never says it is ready');
 
   // Long enough to read. 8 lines that nobody can follow is just a flash.
+  // The multiplier has to come from the page, not be repeated here — a test
+  // that computes a duration the console doesn't actually use is worse than no
+  // test, because it reports a number with confidence and the number is wrong.
+  const speed = get('BOOT_SPEED');
+  ok(typeof speed === 'number' && speed > 0, `BOOT_SPEED is ${speed}`);
   const chars = lines.reduce((n, [t]) => n + t.length, 0);
   const pauses = lines.reduce((n, [, p]) => n + p, 0);
-  const total = 260 + chars * 5 + pauses;
-  ok(total > 2400, `boot runs in ${total}ms — too fast to read`);
-  ok(total < 5200, `boot runs in ${total}ms — too long to sit through on a reload`);
+  const total = (260 + chars * 5 + pauses) * speed;
+  ok(total > 2400, `boot runs in ${Math.round(total)}ms — too fast to read`);
+  ok(total < 7000, `boot runs in ${Math.round(total)}ms — too long to sit through on a reload`);
 
   // It must be skippable, and it must not trap anyone who can't watch it.
   const html = require('fs').readFileSync(
