@@ -177,41 +177,139 @@ def _check_bestiary() -> tuple[list[str], list[str]]:
         if c.get("place") and not sid:
             errors.append(f"bestiary {cid}: has a place but no system to put it in")
 
-    warnings += _check_bestiary_counts(creatures)
+    warnings += _check_counts(creatures, "bestiary")
     return errors, warnings
 
 
-def _check_bestiary_counts(creatures: list[dict]) -> list[str]:
-    """Mention counts are derived from the books, so re-derive and compare."""
+def _chapters() -> list[dict]:
     path = os.path.join(ROOT, ".cache", "corpus.json")
     if not os.path.exists(path):
         return []
     with open(path) as fh:
-        chapters = json.load(fh)
+        return json.load(fh)
+
+
+def _mention_re(entry: dict) -> "re.Pattern | None":
+    """How to count this entry's name in the books.
+
+    The name alone is only good enough when it's an unambiguous coinage.
+    Acronyms and ordinary words need an explicit pattern: counting 'USE'
+    case-insensitively finds the verb 286 times instead of the state's 51, and
+    'the Others' collides with the ordinary word. Same false-positive class that
+    put Dr. Landers and the Spits in the bestiary's candidate list.
+    """
+    raw = entry.get("mentionPattern")
+    if raw:
+        try:
+            return re.compile(raw)
+        except re.error:
+            return None
+    return re.compile(r"\b" + re.escape(entry["name"]) + r"(?:e?s)?\b", re.I)
+
+
+def _check_counts(entries: list[dict], label: str) -> list[str]:
+    """Mention counts are derived from the books, so re-derive and compare."""
+    chapters = _chapters()
     if not chapters:
         return []
 
     out = []
-    for c in creatures:
-        pattern = re.compile(r"\b" + re.escape(c["name"]) + r"(?:e?s)?\b", re.I)
+    for e in entries:
+        pattern = _mention_re(e)
+        if pattern is None:
+            out.append(f"{label} {e['id']}: mentionPattern {e['mentionPattern']!r} is not a valid regex")
+            continue
         got = sum(len(pattern.findall(ch["text"])) for ch in chapters)
 
         # Run this whether or not a count is recorded. An entry with no textual
-        # presence at all is the failure this register most needs to catch —
-        # a creature nobody wrote down is one we invented.
+        # presence at all is the failure these registers most need to catch —
+        # something nobody wrote down is something we invented.
         if got == 0:
-            out.append(f"bestiary {c['id']}: {c['name']!r} appears nowhere in the corpus — "
+            out.append(f"{label} {e['id']}: {e['name']!r} appears nowhere in the corpus — "
                        f"either the name is wrong or the label is ours, not the books'")
             continue
 
-        want = c.get("mentions")
+        want = e.get("mentions")
         if want is None:
-            out.append(f"bestiary {c['id']}: no mention count recorded; the corpus has {got}")
+            out.append(f"{label} {e['id']}: no mention count recorded; the corpus has {got}")
             continue
         # Words are ambiguous — "hydra" also appears as "hydrae", "dragon" turns
         # up in VR and idiom. Flag a real drift, not a rounding difference.
         if abs(got - want) > max(3, want * 0.15):
-            out.append(f"bestiary {c['id']}: recorded {want} mentions, corpus has {got}")
+            out.append(f"{label} {e['id']}: recorded {want} mentions, corpus has {got}")
+    return out
+
+
+PEOPLES = os.path.join(ROOT, "data", "peoples.json")
+
+
+def _check_peoples() -> tuple[list[str], list[str]]:
+    """Peoples and polities: locations resolve, kinds are coherent, counts hold."""
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not os.path.exists(PEOPLES):
+        return errors, warnings
+    with open(PEOPLES) as fh:
+        entries = json.load(fh)["entries"]
+
+    systems = _load_systems()
+    ids = {e["id"] for e in entries}
+    peoples = {e["id"] for e in entries if e.get("kind") == "people"}
+
+    seen: set[str] = set()
+    for e in entries:
+        eid = e.get("id") or "?"
+        if eid in seen:
+            errors.append(f"peoples {eid}: duplicate id")
+        seen.add(eid)
+
+        if e.get("kind") not in ("people", "polity"):
+            errors.append(f"peoples {eid}: kind {e.get('kind')!r} is not people or polity")
+        if not e.get("cite"):
+            errors.append(f"peoples {eid}: needs a cite")
+        if e.get("contact") and e.get("kind") != "people":
+            errors.append(f"peoples {eid}: contact is about a species, not a polity")
+
+        # a polity has to belong to somebody we know, when it belongs to anyone
+        owner = e.get("of")
+        if owner and owner not in peoples:
+            errors.append(f"peoples {eid}: of {owner!r} is not a people in this file")
+        if owner and e.get("kind") == "people":
+            errors.append(f"peoples {eid}: a people doesn't belong to another people")
+
+        sid = e.get("system")
+        if sid and systems and sid not in systems:
+            errors.append(f"peoples {eid}: unknown system {sid!r}")
+        elif sid and e.get("place"):
+            known = {p["name"] for p in (systems.get(sid, {}).get("places") or [])}
+            if known and e["place"] not in known:
+                warnings.append(f"peoples {eid}: place {e['place']!r} isn't listed in {sid}")
+        if e.get("place") and not sid:
+            errors.append(f"peoples {eid}: has a place but no system to put it in")
+
+    warnings += _check_counts(entries, "peoples")
+    errors += _check_no_overlap(entries)
+    return errors, warnings
+
+
+def _check_no_overlap(entries: list[dict]) -> list[str]:
+    """A name may not be filed as both a people and a beast.
+
+    This is the one rule that spans the two registers, and it's the whole reason
+    the split exists: the Deltans are people, and the console must never be able
+    to say otherwise in one view while saying the opposite in another.
+    """
+    if not os.path.exists(BESTIARY):
+        return []
+    with open(BESTIARY) as fh:
+        creatures = json.load(fh)["creatures"]
+    fauna = {c["name"].strip().lower().rstrip("s"): c["id"] for c in creatures}
+    out = []
+    for e in entries:
+        key = e["name"].strip().lower().removeprefix("the ").rstrip("s")
+        if key in fauna:
+            out.append(f"peoples {e['id']}: {e['name']!r} is also in the bestiary "
+                       f"as {fauna[key]!r} — a people cannot also be fauna")
     return out
 
 
@@ -314,6 +412,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     best_errors, best_warnings = _check_bestiary()
     errors += best_errors
     warnings += best_warnings
+
+    ppl_errors, ppl_warnings = _check_peoples()
+    errors += ppl_errors
+    warnings += ppl_warnings
 
     # `gen` is only independent information when the parent chain is broken.
     # Where the chain reaches Bob-1 it's derivable, so any disagreement means one

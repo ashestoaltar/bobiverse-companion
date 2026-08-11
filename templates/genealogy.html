@@ -205,7 +205,7 @@
   .unres-lead{color:var(--amber-dim); font-size:13.5px; max-width:74ch; margin:0 0 16px; line-height:1.62}
 
   /* --- bestiary --- */
-  .beasts-lead{color:var(--amber-dim); font-size:13.5px; max-width:74ch; margin:0 0 18px; line-height:1.62}
+  .reg-lead{color:var(--amber-dim); font-size:13.5px; max-width:74ch; margin:0 0 18px; line-height:1.62}
   .beasts{display:grid; gap:12px; grid-template-columns:repeat(auto-fill, minmax(178px, 1fr))}
   .beast{display:flex; flex-direction:column; gap:9px; text-align:left; padding:11px;
          background:transparent; border:1px solid var(--rule); color:inherit;
@@ -226,6 +226,19 @@
   .beast-art.empty{border:1px dashed var(--rule); background:transparent}
   .beast-art.empty span{font-size:20px; color:var(--ash); opacity:.75}
   .beast-art.big.empty span{font-size:30px}
+
+  /* --- peoples and polities --- */
+  .entries{display:grid; gap:8px; grid-template-columns:repeat(auto-fill, minmax(258px, 1fr))}
+  .entry{display:flex; gap:10px; align-items:flex-start; text-align:left; padding:9px 11px;
+         background:transparent; border:1px solid var(--rule); color:inherit;
+         font:inherit; cursor:pointer}
+  .entry:hover, .entry[aria-pressed="true"]{border-color:var(--amber); background:var(--panel-hi)}
+  .entry-mark{color:var(--amber-dim); line-height:1.5}
+  .entry-body{display:block; min-width:0}
+  .entry-body b{display:block; color:var(--amber-hi); font-weight:400; letter-spacing:.04em}
+  .entry-body .dim{display:block; font-size:11.5px; line-height:1.5}
+  /* an expansion is a quieter fact than the name, but it is the interesting one */
+  .entry-body .exp{font-style:italic; opacity:.85}
   .card{border-left:2px solid var(--rule); padding:0 0 0 12px; margin-bottom:15px}
   /* cleared work stays legible — dimmed, not struck through, because the note
      on a finished item is usually the part worth keeping */
@@ -432,6 +445,10 @@ const SKYFIELD = /*__SKY__*/null;
    register — the validator refuses one here. */
 const BESTIARY = /*__BESTIARY__*/null;
 
+/* Sapient species and the polities they build. The bestiary's opposite
+   number — the build refuses to let a name appear in both. */
+const PEOPLES = /*__PEOPLES__*/null;
+
 /* ---- indexes ---------------------------------------------------------- */
 const SYS = Object.create(null);
 if (SYSTEMS) SYSTEMS.systems.forEach(s => SYS[s.id] = s);
@@ -478,7 +495,7 @@ const COLS = [
 ];
 
 const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1,
-               selected:null, beast:null};
+               selected:null, beast:null, people:null};
 
 /* ---- registers --------------------------------------------------------
    Every view is an entry here. The tab bar, the dispatch in render(), the
@@ -532,6 +549,27 @@ const REGISTERS = [
      const hit = e.target.closest('[data-beast]');
      if (!hit) return false;
      state.beast = state.beast === hit.dataset.beast ? null : hit.dataset.beast;
+     render();
+     return true;
+   }},
+  {id:'peoples',    label:'PEOPLES',    render: renderPeoples,
+   rows: peoples,
+   status: rows => {
+     const all = (PEOPLES && PEOPLES.entries) || [];
+     statusLine(rows.length === all.length ? `${all.length} peoples and polities`
+                                           : `${rows.length} of ${all.length}`,
+                `${all.filter(e => e.kind === 'people').length} species`,
+                `${all.filter(e => e.kind === 'polity').length} polities`);
+   },
+   dossier: () => state.people ? renderPeopleDossier(state.people) : null,
+   onClick: e => {
+     const sys = e.target.closest('[data-sys]');
+     if (sys) { state.view = 'chart'; CHART.sel = sys.dataset.sys; render(); return true; }
+     const jump = e.target.closest('[data-people]');
+     if (jump) { state.people = jump.dataset.people; render(); return true; }
+     const hit = e.target.closest('[data-entry]');
+     if (!hit) return false;
+     state.people = state.people === hit.dataset.entry ? null : hit.dataset.entry;
      render();
      return true;
    }},
@@ -1188,7 +1226,7 @@ function renderBestiary(rows){
         <span class="dim">${esc(c.role || 'unknown')} · ${esc(beastWhere(c))}</span>
       </div>
     </button>`).join('');
-  return `<div class="beasts-lead"><span class="redacted">[</span>${
+  return `<div class="reg-lead"><span class="redacted">[</span>${
     rows.length === total ? `${total} creatures on file` : `${rows.length} of ${total} creatures`
   }<span class="redacted">]</span><br><br>
     Non-sapient fauna only. The Deltans, Quinlans, Pav and the Others are people,
@@ -1221,6 +1259,104 @@ function renderBeastDossier(id){
       <p class="note">${esc(c.note)}</p></div>
     ${c.art ? '' : `<div class="sec"><div class="sec-label">ILLUSTRATION</div>
       <p class="note dim">None on file. Drop an SVG at assets/bestiary/${esc(c.id)}.svg and rebuild.</p></div>`}
+  </div>`;
+}
+
+/* ---- peoples and polities ---------------------------------------------
+   The bestiary's opposite number. A people is a sapient species; a polity is
+   anything that governs, organises or speaks for one. They share a register
+   because in this series they are one argument seen from two sides — who
+   counts as a person, and who gets to decide. The build refuses to let a name
+   appear here and in the bestiary. */
+
+const CONTACT_NOTE = {
+  origin:      'the species the Bobs came from',
+  uplifted:    'deliberately helped — the interference Bob chose to commit',
+  covert:      'walked among, without being told',
+  aware:       'knows about the Bobs and has its own opinion',
+  hostile:     'at war',
+  uncontacted: 'not yet met',
+  unknown:     'the books do not say',
+};
+const STATUS_MARK = {extant: '◆', extinct: '✕', defunct: '✕', unknown: '·'};
+
+function peoples(){
+  const all = (PEOPLES && PEOPLES.entries) || [];
+  const q = state.q.trim().toLowerCase();
+  const rows = !q ? all.slice() : all.filter(e =>
+    [e.name, e.expansion, e.kind, e.of, e.place, sysName(e.system), e.note, e.cite]
+      .some(v => v && String(v).toLowerCase().includes(q)));
+  // Species first, then polities; loudest first inside each. A polity only
+  // makes sense once you know whose it is.
+  return rows.sort((a, b) =>
+    (a.kind === b.kind ? 0 : a.kind === 'people' ? -1 : 1) ||
+    (b.mentions || 0) - (a.mentions || 0) || a.name.localeCompare(b.name));
+}
+
+function peopleWhere(e){
+  const sys = sysName(e.system);
+  if (e.place && sys) return `${e.place}, ${sys}`;
+  return e.place || sys || 'no fixed world on record';
+}
+
+function renderPeoples(rows){
+  if (!PEOPLES) return `<p class="empty">[PEOPLES REGISTER UNAVAILABLE]</p>`;
+  const all = PEOPLES.entries || [];
+  if (!rows.length) return `<p class="empty">[NO MATCH IN ${all.length} ENTRIES]</p>`;
+
+  const byId = Object.fromEntries(all.map(e => [e.id, e]));
+  const group = kind => rows.filter(e => e.kind === kind).map(e => `
+    <button class="entry" data-entry="${esc(e.id)}" aria-pressed="${state.people === e.id}">
+      <span class="entry-mark" aria-hidden="true">${STATUS_MARK[e.status] || '·'}</span>
+      <span class="entry-body">
+        <b>${esc(e.name)}</b>${e.expansion ? `<span class="dim exp">${esc(e.expansion)}</span>` : ''}
+        <span class="dim">${e.kind === 'people'
+          ? esc(CONTACT_NOTE[e.contact] || e.contact || 'contact unrecorded')
+          : esc(e.of ? `${byId[e.of] ? byId[e.of].name : e.of} · ${peopleWhere(e)}` : peopleWhere(e))}</span>
+      </span>
+    </button>`).join('');
+
+  const species = group('people'), polities = group('polity');
+  return `<div class="reg-lead"><span class="redacted">[</span>${
+      rows.length === all.length ? `${all.length} on file` : `${rows.length} of ${all.length}`
+    }<span class="redacted">]</span><br><br>
+    Everyone the Bobs had to decide how to treat, and every body that claimed to
+    speak for them. Where an acronym is expanded here, a character expanded it on
+    the page — FAITH has no expansion because the books never give one.</div>
+    ${species ? `<div class="sec"><div class="sec-label">SPECIES</div><div class="entries">${species}</div></div>` : ''}
+    ${polities ? `<div class="sec"><div class="sec-label">POLITIES</div><div class="entries">${polities}</div></div>` : ''}`;
+}
+
+function renderPeopleDossier(id){
+  const all = (PEOPLES && PEOPLES.entries) || [];
+  const e = all.find(x => x.id === id);
+  if (!e) return null;
+  const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
+  const sys = e.system && SYS[e.system];
+  const owner = e.of && all.find(x => x.id === e.of);
+  const theirs = all.filter(x => x.of === e.id);
+  return `<div class="doss">
+    <button class="close" id="d-close" aria-label="Close">×</button>
+    <h2>${esc(e.name)}</h2>
+    ${e.expansion ? `<p class="note dim">${esc(e.expansion)}</p>` : ''}
+    ${e.art ? `<div class="beast-art big">${e.art}</div>` : ''}
+    <dl class="fields">
+      ${f('KIND', e.kind === 'people' ? 'sapient species' : 'polity')}
+      ${f('WORLD', peopleWhere(e))}
+      ${f('STANDING', e.status)}
+      ${e.kind === 'people' ? f('CONTACT', CONTACT_NOTE[e.contact] || e.contact) : ''}
+      ${owner ? f('SPEAKS FOR', owner.name) : ''}
+      ${f('MENTIONS', e.mentions != null ? `${e.mentions} across the five books` : null)}
+      ${f('FIRST ON RECORD', e.cite)}
+    </dl>
+    ${theirs.length ? `<div class="sec"><div class="sec-label">POLITIES — ${theirs.length}</div>
+      <div class="kids">${theirs.map(t =>
+        `<a href="#" data-people="${esc(t.id)}">${esc(t.name)}</a>`).join('')}</div></div>` : ''}
+    ${sys ? `<div class="sec"><div class="sec-label">SYSTEM</div>
+      <p class="note"><a href="#" data-sys="${esc(e.system)}">${esc(sys.name)}</a>${
+        sys.distance_ly ? ` <span class="dim">— ${sys.distance_ly.toFixed(2)} ly</span>` : ''}</p></div>` : ''}
+    <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
+      <p class="note">${esc(e.note)}</p></div>
   </div>`;
 }
 

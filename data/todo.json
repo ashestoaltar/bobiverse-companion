@@ -94,8 +94,9 @@
     },
     {
       "cat": "Companion registers",
-      "text": "Peoples and polities",
-      "note": "Deltans, Quinlans, Pav, the Others, Zjentfen; the Pangean Council, the UFS, the Quinlan Resistance and Crew, and the Bawbes. Needs its own schema — species and governments don't have parents, so the tier system won't transfer."
+      "text": "Peoples and polities built",
+      "note": "Five species and nine polities in data/peoples.json, with its own register. Provenance is graded differently from the tree — species and governments have no parents — so what's recorded is whether the books state a thing or leave it open. Acronyms carry an expansion only where a character expands it on the page: USE is the United States of Eurasia, VEHEMENT keeps Butterworth's own hedge, and FAITH has none because the books never give one. A name may be a people or fauna and never both; validate.py checks the two files against each other. Still to do: the Arcadians and Zjentfen, both single mentions; the human colony governments on Vulcan, Romulus, Poseidon and Newholme; and the Bob factions, which currently live as a field on bobs.json rather than here.",
+      "done": true
     },
     {
       "cat": "BobNet",
@@ -111,6 +112,11 @@
       "cat": "Companion registers",
       "text": "Illustrate the bestiary",
       "note": "Two of nine have art — dragon and kraken, drawn as stroke-only SVG so the console can colour them with currentColor. The rest show a dashed plate with their role mark. Adding one is: draw assets/bestiary/<id>.svg, rebuild. The build refuses art containing a script or an external URL, so the page keeps its promise of zero external requests."
+    },
+    {
+      "cat": "Companion registers",
+      "text": "Second pass on peoples: colonies, minor species, Bob factions",
+      "note": "The register covers the majors. Missing: the human colony governments (Vulcan, Romulus, Poseidon, Newholme, Pangea), the Arcadians and Zjentfen at one mention each, and the question of whether the four Bob factions belong here as polities or stay as a field on bobs.json. They cut across lineage, so they are arguably exactly what a polity is."
     }
   ]
 }

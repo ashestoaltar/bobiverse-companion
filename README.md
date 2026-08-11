@@ -44,7 +44,7 @@ record now says so.
 
 ## The console
 
-Six registers, with live search across names, aliases, designations, systems,
+Seven registers, with live search across names, aliases, designations, systems,
 notes and citations:
 
 - **Register** — the full list, sortable on every column.
@@ -62,6 +62,10 @@ notes and citations:
   they actually occupy. Fauna only: the Deltans, Quinlans, Pav and the Others are
   people, and people get their own register. That line is enforced by the build,
   because the series is largely Bob working out where to draw it.
+- **Peoples** — the sapient species and the polities that claim to speak for
+  them, with `contact` recording how each stands with the Bobs: uplifted, walked
+  among without being told, aware and unimpressed, or at war. Acronyms are only
+  expanded where a character expands them on the page, so FAITH stays FAITH.
 - **To-do** — the research backlog, reported the way Guppy reports Bob's:
   a bracketed count divided into categories. It has never once got shorter.
 
@@ -117,7 +121,7 @@ python src/extract.py --name Thor    # research one Bob
 `make test` needs Node. It runs the shipped script from `dist/index.html` against
 a stub DOM — data integrity, every view under every filter, the chart's
 projection geometry and astrophysics, label legibility, and a golden-master
-snapshot of 102 rendered states.
+snapshot of 109 rendered states.
 
 `src/extract.py` finds passages and prints them with citations. It never writes
 to `data/bobs.json` — deciding what a passage establishes is a judgement call,
@@ -150,6 +154,9 @@ their lineage deliberately expunged, and 30 carrying an unverified lead from a
 dropped source. Biography is held to the same standard as lineage: `desig`,
 `born` and `vessel` only where the books print them, and generation counted down
 the tree except for the three the text states out loud.
+
+`data/peoples.json` holds five species and nine polities. A name may be a people
+or fauna, never both, and the build checks the two files against each other.
 
 `data/bestiary.json` holds nine non-sapient creatures, each pinned to the world
 it lives on and cited to its first appearance. Illustrations are stroke-only SVGs

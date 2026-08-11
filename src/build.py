@@ -25,17 +25,42 @@ TEMPLATE = os.path.join(ROOT, "templates", "genealogy.html")
 OUT = os.path.join(ROOT, "dist", "index.html")
 
 BESTIARY = os.path.join(ROOT, "data", "bestiary.json")
-ART_DIR = os.path.join(ROOT, "assets", "bestiary")
+PEOPLES = os.path.join(ROOT, "data", "peoples.json")
+ASSETS = os.path.join(ROOT, "assets")
 
 PLACEHOLDER = "/*__BOBS__*/[]"
 TODO_PLACEHOLDER = "/*__TODO__*/null"
 SYS_PLACEHOLDER = "/*__SYSTEMS__*/null"
 SKY_PLACEHOLDER = "/*__SKY__*/null"
 BEST_PLACEHOLDER = "/*__BESTIARY__*/null"
+PEOPLE_PLACEHOLDER = "/*__PEOPLES__*/null"
 
 
-def load_art(cid: str) -> str | None:
-    """Inline assets/bestiary/<id>.svg, if someone has drawn one.
+def inject_register(html: str, path: str, key: str, register: str,
+                    placeholder: str) -> tuple[str, dict, int]:
+    """Load a companion register, attach any artwork, and splice it in.
+
+    Both companion registers work the same way, so they share this: strip the
+    editorial comment, inline assets/<register>/<id>.svg into each entry's
+    `art`, and replace the placeholder.
+    """
+    with open(path) as fh:
+        data = json.load(fh)
+    data.pop("_comment", None)
+    drawn = 0
+    for entry in data[key]:
+        art = load_art(register, entry["id"])
+        if art:
+            entry["art"] = art
+            drawn += 1
+    if placeholder not in html:
+        print(f"ERROR: placeholder {placeholder} missing from template")
+        sys.exit(1)
+    return html.replace(placeholder, json.dumps(data, ensure_ascii=False), 1), data, drawn
+
+
+def load_art(register: str, cid: str) -> str | None:
+    """Inline assets/<register>/<id>.svg, if someone has drawn one.
 
     The console is a single file that makes no external requests, so an
     illustration can't be an <img src>. Inline SVG is the format that fits:
@@ -46,7 +71,7 @@ def load_art(cid: str) -> str | None:
     Nothing here is hand-edited into bestiary.json. Draw a file, name it after
     the creature's id, rebuild.
     """
-    path = os.path.join(ART_DIR, f"{cid}.svg")
+    path = os.path.join(ASSETS, register, f"{cid}.svg")
     if not os.path.exists(path):
         return None
     with open(path) as fh:
@@ -145,29 +170,20 @@ def main() -> None:
     html = html.replace(SKY_PLACEHOLDER, json.dumps(
         {"count": sky["count"], "stars": sky["stars"], "source": sky["source"],
          "licence": sky["licence"]}, ensure_ascii=False), 1)
-    with open(BESTIARY) as fh:
-        bestiary = json.load(fh)
-    bestiary.pop("_comment", None)
-    drawn = 0
-    for creature in bestiary["creatures"]:
-        art = load_art(creature["id"])
-        if art:
-            creature["art"] = art
-            drawn += 1
-    if BEST_PLACEHOLDER not in html:
-        print(f"ERROR: placeholder {BEST_PLACEHOLDER} missing from template")
-        sys.exit(1)
-    html = html.replace(BEST_PLACEHOLDER, json.dumps(bestiary, ensure_ascii=False), 1)
+    html, bestiary, drawn = inject_register(
+        html, BESTIARY, "creatures", "bestiary", BEST_PLACEHOLDER)
+    html, peoples, drawn_p = inject_register(
+        html, PEOPLES, "entries", "peoples", PEOPLE_PLACEHOLDER)
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as fh:
         fh.write(html)
 
-    creatures = len(bestiary["creatures"])
     print(f"built {os.path.relpath(OUT, ROOT)} — {len(bobs)} records, "
           f"{len(todo['items'])} to-do items, "
           f"{len(systems['systems'])} systems, {sky['count']} backdrop stars, "
-          f"{creatures} creatures ({drawn} illustrated), "
+          f"{len(bestiary['creatures'])} creatures ({drawn} illustrated), "
+          f"{len(peoples['entries'])} peoples and polities ({drawn_p} illustrated), "
           f"{len(html):,} bytes")
 
 

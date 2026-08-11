@@ -113,9 +113,10 @@ data/todo.json   the research backlog, rendered as a view in the console
 data/systems.json star systems with real astrometry, and the places in them
 data/skyfield.json the naked-eye sky for the chart backdrop (HYG, CC BY-SA 4.0)
 data/bestiary.json non-sapient fauna; data/bestiary.schema.json documents it
-assets/bestiary/  <id>.svg illustrations, inlined into the page by the build
+data/peoples.json  sapient species and their polities; peoples.schema.json too
+assets/<register>/ <id>.svg illustrations, inlined into the page by the build
 templates/genealogy.html   the console — register, lineage, unresolved, chart,
-                 bestiary, to-do
+                 bestiary, peoples, to-do
 books/MANIFEST.sha256  hashes + chapter counts of your ebooks; the one thing in
                  books/ that IS committed, because it's facts about the files
 src/parse_ebook.py  MOBI + EPUB -> chapters, refuses DRM
@@ -422,13 +423,42 @@ promise of zero external requests has to survive the artwork. Raster art works
 the same way — base64 it into a `data:` URI. Creatures without art get a dashed
 plate bearing their role mark, which reads as "reserved" rather than "broken".
 
-**Peoples and polities.** Confirmed for build. Species — Deltans, Quinlans,
-Pav, the Others, Zjentfen (Bk2 ch60), and the gorilloids. Polities — the
-Pangean Council, the UFS, the Quinlan Resistance and the Crew, the Newholme and
-Pangea colonies, and the Bawbes, which is what the locals call us. Note that
-these need a different provenance model than the Bobs: species and governments
-don't have parents, so tiers T/A/B/P/C/X won't transfer directly. Design that
-schema fresh rather than bending this one.
+**Peoples and polities.** Built — `data/peoples.json`, five species and nine
+polities, its own register. Provenance works differently here: species and
+governments have no parents, so the tier letters don't transfer. What's graded
+instead is whether the books *state* a thing or leave it open.
+
+The rule that spans this register and the bestiary: **a name is a people or it
+is fauna, never both.** `validate.py` checks the two files against each other.
+The console must not be able to call the Deltans a species in one view and a
+beast in another — that is the argument the books are having, and getting it
+wrong by accident would be picking a side.
+
+Two fields carry most of the meaning:
+
+- `contact` turns the Prime Directive thread into data — `uplifted` is Bob
+  deciding that watching was also a choice, `covert` is walking among Quinlans
+  without telling them, `aware` is a people that knows and has its own opinion.
+- `expansion` holds what an acronym stands for **only where a character expands
+  it on the page**. USE is the United States of Eurasia because Dr. Landers says
+  so. VEHEMENT gets its expansion from Butterworth along with his own hedge —
+  "or something close to that" — and the hedge is recorded because the hedge is
+  the citation. FAITH has no expansion field at all: the books never unpack it,
+  and inventing a plausible one is exactly the failure this project exists to
+  avoid.
+
+**Mention counts need explicit patterns here.** Matching a name
+case-insensitively is fine for a coinage like "gorilloid" and disastrous for an
+acronym: `USE` finds the verb 286 times against the state's 51, `FAITH` finds
+the noun, and "the Others" collides with the ordinary word. Entries whose name
+is ambiguous carry `mentionPattern`, and the validator uses it. This is the same
+false-positive class that put Dr. Landers and the Spits in the bestiary's
+candidate list — it recurs, so assume it rather than discover it.
+
+Some names look like species and are not. **Bawbe** is the Deltan word for Bob.
+**Hexghi** is a Deltan family group. **The Spits** is the Spitsbergen island
+refuge. **Boojums** are Quinlan drones. Check what a word denotes before filing
+it anywhere.
 
 Same ground rules apply to all of them: derived text stays in `.cache/`, facts
 are publishable, and every claim carries where it came from.
