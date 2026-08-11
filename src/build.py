@@ -16,6 +16,7 @@ from validate import validate  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data", "bobs.json")
+SCHEMA = os.path.join(ROOT, "data", "schema.json")
 TODO = os.path.join(ROOT, "data", "todo.json")
 SYSTEMS = os.path.join(ROOT, "data", "systems.json")
 SKYFIELD = os.path.join(ROOT, "data", "skyfield.json")
@@ -27,10 +28,29 @@ TODO_PLACEHOLDER = "/*__TODO__*/null"
 SYS_PLACEHOLDER = "/*__SYSTEMS__*/null"
 SKY_PLACEHOLDER = "/*__SKY__*/null"
 
-# field order in the emitted literal — keeps diffs readable
-ORDER = ["id", "name", "parent", "src", "cite", "gen", "desig", "vessel", "born",
-         "origin", "visited", "status", "lostAt", "faction", "ref", "conflict",
-         "partialNote", "note"]
+# Field order in the emitted literal — keeps diffs readable. It is also, in
+# effect, a whitelist: a field missing here never reaches the page. That bit
+# twice, silently — `alias` and `priorClaim` were both added to the schema and
+# the console without being added here, so the HAS LEAD chip filtered to nothing
+# and Will's "/ Riker" never appeared. _check_order() below makes the schema and
+# this list agree, so the next field can't go missing the same way.
+ORDER = ["id", "name", "alias", "parent", "src", "cite", "gen", "desig", "vessel",
+         "born", "origin", "visited", "status", "lostAt", "faction", "ref",
+         "conflict", "partialNote", "priorClaim", "note"]
+
+
+def _check_order() -> None:
+    """Every documented field must be emitted, or the console silently loses it."""
+    with open(SCHEMA) as fh:
+        known = json.load(fh)["properties"]["bobs"]["items"]["properties"]
+    missing = [f for f in known if f not in ORDER]
+    unknown = [f for f in ORDER if f not in known]
+    if missing:
+        print(f"ERROR: schema fields the build would drop: {', '.join(missing)}")
+    if unknown:
+        print(f"ERROR: ORDER lists fields the schema doesn't define: {', '.join(unknown)}")
+    if missing or unknown:
+        sys.exit(1)
 
 
 def render_literal(bobs: list[dict]) -> str:
@@ -42,6 +62,8 @@ def render_literal(bobs: list[dict]) -> str:
 
 
 def main() -> None:
+    _check_order()
+
     with open(DATA) as fh:
         bobs = json.load(fh)["bobs"]
 

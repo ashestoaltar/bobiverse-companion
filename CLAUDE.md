@@ -124,6 +124,13 @@ src/build.py        bobs.json + template -> dist/index.html
 templates/genealogy.html   the console, with a data placeholder
 ```
 
+**`build.py`'s `ORDER` list is a whitelist.** A field missing from it never
+reaches the page, however well documented it is elsewhere. That bit twice —
+`alias` and `priorClaim` were both added to the schema and used by the console
+while the build quietly dropped them, so the HAS LEAD chip filtered to nothing
+and Will's "/ Riker" never rendered. `_check_order()` now fails the build if the
+schema and `ORDER` disagree in either direction.
+
 ## Workflow
 
 ```
