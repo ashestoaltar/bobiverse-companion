@@ -20,13 +20,17 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BOOKS_DIR = os.path.join(ROOT, "books")
 CACHE = os.path.join(ROOT, ".cache", "corpus.json")
 
-# Match files to book numbers by filename. Adjust if yours are named differently.
+# Match files to book numbers by title in the filename. Matching on the title
+# rather than a naming convention means a file dropped in straight from a store,
+# with whatever baroque name it came with, still lands in the right slot.
+# books/ is named bobiverse-<n>-<title>.epub, but nothing depends on that.
+SEP = r"[-_ ]?"
 BOOK_PATTERNS = [
-    (1, r"we[_ ]?are[_ ]?legion"),
-    (2, r"for[_ ]?we[_ ]?are[_ ]?many"),
-    (3, r"all[_ ]?these[_ ]?worlds"),
+    (1, rf"we{SEP}are{SEP}legion"),
+    (2, rf"for{SEP}we{SEP}are{SEP}many"),
+    (3, rf"all{SEP}these{SEP}worlds"),
     (4, r"heaven"),
-    (5, r"not[_ ]?till[_ ]?we[_ ]?are[_ ]?lost"),
+    (5, rf"not{SEP}till{SEP}we{SEP}are{SEP}lost"),
 ]
 
 
@@ -45,7 +49,28 @@ def discover() -> list[tuple[int, str]]:
     return sorted(set(found))
 
 
-def build(verbose: bool = True) -> list[dict]:
+def _existing_counts() -> dict[int, int]:
+    """Chapters per book in the cache we already have, if any."""
+    if not os.path.exists(CACHE):
+        return {}
+    try:
+        with open(CACHE) as fh:
+            cached = json.load(fh)
+    except (OSError, ValueError):
+        return {}
+    counts: dict[int, int] = {}
+    for chapter in cached:
+        counts[chapter["book"]] = counts.get(chapter["book"], 0) + 1
+    return counts
+
+
+def _regression(fresh: dict[int, int], have: dict[int, int]) -> list[str]:
+    """Books the new parse understands worse than the cache already does."""
+    return [f"book {num}: cache has {old} chapters, this parse found {fresh.get(num, 0)}"
+            for num, old in sorted(have.items()) if fresh.get(num, 0) < old]
+
+
+def build(verbose: bool = True, force: bool = False) -> list[dict]:
     chapters: list[dict] = []
     for num, path in discover():
         try:
@@ -57,6 +82,24 @@ def build(verbose: bool = True) -> list[dict]:
         if verbose:
             words = sum(len(c["text"].split()) for c in got)
             print(f"  book {num}: {len(got):>3} chapters, {words:>7,} words")
+
+    # The cache is derived from books/, but it is not cheap to lose: when the
+    # ebooks went missing it was the only copy of the parsed text, and every
+    # citation in data/bobs.json is numbered against it. A book that suddenly
+    # parses to fewer chapters means a header shape we don't match yet — a
+    # missing file, a different edition — not a book that got shorter. Refuse
+    # rather than quietly overwrite good chapter numbers with worse ones.
+    lost = _regression({num: sum(1 for c in chapters if c["book"] == num)
+                        for num in {c["book"] for c in chapters}}, _existing_counts())
+    if lost and not force:
+        print("\nRefusing to overwrite the cache — this parse is worse than what's cached:",
+              file=sys.stderr)
+        for line in lost:
+            print(f"  {line}", file=sys.stderr)
+        print("\nThe cache is unchanged. Fix the parser, or re-run with --force if the\n"
+              "new parse really is the one you want.", file=sys.stderr)
+        raise SystemExit(1)
+
     os.makedirs(os.path.dirname(CACHE), exist_ok=True)
     with open(CACHE, "w") as fh:
         json.dump(chapters, fh)
@@ -79,6 +122,8 @@ def cite(chapter: dict) -> str:
 
 if __name__ == "__main__":
     if not discover():
+        # Never treat "no books" as "empty corpus" — that would wipe the cache.
         print(f"No ebooks found in {BOOKS_DIR}/ — drop your DRM-free files there.")
+        print("The cache, if you have one, is untouched.")
         sys.exit(1)
-    build()
+    build(force="--force" in sys.argv)

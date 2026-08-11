@@ -104,7 +104,9 @@ both tier T, because their parentage survives on the page regardless.
 
 ```
 books/           your DRM-free ebooks (gitignored, never committed)
-.cache/          parsed corpus (gitignored)
+                 named bobiverse-<n>-<title>.epub, though discovery matches on
+                 the title, so any name carrying it will do
+.cache/          parsed corpus (gitignored, and not cheap to lose — see below)
 data/bobs.json   source of truth
 data/schema.json field documentation and constraints
 data/todo.json   the research backlog, rendered as a view in the console
@@ -168,6 +170,20 @@ match — that is the one expected divergence.
 
 `make validate` re-checks every citation against the corpus whenever `.cache/`
 exists, so a chapter number that drifts gets caught rather than believed.
+
+### The cache is not disposable
+
+`.cache/corpus.json` is derived from `books/`, but it is not cheap to regenerate:
+when the ebooks went missing it was the only surviving copy of the parsed text,
+and every citation in `data/bobs.json` is numbered against it. So `make corpus`
+**refuses to overwrite the cache with a worse parse** — if any book comes back
+with fewer chapters than the cache already has, it prints what it would have lost
+and exits non-zero, changing nothing. Empty `books/` is likewise refused rather
+than treated as an empty corpus. `--force` overrides, and should be reached for
+only when the new parse really is the better one.
+
+Do not restore `books/` or `.cache/` from `git archive` or any other rewind:
+they're gitignored, so a rewind deletes them and brings nothing back.
 
 ## Systems
 

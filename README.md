@@ -87,6 +87,11 @@ make build && open dist/index.html
 
 Requires Python 3.10+. No third-party dependencies.
 
+EPUB and MOBI both work, and files are matched to books by the title in the
+filename — whatever name yours arrived with should be fine. `make corpus` won't
+replace a cached parse with a thinner one, so an edition the parser doesn't
+understand yet fails loudly instead of quietly renumbering every citation.
+
 ## Working on the data
 
 ```bash
