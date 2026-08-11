@@ -145,6 +145,37 @@ python src/extract.py --unresolved      # work the tier C and P backlog
 `extract.py` prints passages with citations; it never edits `data/bobs.json`.
 Reading the passage and deciding what it establishes is the human's job.
 
+## Adding a register
+
+The console is driven by a `REGISTERS` list. Each entry is one view, and the
+tab bar, the dispatch in `render()`, the dossier pane and the resize handler all
+read it — so a new register is **one entry plus one render function**, with no
+console surgery:
+
+```js
+{id:'bestiary', label:'BESTIARY', render: renderBestiary}
+```
+
+`id`, `label` and `render` are required. Optional hooks, which exist because the
+chart needed them and the next drawing register will too:
+
+| hook | when |
+|---|---|
+| `rows()` | what feeds `render()` and the status line. Defaults to `visible()` — the filtered, sorted replicant list. A register over different data supplies its own. |
+| `paint()` | after the stage is in the DOM, for anything that measures or draws to a canvas |
+| `onResize()` | window resized while this view is up |
+| `dossier()` | claim the right-hand pane. Return `null` to fall through to the replicant dossier — the chart does this when no system is selected. |
+| `status(rows)` | the footer line. Defaults to the replicant tally. |
+
+Registers are looked up on demand rather than through a cached map, so one
+appended at runtime resolves like any other.
+
+**Do not reintroduce `state.view === '...'` anywhere.** That's the pattern this
+replaced: five views' worth of special cases scattered across the dispatch, the
+dossier, the resize handler and the tab markup. `tests/registers.test.js` adds a
+synthetic register at runtime and asserts every hook fires, so a new special
+case that bypasses the list will fail it.
+
 ## Testing
 
 ```

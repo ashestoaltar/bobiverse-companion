@@ -32,8 +32,9 @@
     },
     {
       "cat": "BobNet",
-      "text": "Restructure before register five",
-      "note": "The console hardcodes every view into one template. Fine at five (register, lineage, unresolved, chart, to-do), won't be at eight once the bestiary and the peoples register land. Worth doing deliberately rather than discovering it halfway through."
+      "text": "Console restructured around a register list",
+      "note": "Every view used to be hardcoded: five tab buttons in the markup, a ternary chain in render(), and state.view special cases in the dossier, the paint step and the resize handler. Adding a sixth register meant editing all of them. Now REGISTERS drives all five, and a new view is one entry plus one render function. Done as a golden-master refactor — the 95-state snapshot was byte-identical before and after, so nothing rendered differently. tests/registers.test.js adds a synthetic register at runtime and checks every hook fires, so the next state.view special case will fail the build rather than rot quietly.",
+      "done": true
     },
     {
       "cat": "Lineage",

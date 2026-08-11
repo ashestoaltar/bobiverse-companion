@@ -358,13 +358,8 @@
              placeholder="search name, designation, system, namesake, notes">
     </label>
 
-    <div class="tabs" role="tablist" aria-label="View">
-      <button class="tab" role="tab" id="tab-register"   aria-selected="true"  data-view="register">REGISTER</button>
-      <button class="tab" role="tab" id="tab-lineage"    aria-selected="false" data-view="lineage">LINEAGE</button>
-      <button class="tab" role="tab" id="tab-unresolved" aria-selected="false" data-view="unresolved">UNRESOLVED</button>
-      <button class="tab" role="tab" id="tab-chart" aria-selected="false" data-view="chart">CHART</button>
-      <button class="tab" role="tab" id="tab-todo" aria-selected="false" data-view="todo">TO-DO</button>
-    </div>
+    <!-- filled from REGISTERS; adding a register must not mean editing markup -->
+    <div class="tabs" id="tabs" role="tablist" aria-label="View"></div>
 
     <button class="chip" id="crt" aria-pressed="true"
             title="Bobs each build their own VR to taste. Turn the CRT off if you'd rather just read.">CRT</button>
@@ -456,6 +451,44 @@ const COLS = [
 ];
 
 const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1, selected:null};
+
+/* ---- registers --------------------------------------------------------
+   Every view is an entry here. The tab bar, the dispatch in render(), the
+   dossier pane and the resize handler all read this list, so adding a
+   register — bestiary, peoples and polities, ship designs — is one entry plus
+   one render function, with no console surgery.
+
+   Only `id`, `label` and `render` are required. The optional hooks exist
+   because the chart needs them, and the next register that draws something
+   will need them too:
+
+     rows()          what feeds render() and the status line. Defaults to
+                     visible(), the filtered and sorted replicant list; a
+                     register over different data supplies its own.
+     paint()         runs after the stage is in the DOM, for anything that has
+                     to measure or draw to a canvas.
+     onResize()      called when the window changes size, if this view is up.
+     dossier()       right-hand pane. Return null to fall through to the
+                     replicant dossier, which is what the chart does when no
+                     system is selected.
+     status(rows)    the footer. Defaults to the replicant tally.
+
+   Function declarations hoist, so naming renderChart here before it appears
+   further down is fine. */
+const REGISTERS = [
+  {id:'register',   label:'REGISTER',   render: renderRegister},
+  {id:'lineage',    label:'LINEAGE',    render: renderLineage},
+  {id:'unresolved', label:'UNRESOLVED', render: renderUnresolved},
+  {id:'chart',      label:'CHART',      render: renderChart,
+   paint: paintChart,
+   onResize: paintChart,
+   dossier: () => (CHART.sel && SYS[CHART.sel]) ? renderSystemDossier(SYS[CHART.sel]) : null},
+  {id:'todo',       label:'TO-DO',      render: renderTodo},
+];
+
+/* Looked up on demand rather than cached in a map, so a register appended at
+   runtime resolves like any other. The list is five long; the lookup is free. */
+const currentRegister = () => REGISTERS.find(r => r.id === state.view) || REGISTERS[0];
 
 /* ---- helpers ---------------------------------------------------------- */
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -953,10 +986,11 @@ function renderSystemDossier(sys){
 
 function renderDossier(){
   const el = document.getElementById('dossier');
-  if (state.view === 'chart' && CHART.sel && SYS[CHART.sel]) {
-    el.innerHTML = renderSystemDossier(SYS[CHART.sel]);
-    return;
-  }
+  // A register may claim the pane — the chart shows the selected system.
+  // Returning null means "not mine", and the replicant dossier takes over.
+  const own = currentRegister().dossier;
+  const mine = own && own();
+  if (mine) { el.innerHTML = mine; return; }
   const b = state.selected && byId[state.selected];
   if (!b) {
     el.innerHTML = `<div class="idle"><b>[NO RECORD SELECTED]</b>
@@ -1073,21 +1107,22 @@ function renderStatus(rows){
     `<span class="cursor">█</span>`;
 }
 
+function renderTabs(){
+  document.getElementById('tabs').innerHTML = REGISTERS.map(r =>
+    `<button class="tab" role="tab" id="tab-${r.id}" aria-selected="${r.id === state.view}" ` +
+    `data-view="${r.id}">${esc(r.label)}</button>`).join('');
+}
+
 function render(){
-  const rows = visible();
-  const stage = document.getElementById('stage');
-  stage.innerHTML = state.view === 'register'   ? renderRegister(rows)
-                  : state.view === 'lineage'    ? renderLineage(rows)
-                  : state.view === 'chart'      ? renderChart()
-                  : state.view === 'todo'       ? renderTodo()
-                  :                               renderUnresolved(rows);
-  document.querySelectorAll('.tab').forEach(t =>
-    t.setAttribute('aria-selected', String(t.dataset.view === state.view)));
+  const reg = currentRegister();
+  const rows = (reg.rows || visible)();
+  document.getElementById('stage').innerHTML = reg.render(rows);
+  renderTabs();
   const doss = document.getElementById('dossier');
   doss.hidden = window.innerWidth <= 860 && !state.selected;
   renderDossier();
-  renderStatus(rows);
-  if (state.view === 'chart') paintChart();
+  (reg.status || renderStatus)(rows);
+  if (reg.paint) reg.paint();
 }
 
 function select(id){
@@ -1147,7 +1182,10 @@ function select(id){
     if (k === 'reset') Object.assign(CHART, {yaw: -0.62, pitch: 0.50, zoom: 1, panx: 0, pany: 0});
     paintChart();
   });
-  window.addEventListener('resize', () => { if (state.view === 'chart') paintChart(); });
+  window.addEventListener('resize', () => {
+    const on = currentRegister().onResize;
+    if (on) on();
+  });
 })();
 
 /* ---- events ----------------------------------------------------------- */

@@ -34,7 +34,7 @@ module.exports = ({ok, get, run, snapshot}) => {
   // golden master, because chips live in their own element.
   // Some panes are written with innerHTML and some with textContent
   // (chart-stat, chart-year), so read whichever the console actually set.
-  const PANES = ['stage', 'dossier', 'status', 'chips', 'chart-stat', 'chart-year'];
+  const PANES = ['stage', 'dossier', 'status', 'chips', 'tabs', 'chart-stat', 'chart-year'];
   const pane = id => {
     const el = get('document').getElementById(id);
     return el.innerHTML || el.textContent || '';
@@ -52,8 +52,6 @@ module.exports = ({ok, get, run, snapshot}) => {
     state.view = v;
     run('render()');
     for (const [id, html] of Object.entries(all())) shot[`${v}:${id}`] = html;
-    // the tab bar's selected state is markup too
-    shot[`${v}:tabs`] = views.map(x => `${x}=${x === v}`).join(' ');
   }
 
   // ---- each view with a selection, so the dossier is captured too ----

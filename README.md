@@ -44,8 +44,8 @@ record now says so.
 
 ## The console
 
-Three views over the same 87 records, with live search across names, aliases,
-designations, systems, notes and citations:
+Five registers, with live search across names, aliases, designations, systems,
+notes and citations:
 
 - **Register** — the full list, sortable on every column.
 - **Lineage** — the descent tree. Filtering keeps the ancestors needed to reach
