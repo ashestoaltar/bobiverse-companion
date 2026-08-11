@@ -5,6 +5,11 @@ title, the POV Bob, an in-world date, and usually a location. The date is the
 only one that is unambiguously identifiable by shape, so it is the anchor:
 find the date paragraph, and the POV is the paragraph before it.
 
+Editions disagree about how that header is marked up, so there are three
+detectors, tried in order: header-as-paragraph, header-as-list-item, and a flat
+regex over untagged text. A book that yields zero chapters is usually a fourth
+markup shape rather than a bad file.
+
 Refuses DRM'd files rather than trying to work around them.
 """
 
@@ -14,6 +19,7 @@ import html
 import os
 import re
 import struct
+import sys
 import zipfile
 
 # NB: keep the non-capturing group. Without it the alternation binds loosely
@@ -219,6 +225,9 @@ def parse(path: str, book: int) -> list[dict]:
     for markup in docs:
         chapter = _chapter_from_paragraphs(_paragraphs(markup))
         if chapter is None:
+            # Some editions set the header as a list item rather than a paragraph.
+            chapter = _chapter_from_listhead(markup)
+        if chapter is None:
             # Book 1's MOBI has no <p> tags; fall back to a flat text split.
             chapter = _chapter_from_flat(markup)
         if chapter is None:
@@ -226,6 +235,16 @@ def parse(path: str, book: int) -> list[dict]:
         chapter["book"] = book
         chapter["seq"] = len(chapters) + 1
         chapters.append(chapter)
+
+    # Where the edition prints its own chapter numbers, hold our positional
+    # count to them. Every numbering bug we've had was silent — a header shape
+    # we didn't match, dropping a chapter and shifting every number after it.
+    # This is the one book that can tell us, so let it.
+    for chapter in chapters:
+        printed = chapter.pop("printed", None)
+        if printed is not None and printed != chapter["seq"]:
+            print(f"  book {book}: chapter {chapter['seq']} is printed as {printed} "
+                  f"— a chapter was probably missed before it", file=sys.stderr)
     return chapters
 
 
@@ -238,6 +257,48 @@ FLAT_HEAD = re.compile(
     rf"((?:{MONTHS}\s+\d{{1,2}},\s*\d{{4}})|(?:{MONTHS}\s+\d{{4}})|(?:Version \d\.\d))"
     r"(?:\s*[\u2013\u2014-]\s*([A-Za-z0-9 \u00b2']{3,28}?))?(?=\s+[A-Z\u201c\[])"
 )
+
+
+# The 2016 ebook edition of book 1 sets each chapter header as a single-item
+# ordered list — "<li value="13">Bob – August 17, 2133 – En Route</li>" — with
+# the body as ordinary paragraphs after it. The date is no longer a paragraph,
+# so the date-anchored detector never sees it and the whole book parses to
+# nothing. The li's `value` is the printed chapter number, which parse() then
+# holds our positional count to.
+LIST_ITEM = re.compile(r'<li\b[^>]*\bvalue="(\d+)"[^>]*>(.*?)</li>', re.S)
+
+# Same shape as FLAT_HEAD, but anchored to a standalone header rather than
+# reaching into the body for its right-hand boundary. Book 1 ch56 uses ASCII
+# hyphens where every other chapter uses en dashes, hence the character class.
+HEAD_PARTS = re.compile(
+    rf"^([A-Z][A-Za-z0-9'\-]{{1,18}})(?:\s*[–—-]\s*|\s+(?=Version\b))"
+    rf"((?:{MONTHS}\s+\d{{1,2}},\s*\d{{4}})|(?:{MONTHS},?\s+\d{{4}})|(?:Version \d\.\d))"
+    r"(?:\s*[–—-]\s*(.+?))?$"
+)
+
+
+def _chapter_from_listhead(markup: str) -> dict | None:
+    items = LIST_ITEM.findall(markup)
+    if len(items) != 1:
+        return None
+    value, inner = items[0]
+    header = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", inner))).strip()
+    m = HEAD_PARTS.match(header)
+    if not m:
+        return None
+
+    body = " ".join(_paragraphs(markup))
+    if len(body) < MIN_BODY_CHARS:
+        return None
+
+    return {
+        "title": None,
+        "pov": m.group(1),
+        "when": m.group(2),
+        "where": (m.group(3) or "").strip() or None,
+        "text": body,
+        "printed": int(value),
+    }
 
 
 def _chapter_from_flat(markup: str) -> dict | None:

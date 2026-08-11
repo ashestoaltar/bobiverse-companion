@@ -136,15 +136,20 @@ Reading the passage and deciding what it establishes is the human's job.
 
 Every chapter opens with an optional title, the POV Bob, an in-world date, and
 usually a location. The date is the only field identifiable by shape, so it's
-the anchor: find the date paragraph, the POV is the paragraph before it. Book 1
-in MOBI has no paragraph tags and falls back to a flat regex. Book 5 uses word
-numerals ("Chapter One"), which is why the parser doesn't rely on chapter
-numbering.
+the anchor: find the date paragraph, the POV is the paragraph before it. Book 5
+uses word numerals ("Chapter One"), which is why the parser doesn't rely on
+chapter numbering.
+
+Editions differ in where they put that header, so there are three detectors,
+tried in order: header-as-paragraph (books 2–5), header-as-list-item (the 2016
+EPUB of book 1), and a flat regex over untagged text (the MOBI of book 1, which
+has no paragraph tags at all). A book that parses to zero chapters usually means
+a fourth shape, not a bad file.
 
 Because the anchor is the date, anything that doesn't look like a date silently
 costs a whole chapter — and every chapter after it in that book shifts, which
-quietly corrupts citations. Four such cases were found and fixed; the corpus went
-from 345 chapters to 351:
+quietly corrupts citations. Five such cases have been found and fixed; the corpus
+went from 345 chapters to 351:
 
 | what | where | effect |
 |---|---|---|
@@ -152,12 +157,14 @@ from 345 chapters to 351:
 | "Sept 2172" — abbreviated month | Bk2 ch18 | book 2 was 1 out |
 | "September, 2182" — month, comma, year, no day | Bk2 ch47, ch54 | book 2 was 3 out by the end |
 | "Same Day" — a relative date, not a date | Bk4 ch30 | book 4 was 1 out |
+| header in an `<li>`, not a `<p>` | Bk1, 2016 EPUB | whole book parsed to nothing |
 
 **The regression test is the books' own chapter numbers.** Books 2 and 4 print
-them in the chapter titles, so `seq` should equal the printed number with no
-gaps. Books 1, 2, 3 and 5 now match exactly. Book 4 legitimately restarts
-numbering at part 2, so our `seq` is a global index there and won't match — that
-is the one expected divergence.
+them in the chapter titles, and book 1's EPUB carries them as `<li value="n">`,
+so `seq` should equal the printed number with no gaps — the parser says so on
+stderr when it doesn't. Books 1, 2, 3 and 5 match exactly. Book 4 legitimately
+restarts numbering at part 2, so our `seq` is a global index there and won't
+match — that is the one expected divergence.
 
 `make validate` re-checks every citation against the corpus whenever `.cache/`
 exists, so a chapter number that drifts gets caught rather than believed.
