@@ -340,8 +340,15 @@
     position:fixed; inset:0; z-index:120; background:var(--void);
     display:flex; align-items:center; justify-content:center; cursor:pointer;
   }
-  .boot pre{margin:0; font-size:13px; line-height:1.85; color:var(--phos)}
+  .boot pre{margin:0; font-size:13px; line-height:1.85; color:var(--phos); min-height:15.5em}
   .boot.done{opacity:0; pointer-events:none; transition:opacity .32s ease}
+  /* The caret blinks so a pause between lines reads as the machine thinking
+     rather than the page having hung. */
+  .caret{color:var(--phos); animation:blink 1.06s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  .boot-hint{position:fixed; bottom:22px; left:0; right:0; text-align:center;
+             font-size:11px; letter-spacing:.14em; color:var(--ash); opacity:.5}
+  @media (prefers-reduced-motion: reduce){ .caret{animation:none} }
 
   /* --- responsive ----------------------------------------------------- */
   @media (max-width:1080px){
@@ -370,7 +377,8 @@
 <div class="crt-scan"></div>
 <div class="crt-vig"></div>
 
-<div class="boot" id="boot" aria-hidden="true"><pre id="boot-text"></pre></div>
+<div class="boot" id="boot" aria-hidden="true"><pre id="boot-text"></pre>
+  <div class="boot-hint">CLICK OR PRESS ANY KEY TO SKIP</div></div>
 
 <div class="shell">
 
@@ -1531,27 +1539,84 @@ window.addEventListener('resize', () => {
 });
 
 /* ---- boot ------------------------------------------------------------- */
+/* What the console reports about itself on the way up. Every number is read
+   from the data rather than written down, so the boot screen can't drift out of
+   date the way a hardcoded splash would. Each line carries the pause that
+   follows it — uniform timing reads as an animation, but varied timing reads as
+   a machine doing work of different sizes, which is the effect we want. */
+function bootLines(){
+  const systems = (SYSTEMS && SYSTEMS.systems) || [];
+  const beasts  = (BESTIARY && BESTIARY.creatures) || [];
+  const folk    = (PEOPLES && PEOPLES.entries) || [];
+  const stars   = SKYFIELD ? SKYFIELD.count : 0;
+  return [
+    ['[BobNet link established · Epsilon Eridani relay]', 240],
+    ['[Mounting lineage registry: OK]', 130],
+    [`[Indexing ${BOBS.length} replicant records: OK]`, 170],
+    [`[${BOBS.filter(b => b.src === 'c').length} with no source on file, ` +
+     `${BOBS.filter(b => b.src === 'x').length} expunged]`, 260],
+    [`[Star chart: ${systems.length} systems · ${stars.toLocaleString()} background stars]`, 170],
+    [`[Bestiary: ${beasts.length} creatures]`, 120],
+    [`[Peoples: ${folk.filter(e => e.kind === 'people').length} species · ` +
+     `${folk.filter(e => e.kind === 'polity').length} polities]`, 240],
+    ['[STATUS: Ready]', 480],
+  ];
+}
+
 (function boot(){
   const el = document.getElementById('boot');
   const out = document.getElementById('boot-text');
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const lines = [
-    '[BobNet link established · Epsilon Eridani relay]',
-    '[Mounting lineage registry: OK]',
-    `[Indexing ${BOBS.length} replicant records: OK]`,
-    `[${BOBS.filter(b => b.src === 'c').length} with no source on file, ` +
-      `${BOBS.filter(b => b.src === 'x').length} expunged]`,
-    '[STATUS: Ready]'
-  ];
-  const finish = () => { el.classList.add('done'); setTimeout(() => el.remove(), 380); };
-  if (reduce) { el.remove(); return; }
-  let i = 0;
-  const tick = () => {
-    out.textContent = lines.slice(0, ++i).join('\n');
-    if (i < lines.length) setTimeout(tick, 105); else setTimeout(finish, 260);
+  if (!el || !out) return;
+
+  let stopped = false, timer = null;
+  const finish = () => {
+    if (stopped) return;             // click, keypress and the last line can all land here
+    stopped = true;
+    if (timer) clearTimeout(timer);
+    document.removeEventListener('keydown', skip);   // or it eats the first '/' later
+    el.classList.add('done');
+    setTimeout(() => el.remove(), 380);
   };
-  tick();
+  const skip = () => finish();
+
+  // Anyone who has asked not to be animated gets the console straight away.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.remove(); return; }
+
+  const lines = bootLines();
+  // One knob for the whole sequence. 1 is about 3.4 seconds end to end, which
+  // is long enough to read eight lines and short enough to sit through on a
+  // reload. Raise it to linger, lower it to hurry.
+  const SPEED = 1;
+  const CHAR_MS = 5 * SPEED;   // typing speed; the pauses do most of the pacing
+  let li = 0, ci = 0;
+  const done = [];
+
+  const paint = partial => {
+    const shown = partial == null ? done : done.concat([partial]);
+    out.innerHTML = esc(shown.join('\n')) + '<span class="caret">█</span>';
+  };
+
+  const step = () => {
+    if (li >= lines.length) { finish(); return; }
+    const [text, pause] = lines[li];
+    if (ci < text.length) {
+      ci += 1;
+      paint(text.slice(0, ci));
+      timer = setTimeout(step, CHAR_MS);
+      return;
+    }
+    done.push(text);
+    li += 1;
+    ci = 0;
+    paint(null);
+    timer = setTimeout(step, pause * SPEED);
+  };
+
+  paint(null);
+  timer = setTimeout(step, 260 * SPEED);   // a beat of dark before anything types
+
   el.addEventListener('click', finish);
+  document.addEventListener('keydown', skip);
 })();
 
 /* display preference — persisted, harmless if storage is unavailable */
