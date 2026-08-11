@@ -1545,10 +1545,10 @@ window.addEventListener('resize', () => {
    follows it — uniform timing reads as an animation, but varied timing reads as
    a machine doing work of different sizes, which is the effect we want. */
 /* Pacing for the whole boot sequence, as one multiplier. 1 was about 3.4
-   seconds and read as hurried; 1.4 gives roughly 4.8, which is long enough to
+   seconds and read as hurried. 1.55 gives roughly 6, which is long enough to
    watch the machine work rather than just catch that it did. Any key or click
    skips, so the cost of erring slow is small. */
-const BOOT_SPEED = 1.4;
+const BOOT_SPEED = 1.55;
 
 function bootLines(){
   const systems = (SYSTEMS && SYSTEMS.systems) || [];
@@ -1565,7 +1565,8 @@ function bootLines(){
     [`[Bestiary: ${beasts.length} creatures]`, 120],
     [`[Peoples: ${folk.filter(e => e.kind === 'people').length} species · ` +
      `${folk.filter(e => e.kind === 'polity').length} polities]`, 240],
-    ['[STATUS: Ready]', 480],
+    // A real hold on the last line — the sequence should land, not stop.
+    ['[STATUS: Ready]', 880],
   ];
 }
 
