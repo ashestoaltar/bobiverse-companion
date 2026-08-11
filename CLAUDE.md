@@ -112,7 +112,10 @@ data/schema.json field documentation and constraints
 data/todo.json   the research backlog, rendered as a view in the console
 data/systems.json star systems with real astrometry, and the places in them
 data/skyfield.json the naked-eye sky for the chart backdrop (HYG, CC BY-SA 4.0)
-templates/genealogy.html   the console — register, lineage, unresolved, chart, to-do
+data/bestiary.json non-sapient fauna; data/bestiary.schema.json documents it
+assets/bestiary/  <id>.svg illustrations, inlined into the page by the build
+templates/genealogy.html   the console — register, lineage, unresolved, chart,
+                 bestiary, to-do
 books/MANIFEST.sha256  hashes + chapter counts of your ebooks; the one thing in
                  books/ that IS committed, because it's facts about the files
 src/parse_ebook.py  MOBI + EPUB -> chapters, refuses DRM
@@ -387,11 +390,37 @@ re-parsed. Sol, Epsilon Eridani, Delta Eridani, 82 Eridani, Omicron² Eridani,
 Delta Pavonis, Gamma Pavonis, Eta Cassiopeiae, Poseidon, Gliese 877,
 HIP 84051, Alpha Centauri, Ragnarök/Valhalla.
 
-**Bestiary.** Well attested in the corpus already, by rough mention count:
-gorilloids (166), landers (92), boojums (47), snarks (38 — later renamed
-Quinlans), spits (36), raptors (48), krakens (11), hexghi (6), plus the
-Deltans' fauna and the Heaven's River river life. Note that "manny" (370) is
-an android body, not a creature — easy false positive.
+**Bestiary.** Built — `data/bestiary.json`, nine creatures, its own register.
+The inherited list that used to sit here was mostly wrong, and every entry was
+checked against the corpus before it went in. Five of its eight items did not
+survive: **landers** (92) is Dr. Landers, a human; **spits** (36) is the Spits,
+a human faction; **boojums** (47) are Quinlan *drones*, machines not animals;
+**hexghi** is the Deltan word for a family group, not a species; and **snarks**
+are what the Bobs called the Quinlans before learning their own name — people,
+so they belong in the peoples register. Only gorilloids, raptors and krakens
+came through. The list also missed the biggest one entirely: **dragons**, 191
+mentions across books 4 and 5, named by Mario.
+
+The rule that keeps this register honest is that it holds **non-sapient fauna
+only**. `validate.py` rejects a sapient entry by name and by the `sapience`
+field, which has no "sapient" value to set. This is not fussiness: the series is
+Bob working out who counts as a person, and filing the Deltans under "beasts"
+would make the console argue the opposite. Where the books leave it open, use
+`sapience: "contested"` rather than deciding for them.
+
+Mention counts are re-derived from the corpus at validate time, so a number that
+drifts gets caught. A creature whose name appears nowhere is flagged outright —
+that one means we invented it.
+
+**Illustrations.** `assets/bestiary/<id>.svg` is inlined by the build into the
+`art` field. Never hand-edit `art` in the JSON. Stroke-only, no `fill`, no
+colour of its own: the console styles them with `stroke: currentColor` so one
+file serves the card and the dossier in either palette, and they read as
+phosphor drawings on the display rather than pictures pasted over it. The build
+refuses any SVG containing a script or an external URL, because the page's
+promise of zero external requests has to survive the artwork. Raster art works
+the same way — base64 it into a `data:` URI. Creatures without art get a dashed
+plate bearing their role mark, which reads as "reserved" rather than "broken".
 
 **Peoples and polities.** Confirmed for build. Species — Deltans, Quinlans,
 Pav, the Others, Zjentfen (Bk2 ch60), and the gorilloids. Polities — the

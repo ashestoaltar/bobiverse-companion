@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Bobiverse bestiary — non-sapient fauna",
+  "type": "object",
+  "required": ["creatures"],
+  "properties": {
+    "_comment": {"type": "string"},
+    "creatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "sapience", "cite", "note"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$",
+            "description": "Stable internal key. Also the filename the build looks for under assets/bestiary/<id>.svg."
+          },
+          "name": {
+            "type": "string",
+            "description": "As the books spell it. Bobs name fauna by resemblance — gorilloid, pigoid, bronto — which is exactly what a bestiary has always done."
+          },
+          "namedBy": {
+            "type": "string",
+            "description": "Who coined the name, where the text says. Bob named the gorilloids, Mario the dragons, Howard the trout. Omit rather than guess."
+          },
+          "system": {
+            "type": "string",
+            "description": "id keyed into data/systems.json. The validator rejects one that isn't there."
+          },
+          "place": {
+            "type": "string",
+            "description": "Name of the world within that system, matching a `places` entry in systems.json — Vulcan, Poseidon, Eden. The validator checks it against that list."
+          },
+          "role": {
+            "type": "string",
+            "enum": ["predator", "prey", "megafauna", "scavenger", "unknown"],
+            "description": "Ecological role as the text presents it, not as a formal taxonomy. Nothing here is a scientific claim."
+          },
+          "sapience": {
+            "type": "string",
+            "enum": ["none", "contested"],
+            "description": "Whether the books treat this as a person. 'none' needs the text to settle it — Bk1 ch35 says outright there is nothing but animal intelligence behind a gorilloid. 'contested' is for creatures the books deliberately leave open. There is no 'sapient' value: a sapient species is a people, and belongs in the peoples register. The validator enforces that, because filing the Deltans under 'beasts' would argue against the books."
+          },
+          "mentions": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "How many times the name appears across the five books. Checked against .cache/corpus.json when it exists, so a number that drifts gets caught rather than believed. It is a rough weight, not a precise statistic — it counts the word, and words are ambiguous."
+          },
+          "cite": {
+            "type": "string",
+            "description": "First substantive appearance. Format: 'Bk<n> ch<n> · <POV>, <date>', verified against the corpus like every other citation."
+          },
+          "note": {
+            "type": "string",
+            "description": "Our prose, in our own words — never quoted book text. Shown in the dossier."
+          },
+          "art": {
+            "type": "string",
+            "description": "Inline SVG for the illustration. NOT hand-edited: the build fills this from assets/bestiary/<id>.svg so artwork can be dropped in as a file. Kept in the schema so the field is documented rather than mysterious."
+          }
+        }
+      }
+    }
+  }
+}

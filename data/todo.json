@@ -88,8 +88,9 @@
     },
     {
       "cat": "Companion registers",
-      "text": "Bestiary",
-      "note": "Well attested already: gorilloids (166 mentions), landers (92), raptors (48), boojums (47), snarks (38, later renamed Quinlans), spits (36), krakens (11), hexghi (6). Watch out for manny — that's an android body, not a creature."
+      "text": "Bestiary built",
+      "note": "Nine creatures in data/bestiary.json, with its own register and an illustration pipeline. The inherited candidate list was mostly wrong — five of eight entries did not survive checking against the text: landers is Dr. Landers, spits is a human faction, boojums are Quinlan drones, hexghi is the Deltan word for a family group, and snarks are Quinlans, who are people. It also missed dragons entirely, at 191 mentions the most-discussed animal in the series. Still to do: a second pass for Ragnarok and Heaven's River river life, and the 'contested sapience' cases the books deliberately leave open.",
+      "done": true
     },
     {
       "cat": "Companion registers",
@@ -105,6 +106,11 @@
       "cat": "BobNet",
       "text": "Images",
       "note": "Later. Whatever we do has to survive the no-external-requests rule, so anything visual gets inlined."
+    },
+    {
+      "cat": "Companion registers",
+      "text": "Illustrate the bestiary",
+      "note": "Two of nine have art — dragon and kraken, drawn as stroke-only SVG so the console can colour them with currentColor. The rest show a dashed plate with their role mark. Adding one is: draw assets/bestiary/<id>.svg, rebuild. The build refuses art containing a script or an external URL, so the page keeps its promise of zero external requests."
     }
   ]
 }

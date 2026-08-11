@@ -203,6 +203,29 @@
   /* --- unresolved register -------------------------------------------- */
   .unres{padding-bottom:40px}
   .unres-lead{color:var(--amber-dim); font-size:13.5px; max-width:74ch; margin:0 0 16px; line-height:1.62}
+
+  /* --- bestiary --- */
+  .beasts-lead{color:var(--amber-dim); font-size:13.5px; max-width:74ch; margin:0 0 18px; line-height:1.62}
+  .beasts{display:grid; gap:12px; grid-template-columns:repeat(auto-fill, minmax(178px, 1fr))}
+  .beast{display:flex; flex-direction:column; gap:9px; text-align:left; padding:11px;
+         background:transparent; border:1px solid var(--rule); color:inherit;
+         font:inherit; cursor:pointer}
+  .beast:hover{border-color:var(--amber); background:var(--panel-hi)}
+  .beast[aria-pressed="true"]{border-color:var(--amber); background:var(--panel-hi)}
+  .beast-id b{display:block; color:var(--amber-hi); font-weight:400; letter-spacing:.04em}
+  .beast-id .dim{font-size:11.5px; letter-spacing:.05em; text-transform:uppercase}
+  /* Illustrations are stroked, not filled, so they read as phosphor drawings on
+     the display rather than pictures pasted over it. currentColor lets one file
+     serve both the card and the dossier without knowing the palette. */
+  .beast-art{display:grid; place-items:center; aspect-ratio:4/3; color:var(--amber);
+             background:rgba(0,0,0,.22); overflow:hidden}
+  .beast-art svg{width:100%; height:100%; display:block; fill:none;
+                 stroke:currentColor; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round}
+  .beast-art.big{aspect-ratio:16/10; margin:2px 0 14px; border:1px solid var(--rule)}
+  /* an empty plate says "reserved", not "broken" */
+  .beast-art.empty{border:1px dashed var(--rule); background:transparent}
+  .beast-art.empty span{font-size:20px; color:var(--ash); opacity:.75}
+  .beast-art.big.empty span{font-size:30px}
   .card{border-left:2px solid var(--rule); padding:0 0 0 12px; margin-bottom:15px}
   /* cleared work stays legible — dimmed, not struck through, because the note
      on a finished item is usually the part worth keeping */
@@ -405,6 +428,10 @@ const SYSTEMS = /*__SYSTEMS__*/null;
    magnitude and colour index only; a backdrop needs no distances. */
 const SKYFIELD = /*__SKY__*/null;
 
+/* Non-sapient fauna. Sapient species are people and belong in their own
+   register — the validator refuses one here. */
+const BESTIARY = /*__BESTIARY__*/null;
+
 /* ---- indexes ---------------------------------------------------------- */
 const SYS = Object.create(null);
 if (SYSTEMS) SYSTEMS.systems.forEach(s => SYS[s.id] = s);
@@ -450,7 +477,8 @@ const COLS = [
   {key:'src',    label:'PROVENANCE', get:b => b.src}
 ];
 
-const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1, selected:null};
+const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1,
+               selected:null, beast:null};
 
 /* ---- registers --------------------------------------------------------
    Every view is an entry here. The tab bar, the dispatch in render(), the
@@ -471,7 +499,12 @@ const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1, sel
      dossier()       right-hand pane. Return null to fall through to the
                      replicant dossier, which is what the chart does when no
                      system is selected.
-     status(rows)    the footer. Defaults to the replicant tally.
+     status(rows)    the footer. Use statusLine() so every register speaks in
+                     the same bracketed voice. Defaults to the replicant tally.
+     onClick(e)      first refusal on clicks in this view. Return true if you
+                     handled it, false to let the normal row/sort/chip handling
+                     run. The bestiary uses it for its own cards, since those
+                     aren't replicant rows.
 
    Function declarations hoist, so naming renderChart here before it appears
    further down is fine. */
@@ -483,6 +516,25 @@ const REGISTERS = [
    paint: paintChart,
    onResize: paintChart,
    dossier: () => (CHART.sel && SYS[CHART.sel]) ? renderSystemDossier(SYS[CHART.sel]) : null},
+  {id:'bestiary',   label:'BESTIARY',   render: renderBestiary,
+   rows: beasts,
+   status: rows => {
+     const all = (BESTIARY && BESTIARY.creatures) || [];
+     statusLine(rows.length === all.length ? `${all.length} creatures`
+                                           : `${rows.length} of ${all.length} creatures`,
+                `${all.filter(c => c.art).length} illustrated`,
+                `sapients live in their own register`);
+   },
+   dossier: () => state.beast ? renderBeastDossier(state.beast) : null,
+   onClick: e => {
+     const sys = e.target.closest('[data-sys]');
+     if (sys) { state.view = 'chart'; CHART.sel = sys.dataset.sys; render(); return true; }
+     const hit = e.target.closest('[data-beast]');
+     if (!hit) return false;
+     state.beast = state.beast === hit.dataset.beast ? null : hit.dataset.beast;
+     render();
+     return true;
+   }},
   {id:'todo',       label:'TO-DO',      render: renderTodo},
 ];
 
@@ -1088,10 +1140,102 @@ function renderDossier(){
     </div>`;
 }
 
+/* ---- bestiary ---------------------------------------------------------
+   Fauna only. The sapients — Deltans, Quinlans, Pav, the Others — are people
+   and get their own register; the build refuses to put one here. Bob spends
+   three books working out who counts, and filing the Deltans under "beasts"
+   would answer that question the wrong way on his behalf. */
+
+const ROLE_MARK = {predator: '▲', prey: '▽', megafauna: '⬢', scavenger: '◇', unknown: '·'};
+
+function beasts(){
+  const all = (BESTIARY && BESTIARY.creatures) || [];
+  const q = state.q.trim().toLowerCase();
+  const rows = !q ? all.slice() : all.filter(c =>
+    [c.name, c.namedBy, c.role, c.place, sysName(c.system), c.note, c.cite]
+      .some(v => v && String(v).toLowerCase().includes(q)));
+  // Loudest first — mention count is a rough proxy for how much of the books
+  // an animal actually occupies, and the dragons earned the top slot.
+  return rows.sort((a, b) => (b.mentions || 0) - (a.mentions || 0) || a.name.localeCompare(b.name));
+}
+
+/* No art yet for most of these. Rather than a blank, draw the role mark on a
+   dashed plate — it reads as "slot reserved" instead of "something broke",
+   and it keeps the grid from lurching when illustrations land one at a time. */
+function beastPlate(c, big){
+  if (c.art) return `<div class="beast-art${big ? ' big' : ''}">${c.art}</div>`;
+  return `<div class="beast-art${big ? ' big' : ''} empty" aria-hidden="true">
+    <span>${ROLE_MARK[c.role] || '·'}</span></div>`;
+}
+
+function beastWhere(c){
+  const sys = sysName(c.system);
+  if (c.place && sys) return `${c.place}, ${sys}`;
+  return c.place || sys || 'unrecorded';
+}
+
+function renderBestiary(rows){
+  if (!BESTIARY) return `<p class="empty">[BESTIARY UNAVAILABLE]</p>`;
+  const total = (BESTIARY.creatures || []).length;
+  if (!rows.length) {
+    return `<p class="empty">[NO MATCH IN ${total} CREATURES]</p>`;
+  }
+  const cards = rows.map(c => `
+    <button class="beast" data-beast="${esc(c.id)}" aria-pressed="${state.beast === c.id}">
+      ${beastPlate(c, false)}
+      <div class="beast-id">
+        <b>${esc(c.name)}</b>
+        <span class="dim">${esc(c.role || 'unknown')} · ${esc(beastWhere(c))}</span>
+      </div>
+    </button>`).join('');
+  return `<div class="beasts-lead"><span class="redacted">[</span>${
+    rows.length === total ? `${total} creatures on file` : `${rows.length} of ${total} creatures`
+  }<span class="redacted">]</span><br><br>
+    Non-sapient fauna only. The Deltans, Quinlans, Pav and the Others are people,
+    and people get their own register — the one Bob had to think hardest about.
+    Names are mostly the Bobs' own, assigned on sight and never revisited.</div>
+    <div class="beasts">${cards}</div>`;
+}
+
+function renderBeastDossier(id){
+  const c = ((BESTIARY && BESTIARY.creatures) || []).find(x => x.id === id);
+  if (!c) return null;
+  const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
+  const sys = c.system && SYS[c.system];
+  return `<div class="doss">
+    <button class="close" id="d-close" aria-label="Close">×</button>
+    <h2>${esc(c.name)}</h2>
+    ${beastPlate(c, true)}
+    <dl class="fields">
+      ${f('ROLE', c.role)}
+      ${f('WORLD', beastWhere(c))}
+      ${f('NAMED BY', c.namedBy)}
+      ${f('SAPIENCE', c.sapience === 'contested' ? 'contested — the books leave it open' : 'none on record')}
+      ${f('MENTIONS', c.mentions != null ? `${c.mentions} across the five books` : null)}
+      ${f('FIRST ON RECORD', c.cite)}
+    </dl>
+    ${sys ? `<div class="sec"><div class="sec-label">SYSTEM</div>
+      <p class="note"><a href="#" data-sys="${esc(c.system)}">${esc(sys.name)}</a>${
+        sys.distance_ly ? ` <span class="dim">— ${sys.distance_ly.toFixed(2)} ly</span>` : ''}</p></div>` : ''}
+    <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
+      <p class="note">${esc(c.note)}</p></div>
+    ${c.art ? '' : `<div class="sec"><div class="sec-label">ILLUSTRATION</div>
+      <p class="note dim">None on file. Drop an SVG at assets/bestiary/${esc(c.id)}.svg and rebuild.</p></div>`}
+  </div>`;
+}
+
 /* ---- shell ------------------------------------------------------------ */
 function renderChips(){
   document.getElementById('chips').innerHTML = FILTERS.map(f =>
     `<button class="chip" data-filter="${f.id}" aria-pressed="${state.filters.has(f.id)}">${f.label}</button>`).join('');
+}
+
+/* Bracketed, dot-separated, cursor on the end — square brackets are machine
+   speech, so the status line is the machine talking. Registers use this rather
+   than assembling the markup themselves. */
+function statusLine(...parts){
+  document.getElementById('status').innerHTML =
+    `[${parts.filter(Boolean).join(' · ')}] <span class="cursor">█</span>`;
 }
 
 function renderStatus(rows){
@@ -1192,6 +1336,10 @@ function select(id){
 document.addEventListener('click', e => {
   const tab = e.target.closest('.tab');
   if (tab) { state.view = tab.dataset.view; render(); return; }
+
+  // the active register gets first refusal on everything else
+  const own = currentRegister().onClick;
+  if (own && own(e)) return;
 
   const chip = e.target.closest('.chip[data-filter]');   // the CRT toggle shares the look, not the behaviour
   if (chip) {

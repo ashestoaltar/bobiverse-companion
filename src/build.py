@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -23,10 +24,47 @@ SKYFIELD = os.path.join(ROOT, "data", "skyfield.json")
 TEMPLATE = os.path.join(ROOT, "templates", "genealogy.html")
 OUT = os.path.join(ROOT, "dist", "index.html")
 
+BESTIARY = os.path.join(ROOT, "data", "bestiary.json")
+ART_DIR = os.path.join(ROOT, "assets", "bestiary")
+
 PLACEHOLDER = "/*__BOBS__*/[]"
 TODO_PLACEHOLDER = "/*__TODO__*/null"
 SYS_PLACEHOLDER = "/*__SYSTEMS__*/null"
 SKY_PLACEHOLDER = "/*__SKY__*/null"
+BEST_PLACEHOLDER = "/*__BESTIARY__*/null"
+
+
+def load_art(cid: str) -> str | None:
+    """Inline assets/bestiary/<id>.svg, if someone has drawn one.
+
+    The console is a single file that makes no external requests, so an
+    illustration can't be an <img src>. Inline SVG is the format that fits:
+    a few KB, scales to any size, and can be stroked in phosphor so it looks
+    native to the display rather than pasted on. A raster image works too —
+    base64 it into a data: URI and drop it in the same field.
+
+    Nothing here is hand-edited into bestiary.json. Draw a file, name it after
+    the creature's id, rebuild.
+    """
+    path = os.path.join(ART_DIR, f"{cid}.svg")
+    if not os.path.exists(path):
+        return None
+    with open(path) as fh:
+        svg = fh.read()
+    # Strip anything that belongs to a standalone document rather than an
+    # inline fragment; an <?xml?> declaration mid-page is invalid.
+    svg = re.sub(r"<\?xml.*?\?>", "", svg, flags=re.S)
+    svg = re.sub(r"<!DOCTYPE.*?>", "", svg, flags=re.S | re.I)
+    svg = svg.strip()
+    if not svg.startswith("<svg"):
+        print(f"  warn: {os.path.relpath(path, ROOT)} doesn't start with <svg>, skipped")
+        return None
+    # The page promises no external requests. Art must keep that promise.
+    for bad in ("http://", "https://", "<script", "xlink:href=\"http"):
+        if bad in svg.lower():
+            print(f"  warn: {os.path.relpath(path, ROOT)} reaches outside the page ({bad}), skipped")
+            return None
+    return svg
 
 # Field order in the emitted literal — keeps diffs readable. It is also, in
 # effect, a whitelist: a field missing here never reaches the page. That bit
@@ -107,13 +145,29 @@ def main() -> None:
     html = html.replace(SKY_PLACEHOLDER, json.dumps(
         {"count": sky["count"], "stars": sky["stars"], "source": sky["source"],
          "licence": sky["licence"]}, ensure_ascii=False), 1)
+    with open(BESTIARY) as fh:
+        bestiary = json.load(fh)
+    bestiary.pop("_comment", None)
+    drawn = 0
+    for creature in bestiary["creatures"]:
+        art = load_art(creature["id"])
+        if art:
+            creature["art"] = art
+            drawn += 1
+    if BEST_PLACEHOLDER not in html:
+        print(f"ERROR: placeholder {BEST_PLACEHOLDER} missing from template")
+        sys.exit(1)
+    html = html.replace(BEST_PLACEHOLDER, json.dumps(bestiary, ensure_ascii=False), 1)
+
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as fh:
         fh.write(html)
 
+    creatures = len(bestiary["creatures"])
     print(f"built {os.path.relpath(OUT, ROOT)} — {len(bobs)} records, "
           f"{len(todo['items'])} to-do items, "
           f"{len(systems['systems'])} systems, {sky['count']} backdrop stars, "
+          f"{creatures} creatures ({drawn} illustrated), "
           f"{len(html):,} bytes")
 
 

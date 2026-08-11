@@ -1,0 +1,27 @@
+<svg viewBox="0 0 160 120" role="img" aria-label="Kraken, mantle above trailing tentacles">
+  <!-- Poseidon's headline animal. Same rules as every plate here: stroke only,
+       no fill, no colour of its own. -->
+  <g>
+    <!-- mantle -->
+    <path d="M80 12 C 62 12, 50 26, 50 42 C 50 52, 56 60, 64 64 L 96 64 C 104 60, 110 52, 110 42 C 110 26, 98 12, 80 12 Z"/>
+    <path d="M62 32 C 66 28, 72 28, 76 32" opacity="0.7"/>
+    <path d="M84 32 C 88 28, 94 28, 98 32" opacity="0.7"/>
+    <!-- eyes -->
+    <path d="M67 44 C 69 42, 72 42, 74 44 C 72 47, 69 47, 67 44 Z"/>
+    <path d="M86 44 C 88 42, 91 42, 93 44 C 91 47, 88 47, 86 44 Z"/>
+    <!-- tentacles -->
+    <path d="M66 64 C 58 78, 46 88, 30 94 C 22 97, 16 96, 12 92"/>
+    <path d="M72 65 C 66 82, 56 98, 42 110"/>
+    <path d="M78 66 C 76 84, 72 102, 66 116"/>
+    <path d="M86 66 C 88 84, 92 102, 98 116"/>
+    <path d="M92 65 C 98 82, 108 98, 122 110"/>
+    <path d="M98 64 C 106 78, 118 88, 134 94 C 142 97, 148 96, 152 92"/>
+    <!-- suckers, sparse: enough to read as texture without becoming noise -->
+    <g opacity="0.45">
+      <path d="M60 74 L 62 76 M52 84 L 55 85 M42 91 L 45 91"/>
+      <path d="M70 80 L 73 81 M64 96 L 67 96 M55 106 L 58 105"/>
+      <path d="M90 80 L 87 81 M96 96 L 93 96 M105 106 L 102 105"/>
+      <path d="M100 74 L 98 76 M108 84 L 105 85 M118 91 L 115 91"/>
+    </g>
+  </g>
+</svg>

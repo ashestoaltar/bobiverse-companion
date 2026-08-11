@@ -44,7 +44,7 @@ record now says so.
 
 ## The console
 
-Five registers, with live search across names, aliases, designations, systems,
+Six registers, with live search across names, aliases, designations, systems,
 notes and citations:
 
 - **Register** — the full list, sortable on every column.
@@ -58,6 +58,10 @@ notes and citations:
   colour and sized by absolute magnitude, so an F2 dwarf really does outshine an
   M3. The backdrop is the real naked-eye sky — 5,070 stars to magnitude 6 from the
   HYG Database, in their true colours. Nothing on the chart is invented.
+- **Bestiary** — the non-sapient fauna, loudest first by how much of the books
+  they actually occupy. Fauna only: the Deltans, Quinlans, Pav and the Others are
+  people, and people get their own register. That line is enforced by the build,
+  because the series is largely Bob working out where to draw it.
 - **To-do** — the research backlog, reported the way Guppy reports Bob's:
   a bracketed count divided into categories. It has never once got shorter.
 
@@ -113,7 +117,7 @@ python src/extract.py --name Thor    # research one Bob
 `make test` needs Node. It runs the shipped script from `dist/index.html` against
 a stub DOM — data integrity, every view under every filter, the chart's
 projection geometry and astrophysics, label legibility, and a golden-master
-snapshot of 95 rendered states.
+snapshot of 102 rendered states.
 
 `src/extract.py` finds passages and prints them with citations. It never writes
 to `data/bobs.json` — deciding what a passage establishes is a judgement call,
@@ -146,6 +150,10 @@ their lineage deliberately expunged, and 30 carrying an unverified lead from a
 dropped source. Biography is held to the same standard as lineage: `desig`,
 `born` and `vessel` only where the books print them, and generation counted down
 the tree except for the three the text states out loud.
+
+`data/bestiary.json` holds nine non-sapient creatures, each pinned to the world
+it lives on and cited to its first appearance. Illustrations are stroke-only SVGs
+under `assets/bestiary/`, inlined at build time so the page stays a single file.
 
 The research backlog lives in `data/todo.json` and is a view in the console.
 

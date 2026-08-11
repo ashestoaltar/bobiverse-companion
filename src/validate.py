@@ -131,6 +131,90 @@ def _check_systems(bobs: list[dict]) -> tuple[list[str], list[str]]:
     return errors, warnings
 
 
+BESTIARY = os.path.join(ROOT, "data", "bestiary.json")
+
+# Species the books establish as people. If one of these turns up in the
+# bestiary, the register has drifted into saying something the books argue
+# against — so it's an error, not a warning.
+SAPIENT = {"deltan", "quinlan", "snark", "pav", "other", "bawbe", "arcadian"}
+
+
+def _check_bestiary() -> tuple[list[str], list[str]]:
+    """Fauna entries: no sapients, systems and places resolve, counts hold up."""
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not os.path.exists(BESTIARY):
+        return errors, warnings
+    with open(BESTIARY) as fh:
+        creatures = json.load(fh)["creatures"]
+
+    systems = _load_systems()
+    ids: set[str] = set()
+    for c in creatures:
+        cid = c.get("id") or "?"
+        if cid in ids:
+            errors.append(f"bestiary {cid}: duplicate id")
+        ids.add(cid)
+
+        # the boundary this register exists to keep
+        if c.get("name", "").strip().lower().rstrip("s") in SAPIENT:
+            errors.append(f"bestiary {cid}: {c.get('name')!r} is a people, not fauna — "
+                          f"sapient species belong in the peoples register")
+        if c.get("sapience") not in ("none", "contested"):
+            errors.append(f"bestiary {cid}: sapience {c.get('sapience')!r} is not a bestiary value")
+        if c.get("sapience") == "none" and not c.get("cite"):
+            errors.append(f"bestiary {cid}: claiming non-sapience needs a cite that settles it")
+
+        # locations must resolve into the systems file
+        sid = c.get("system")
+        if sid and systems and sid not in systems:
+            errors.append(f"bestiary {cid}: unknown system {sid!r}")
+        elif sid and c.get("place"):
+            known = {p["name"] for p in (systems.get(sid, {}).get("places") or [])}
+            if known and c["place"] not in known:
+                warnings.append(f"bestiary {cid}: place {c['place']!r} isn't listed in "
+                                f"{sid} ({', '.join(sorted(known)) or 'none'})")
+        if c.get("place") and not sid:
+            errors.append(f"bestiary {cid}: has a place but no system to put it in")
+
+    warnings += _check_bestiary_counts(creatures)
+    return errors, warnings
+
+
+def _check_bestiary_counts(creatures: list[dict]) -> list[str]:
+    """Mention counts are derived from the books, so re-derive and compare."""
+    path = os.path.join(ROOT, ".cache", "corpus.json")
+    if not os.path.exists(path):
+        return []
+    with open(path) as fh:
+        chapters = json.load(fh)
+    if not chapters:
+        return []
+
+    out = []
+    for c in creatures:
+        pattern = re.compile(r"\b" + re.escape(c["name"]) + r"(?:e?s)?\b", re.I)
+        got = sum(len(pattern.findall(ch["text"])) for ch in chapters)
+
+        # Run this whether or not a count is recorded. An entry with no textual
+        # presence at all is the failure this register most needs to catch —
+        # a creature nobody wrote down is one we invented.
+        if got == 0:
+            out.append(f"bestiary {c['id']}: {c['name']!r} appears nowhere in the corpus — "
+                       f"either the name is wrong or the label is ours, not the books'")
+            continue
+
+        want = c.get("mentions")
+        if want is None:
+            out.append(f"bestiary {c['id']}: no mention count recorded; the corpus has {got}")
+            continue
+        # Words are ambiguous — "hydra" also appears as "hydrae", "dragon" turns
+        # up in VR and idiom. Flag a real drift, not a rounding difference.
+        if abs(got - want) > max(3, want * 0.15):
+            out.append(f"bestiary {c['id']}: recorded {want} mentions, corpus has {got}")
+    return out
+
+
 def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -226,6 +310,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     sys_errors, sys_warnings = _check_systems(bobs)
     errors += sys_errors
     warnings += sys_warnings
+
+    best_errors, best_warnings = _check_bestiary()
+    errors += best_errors
+    warnings += best_warnings
 
     # `gen` is only independent information when the parent chain is broken.
     # Where the chain reaches Bob-1 it's derivable, so any disagreement means one
