@@ -113,8 +113,11 @@ data/todo.json   the research backlog, rendered as a view in the console
 data/systems.json star systems with real astrometry, and the places in them
 data/skyfield.json the naked-eye sky for the chart backdrop (HYG, CC BY-SA 4.0)
 templates/genealogy.html   the console — register, lineage, unresolved, chart, to-do
+books/MANIFEST.sha256  hashes + chapter counts of your ebooks; the one thing in
+                 books/ that IS committed, because it's facts about the files
 src/parse_ebook.py  MOBI + EPUB -> chapters, refuses DRM
 src/corpus.py       build/load the cached corpus
+src/verify_books.py check books/ against the manifest
 src/extract.py      surface candidate passages for review (never auto-writes)
 src/validate.py     schema, referential integrity, tier rules
 src/build.py        bobs.json + template -> dist/index.html
@@ -183,7 +186,32 @@ than treated as an empty corpus. `--force` overrides, and should be reached for
 only when the new parse really is the better one.
 
 Do not restore `books/` or `.cache/` from `git archive` or any other rewind:
-they're gitignored, so a rewind deletes them and brings nothing back.
+they're gitignored, so a rewind deletes them and brings nothing back. For the
+same reason **`git clean -xdf` deletes every ebook and the cache in one stroke** —
+it is not a safe tidy-up command in this repo.
+
+Nothing in here protects the ebooks. They're gitignored, they sit on the same
+disk as everything else, and git has never seen them. The real protection is a
+backup somewhere else; that is the user's, and it is not optional.
+
+### Verifying a restored copy
+
+`books/MANIFEST.sha256` is committed — hashes and chapter counts, no text. It
+can't protect the books, but it answers the question git can't: is the copy in
+`books/` the same copy the citations were built against?
+
+```
+make verify-books                        # hashes, then what they parse to
+sha256sum -c books/MANIFEST.sha256       # hashes only, no tooling
+python3 src/verify_books.py --update     # after a deliberate edition change
+```
+
+Both levels matter, and they fail differently. A hash mismatch means a different
+file. Matching chapter and word counts mean the *numbering* survived — which is
+the thing citations actually depend on, and the thing a substituted edition
+breaks silently. Book 1 has already been swapped from MOBI to the 2016 EPUB
+once; it was luck that we noticed, and the manifest is so that next time it
+isn't luck.
 
 ## Systems
 

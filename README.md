@@ -92,6 +92,15 @@ filename — whatever name yours arrived with should be fine. `make corpus` won'
 replace a cached parse with a thinner one, so an edition the parser doesn't
 understand yet fails loudly instead of quietly renumbering every citation.
 
+`books/MANIFEST.sha256` records the hash and chapter count of each ebook — facts
+about the files, not their contents, so it's safe to commit. `make verify-books`
+checks a copy against it. Different editions number their chapters differently,
+and citations are numbered against a specific parse, so this is worth running
+after restoring the books on a new machine.
+
+Note that `git clean -xdf` would delete `books/` and `.cache/` — both are
+gitignored, so git cannot bring them back. Keep your ebooks backed up elsewhere.
+
 ## Working on the data
 
 ```bash

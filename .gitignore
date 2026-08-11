@@ -1,6 +1,10 @@
 # Your ebooks. Never commit these.
 books/*
 !books/.gitkeep
+# Hashes and chapter counts, not text — safe to commit, and the only way to
+# tell whether a copy restored from backup is the one the citations were built
+# against. git cannot restore the books themselves.
+!books/MANIFEST.sha256
 
 # Parsed book text derived from them. Also never commit.
 .cache/
