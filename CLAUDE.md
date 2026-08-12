@@ -211,6 +211,27 @@ stolen backup more than a century later. He was the only Bob in the register
 carrying a faction he could not possibly have joined, and the STARFLEET chip
 listed him. Descent belongs in prose.
 
+## Addresses
+
+Every view is linkable: `#<view>/<selection>?q=<search>&f=<filters>`. Hash, not
+query string, so the page still works from `file://` — it is meant to open by
+double-clicking, and publishing must not break that.
+
+Each register keeps its selection somewhere different — `state.selected`,
+`CHART.sel`, `state.beast`, `state.people` — and `SEL` in the template is the
+only place that knows which. **A new register declares itself there and nowhere
+else**, and `tests/url.test.js` walks `REGISTERS` and fails until it has. A
+register nobody can link to is a register nobody can share.
+
+Anything in a hash that doesn't resolve is dropped rather than obeyed: an
+unknown view is refused outright, an unknown record lands you on the right
+register with nothing selected. Links outlive the records they point at.
+
+`history.pushState` on a new view or record, `replaceState` otherwise — pushing
+an entry per keystroke turns the back button into a way to retype your search
+backwards. On `file://` Chrome refuses the History API entirely, so it falls
+back to setting the hash.
+
 ## Guppy
 
 He has been the voice of this console from the start — every bracketed line is

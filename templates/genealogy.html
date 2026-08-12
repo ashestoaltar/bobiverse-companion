@@ -1659,6 +1659,7 @@ function render(){
   renderDossier();
   (reg.status || renderStatus)(rows);
   if (reg.paint) reg.paint();
+  syncHash();
 }
 
 function select(id){
@@ -1666,6 +1667,82 @@ function select(id){
   render();
   const row = document.querySelector(`[data-id="${id}"]`);
   if (row && row.scrollIntoView) row.scrollIntoView({block:'nearest'});
+}
+
+/* ---- addressable state -------------------------------------------------
+   #<view>/<selection>?q=<search>&f=<filters>, e.g. #chart/82_eridani or
+   #register/homer?f=memorium. Hash rather than query string so it works from
+   file:// as well as a host — this page is meant to be openable by
+   double-clicking it, and that has to keep being true after publishing.
+
+   Each register keeps its selection in its own place: replicant views in
+   state.selected, the chart in CHART.sel, the bestiary and peoples in their
+   own fields. sel() and setSel() are the only two places that know that, so a
+   new register declares itself here and nowhere else. */
+const SEL = {
+  chart:    {get: () => CHART.sel,       set: v => CHART.sel = v,       ok: v => !!SYS[v]},
+  bestiary: {get: () => state.beast,     set: v => state.beast = v,     ok: v => (BESTIARY?.creatures || []).some(c => c.id === v)},
+  peoples:  {get: () => state.people,    set: v => state.people = v,    ok: v => (PEOPLES?.entries || []).some(e => e.id === v)},
+};
+const DEFAULT_SEL = {get: () => state.selected, set: v => state.selected = v, ok: v => !!byId[v]};
+const selOf = view => SEL[view] || DEFAULT_SEL;
+
+function hashFor(){
+  const view = state.view;
+  const sel = selOf(view).get();
+  const q = [];
+  if (state.q.trim()) q.push('q=' + encodeURIComponent(state.q.trim()));
+  if (state.filters.size) q.push('f=' + [...state.filters].join(','));
+  return '#' + view + (sel ? '/' + encodeURIComponent(sel) : '') +
+         (q.length ? '?' + q.join('&') : '');
+}
+
+/* A new view or a new record is somewhere you navigated to and should be able
+   to come back from. Typing in the search box is not — pushing a history entry
+   per keystroke turns the back button into a way to retype your query
+   backwards. */
+let lastPath = '';
+function syncHash(){
+  const next = hashFor();
+  if (window.location.hash === next) return;
+  const path = next.split('?')[0];
+  const push = path !== lastPath;
+  lastPath = path;
+  try {
+    window.history[push ? 'pushState' : 'replaceState'](null, '', next);
+  } catch (e) {
+    // Chrome refuses the History API on file:// — fall back to the hash itself
+    window.location.hash = next.slice(1);
+  }
+}
+
+function applyHash(){
+  const raw = String(window.location.hash || '').replace(/^#/, '');
+  if (!raw) return false;
+  const [path, query] = raw.split('?');
+  const [view, rawSel] = path.split('/');
+  if (!REGISTERS.some(r => r.id === view)) return false;
+  state.view = view;
+
+  // Anything that doesn't resolve is dropped rather than obeyed. A stale link
+  // should land you on the right register with nothing selected, not on an
+  // empty dossier for a record that no longer exists.
+  const spec = selOf(view);
+  const want = rawSel ? decodeURIComponent(rawSel) : '';
+  spec.set(want && spec.ok(want) ? want : null);
+
+  state.q = '';
+  state.filters.clear();
+  for (const part of (query || '').split('&')) {
+    const [k, v] = part.split('=');
+    if (k === 'q' && v) state.q = decodeURIComponent(v.replace(/\+/g, ' '));
+    if (k === 'f' && v) decodeURIComponent(v).split(',')
+      .filter(id => FILTERS.some(f => f.id === id)).forEach(id => state.filters.add(id));
+  }
+  const box = document.getElementById('q');
+  if (box) box.value = state.q;
+  lastPath = '#' + path;
+  return true;
 }
 
 /* ---- chart interaction ------------------------------------------------ */
@@ -1677,7 +1754,7 @@ function select(id){
     const svg = svgOf(e);
     if (!svg) return;
     const star = e.target.closest('.star');
-    if (star) { CHART.sel = star.dataset.sys; paintChart(); renderDossier();
+    if (star) { CHART.sel = star.dataset.sys; paintChart(); renderDossier(); syncHash();
                 document.getElementById('dossier').hidden = false; return; }
     drag = {x: e.clientX, y: e.clientY, pan: e.shiftKey};
     svg.classList.add('drag');
@@ -1836,6 +1913,9 @@ function bootLines(){
 
   // Anyone who has asked not to be animated gets the console straight away.
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.remove(); return; }
+  // So does anyone arriving on a link. A hash means you were sent somewhere
+  // specific, and six seconds of machine noise between you and it is rude.
+  if (String(window.location.hash || '').length > 1) { el.remove(); return; }
 
   const lines = bootLines();
   const SPEED = BOOT_SPEED;
@@ -1893,6 +1973,16 @@ function bootLines(){
   apply();
 })();
 
+window.addEventListener('hashchange', () => {
+  // Ignore the write we just made ourselves; react to the back button and to
+  // anyone editing the address bar.
+  if (window.location.hash === hashFor()) return;
+  applyHash();
+  renderChips();
+  render();
+});
+
+applyHash();
 renderChips();
 render();
 </script>

@@ -55,6 +55,11 @@ function install(sandbox, {width = 1400} = {}) {
     addEventListener: () => {},
     devicePixelRatio: 1,
     location: {hash: ''},
+    // the console writes its address here; the stub just records it
+    history: {
+      pushState(_a, _b, url) { sandbox.window.location.hash = String(url).replace(/^[^#]*/, ''); },
+      replaceState(_a, _b, url) { this.pushState(_a, _b, url); },
+    },
   };
   sandbox.navigator = {userAgent: 'test'};
   sandbox.setTimeout = () => 0;

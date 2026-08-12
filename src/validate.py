@@ -6,6 +6,7 @@ provenance honest. Exits non-zero on any error so it can gate a build.
 
 from __future__ import annotations
 
+import glob
 import json
 import math
 import os
@@ -267,6 +268,10 @@ def _check_counts(entries: list[dict], label: str) -> list[str]:
 PEOPLES = os.path.join(ROOT, "data", "peoples.json")
 MEMORIUM = os.path.join(ROOT, "data", "memorium.json")
 
+# Long enough that a hit is a passage rather than a phrase. Citations quote
+# short and often; twelve words in the author's order is something else.
+PASSAGE_LEN = 12
+
 
 def _check_memorium(bobs: list[dict], by_id: dict) -> tuple[list[str], list[str]]:
     """The In Memorium list: the unnamed entries stay honest, and the spelling stays Taylor's.
@@ -340,6 +345,68 @@ def _check_memorium(bobs: list[dict], by_id: dict) -> tuple[list[str], list[str]
                           "at n == pool the names would all be known")
 
     return errors, warnings
+
+
+def _check_no_passages() -> list[str]:
+    """Nothing we publish may contain a passage of the books.
+
+    The rule has always been paraphrase and cite, and until now it was kept by
+    remembering it. This checks it: every run of PASSAGE_LEN consecutive words
+    in anything publishable is looked up against the corpus, and a hit means
+    someone pasted rather than paraphrased.
+
+    The length is the judgement. Short quotation is the point of a citation —
+    "It's Will, now" has to be allowed to appear — while twelve consecutive
+    words in Taylor's order is a passage however it got there. Words are
+    lowercased and stripped of punctuation first, so retyping it with different
+    quote marks doesn't get past.
+    """
+    chapters = _chapters(narrative_only=False)
+    if not chapters:
+        return []
+
+    def grams(text: str):
+        words = re.findall(r"[a-z0-9']+", text.lower())
+        for i in range(len(words) - PASSAGE_LEN + 1):
+            yield " ".join(words[i:i + PASSAGE_LEN])
+
+    # Collect from everything that gets published, then scan the corpus once.
+    ours: dict[str, str] = {}
+    for path in sorted(glob.glob(os.path.join(ROOT, "data", "*.json"))) + \
+                sorted(glob.glob(os.path.join(ROOT, "*.md"))):
+        name = os.path.basename(path)
+        if name == "skyfield.json":       # packed integers, no prose
+            continue
+        with open(path) as fh:
+            raw = fh.read()
+        if name.endswith(".json"):
+            def walk(node):
+                if isinstance(node, str):
+                    yield node
+                elif isinstance(node, dict):
+                    for v in node.values():
+                        yield from walk(v)
+                elif isinstance(node, list):
+                    for v in node:
+                        yield from walk(v)
+            text = " ".join(walk(json.loads(raw)))
+        else:
+            text = raw
+        for g in grams(text):
+            ours.setdefault(g, name)
+
+    if not ours:
+        return []
+    out = []
+    seen: set[str] = set()
+    for ch in chapters:
+        for g in grams(ch["text"]):
+            if g in ours and g not in seen:
+                seen.add(g)
+                where = f"Bk{ch['book']} ch{ch['seq']}"
+                out.append(f"{ours[g]}: {PASSAGE_LEN} consecutive words from {where} — "
+                           f"paraphrase and cite instead: \"{g[:70]}...\"")
+    return out
 
 
 def _check_peoples() -> tuple[list[str], list[str]]:
@@ -531,6 +598,8 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     mem_errors, mem_warnings = _check_memorium(bobs, by_id)
     errors += mem_errors
     warnings += mem_warnings
+
+    errors += _check_no_passages()
 
     # `gen` is only independent information when the parent chain is broken.
     # Where the chain reaches Bob-1 it's derivable, so any disagreement means one

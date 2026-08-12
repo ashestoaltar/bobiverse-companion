@@ -106,6 +106,14 @@ books' description rather than the Star Wars character they compare him to,
 rendered in `currentColor` so he takes the colour of wherever he is. He blinks
 occasionally. That is the whole performance, which is the joke.
 
+Every view has an address. `#chart/82_eridani`, `#memorium/homer`,
+`#register/riker?f=lead` — the register, the selected record, the search and the
+filter chips all live in the URL, so a dossier can be linked to and a link
+survives being sent. It's a hash rather than a query string because this page is
+meant to open by double-clicking it, and that has to keep being true. Arriving on
+a link skips the boot sequence; six seconds of machine noise between you and the
+thing you were sent is rude.
+
 The console boots the way a terminal should — Guppy first, then the link, then
 each line typed out with its own pause. About six seconds, skippable with any
 key.
@@ -165,6 +173,15 @@ narrating his parent's. See CLAUDE.md.
 integrity, ancestry cycles, and that Bobs sharing a Hipparcos catalogue number
 agree about which system they were built in — since the designation states it.
 
+## Licensing
+
+Three different things live here and they are not under the same terms: the code
+is MIT, our data and prose are CC BY 4.0, and `data/skyfield.json` is CC BY-SA
+4.0 from the HYG Database — **which means the built page is a ShareAlike work**,
+because it embeds that star field. The books are nobody's but Taylor's and are
+never distributed. See [LICENSE.md](LICENSE.md), which spells out what that means
+if you want to fork this.
+
 ## Credits
 
 Star positions, spectral types and magnitudes for the Bobiverse systems come from
@@ -222,7 +239,11 @@ Everything above is checked rather than asserted:
   chapters and that number must not move quietly.
 - Mention counts in the companion registers are re-derived from the corpus; an
   entry whose name appears nowhere is flagged, because that means we invented it.
-- `make test` runs 2,935 checks across 11 suites against the shipped page,
+- No passage of the books may appear in anything publishable. Every run of
+  twelve consecutive words in `data/*.json` and the documentation is checked
+  against the parsed corpus, so paraphrase-and-cite is enforced rather than
+  remembered. It found one on its first run.
+- `make test` runs 3,011 checks across 12 suites against the shipped page,
   including a golden-master snapshot of 118 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and
