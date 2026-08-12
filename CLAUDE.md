@@ -65,12 +65,27 @@ is otherwise — Herschel is tier C with eighteen POV chapters and a generation 
 states out loud. We just don't know who made him. `cite`, `gen` and the rest are
 welcome on any tier.
 
-**The books are the only source.** Taylor's 2017 genealogy and the fandom wiki
-were dropped: a lineage claim we can't point at a page for should not be drawn
-as though we know it. That cost 30 parentages and it was worth it. Dropped
-claims aren't deleted — they move to `priorClaim`, recorded as a research lead
-and never rendered as an edge. If the books later settle one, promote it and
-remove the field.
+**The books are the only source.** Taylor's online tree and the fandom wiki were
+dropped: a lineage claim we can't point at a page for should not be drawn as
+though we know it. That cost 30 parentages and it was worth it. Dropped claims
+aren't deleted — they move to `priorClaim`, recorded as a research lead and
+never rendered as an edge. If the books later settle one, promote it and remove
+the field.
+
+**Eighteen were promoted that way**, all at once, when the appendices were
+finally parsed: book 2 prints a genealogy of its own and book 4 reprints it.
+That is back matter, exactly like the Cast of Characters, which had already been
+supplying tier-T parentages for ten records. It agrees with all 26 parentages
+the narrative had given us, contradicts none, names no Bob we lack a record for,
+and settles precisely the 18 whose `priorClaim` read "Taylor's 2017 genealogy
+put this Bob under X. The books don't say so." They do say so.
+
+Do not read that as the rule bending. The rule found the page — the claims sat
+unasserted for as long as we couldn't cite them, and were promoted the hour we
+could. Note too that the printed tree is **not** the online one: where the
+online tree spelled Jonny "Johnny" and Jacques "Jaques", the appendix matches
+the narrative. Twelve wiki leads stand unchanged, and `priorClaim` still means
+what it meant.
 
 | tier | meaning | requirements |
 |---|---|---|

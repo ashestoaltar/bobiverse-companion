@@ -17,11 +17,19 @@ each edge came from. This one grades every claim:
 | C | ✕ grey | no ancestor on record; listed in the unresolved register |
 | X | ▨ red | the record was deliberately expunged |
 
-**The books are the only source.** Taylor's 2017 genealogy and the fandom wiki
-used to supply 30 of these parentages; they've been dropped, because a lineage
-we can't point at a page for shouldn't be drawn as though we know it. Those
-claims aren't lost — each sits on its record as an unverified lead, visible in
-the dossier and never drawn as an edge.
+**The books are the only source.** Taylor's online tree and the fandom wiki used
+to supply 30 of these parentages; they were dropped, because a lineage we can't
+point at a page for shouldn't be drawn as though we know it. Dropped claims
+aren't lost — each sits on its record as an unverified lead, visible in the
+dossier and never drawn as an edge.
+
+Eighteen of those thirty have since come back, and the rule is why. **Book 2
+prints a genealogy of its own**, as an appendix, and book 4 reprints it. That's
+a page we can point at, so those eighteen are cited parentages now rather than
+leads. It agrees with all 26 parentages the books had already given us and
+contradicts none of them — and where the online tree disagreed with the
+narrative on spelling, "Johnny" and "Jaques", the printed one matches the
+narrative. Twelve leads from the wiki are still leads.
 
 The tier grades **parentage only**. A tier C Bob can still be thoroughly
 documented — Herschel has eighteen POV chapters and announces his own generation
@@ -33,10 +41,11 @@ data out of the databases during the war, so for its members the missing lineage
 isn't a gap in anyone's reading — it's the deletion itself, and the registry says
 so rather than shrugging.
 
-Ten tier-T records come from an unexpected place: the **Cast of Characters
-appendix at the back of book 2**, which states parentage outright. Back matter
-rather than story, but Taylor's own words printed in the novel — and it turned
-up a Bob the narrative never introduces.
+Twenty-eight tier-T records come from an unexpected place: the **appendices at
+the back of book 2**, reprinted in book 4. The Cast of Characters states ten
+parentages outright and turned up a Bob the narrative never introduces; the
+Genealogy is a full tree and settles eighteen more. Back matter rather than
+story, but Taylor's own words printed in the novel.
 
 Where sources disagree, the disagreement is recorded rather than resolved
 silently — including when the disagreement turns out to be our own fault. We had
@@ -81,8 +90,8 @@ notes and citations:
 Selecting a record pulls its dossier and traces the route back to Bob-1
 hop by hop, **grading each link separately**. A chain can be solid for two hops
 and then run out of sources, and that's visible rather than smoothed over.
-34 of the 87 traces reach Bob-1; 53 terminate — an honest number rather than a
-flattering one.
+52 of the 87 traces reach Bob-1; 35 terminate — an honest number rather than a
+flattering one. It was 34 until the back matter got parsed.
 
 Two details follow the books rather than taste. Bobs all wear the same face, so
 the registry identifies them the way Guppy does — by serial number, with the
@@ -170,9 +179,9 @@ gitignored and should remain so.
 
 ## Status
 
-**87 replicants** — 52 with citations, 32 with a parent stated in the books, 2
-with their lineage deliberately expunged, and 30 carrying an unverified lead from
-a dropped source. 34 traces reach Bob-1; 53 terminate. Biography is held to the
+**87 replicants** — 70 with citations, 50 with a parent stated in the books, 2
+with their lineage deliberately expunged, and 12 carrying an unverified lead from
+a dropped source. 52 traces reach Bob-1; 35 terminate. Biography is held to the
 same standard as lineage: `desig`, `born` and `vessel` only where the books print
 them, and generation counted down the tree except for the three the text states
 out loud.
@@ -206,7 +215,9 @@ Everything above is checked rather than asserted:
   cycles, and that Bobs sharing a Hipparcos number agree about where they were
   built, since the designation states it.
 - Every citation is re-verified against the parsed books, so a chapter number
-  that drifts gets caught rather than believed.
+  that drifts gets caught rather than believed. `books/MANIFEST.sha256` counts
+  each book's chapters and its appendices separately, because citations index
+  chapters and that number must not move quietly.
 - Mention counts in the companion registers are re-derived from the corpus; an
   entry whose name appears nowhere is flagged, because that means we invented it.
 - `make test` runs 2,935 checks across 11 suites against the shipped page,

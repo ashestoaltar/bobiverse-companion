@@ -240,7 +240,9 @@
   {
    "id": "elmer",
    "name": "Elmer",
-   "src": "c",
+   "parent": "bill",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "origin": "epsilon_eridani",
    "visited": [
     "82_eridani"
@@ -249,13 +251,14 @@
    "fateCite": "Bk1 ch60 · Khan, Apr 2185",
    "fateNote": "His SURGE drive went intermittent in the first battle at 82 Eridani with no time or parts to fix it, so he stayed where he was and kept his jamming up to the last moment, blinding the Brazilian units so Khan could run silent and get clear. Around fifty converged on him. He had sent a differential to Bill first and it completed — Khan asks after him by name afterwards and is told he made it. We had him filed as lost for the life of this registry; the books say the opposite in as many words.",
    "lostAt": "82_eridani",
-   "ref": "Elmer Fudd",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Elmer Fudd"
   },
   {
    "id": "hannibal",
    "name": "Hannibal",
-   "src": "c",
+   "parent": "bill",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "origin": "epsilon_eridani",
    "visited": [
     "82_eridani"
@@ -264,13 +267,14 @@
    "fateCite": "Bk3 ch63 · Riker, Apr 2257; Bk3 ch67 · Riker, Apr 2257",
    "fateNote": "Vanished from the strategy session in mid-sentence, before anyone knew there was an attack — the first casualty of the first battle at 82 Eridani, and Tom, nearest to him, found only a diffuse cloud spreading and thinning where he had been. His backup completed. Seventy-two years later he is commanding the Jokers, the squad that runs the nuclear package in at the Others, taking orders from Bill over SCUT and being told to keep his backups up to date. Held at presumed until a sweep of everything after his death date turned him up alive. This is an inference rather than a statement, and names do get reused here — the registry carries two Hectors. What separates this case is the diagnostic that exposed that one: Bill does not recognise the second Hector and has to look him up, while Will and Bill both address Hannibal directly and familiarly, mid-operation, with no such beat. If a second Hannibal is ever established this comes back out, and the candidate pool goes back to six.",
    "lostAt": "82_eridani",
-   "ref": "The general or the Lecter, take your pick",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "The general or the Lecter, take your pick"
   },
   {
    "id": "tom",
    "name": "Tom",
-   "src": "c",
+   "parent": "bill",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "origin": "epsilon_eridani",
    "visited": [
     "82_eridani"
@@ -279,13 +283,14 @@
    "fateCite": "Bk1 ch60 · Khan, Apr 2185",
    "fateNote": "His SCUT signal and Hector's cut off together without warning while the squad had its jamming at maximum and everyone in the system was blind. Khan took it for a nuke and had no way to check.  Six vessels were destroyed at 82 Eridani that day and Bill afterwards counted three backups that did not complete. Exactly half of them are on the In Memorium list and half were restored, and the books never say which. The register carries all six here rather than guess.",
    "lostAt": "82_eridani",
-   "ref": "Tom & Jerry",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Tom & Jerry"
   },
   {
    "id": "barney",
    "name": "Barney",
-   "src": "c",
+   "parent": "bill",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "origin": "epsilon_eridani",
    "visited": [
     "82_eridani"
@@ -294,8 +299,7 @@
    "fateCite": "Bk1 ch60 · Khan, Apr 2185",
    "fateNote": "Dropped out late in the fight, leaving Khan and Elmer as the last two still running. Nothing further is said about him.  Six vessels were destroyed at 82 Eridani that day and Bill afterwards counted three backups that did not complete. Exactly half of them are on the In Memorium list and half were restored, and the books never say which. The register carries all six here rather than guess.",
    "lostAt": "82_eridani",
-   "ref": "Barney Gumble, The Simpsons",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Barney Gumble, The Simpsons"
   },
   {
    "id": "fred",
@@ -317,26 +321,28 @@
   {
    "id": "kyle",
    "name": "Kyle",
-   "src": "c",
+   "parent": "bill",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "origin": "epsilon_eridani",
    "visited": [
     "82_eridani"
    ],
    "fate": "active",
-   "ref": "South Park",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "South Park"
   },
   {
    "id": "ned",
    "name": "Ned",
-   "src": "c",
+   "parent": "bill",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "origin": "epsilon_eridani",
    "visited": [
     "82_eridani"
    ],
    "fate": "active",
-   "ref": "Ned Flanders, The Simpsons",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Bill. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Ned Flanders, The Simpsons"
   },
   {
    "id": "jackson",
@@ -459,10 +465,11 @@
   {
    "id": "thor",
    "name": "Thor",
-   "src": "c",
+   "parent": "calvin",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "fate": "active",
-   "ref": "Norse thunder god",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Calvin. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Norse thunder god"
   },
   {
    "id": "owen",
@@ -507,23 +514,25 @@
   {
    "id": "skinner",
    "name": "Skinner",
-   "src": "c",
+   "parent": "mulder",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "desig": "HIC3821-1",
    "origin": "eta_cassiopeiae",
    "fate": "active",
-   "ref": "Walter Skinner, The X-Files",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Mulder. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Walter Skinner, The X-Files"
   },
   {
    "id": "jonny",
    "name": "Jonny",
-   "src": "c",
+   "parent": "mulder",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "desig": "HIC3821-2",
    "origin": "eta_cassiopeiae",
    "fate": "active",
    "ref": "—",
-   "conflict": "The text spells him Jonny, four times and never otherwise, so that is what we use. Taylor's tree spelled him \"Johnny\" — noted only because the tree was a source we've since dropped.",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Mulder. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "conflict": "The text spells him Jonny, four times and never otherwise. The genealogy printed in book 2 spells him Jonny too; the online tree that used to be a source here spelled him \"Johnny\", which is one reason not to conflate the two."
   },
   {
    "id": "loki",
@@ -592,15 +601,18 @@
   {
    "id": "claude",
    "name": "Claude",
-   "src": "c",
+   "parent": "mario",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "fate": "active",
-   "ref": "—",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Mario. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "—"
   },
   {
    "id": "jacques",
    "name": "Jacques",
-   "src": "c",
+   "parent": "mario",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "visited": [
     "delta_pavonis",
     "hip_84051"
@@ -609,27 +621,28 @@
    "fateCite": "Bk2 ch72 · Bill, Feb 2217",
    "fateNote": "Killed during his group's attack in the war with the Others. His differential was current to within the last few minutes, so he was restored as soon as a vessel could be freed up. The clearest named case of the backup system doing exactly what it was built to do — and by Bk2 ch74 he is back at work taking inventory.",
    "ref": "—",
-   "conflict": "Taylor’s tree spells him \"Jaques\".",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Mario. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted.",
+   "conflict": "The online tree that used to be a source here spelled him \"Jaques\". The genealogy printed in book 2 spells him Jacques, as the narrative does.",
    "note": "Brokered the deal that handed the Pav spaceflight technology in exchange for raw materials."
   },
   {
    "id": "phineas",
    "name": "Phineas",
-   "src": "c",
+   "parent": "jacques",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "origin": "delta_pavonis",
    "fate": "active",
-   "ref": "Phineas & Ferb",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Jacques. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Phineas & Ferb"
   },
   {
    "id": "ferb",
    "name": "Ferb",
-   "src": "c",
+   "parent": "jacques",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "origin": "delta_pavonis",
    "fate": "active",
-   "ref": "Phineas & Ferb",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Jacques. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Phineas & Ferb"
   },
   {
    "id": "homer",
@@ -677,37 +690,40 @@
   {
    "id": "ralph",
    "name": "Ralph",
-   "src": "c",
+   "parent": "riker",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "origin": "sol",
    "fate": "active",
-   "ref": "Ralph Wiggum, The Simpsons",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Ralph Wiggum, The Simpsons"
   },
   {
    "id": "bert",
    "name": "Bert",
-   "src": "c",
+   "parent": "riker",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "vessel": "Exodus-1",
    "origin": "sol",
    "visited": [
     "omicron2_eridani"
    ],
    "fate": "active",
-   "ref": "Sesame Street",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Sesame Street"
   },
   {
    "id": "ernie",
    "name": "Ernie",
-   "src": "c",
+   "parent": "riker",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "vessel": "Exodus-2",
    "origin": "sol",
    "visited": [
     "omicron2_eridani"
    ],
    "fate": "active",
-   "ref": "Sesame Street",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "Sesame Street"
   },
   {
    "id": "sam",
@@ -748,18 +764,20 @@
   {
    "id": "rudy",
    "name": "Rudy",
-   "src": "c",
+   "parent": "riker",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "fate": "active",
-   "ref": "—",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "—"
   },
   {
    "id": "edwin",
    "name": "Edwin",
-   "src": "c",
+   "parent": "riker",
+   "src": "t",
+   "cite": "Bk2 · Genealogy",
    "fate": "active",
-   "ref": "—",
-   "priorClaim": "Taylor's 2017 genealogy put this Bob under Will. The books don't say so, and we no longer treat that source as authoritative. Kept as a research lead, not asserted."
+   "ref": "—"
   },
   {
    "id": "howard",
