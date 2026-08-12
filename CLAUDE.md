@@ -487,6 +487,25 @@ them are named, so a register of named Bobs is much smaller than the body count.
 And `lostAt` takes system ids only: Bender was recovered from inside Heaven's
 River, which is a megastructure, so his is empty.
 
+### Where a reading is allowed to live
+
+`note` is the only field on a record that may hold an interpretation, and the
+dossier labels it — ANNOTATION, REGISTRY EDITOR, NOT BOBNET. Everything else on
+the page is a claim about the books with a page behind it.
+
+Will's record is the working example. What the books state: he changed his name
+in Bk3 ch57, April 2257, mid-evacuation, saying only that he wanted to leave the
+Star Trek thing behind him; and seventy-four years later he says he had needed
+distance from the old Riker persona **for a lot of reasons**, then names one,
+and it is the least of them. So the text says the reasons were plural and never
+lists them — which is a stated gap, not a missing source, and gets recorded as
+one.
+
+What the register reads into that — Homer, the century of evacuation, a war
+survived rather than won — is marked in the prose as this register's reading and
+not the books'. Say which is which inside the note. A reader who wants the
+citations should never have to guess where they stopped.
+
 ### Absence is a research state, not a fact
 
 Say **"no source found"**, never "no source exists". The distinction cost this
