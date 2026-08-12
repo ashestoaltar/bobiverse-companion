@@ -30,9 +30,18 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BOOKS = os.path.join(ROOT, "books")
 MANIFEST = os.path.join(BOOKS, "MANIFEST.sha256")
 
-# "# = <name> | book <n> | <n> chapters | <n> words | <n> bytes | <edition>"
+# "# = <name> | book <n> | <n> chapters | <n> appendices | <n> words | <n> bytes | <edition>"
+#
+# Chapters and appendices are counted separately, and it matters. Citations
+# index narrative chapters, so that count is the one that must never move
+# quietly — folding back matter into it would mean a book that gained an
+# appendix and lost a chapter still reconciled. The appendix count is
+# information rather than a tripwire; it changed from 0 the day the parser
+# learned to read them. Manifests written before that carry no appendix field,
+# so it stays optional.
 EXPECT = re.compile(
     r"^# = (?P<name>.+?) \| book (?P<book>\d+) \| (?P<chapters>\d+) chapters "
+    r"(?:\| (?P<appendices>\d+) appendices )?"
     r"\| (?P<words>\d+) words \| (?P<bytes>\d+) bytes \| (?P<edition>.+)$")
 
 
@@ -56,8 +65,11 @@ def read_manifest() -> tuple[dict[str, str], dict[str, dict]]:
             m = EXPECT.match(line)
             if m:
                 d = m.groupdict()
-                for k in ("book", "chapters", "words", "bytes"):
-                    d[k] = int(d[k])
+                for k in ("book", "chapters", "appendices", "words", "bytes"):
+                    # appendices is absent from manifests written before the
+                    # parser could read back matter; None means "not recorded",
+                    # which verify() treats as "don't check", not as zero.
+                    d[k] = int(d[k]) if d[k] is not None else None
                 expect[d["name"]] = d
                 continue
             if line.startswith("#") or not line.strip():
@@ -107,15 +119,23 @@ def verify(quick: bool = False) -> list[str]:
             problems.append(f"{name}: {exc}")
             continue
         words = sum(len(c["text"].split()) for c in got)
-        if len(got) != exp["chapters"]:
-            problems.append(f"{name}: parses to {len(got)} chapters, manifest says "
+        chapters = [c for c in got if c.get("kind") != "appendix"]
+        back = len(got) - len(chapters)
+        want_back = exp.get("appendices")
+        if len(chapters) != exp["chapters"]:
+            problems.append(f"{name}: parses to {len(chapters)} chapters, manifest says "
                             f"{exp['chapters']} — citations to book {exp['book']} "
                             f"are no longer trustworthy")
+        elif want_back is not None and back != want_back:
+            problems.append(f"{name}: {back} appendices, manifest says {want_back} — "
+                            f"back matter appeared or vanished")
         elif words != exp["words"]:
-            problems.append(f"{name}: {len(got)} chapters but {words:,} words, "
+            problems.append(f"{name}: {len(chapters)} chapters but {words:,} words, "
                             f"manifest says {exp['words']:,}")
         else:
-            print(f"  book {exp['book']}: {len(got)} chapters, {words:,} words — OK")
+            extra = f" + {back} appendices" if back else ""
+            print(f"  book {exp['book']}: {len(chapters)} chapters{extra}, "
+                  f"{words:,} words — OK")
     return problems
 
 
@@ -128,7 +148,9 @@ def update() -> None:
         got = _parse(path, num)
         rows.append({
             "book": num, "name": name, "sha": _sha256(path),
-            "bytes": os.path.getsize(path), "chapters": len(got),
+            "bytes": os.path.getsize(path),
+            "chapters": sum(1 for c in got if c.get("kind") != "appendix"),
+            "appendices": sum(1 for c in got if c.get("kind") == "appendix"),
             "words": sum(len(c["text"].split()) for c in got),
             "edition": old.get(name, {}).get("edition", "unrecorded — describe it here"),
         })
@@ -143,7 +165,8 @@ def update() -> None:
     out = head + ["#"]
     for r in rows:
         out.append(f"# = {r['name']} | book {r['book']} | {r['chapters']} chapters "
-                   f"| {r['words']} words | {r['bytes']} bytes | {r['edition']}")
+                   f"| {r['appendices']} appendices | {r['words']} words "
+                   f"| {r['bytes']} bytes | {r['edition']}")
     out.append("#")
     out += [f"{r['sha']}  {r['name']}" for r in rows]
     with open(MANIFEST, "w") as fh:

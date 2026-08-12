@@ -73,8 +73,9 @@
     },
     {
       "cat": "Sources",
-      "text": "Confirm books 4 and 5 have no Cast of Characters",
-      "note": "Book 2's appendix rescued ten records and turned up Surly. A quick check of the other volumes' back matter is cheap."
+      "text": "Back matter: book 4 has an appendix too, and nobody had read it",
+      "note": "Answered, and the assumption in the question was wrong. Book 4 carries the same three appendices as book 2 — List of Acronyms, Cast of Characters and Genealogy — reprinted with GUPPI added to the acronyms and everything else identical to the line. Books 1, 3 and 5 have none. More to the point, none of it was in the corpus: the parser needs a POV and a date to recognise a chapter, back matter has neither, so every automated sweep this project has ever run walked straight past it. Now parsed as appendix entries numbered after the narrative, so a citation can't collide with a chapter number, and the manifest counts chapters and appendices separately so the count that citations depend on stays a tripwire.",
+      "done": true
     },
     {
       "cat": "Sources",
@@ -153,6 +154,11 @@
       "cat": "Lineage",
       "text": "The nine unaccounted — is any of them settled somewhere we haven't looked",
       "note": "Hannibal, Tom, Barney, Fred, Jackson and Hector lost vessels at 82 Eridani in Apr 2185; Jeffrey, Milton and Zeke in Nov 2195. Exactly three of the first six are on the In Memorium list and three were restored, and the second battle never accounts for its backups at all. If any of the nine speaks, is spoken to, or is counted anywhere after his death date, that settles him and shrinks the unnamed pool. Worth a name-by-name sweep of everything after the relevant chapter — this is the same job as the biographical sweep and could ride along with it. Note that a hit is not automatically the same Bob: the corpus holds a Deltan named Fred and a human named Hector Rodriguez, and the Hector collision is still open."
+    },
+    {
+      "cat": "Lineage",
+      "text": "Taylor's genealogy is printed in the books — decide whether to promote the 18",
+      "note": "The tree we dropped as 'Taylor's 2017 genealogy' is an appendix in book 2, reprinted in book 4. It is back matter rather than narrative, which is exactly what the Cast of Characters is, and that already supplies ten tier-T parentages. Cross-referenced against the register: it agrees with all 26 parentages we already hold, contradicts nothing, names no Bob we lack a record for, and settles 18 that currently sit unparented at tier C — precisely the 18 whose priorClaim reads 'Taylor's 2017 genealogy put this Bob under X. The books don't say so.' They do say so. The remaining 12 leads are from the wiki and stand unaffected. Promoting would move tier C from 51 to 33 and tier T from 32 to 50, and lift the number of traces reaching Bob-1 well above 34. It would also mean rewriting the headline claim in both README and CLAUDE.md. Not done unilaterally — this reverses the project's central editorial decision and the call belongs to a human."
     }
   ]
 }

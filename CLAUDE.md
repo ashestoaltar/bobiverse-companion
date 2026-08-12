@@ -260,6 +260,37 @@ and commit the snapshot **with** the change that caused it. A snapshot updated i
 its own commit tells you nothing. If a run is ever flaky, the flake is the bug —
 nothing captured may vary between runs.
 
+## Back matter
+
+Books 2 and 4 print appendices; books 1, 3 and 5 do not. Book 4's are a reprint
+of book 2's, identical line for line except that GUPPI joins the acronyms —
+which is a useful accident, because the two editions use completely different
+markup and agreeing exactly is a strong check that both parsed correctly.
+
+Until now the parser walked past all of it. A chapter is recognised by its POV
+and date; back matter has neither, so every detector rejected it and **every
+automated sweep this project has ever run was blind to it.** That left the Cast
+of Characters cited by ten records but unsearchable, and hid a Genealogy printed
+in the novel itself.
+
+Appendices are parsed as corpus entries with `kind: "appendix"`, no POV and no
+date, numbered *after* the narrative so a citation can never collide with a
+chapter number. `books/MANIFEST.sha256` counts chapters and appendices
+separately: citations index narrative chapters, so that number stays a tripwire,
+while the appendix count is information.
+
+Two shapes needed care. The **Genealogy** is a tree encoded purely as left
+margins — `margin: 0 0 0 90pt` in book 2, `margin-left: 17%` in book 4 — so
+depth comes from ranking the distinct values rather than reading them, and is
+re-emitted as two spaces per level. It greps like text and parses like a tree.
+The **Cast** is a two-column table in both, and is paired by table row. Two
+cleverer rules failed first and are worth not repeating: pairing cells by
+alternation breaks on any stray row, and filtering to the modal class threw
+away every second description, because book 2 sets the list in two alternating
+styles. Filtering to classes used more than once then lost Archimedes and
+Victor, the first and last entries, which carry their own edge styling — and
+those are precisely the two places nobody checks.
+
 ## Chapter parsing
 
 Every chapter opens with an optional title, the POV Bob, an in-world date, and

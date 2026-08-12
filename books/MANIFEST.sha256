@@ -11,11 +11,11 @@
 #   sha256sum -c books/MANIFEST.sha256    # hashes only, no tooling needed
 #   make verify-books                     # hashes AND what they parse to
 #
-# = bobiverse-1-we-are-legion.epub | book 1 | 61 chapters | 91034 words | 383701 bytes | 2016 EPUB — chapter headers are <li value=n>, not <p>
-# = bobiverse-2-for-we-are-many.epub | book 2 | 77 chapters | 83524 words | 386584 bytes | EPUB — headers as paragraphs
-# = bobiverse-3-all-these-worlds.epub | book 3 | 74 chapters | 72427 words | 336827 bytes | EPUB — headers as paragraphs
-# = bobiverse-4-heavens-river.epub | book 4 | 67 chapters | 157099 words | 592258 bytes | EPUB — headers as paragraphs; numbering restarts at part 2
-# = bobiverse-5-not-till-we-are-lost.epub | book 5 | 72 chapters | 97540 words | 553665 bytes | EPUB — headers as paragraphs; word-numeral chapter titles
+# = bobiverse-1-we-are-legion.epub | book 1 | 61 chapters | 0 appendices | 91034 words | 383701 bytes | 2016 EPUB — chapter headers are <li value=n>, not <p>
+# = bobiverse-2-for-we-are-many.epub | book 2 | 77 chapters | 3 appendices | 84370 words | 386584 bytes | EPUB — headers as paragraphs
+# = bobiverse-3-all-these-worlds.epub | book 3 | 74 chapters | 0 appendices | 72427 words | 336827 bytes | EPUB — headers as paragraphs
+# = bobiverse-4-heavens-river.epub | book 4 | 67 chapters | 3 appendices | 157952 words | 592258 bytes | EPUB — headers as paragraphs; numbering restarts at part 2
+# = bobiverse-5-not-till-we-are-lost.epub | book 5 | 72 chapters | 0 appendices | 97540 words | 553665 bytes | EPUB — headers as paragraphs; word-numeral chapter titles
 #
 c875aea7d6d183ee2e08ac848137f70e0a0e4f745501487c7ca97cf1e820e1da  bobiverse-1-we-are-legion.epub
 2149f5ba9f048f58b17386363a1b8d7e5fe4fe40d0d105701a9f13ae26af3896  bobiverse-2-for-we-are-many.epub

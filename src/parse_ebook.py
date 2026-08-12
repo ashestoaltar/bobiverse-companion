@@ -104,6 +104,22 @@ def _chapter_from_paragraphs(ps: list[str]) -> dict | None:
 # EPUB
 # --------------------------------------------------------------------------
 
+def _epub_css(path: str) -> str:
+    """Every stylesheet in the archive, concatenated.
+
+    The Genealogy appendix encodes its tree as left margins on CSS classes, so
+    the markup alone is a flat list of names. Cheap to read all of them: the
+    class names are unique enough across two books that collisions haven't
+    happened, and a wrong margin only mis-ranks a depth, never invents a name.
+    """
+    try:
+        zf = zipfile.ZipFile(path)
+    except (zipfile.BadZipFile, OSError):
+        return ""
+    return "\n".join(zf.read(n).decode("utf-8", "ignore")
+                     for n in zf.namelist() if n.lower().endswith(".css"))
+
+
 def _epub_spine(path: str):
     zf = zipfile.ZipFile(path)
     names = zf.namelist()
@@ -216,13 +232,21 @@ def parse(path: str, book: int) -> list[dict]:
     ext = os.path.splitext(path)[1].lower()
     if ext == ".epub":
         docs = _epub_spine(path)
+        css = _epub_css(path)
     elif ext in (".mobi", ".azw", ".azw3", ".prc"):
         docs = _mobi_sections(path)
+        css = ""
     else:
         raise ValueError(f"unsupported format: {ext}")
 
     chapters = []
+    appendices = []
     for markup in docs:
+        back = _appendix(markup, css)
+        if back is not None:
+            back["book"] = book
+            appendices.append(back)
+            continue
         chapter = _chapter_from_paragraphs(_paragraphs(markup))
         if chapter is None:
             # Some editions set the header as a list item rather than a paragraph.
@@ -245,7 +269,129 @@ def parse(path: str, book: int) -> list[dict]:
         if printed is not None and printed != chapter["seq"]:
             print(f"  book {book}: chapter {chapter['seq']} is printed as {printed} "
                   f"— a chapter was probably missed before it", file=sys.stderr)
-    return chapters
+
+    # Back matter is numbered after the narrative so a citation can never
+    # collide with a chapter number, and carries no POV or date because it has
+    # neither — it is Taylor writing as himself, not a Bob narrating.
+    for i, back in enumerate(appendices):
+        back["seq"] = len(chapters) + i + 1
+    return chapters + appendices
+
+
+# ---- back matter ---------------------------------------------------------
+#
+# Books 2 and 4 print appendices, and until now the parser walked straight past
+# them: they have no POV and no date, so every chapter detector rejected them
+# and they never entered the corpus. That left the Cast of Characters cited by
+# ten records but unsearchable, and hid a Genealogy printed in the novel itself.
+# Books 1, 3 and 5 have none.
+APPENDIX_TITLES = {
+    "cast of characters": "Cast of Characters",
+    "genealogy": "Genealogy",
+    "list of terms": "List of Terms",
+    "list of acronyms": "List of Acronyms",
+}
+_HEADING = re.compile(r"<(h[1-6]|p)\b[^>]*>(.*?)</\1>", re.S | re.I)
+_ROW = re.compile(r"<(p|td)\b([^>]*)>(.*?)</\1>", re.S | re.I)
+_TR = re.compile(r"<tr\b[^>]*>(.*?)</tr>", re.S | re.I)
+_CELL = re.compile(r"<(td|th)\b([^>]*)>(.*?)</\1>", re.S | re.I)
+# Book 2 sets the tree's indent as shorthand `margin: 0 0 0 90pt`, book 4 as
+# `margin-left: 17%`. Depth is taken from the rank of the distinct values, not
+# their size, so the unit doesn't matter — but they have to be found first.
+_MARGIN_LEFT = re.compile(r"margin-left:\s*(-?[\d.]+)", re.I)
+_MARGIN_SHORT = re.compile(r"(?:^|;)\s*margin:\s*([^;}]+)", re.I)
+
+
+def _left_margin(decl: str) -> float:
+    hit = _MARGIN_LEFT.search(decl)
+    if hit:
+        return float(hit.group(1))
+    hit = _MARGIN_SHORT.search(decl)
+    if not hit:
+        return 0.0
+    parts = hit.group(1).split()
+    # CSS shorthand: 1 value = all sides, 2 = v/h, 3 = t/h/b, 4 = t/r/b/l
+    left = {1: 0, 2: 1, 3: 1, 4: 3}.get(len(parts))
+    if left is None:
+        return 0.0
+    num = re.match(r"-?[\d.]+", parts[left])
+    return float(num.group(0)) if num else 0.0
+
+
+def _text(markup: str) -> str:
+    return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", markup))).strip()
+
+
+def _appendix(markup: str, css: str = "") -> dict | None:
+    """Recognise a back-matter section and keep the shape that carries meaning.
+
+    The Genealogy is a tree encoded purely as left margins — 18/54/90/126pt in
+    book 2, a different scale in book 4 — so flattening it to prose would throw
+    away the only thing it says. Depth is recovered by ranking the distinct
+    indents rather than by matching absolute values, and re-emitted as two
+    spaces per level, which greps like text and parses like a tree.
+    """
+    first = None
+    for m in _HEADING.finditer(markup):
+        body = _text(m.group(2))
+        if body:
+            first = body
+            break
+    if first is None:
+        return None
+    title = APPENDIX_TITLES.get(first.strip().lower().rstrip(":"))
+    if title is None:
+        return None
+
+    styles = dict(re.findall(r"\.([A-Za-z0-9_-]+)\s*\{([^}]*)\}", css))
+    rows: list[tuple[int, str]] = []
+    for m in _ROW.finditer(markup):
+        body = _text(m.group(3))
+        if not body or body == first:
+            continue
+        indent = 0.0
+        cls = re.search(r'class="([^"]*)"', m.group(2) or "")
+        if cls:
+            for name in cls.group(1).split():
+                indent = max(indent, _left_margin(styles.get(name, "")))
+        rows.append((indent, body, cls.group(1).strip() if cls else ""))
+
+    if title == "Genealogy":
+        levels = sorted({i for i, _, _ in rows})
+        depth = {v: n for n, v in enumerate(levels)}
+        text = "\n".join("  " * depth[i] + t for i, t, _ in rows)
+    elif _TR.search(markup):
+        # Both Casts are two-column tables. Pair by row rather than by counting
+        # cells: the alternation rule works right up until an edge style breaks
+        # it, and book 2 gives its first and last rows their own classes, so any
+        # scheme that filters on class silently loses Archimedes and Victor —
+        # the first and last entries, where nobody looks.
+        lines = []
+        for tr in _TR.findall(markup):
+            cells = [_text(c) for _, _, c in _CELL.findall(tr)]
+            cells = [c for c in cells if c]
+            if cells:
+                lines.append(" — ".join(cells))
+        text = "\n".join(lines)
+    else:
+        # No table: alternating paragraphs, as book 2 sets its List of Terms.
+        # Here a style used exactly once is a preamble, never an entry.
+        counts: dict[str, int] = {}
+        for _, _, cls in rows:
+            counts[cls] = counts.get(cls, 0) + 1
+        lines, buf = [], []
+        for _, t, cls in rows:
+            if len(counts) > 1 and counts[cls] < 2:
+                continue
+            buf.append(t)
+            if len(buf) == 2:
+                lines.append(f"{buf[0]} — {buf[1]}")
+                buf = []
+        lines += buf
+        text = "\n".join(lines)
+
+    return {"title": title, "pov": None, "when": None, "where": None,
+            "kind": "appendix", "text": text}
 
 
 # Book 1's dated chapters read "Bob \u2013 July 15, 2133", but its first two are
