@@ -472,6 +472,27 @@ them are named, so a register of named Bobs is much smaller than the body count.
 And `lostAt` takes system ids only: Bender was recovered from inside Heaven's
 River, which is a megastructure, so his is empty.
 
+### Absence is a research state, not a fact
+
+Say **"no source found"**, never "no source exists". The distinction cost this
+project eighteen records: `priorClaim` boilerplate read "The books don't say
+so" on parentages that book 2's appendix states outright, and nobody could have
+noticed while the appendix sat outside the corpus. FAITH's note said the books
+never expand the acronym; the List of Terms does. The old `status` field said
+Elmer and Bender were lost; both came back.
+
+Recording what the books leave open is the point of this registry, so most
+absence claims here are correct and stay — the pigoid really never learns. What
+is not allowed is asserting absence *as a property of the books* when what was
+actually established is that a search came back empty.
+
+And do not restate a derived number in prose. Five `fateNote`s said "six
+vessels ... exactly half ... all six here" and were wrong on all three counts
+within hours of being written, because Elmer's vessel was the seventh and
+Hannibal was ruled out the same afternoon. The In Memorium arithmetic lives in
+`memorium.json` and the register counts; `validate.py` rejects a pooled
+candidate whose note restates it. Same rule as `gen`.
+
 ## Field policy
 
 The books are the only source for biography too, not just lineage. `desig`

@@ -169,8 +169,9 @@
     },
     {
       "cat": "Sources",
-      "text": "Audit the notes for claims about what the books do not say",
-      "note": "Three have now been wrong the same way. Eighteen records said \"The books don't say so\" about parentages printed in book 2's appendix. FAITH's note said the books never expand it; the List of Terms does. The old status field said Elmer and Bender were lost when both came back. Each stated a fact about the books where what was actually known was that we had not found it. The phrasing to prefer is \"no source found\" over \"no source exists\" — one is a research state and the other is a claim. Worth grepping the notes for never, none, nowhere and no source, and softening any that assert absence rather than report it."
+      "text": "Notes audited for claims about what the books don't say",
+      "note": "33 absence-phrases across 27 records. Most are correct and stay: the pigoid really never learns, Bridget really had never seen a trout, and 'the books never say which three' was verified by an exhaustive sweep this morning. Two things came out. The twelve remaining wiki leads all carried the sentence that was wrong eighteen times — 'The books don't say so' — rewritten to distinguish not found from does not exist. And the audit caught a live bug it had not been looking for: five fateNotes restated the pool arithmetic in prose, and all three figures had gone stale within hours, because Elmer's vessel turned out to be the seventh and Hannibal was ruled out the same day. The arithmetic now lives in memorium.json alone and the register derives the rest; validate.py rejects a pooled candidate whose note restates it. Same rule as gen: store a number only where it can't be derived.",
+      "done": true
     }
   ]
 }

@@ -314,7 +314,21 @@ def _check_memorium(bobs: list[dict], by_id: dict) -> tuple[list[str], list[str]
             errors.append(f"{where}: needs a note saying what is and isn't known")
         if entry.get("where") and entry["where"] not in systems:
             errors.append(f"{where}: unknown system {entry['where']!r}")
+        # The pool's arithmetic — how many died, how many were restored, how many
+        # candidates are left — changes every time one of them is settled, and it
+        # is derived from this file and the fate fields. Prose does not update
+        # itself: within hours of being written, five fateNotes saying "six
+        # vessels ... exactly half ... all six here" were wrong on all three
+        # counts, because Elmer's vessel was the seventh and Hannibal had since
+        # been ruled out. Keep the count in one place and let the register do the
+        # counting.
         for bid in pool:
+            note = (by_id.get(bid) or {}).get("fateNote") or ""
+            stale = re.search(r"\bhalf\b|\ball (?:three|four|five|six|seven)\b", note, re.I)
+            if stale:
+                errors.append(f"{where}: {bid}'s fateNote says {stale.group(0)!r} about the pool. "
+                              "That arithmetic changes whenever a candidate is settled — state it "
+                              "once, in this file's note, and let the register derive the rest")
             if bid not in by_id:
                 errors.append(f"{where}: candidate {bid!r} is not a record")
             elif by_id[bid].get("fate") != "presumed":
