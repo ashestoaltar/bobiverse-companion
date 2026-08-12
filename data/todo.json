@@ -102,12 +102,12 @@
     {
       "cat": "BobNet",
       "text": "Blog posts in Bill's voice",
-      "note": "Bill's blog is canon — he needles Bob about not reading it in Bk4 ch5. Site updates belong as dated posts, not changelogs. See the voice guide in CLAUDE.md."
+      "note": "Bill's blog is canon — he needles Bob about not reading it in Bk4 ch5. Site updates belong as dated posts, not changelogs. See the voice guide in CLAUDE.md. First post writes itself now: the fan ecosystem builds its genealogies on a 2017 PDF at kurt-anderson.com, which is what sbtn/treeofbob cites, while Taylor's own genealogy sits in the back matter of book 2 — and the two disagree about how to spell Jonny and Jacques. The book is right. Second and third: the Surly discovery, and the landers/spits/boojums purge."
     },
     {
       "cat": "BobNet",
       "text": "Images",
-      "note": "Later. Whatever we do has to survive the no-external-requests rule, so anything visual gets inlined."
+      "note": "Later. Whatever we do has to survive the no-external-requests rule, so anything visual gets inlined. Settled shape: images are payload, never chrome. The shell stays terminal and an opened attachment in a dossier is allowed to be rich — [ATTACHMENT: dragon.plate] and a panel that is clearly the opened file. An empty plate stays 'no file on record', because a Bob with no known parent must never get a handsome illustration to make up for it."
     },
     {
       "cat": "Companion registers",
@@ -137,7 +137,7 @@
     {
       "cat": "BobNet",
       "text": "Holotank — rich payload, amber chrome",
-      "note": "Checked against the corpus before writing it down: holotank 34 hits, hologram 22, holographic 8, holoview 1, holosphere 0. Holosphere is the coinage we'd have reached for and it isn't Taylor's word, so that's a bullet dodged. The rule if this ever gets built: the shell stays terminal and the opened file can be rich. Drab file manager, rich document. Tabs, phosphor, Guppy and the bracketed metadata stay exactly as they are; an attachment in the dossier is allowed to be a real picture, labelled as machine-attached media. What it must never do is give a Bob with no known parent a handsome illustrated tree to make up for it. If media ever lands on a Bob record, it goes in the schema AND in build.py's ORDER — that whitelist has already silently eaten two fields."
+      "note": "Checked against the corpus before writing it down: holotank 34 hits, hologram 22, holographic 8, holoview 1, holosphere 0. Holosphere is the coinage we'd have reached for and it isn't Taylor's word, so that's a bullet dodged. The rule if this ever gets built: the shell stays terminal and the opened file can be rich. Drab file manager, rich document. Tabs, phosphor, Guppy and the bracketed metadata stay exactly as they are; an attachment in the dossier is allowed to be a real picture, labelled as machine-attached media. What it must never do is give a Bob with no known parent a handsome illustrated tree to make up for it. If media ever lands on a Bob record, it goes in the schema AND in build.py's ORDER — that whitelist has already silently eaten two fields.\n\nSurveyed the prior art since. ruguevara/Bobmap is the one to look at — Three.js, TypeScript, Vite, HYG v3.7, live at bobmap.pixelmatter.org — and it is prettier than ours. Do NOT answer it with Three.js. Ours is already a real 3D chart: measured coordinates, orthographic projection, drag-rotate, depth cueing, SVG for crisp labels and click targets over a canvas backdrop of 5,070 stars. Vendoring 600KB of someone else's engine to get glow would triple the page and put the largest single body of code in the project outside our own review, in a project whose whole argument is that everything here is checkable.\n\nThe shine is framing and light, not an engine. Three changes get most of it: a perspective divide instead of the current orthographic scale; additive glow on the star sprites, which canvas 2D does natively with radial gradients and lighter compositing; and — the actual idea — bound the volume. A holotank is a tank. Ours fills its pane edge to edge like a diagram; give it a floor grid, corner brackets and a plinth line and it reads as a thing sitting on Bill's desk rather than a chart filling a window. Label it [HOLOTANK]. That is the canon word, checked: 34 hits, and holosphere has none."
     },
     {
       "cat": "Sources",
@@ -152,8 +152,8 @@
     },
     {
       "cat": "Lineage",
-      "text": "The nine unaccounted — is any of them settled somewhere we haven't looked",
-      "note": "Hannibal, Tom, Barney, Fred, Jackson and Hector lost vessels at 82 Eridani in Apr 2185; Jeffrey, Milton and Zeke in Nov 2195. Exactly three of the first six are on the In Memorium list and three were restored, and the second battle never accounts for its backups at all. If any of the nine speaks, is spoken to, or is counted anywhere after his death date, that settles him and shrinks the unnamed pool. Worth a name-by-name sweep of everything after the relevant chapter — this is the same job as the biographical sweep and could ride along with it. Note that a hit is not automatically the same Bob: the corpus holds a Deltan named Fred and a human named Hector Rodriguez, and the Hector collision is still open."
+      "text": "The eight unaccounted — is any of them settled somewhere we haven't looked",
+      "note": "Tom, Barney, Fred, Jackson and Hector lost vessels at 82 Eridani in Apr 2185; Hannibal did too and has since been settled, which is the proof this works; Jeffrey, Milton and Zeke in Nov 2195. Three of those five are on the In Memorium list and two were restored — settle two more and the last three are named by subtraction, and validate.py errors the moment the pool shrinks to the count, and the second battle never accounts for its backups at all. If any of the nine speaks, is spoken to, or is counted anywhere after his death date, that settles him and shrinks the unnamed pool. Worth a name-by-name sweep of everything after the relevant chapter — this is the same job as the biographical sweep and could ride along with it. Note that a hit is not automatically the same Bob: the corpus holds a Deltan named Fred and a human named Hector Rodriguez, and the Hector collision is still open."
     },
     {
       "cat": "Lineage",
@@ -171,6 +171,27 @@
       "cat": "Sources",
       "text": "Notes audited for claims about what the books don't say",
       "note": "33 absence-phrases across 27 records. Most are correct and stay: the pigoid really never learns, Bridget really had never seen a trout, and 'the books never say which three' was verified by an exhaustive sweep this morning. Two things came out. The twelve remaining wiki leads all carried the sentence that was wrong eighteen times — 'The books don't say so' — rewritten to distinguish not found from does not exist. And the audit caught a live bug it had not been looking for: five fateNotes restated the pool arithmetic in prose, and all three figures had gone stale within hours, because Elmer's vessel turned out to be the seventh and Hannibal was ruled out the same day. The arithmetic now lives in memorium.json alone and the register derives the rest; validate.py rejects a pooled candidate whose note restates it. Same rule as gen: store a number only where it can't be derived.",
+      "done": true
+    },
+    {
+      "cat": "BobNet",
+      "text": "Publish it",
+      "note": "Every comparable project is live and this one is on localhost, which is the entire gap between us and them — treeofbob, Mikeda75/bobiverse-starmap and Bobmap are all on the open web. dist/index.html is the whole site, so GitHub Pages or any static host does it. Needs a root LICENSE that states the split before anything goes out: code MIT or Apache, data CC0 or CC BY since it is facts plus our own prose, and data/skyfield.json stays CC BY-SA because HYG's ShareAlike propagates to anything embedding it. books/ never ships and the README already says bring your own. Do URL state first — publishing without it means every link anyone sends is a link to the front door."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Spoiler gating, stolen from thunfischtoast/bobiverse-map",
+      "note": "Their map lets you pick the book and chapter you have reached and hides everything after it. It is the best idea in the prior art and we are better placed to do it than they are: they tag events by hand for this one purpose, while we already carry Bk/ch on every citation for provenance, so the same field does both jobs. A reader halfway through book 2 could open the register and see only what is established by then — including watching the tier of a record change as they read, which nobody else can offer because nobody else knows where their claims came from. Records whose only citation is Bk2 · Genealogy or Bk2 · Cast of Characters need a rule of their own: back matter is the end of the book it sits in."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Mobile: open it on an actual phone",
+      "note": "The CSS is there — one column under 860px, dossier as a fixed bottom sheet, masthead metadata and optional columns dropped — and it has never been loaded on real hardware. The chart is the doubt: drag-rotate and a year scrubber on a touchscreen, over a 5,070-star canvas backdrop."
+    },
+    {
+      "cat": "Sources",
+      "text": "Prior art surveyed on GitHub",
+      "note": "About fifty Bobiverse repos. Star maps dominate, then timelines, then a few genealogies. The comparable ones: thunfischtoast/bobiverse-map (2D map and timeline, 19 systems, 50+ Bobs, chapter-gated for spoilers), Mikeda75/bobiverse-starmap (books 1-4, J2000 coordinates, guided camera tours), ruguevara/Bobmap (Three.js, HYG v3.7, ~110 stars, live), sbtn/treeofbob (D3, 47 Bobs, archived), eneko/Bobiverse (GraphViz). Most-starred thing in the whole ecosystem is OpenGUPPIE, a physical Guppy build, at 24. Two findings worth keeping. Not one of them cites the text — thunfischtoast tags chapters but for spoiler gating, not provenance, and nobody anywhere distinguishes stated from inferred or records what is unknown. And they are all downstream of the same secondary source: treeofbob cites a 2017 PDF at kurt-anderson.com, which is almost certainly the tree this project dropped, and which we now know differs from the genealogy printed in book 2. The ecosystem is building on a copy while the original is in the back of the book.",
       "done": true
     }
   ]
