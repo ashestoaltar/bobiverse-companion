@@ -279,6 +279,7 @@
   .card.cleared h3{color:var(--ash)}
   .card h3{margin:0; font-size:14.5px; font-weight:500; letter-spacing:.1em; color:var(--amber-hi)}
   .card .card-sub{font-size:11.5px; letter-spacing:.11em; color:var(--ash); margin:1px 0 5px}
+  .card p + p{margin-top:.85em}
   .card p{margin:0; font-size:13px; color:var(--amber-dim); line-height:1.6; max-width:72ch}
   .card button{
     background:transparent; border:1px solid var(--ash); font:inherit; font-size:11.5px;
@@ -344,6 +345,7 @@
   .trace-end{color:var(--ash); font-size:12.5px; padding-left:28px; line-height:1.6; max-width:44ch}
 
   .note{font-size:13px; line-height:1.7; color:var(--amber-dim); margin:0}
+  .note + .note{margin-top:.9em}
   .flag{
     display:inline-block; font-size:11px; letter-spacing:.11em;
     border:1px solid var(--rule); padding:1px 7px; margin:0 5px 5px 0; color:var(--amber-dim);
@@ -676,6 +678,14 @@ const currentRegister = () => REGISTERS.find(r => r.id === state.view) || REGIST
 
 /* ---- helpers ---------------------------------------------------------- */
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* Notes are prose and a few of them have earned paragraphs. A blank line in the
+   data becomes a paragraph break here; everything else collapses as HTML always
+   would, so a single newline is still just a space. Homer's is the record that
+   forced this — his fate runs to five paragraphs across three books, and set as
+   one block it read as a wall. */
+const prose = s => esc(s).split(/\n\s*\n/).map(p => p.trim()).filter(Boolean)
+  .map(p => `<p class="note">${p}</p>`).join('');
 const year = b => { const m = /(\d{4})/.exec(b.born || ''); return m ? +m[1] : 9999; };
 
 function sortVal(b, key){
@@ -1255,7 +1265,7 @@ function renderSystemDossier(sys){
       ${born.length ? `<div class="sec"><div class="sec-label">BUILT HERE — ${born.length}</div><div class="kids">${link(born)}</div></div>` : ''}
       ${lost.length ? `<div class="sec"><div class="sec-label">LOST HERE — ${lost.length}</div><div class="kids">${link(lost)}</div></div>` : ''}
       ${sys.povs.length ? `<div class="sec"><div class="sec-label">NARRATED FROM HERE</div><p class="note">${esc(sys.povs.join(', '))}</p></div>` : ''}
-      ${sys.role ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div><p class="note">${esc(sys.role)}</p></div>` : ''}
+      ${sys.role ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>${prose(sys.role)}</div>` : ''}
     </div>`;
 }
 
@@ -1362,13 +1372,13 @@ function renderDossier(){
       ${ch.length ? `<div class="sec"><div class="sec-label">CLONES ON RECORD — ${ch.length}</div>
         <div class="kids">${ch.map(c => `<button data-id="${c.id}">${esc(c.name)}</button>`).join('<span class="dim"> · </span>')}</div></div>` : ''}
 
-      ${b.partialNote ? `<div class="sec"><div class="sec-label">WHAT THE SOURCE DOES NOT SAY</div><p class="note">${esc(b.partialNote)}</p></div>` : ''}
+      ${b.partialNote ? `<div class="sec"><div class="sec-label">WHAT THE SOURCE DOES NOT SAY</div>${prose(b.partialNote)}</div>` : ''}
       ${b.fateNote ? `<div class="sec"><div class="sec-label">${
           b.fate === 'memorium' ? 'IN MEMORIUM' : 'VESSEL LOST'
-        }</div><p class="note">${esc(b.fateNote)}</p></div>` : ''}
-      ${b.priorClaim ? `<div class="sec"><div class="sec-label">UNVERIFIED LEAD — NOT DRAWN</div><p class="note">${esc(b.priorClaim)}</p></div>` : ''}
-      ${b.conflict ? `<div class="sec"><div class="sec-label">DISAGREEMENT</div><p class="note">${esc(b.conflict)}</p></div>` : ''}
-      ${b.note ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div><p class="note">${esc(b.note)}</p></div>` : ''}
+        }</div>${prose(b.fateNote)}</div>` : ''}
+      ${b.priorClaim ? `<div class="sec"><div class="sec-label">UNVERIFIED LEAD — NOT DRAWN</div>${prose(b.priorClaim)}</div>` : ''}
+      ${b.conflict ? `<div class="sec"><div class="sec-label">DISAGREEMENT</div>${prose(b.conflict)}</div>` : ''}
+      ${b.note ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>${prose(b.note)}</div>` : ''}
     </div>`;
 }
 
@@ -1450,7 +1460,7 @@ function renderBeastDossier(id){
       <p class="note"><a href="#" data-sys="${esc(c.system)}">${esc(sys.name)}</a>${
         sys.distance_ly ? ` <span class="dim">— ${sys.distance_ly.toFixed(2)} ly</span>` : ''}</p></div>` : ''}
     <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
-      <p class="note">${esc(c.note)}</p></div>
+      ${prose(c.note)}</div>
     ${c.art ? '' : `<div class="sec"><div class="sec-label">ILLUSTRATION</div>
       <p class="note dim">None on file. Drop an SVG at assets/bestiary/${esc(c.id)}.svg and rebuild.</p></div>`}
   </div>`;
@@ -1550,7 +1560,7 @@ function renderPeopleDossier(id){
       <p class="note"><a href="#" data-sys="${esc(e.system)}">${esc(sys.name)}</a>${
         sys.distance_ly ? ` <span class="dim">— ${sys.distance_ly.toFixed(2)} ly</span>` : ''}</p></div>` : ''}
     <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
-      <p class="note">${esc(e.note)}</p></div>
+      ${prose(e.note)}</div>
   </div>`;
 }
 

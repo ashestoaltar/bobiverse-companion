@@ -196,6 +196,21 @@ dossier, the resize handler and the tab markup. `tests/registers.test.js` adds a
 synthetic register at runtime and asserts every hook fires, so a new special
 case that bypasses the list will fail it.
 
+### Notes can have paragraphs
+
+A blank line in a note, `fateNote`, `conflict`, `partialNote` or a companion
+register's note becomes a paragraph break in the dossier; a single newline is
+still just a space, as HTML would have it. Most notes are one paragraph and
+should stay that way. Homer's is why the helper exists — his fate runs across
+three books and set as one block it read as a wall of text.
+
+Watch the faction/descent line while you're in there. Homer was tagged
+`faction: Starfleet` for most of this project's life, and the schema says that
+field is affiliation and not lineage. He died in 2176; Starfleet grew out of a
+stolen backup more than a century later. He was the only Bob in the register
+carrying a faction he could not possibly have joined, and the STARFLEET chip
+listed him. Descent belongs in prose.
+
 ## Guppy
 
 He has been the voice of this console from the start — every bracketed line is
