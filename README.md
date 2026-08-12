@@ -86,8 +86,14 @@ books' description rather than the Star Wars character they compare him to,
 rendered in `currentColor` so he takes the colour of wherever he is. He blinks
 occasionally. That is the whole performance, which is the joke.
 
-Everything is one self-contained HTML file with no external requests. A **CRT**
-toggle drops the scanlines and glow if you'd rather just read.
+The console boots the way a terminal should — Guppy first, then the link, then
+each line typed out with its own pause. About six seconds, skippable with any
+key.
+
+Everything is one self-contained HTML file with no external requests: no fonts,
+no scripts, no images. The artwork is inline SVG and the star backdrop is packed
+integers. A **CRT** toggle drops the scanlines and glow if you'd rather just
+read.
 
 ## Setup
 
@@ -155,22 +161,43 @@ gitignored and should remain so.
 
 ## Status
 
-87 replicants, 52 with citations, 32 with a parent stated in the books, 2 with
-their lineage deliberately expunged, and 30 carrying an unverified lead from a
-dropped source. Biography is held to the same standard as lineage: `desig`,
-`born` and `vessel` only where the books print them, and generation counted down
-the tree except for the three the text states out loud.
+**87 replicants** — 52 with citations, 32 with a parent stated in the books, 2
+with their lineage deliberately expunged, and 30 carrying an unverified lead from
+a dropped source. 34 traces reach Bob-1; 53 terminate. Biography is held to the
+same standard as lineage: `desig`, `born` and `vessel` only where the books print
+them, and generation counted down the tree except for the three the text states
+out loud.
 
-`data/peoples.json` holds five species and nine polities. A name may be a people
-or fauna, never both, and the build checks the two files against each other.
+**22 star systems** in `data/systems.json`, 20 with coordinates. They're real
+stars — Taylor used Hipparcos catalogue numbers, which is why a Bob can read his
+own origin off his serial — so the astrometry is real too, from SIMBAD, with
+distances and Cartesian positions computed from parallax rather than copied. The
+backdrop is 5,070 naked-eye stars from the HYG Database.
 
-`data/bestiary.json` holds nine non-sapient creatures, each pinned to the world
-it lives on and cited to its first appearance. Illustrations are stroke-only SVGs
-under `assets/bestiary/`, inlined at build time so the page stays a single file.
+**9 creatures** in `data/bestiary.json`, each pinned to the world it lives on and
+cited to its first appearance; 2 illustrated so far.
 
-The research backlog lives in `data/todo.json` and is a view in the console.
+**5 species and 9 polities** in `data/peoples.json`. A name may be a people or
+fauna, never both, and the build checks the two files against each other.
 
-`data/systems.json` maps the 22 star systems the Bobs reach. They're real stars —
-Taylor used Hipparcos catalogue numbers, which is why a Bob can read his own
-origin off his serial number — so the astrometry is real too, from SIMBAD, with
-distances and Cartesian positions computed from parallax rather than copied.
+The research backlog is `data/todo.json` — 21 items, 5 cleared — and is a view in
+the console. It has never once got shorter.
+
+## How it's kept honest
+
+Everything above is checked rather than asserted:
+
+- `make validate` gates the build — tier rules, referential integrity, ancestry
+  cycles, and that Bobs sharing a Hipparcos number agree about where they were
+  built, since the designation states it.
+- Every citation is re-verified against the parsed books, so a chapter number
+  that drifts gets caught rather than believed.
+- Mention counts in the companion registers are re-derived from the corpus; an
+  entry whose name appears nowhere is flagged, because that means we invented it.
+- `make test` runs 2,585 checks across 10 suites against the shipped page,
+  including a golden-master snapshot of 109 rendered states.
+
+The recurring lesson, which has now bitten in three separate registers: **a word
+that looks like a name usually isn't one.** "Landers" is a person, "Spits" is an
+island, "boojums" are drones, "hexghi" is a family, "manny" is a robot body. Check
+what a word denotes before filing it anywhere.

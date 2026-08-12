@@ -412,12 +412,19 @@ Don't re-run these expecting new names; they're exhausted.
   Bob we didn't have at all. The parser rejects it as back matter, so it has to
   be read by hand. Books 4 and 5 have no equivalent.
 
-## Planned: companion registers
+## Companion registers
 
-Once the genealogy is settled, the same machinery — corpus, extractor,
-validator, console — should carry other registers from the same books. The
-parser and `extract.py` are already generic; what each needs is its own data
-file, schema and view.
+The same machinery — corpus, extractor, validator, console — carries every
+register. Each needs its own data file, schema and view, and nothing else.
+
+**Built:** the star chart (`systems.json`), the bestiary (`bestiary.json`) and
+peoples and polities (`peoples.json`). **Still to come:** ship designs, and the
+second passes recorded in `data/todo.json`.
+
+The pattern that worked, for whatever comes next: survey the corpus first and
+verify the candidate list before writing any of it down — both registers built
+so far found that roughly half their inherited candidates were false positives.
+Then one `REGISTERS` entry, one render function, one schema, one test suite.
 
 **Planetary / system map.** Systems, who surveyed them, what was found, who
 was lost there. `data/bobs.json` already carries `origin`, `visited` and
@@ -506,13 +513,15 @@ the lot — presented as BobNet, the in-world network Bill actually runs. Websit
 app, whatever it ends up being. The bar is the reference works Star Trek fans
 have had for decades; the aim is something that stands next to those.
 
-Two things follow from that, and they should shape decisions now rather than
-later. **Every register is a peer**, so none of them should be special-cased into
-the genealogy's plumbing — `bobs.json`, `systems.json` and whatever comes next
-are siblings. And **the single-file console will stop being the right shape**:
-it currently hardcodes every view into one template, which is fine for four and
-won't be for eight. Worth restructuring deliberately before the bestiary rather
-than discovering it halfway through.
+Two things follow from that. **Every register is a peer**, so none should be
+special-cased into the genealogy's plumbing — `bobs.json`, `systems.json`,
+`bestiary.json` and `peoples.json` are siblings.
+
+And the console had to stop hardcoding its views, which it now does: the
+`REGISTERS` list went in before the bestiary rather than halfway through it, and
+both registers since have cost one entry each with every other rendered state
+byte-identical. That was the right call and the golden-master snapshot is what
+made it safe. Keep both when adding the next one.
 
 Blog posts, status updates, and eventually images.
 
