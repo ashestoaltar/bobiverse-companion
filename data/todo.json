@@ -116,7 +116,32 @@
     {
       "cat": "Companion registers",
       "text": "Second pass on peoples: colonies, minor species, Bob factions",
-      "note": "The register covers the majors. Missing: the human colony governments (Vulcan, Romulus, Poseidon, Newholme, Pangea), the Arcadians and Zjentfen at one mention each, and the question of whether the four Bob factions belong here as polities or stay as a field on bobs.json. They cut across lineage, so they are arguably exactly what a polity is."
+      "note": "The register covers the majors. Missing: the human colony governments (Vulcan, Romulus, Poseidon, Newholme, Pangea), and the Arcadians and Zjentfen at one mention each. The Bob factions are settled: they come in, but as their own category rather than as polities. A polity in this register holds ground and speaks for a population; Starfleet, the Skippies, the Gamers and the Borg hold nothing and speak for one man who kept copying himself. They cut across lineage, which is why they don't belong on bobs.json alone — but calling them governments to get them in the door would cost the register the distinction that makes it worth having."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Cross-register links — make the registers admit the others exist",
+      "note": "The click paths are already in the data and none of them are wired: origin, visited and lostAt point at systems, every creature carries the world it lives on, every people carries how it stands with the Bobs. Six registers sitting in the same window studiously ignoring each other. Herschel to Epsilon Eridani to gorilloids to Deltans ought to be four clicks; today it's four searches, and the search box is the same search box each time. Even one-way links — Bobs built here, fauna of this world — would do most of the work. Raised by an outside review on 11 Aug 2026, and the one structural thing it caught that we hadn't."
+    },
+    {
+      "cat": "BobNet",
+      "text": "URL state, so a dossier can actually be linked to",
+      "note": "?bob=riker, #system/82_eridani. There is no location, history or hashchange anywhere in the template, so every link anyone ever sends to this thing is a link to the front door, followed by the word 'scroll'. No backend to fight, which is exactly why it's an hour rather than a feature. Do it before publishing. Doing it after means every link already out there is wrong."
+    },
+    {
+      "cat": "Companion registers",
+      "text": "Timeline register — the one axis nothing reads",
+      "note": "Chapter dates, born, the chart's 2133-2345 scrubber and each system's first and last year are all stored already, and not one thing reads them as a sequence. Activations, losses, first contact, the Starfleet purge, the war with the Others. The tree knows who came from whom and is serenely uninterested in what was going on at the time. Could start as the chart's year lighting with an event list beside it, which is the sort of sentence that has cost a fortnight before."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Holotank — rich payload, amber chrome",
+      "note": "Checked against the corpus before writing it down: holotank 34 hits, hologram 22, holographic 8, holoview 1, holosphere 0. Holosphere is the coinage we'd have reached for and it isn't Taylor's word, so that's a bullet dodged. The rule if this ever gets built: the shell stays terminal and the opened file can be rich. Drab file manager, rich document. Tabs, phosphor, Guppy and the bracketed metadata stay exactly as they are; an attachment in the dossier is allowed to be a real picture, labelled as machine-attached media. What it must never do is give a Bob with no known parent a handsome illustrated tree to make up for it. If media ever lands on a Bob record, it goes in the schema AND in build.py's ORDER — that whitelist has already silently eaten two fields."
+    },
+    {
+      "cat": "Sources",
+      "text": "Make the suites fail closed",
+      "note": "Deriving expectations from data/*.json instead of hardcoding them was the right fix and it has a blind spot in it: a case that computes an expected count of zero and observes zero passes without proving anything happened. A bug that empties a register would sail straight through, and the suite would report it as a pass in the same cheerful tone as everything else. Assert the critical lists are non-empty before comparing them. We have already lost most of a day to a harness that kept saying 2,585 checks passed while the books themselves were sitting deleted on disk; this is that shape again, drawn smaller."
     }
   ]
 }
