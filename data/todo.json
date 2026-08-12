@@ -163,8 +163,14 @@
     },
     {
       "cat": "Sources",
-      "text": "Re-run every sweep now that the back matter is searchable",
-      "note": "Every corpus sweep this project has run — the bestiary candidates, the peoples survey, the mention counts, the post-death check on the unaccounted nine — was blind to the appendices, because a chapter needs a POV and a date and back matter has neither. That is now fixed, and the first thing it turned up was eighteen parentages. Worth re-running the others against the three appendix entries per book: the Cast of Characters glosses fifty-two characters in one line each and states fates outright, which is exactly the shape that settles arguments. It says Arthur dies in a salvaging accident, and it is the reason we know Surly exists."
+      "text": "Sweeps re-run against the appendices",
+      "note": "Every sweep this project ran was blind to the back matter. Re-run: the List of Terms expands FAITH — Free American Independent Theocratic Hegemony — which the register had recorded as a deliberate gap on the grounds that the books never unpack it. They do, in an appendix. Mention counts were refreshed and now exclude appendices by design, since an alphabetical cast list names everyone once and would flatten the ordering the registers sort on; that also caught two stale figures sitting inside the validator tolerance, hydra 4 to 1 and humans 512 to 497. The Cast of Characters names none of the nine unaccounted, so it does not settle them. The peoples suite no longer asserts that FAITH has no expansion — it checks that every expansion appears somewhere in the corpus, which is the rule the FAITH assertion was a special case of.",
+      "done": true
+    },
+    {
+      "cat": "Sources",
+      "text": "Audit the notes for claims about what the books do not say",
+      "note": "Three have now been wrong the same way. Eighteen records said \"The books don't say so\" about parentages printed in book 2's appendix. FAITH's note said the books never expand it; the List of Terms does. The old status field said Elmer and Bender were lost when both came back. Each stated a fact about the books where what was actually known was that we had not found it. The phrasing to prefer is \"no source found\" over \"no source exists\" — one is a research state and the other is a claim. Worth grepping the notes for never, none, nowhere and no source, and softening any that assert absence rather than report it."
     }
   ]
 }

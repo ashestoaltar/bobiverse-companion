@@ -83,7 +83,9 @@ notes and citations:
 - **Peoples** — the sapient species and the polities that claim to speak for
   them, with `contact` recording how each stands with the Bobs: uplifted, walked
   among without being told, aware and unimpressed, or at war. Acronyms are only
-  expanded where a character expands them on the page, so FAITH stays FAITH.
+  expanded where the books expand them — on the page by a character, or in book
+  2's List of Terms, which is where FAITH finally gets unpacked after five books
+  of nobody in the story ever saying it out loud.
 - **To-do** — the research backlog, reported the way Guppy reports Bob's:
   a bracketed count divided into categories. It has never once got shorter.
 

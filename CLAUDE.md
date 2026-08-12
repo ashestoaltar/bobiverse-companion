@@ -290,7 +290,15 @@ in the novel itself.
 
 Appendices are parsed as corpus entries with `kind: "appendix"`, no POV and no
 date, numbered *after* the narrative so a citation can never collide with a
-chapter number. `books/MANIFEST.sha256` counts chapters and appendices
+chapter number.
+
+**Mention counts exclude them, deliberately.** `_chapters()` filters back matter
+out by default, because the bestiary and peoples registers sort on how much of
+the books an entry occupies, and an alphabetical Cast of Characters names
+everyone exactly once whether they carry the series or appear in one scene.
+Folding it in would add 18 to the Deltans and 1 to a creature nobody mentions
+twice — it flattens the ordering into noise. The appendices are still corpus,
+still searchable, still citable. They are just not evidence of presence. `books/MANIFEST.sha256` counts chapters and appendices
 separately: citations index narrative chapters, so that number stays a tripwire,
 while the appendix count is information.
 

@@ -190,12 +190,27 @@ def _check_bestiary() -> tuple[list[str], list[str]]:
     return errors, warnings
 
 
-def _chapters() -> list[dict]:
+def _chapters(narrative_only: bool = True) -> list[dict]:
+    """Corpus entries. Back matter is excluded by default, and that is a claim.
+
+    Mention counts are what the bestiary and peoples registers sort on — how
+    much of the books an entry actually occupies. An alphabetical Cast of
+    Characters names everyone exactly once whether they carry the series or
+    appear in one scene, so counting it flattens the ordering into noise: it
+    would add 18 to the Deltans and 1 to a creature nobody mentions twice, and
+    the register's whole claim is that the difference means something.
+
+    The appendices are still corpus and still searchable and still citable —
+    they settled eighteen parentages. They are just not evidence of presence.
+    """
     path = os.path.join(ROOT, ".cache", "corpus.json")
     if not os.path.exists(path):
         return []
     with open(path) as fh:
-        return json.load(fh)
+        chapters = json.load(fh)
+    if narrative_only:
+        chapters = [c for c in chapters if c.get("kind") != "appendix"]
+    return chapters
 
 
 def _mention_re(entry: dict) -> "re.Pattern | None":

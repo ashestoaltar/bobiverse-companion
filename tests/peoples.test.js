@@ -53,12 +53,31 @@ module.exports = ({ok, get, run, ROOT}) => {
   ok(new Set(entries.map(e => e.id)).size === entries.length, 'duplicate entry id');
 
   // ---- expansions are the books', not ours ----
-  // FAITH is the test case: it is never unpacked on the page, so it must carry
-  // no expansion. Inventing a plausible one is the failure mode this guards.
+  // The failure this guards is inventing a plausible expansion for an acronym
+  // the books leave closed. FAITH used to be the test case for exactly that,
+  // and the assertion was that it must carry none — which was true right up
+  // until the appendices were parsed and book 2's List of Terms turned out to
+  // expand it. So the guard now checks the thing that actually matters: an
+  // expansion has to be sourced, not absent.
   const faith = byId['faith'];
-  if (faith) ok(!faith.expansion, 'FAITH has no expansion in the books; it must not have one here');
+  if (faith) ok(faith.expansion === 'Free American Independent Theocratic Hegemony',
+                "FAITH's expansion should match book 2's List of Terms");
   const use = byId['use'];
   if (use) ok(use.expansion === 'United States of Eurasia', 'USE expansion should match the text');
+
+  // The general form, which the FAITH case should have been from the start:
+  // every expansion must appear somewhere in the corpus, appendices included.
+  // Naming individual acronyms tests what we happen to remember; this tests the
+  // rule. It is also what would have caught FAITH being wrong from the other
+  // direction — an expansion sitting here that no book ever prints.
+  const cachePath = path.join(ROOT, '.cache', 'corpus.json');
+  const CORPUS = fs.existsSync(cachePath) ? JSON.parse(fs.readFileSync(cachePath, 'utf8')) : [];
+  for (const e of entries) {
+    if (!e.expansion || !CORPUS.length) continue;
+    const needle = e.expansion.replace(/[\u2018\u2019]/g, "'").toLowerCase();
+    const found = CORPUS.some(c => c.text.replace(/[\u2018\u2019]/g, "'").toLowerCase().includes(needle));
+    ok(found, `${e.id}: expansion "${e.expansion}" appears nowhere in the books`);
+  }
 
   // ---- rendering ----
   state.view = 'peoples';
