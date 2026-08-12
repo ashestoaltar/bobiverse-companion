@@ -26,6 +26,7 @@ OUT = os.path.join(ROOT, "dist", "index.html")
 
 BESTIARY = os.path.join(ROOT, "data", "bestiary.json")
 PEOPLES = os.path.join(ROOT, "data", "peoples.json")
+MEMORIUM = os.path.join(ROOT, "data", "memorium.json")
 GUPPY = os.path.join(ROOT, "data", "guppy.json")
 ASSETS = os.path.join(ROOT, "assets")
 
@@ -34,6 +35,7 @@ TODO_PLACEHOLDER = "/*__TODO__*/null"
 SYS_PLACEHOLDER = "/*__SYSTEMS__*/null"
 SKY_PLACEHOLDER = "/*__SKY__*/null"
 BEST_PLACEHOLDER = "/*__BESTIARY__*/null"
+MEM_PLACEHOLDER = "/*__MEMORIUM__*/null"
 PEOPLE_PLACEHOLDER = "/*__PEOPLES__*/null"
 GUPPY_PLACEHOLDER = "/*__GUPPY__*/null"
 
@@ -123,7 +125,8 @@ def load_art(register: str, cid: str) -> str | None:
 # and Will's "/ Riker" never appeared. _check_order() below makes the schema and
 # this list agree, so the next field can't go missing the same way.
 ORDER = ["id", "name", "alias", "parent", "src", "cite", "gen", "desig", "vessel",
-         "born", "origin", "visited", "status", "lostAt", "faction", "ref",
+         "born", "origin", "visited", "fate", "fateCite", "fateNote", "lostAt",
+         "faction", "ref",
          "conflict", "partialNote", "priorClaim", "note"]
 
 
@@ -199,6 +202,17 @@ def main() -> None:
         html, BESTIARY, "creatures", "bestiary", BEST_PLACEHOLDER)
     html, peoples, drawn_p = inject_register(
         html, PEOPLES, "entries", "peoples", PEOPLE_PLACEHOLDER)
+
+    # The In Memorium list is mostly assembled from bobs.json at render time;
+    # this file carries only the entries that have no record to sit on.
+    with open(MEMORIUM) as fh:
+        memorium = json.load(fh)
+    for key in [k for k in memorium if k.startswith("_")]:
+        memorium.pop(key)
+    if MEM_PLACEHOLDER not in html:
+        print(f"ERROR: placeholder {MEM_PLACEHOLDER} missing from template")
+        sys.exit(1)
+    html = html.replace(MEM_PLACEHOLDER, json.dumps(memorium, ensure_ascii=False), 1)
 
     with open(GUPPY) as fh:
         guppy = json.load(fh)

@@ -19,7 +19,7 @@
     --ash:#94734A;
     --rule:#5E4B2B;
     --phos:#7CE8A4;      /* confirmed in the primary text */
-    --alert:#FF6A55;     /* destroyed or missing */
+    --alert:#FF6A55;     /* on the In Memorium list */
     --mono:ui-monospace,'SF Mono','Cascadia Mono','JetBrains Mono','IBM Plex Mono',Menlo,Consolas,'DejaVu Sans Mono',monospace;
     --gap:14px;
   }
@@ -142,11 +142,44 @@
   tr[aria-selected="true"] .prov{color:var(--void)}
   .redacted{color:var(--alert); letter-spacing:.14em}
   .st-active{color:var(--phos)}
-  .st-lost{color:var(--alert)}
-  .st-unknown{color:var(--ash)}
+  .st-restored{color:var(--amber)}
+  .st-presumed{color:var(--amber-dim)}
+  .st-memorium{color:var(--alert)}
   tr[aria-selected="true"] .st-active,
-  tr[aria-selected="true"] .st-lost,
-  tr[aria-selected="true"] .st-unknown{color:var(--void)}
+  tr[aria-selected="true"] .st-restored,
+  tr[aria-selected="true"] .st-presumed,
+  tr[aria-selected="true"] .st-memorium{color:var(--void)}
+
+  /* --- in memorium ------------------------------------------------------
+     Deliberately quieter than the other registers: no zebra striping, more
+     air, and the three unnamed entries rendered as rows rather than as a
+     footnote, because the books count them and a count is a fact. */
+  .mem{padding-bottom:52px}
+  .mem-sec{margin:0 0 34px}
+  .mem-sec > .sec-label{margin-bottom:12px}
+  .mem-row{
+    display:grid; grid-template-columns:22px minmax(0,1fr) 130px 150px;
+    gap:0 12px; align-items:baseline; padding:9px 8px; border-bottom:1px solid var(--rule);
+    background:transparent; border-left:0; border-right:0; border-top:0;
+    width:100%; text-align:left; font:inherit; color:inherit; cursor:pointer;
+  }
+  .mem-row:hover{background:var(--panel-hi)}
+  .mem-row[aria-selected="true"]{background:var(--amber); color:var(--void)}
+  .mem-row[aria-selected="true"] .dim,
+  .mem-row[aria-selected="true"] .mem-mark{color:var(--void)}
+  .mem-mark{color:var(--alert)}
+  .mem-name{letter-spacing:.04em}
+  .mem-blank{cursor:default}
+  .mem-blank:hover{background:transparent}
+  .mem-blank .mem-name{color:var(--ash); letter-spacing:.22em}
+  .mem-foot{
+    color:var(--ash); font-size:12.5px; line-height:1.62; max-width:62ch;
+    margin:16px 0 0; padding-left:34px;
+  }
+  @media (max-width:860px){
+    .mem-row{grid-template-columns:20px minmax(0,1fr); }
+    .mem-row .mem-when, .mem-row .mem-where{display:none}
+  }
 
   /* --- lineage tree --------------------------------------------------- */
   .tree{font-size:14px; line-height:1.66; white-space:pre; padding-bottom:40px}
@@ -476,6 +509,13 @@ const PEOPLES = /*__PEOPLES__*/null;
    console from the start; every bracketed line is his. */
 const GUPPY = /*__GUPPY__*/null;
 
+/* The In Memorium list. Bill keeps it and Guppy archives to it — Riker
+   forwards an entry about Arthur (Bk1 ch47), Bill has Guppy mark Milo's
+   partial backup (Bk1 ch51), and Bill adds three more after 82 Eridani
+   (Bk1 ch60). This file holds only the entries with no record to sit on;
+   the named ones are Bobs at fate 'memorium'. */
+const MEMORIUM = /*__MEMORIUM__*/null;
+
 /* ---- indexes ---------------------------------------------------------- */
 const SYS = Object.create(null);
 if (SYSTEMS) SYSTEMS.systems.forEach(s => SYS[s.id] = s);
@@ -494,7 +534,19 @@ const TIER = {
   c:{mark:'✕', label:'NONE',   full:'no ancestor on record'},
   x:{mark:'▨', label:'EXPUNGED',full:'record deliberately removed'}
 };
-const STATUS = {active:'● ACTIVE', lost:'✕ LOST', unknown:'○ UNKNOWN'};
+/* Fate is graded separately from provenance, because the books put the line
+   at the backup rather than the hull. A Bob whose differential completed is
+   restored into a new vessel and carries on; a destroyed ship is not a death.
+   The old three-value status collapsed all of this into active/lost/unknown,
+   which filed Elmer among the dead and Bender among the lost when the books
+   say in as many words that both came back. */
+const FATE = {
+  active:   {mark:'●', label:'ACTIVE',   full:'nothing on record'},
+  restored: {mark:'◑', label:'RESTORED', full:'vessel destroyed, the Bob recovered'},
+  presumed: {mark:'◌', label:'PRESUMED', full:'vessel destroyed, the backup never accounted for'},
+  memorium: {mark:'○', label:'MEMORIUM', full:'confirmed beyond recovery'}
+};
+const fateOf = b => FATE[b.fate] || FATE.active;
 
 const FILTERS = [
   {id:'t',         label:'TEXT',      test:b => b.src === 't'},
@@ -502,7 +554,8 @@ const FILTERS = [
   {id:'c',         label:'NO SOURCE', test:b => b.src === 'c'},
   {id:'lead',      label:'HAS LEAD',  test:b => !!b.priorClaim},
   {id:'x',         label:'EXPUNGED',  test:b => b.src === 'x'},
-  {id:'lost',      label:'LOST',      test:b => b.status === 'lost'},
+  {id:'memorium',  label:'IN MEMORIUM', test:b => b.fate === 'memorium'},
+  {id:'presumed',  label:'PRESUMED',  test:b => b.fate === 'presumed'},
   {id:'cited',     label:'CITED',     test:b => !!b.cite},
   {id:'conflict',  label:'DISPUTED',  test:b => !!b.conflict},
   {id:'starfleet', label:'STARFLEET', test:b => b.faction === 'Starfleet'},
@@ -517,7 +570,7 @@ const COLS = [
   {key:'gen',    label:'GEN',        get:b => { const g = generation(b); return g ? (g.stated ? g.n + '*' : g.n) : '—'; }, cls:'dim'},
   {key:'parent', label:'SOURCE BOB', get:b => b.parent ? byId[b.parent].name : '—', cls:'dim'},
   {key:'origin', label:'ORIGIN',     get:b => sysName(b.origin) || sysList(b.visited) || '—', cls:'dim max', opt:true},
-  {key:'status', label:'STATUS',     get:b => b.status || 'unknown'},
+  {key:'fate',   label:'FATE',       get:b => b.fate || 'active'},
   {key:'src',    label:'PROVENANCE', get:b => b.src}
 ];
 
@@ -579,6 +632,20 @@ const REGISTERS = [
      render();
      return true;
    }},
+  {id:'memorium',   label:'IN MEMORIUM', render: renderMemorium,
+   rows: () => BOBS.filter(b => b.fate === 'memorium' || b.fate === 'presumed'),
+   status: rows => {
+     const named = BOBS.filter(b => b.fate === 'memorium').length;
+     const unnamed = ((MEMORIUM && MEMORIUM.unnamed) || []).reduce((n, u) => n + u.n, 0);
+     statusLine(`${named + unnamed} on the list`,
+                `${unnamed} of them without a name`,
+                `${BOBS.filter(b => b.fate === 'presumed').length} unaccounted`);
+   },
+   onClick: e => {
+     const sys = e.target.closest('[data-sys]');
+     if (sys) { state.view = 'chart'; CHART.sel = sys.dataset.sys; render(); return true; }
+     return false;
+   }},
   {id:'peoples',    label:'PEOPLES',    render: renderPeoples,
    rows: peoples,
    status: rows => {
@@ -615,7 +682,7 @@ function sortVal(b, key){
   if (key === 'gen')    { const g = generation(b); return g ? g.n : 999; }
   if (key === 'src')    return 'otpcx'.indexOf(b.src);
   if (key === 'parent') return b.parent ? byId[b.parent].name.toLowerCase() : '~';
-  if (key === 'status') return b.status || 'unknown';
+  if (key === 'fate')   return ['memorium','presumed','restored','active'].indexOf(b.fate || 'active');
   if (key === 'origin') return (sysName(b.origin) || sysList(b.visited) || '~').toLowerCase();
   if (key === 'desig')  return (b.desig || '~').toLowerCase();
   return b.name.toLowerCase();
@@ -630,7 +697,7 @@ function visible(){
     }
     if (!q) return true;
     return [b.name, b.alias, b.desig, sysName(b.origin), sysList(b.visited), sysName(b.lostAt), b.vessel, b.ref, b.note,
-            b.cite, b.faction, b.conflict, b.partialNote]
+            b.cite, b.faction, b.conflict, b.partialNote, b.fateNote, b.fateCite]
       .some(v => v && String(v).toLowerCase().includes(q));
   }).sort((x, y) => {
     const a = sortVal(x, state.sort), b = sortVal(y, state.sort);
@@ -675,9 +742,9 @@ function renderRegister(rows){
         const t = TIER[b.src];
         return `<td class="prov ${b.src}">${t.mark} ${t.label}</td>`;
       }
-      if (c.key === 'status') {
-        const s = b.status || 'unknown';
-        return `<td class="st-${s}">${STATUS[s]}</td>`;
+      if (c.key === 'fate') {
+        const ft = fateOf(b);
+        return `<td class="st-${b.fate || 'active'}">${ft.mark} ${ft.label}</td>`;
       }
       return `<td class="${c.cls || ''}${c.opt ? ' opt' : ''}">${esc(c.get(b))}</td>`;
     }).join('');
@@ -705,7 +772,8 @@ function renderLineage(rows){
     const dim = keep.has(node.id) ? '' : ' style="opacity:.42"';
     const bits = [];
     const ng = generation(node); if (ng) bits.push('gen ' + ng.n + (ng.stated ? '*' : ''));
-    if (node.status === 'lost') bits.push('lost' + (node.lostAt ? ' · ' + sysName(node.lostAt) : ''));
+    if (node.fate && node.fate !== 'active')
+      bits.push(fateOf(node).label.toLowerCase() + (node.lostAt ? ' · ' + sysName(node.lostAt) : ''));
     if (node.faction) bits.push(node.faction);
     out.push(
       `<div${dim}><span class="branch">${branch}</span>` +
@@ -730,6 +798,96 @@ function renderLineage(rows){
 
   if (!out.length && !tail) return `<p class="empty">NO RECORDS MATCH THAT QUERY.</p>`;
   return `<div class="tree">${out.join('')}${tail}</div>`;
+}
+
+/* The In Memorium list.
+
+   Assembled rather than stored: the named entries are Bobs at fate 'memorium',
+   and data/memorium.json carries only what has no record to sit on. That is
+   the three backups Bill counted after 82 Eridani and never identified — so
+   they render as rows, dashed and unnamed, because a count is a fact and
+   hiding it in a footnote would make the list look complete when it isn't.
+
+   The unaccounted section is the other half of the honesty: nine Bobs whose
+   vessels were destroyed and whose backups the books never mention again.
+   They are not on the list. They are not off it either. */
+function renderMemorium(){
+  /* Ordered by when it happened, not by when they were built — this is the
+     one view where the death date is the record's date. It comes off fateCite,
+     which the validator requires for every fate but active. */
+  const when = b => (b.fateCite && (b.fateCite.match(/,\s*([A-Z][a-z]{2})?\s*(\d{4})/) || [])[0]) || '';
+  const stamp = b => {
+    const m = /([A-Z][a-z]{2})?\s*(\d{4})/.exec(when(b));
+    if (!m) return 1e6;
+    const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+                 .indexOf(m[1] || '') + 1;
+    return (+m[2]) * 12 + mo;
+  };
+  const byWhen = (a, b) => stamp(a) - stamp(b);
+  const named = BOBS.filter(b => b.fate === 'memorium').sort(byWhen);
+  const presumed = BOBS.filter(b => b.fate === 'presumed').sort(byWhen);
+  const restored = BOBS.filter(b => b.fate === 'restored').sort(byWhen);
+  const unnamed = (MEMORIUM && MEMORIUM.unnamed) || [];
+  const bulk = MEMORIUM && MEMORIUM.unnamed_bulk;
+
+  const row = b => {
+    const sel = state.selected === b.id;
+    return `<button class="mem-row" data-id="${b.id}" aria-selected="${sel}">` +
+      `<span class="mem-mark" aria-hidden="true">${fateOf(b).mark}</span>` +
+      `<span class="mem-name">${esc(b.name)}</span>` +
+      `<span class="mem-when dim">${esc(when(b).replace(/^,\s*/, ''))}</span>` +
+      `<span class="mem-where dim">${esc(sysName(b.lostAt) || '—')}</span></button>`;
+  };
+  const blank = (u, i) => `<div class="mem-row mem-blank" aria-hidden="false">` +
+      `<span class="mem-mark">▨</span>` +
+      `<span class="mem-name">————</span>` +
+      `<span class="mem-when dim">${esc(u.when)}</span>` +
+      `<span class="mem-where dim">${esc(sysName(u.where))}</span></div>`;
+
+  /* The blanks take their place in the sequence rather than sitting in a
+     block at the end. Three of these died between Homer and Gerry and the list
+     should read that way; grouping them apart would make them look like an
+     annotation instead of entries. */
+  const stampOf = w => { const m = /([A-Z][a-z]{2})?\s*(\d{4})/.exec(w || ''); return m
+    ? (+m[2]) * 12 + (['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+        .indexOf(m[1] || '') + 1) : 1e6; };
+  const entries = named.map(b => ({at: stamp(b), html: row(b)}))
+    .concat(unnamed.flatMap(u => Array.from({length: u.n},
+      (_, i) => ({at: stampOf(u.when), html: blank(u, i)}))))
+    .sort((a, b) => a.at - b.at)
+    .map(e => e.html);
+  const blanks = unnamed.flatMap(u => Array.from({length: u.n}, (_, i) => blank(u, i)));
+  const lead =
+    `<p class="unres-lead"><span class="redacted">[</span>` +
+    `${named.length + blanks.length} on the In Memorium list` +
+    `<span class="redacted">]</span><br><br>` +
+    `A Bob is only dead when the backup didn't finish. Elmer lost his ship covering ` +
+    `Khan's retreat and came back; Mack's cube came through the blast; Jacques was ` +
+    `killed and restored inside the week. So this list is short, and every name on ` +
+    `it is here because a transfer failed, or because someone made sure there was ` +
+    `nothing left to restore.</p>`;
+
+  const secs = [
+    `<div class="mem-sec"><div class="sec-label">ON THE LIST</div>` +
+      entries.join('') +
+      (unnamed.length ? `<p class="mem-foot">${esc(unnamed[0].note)}</p>` : '') +
+    `</div>`,
+    presumed.length ? `<div class="mem-sec"><div class="sec-label">VESSEL LOST, FATE UNACCOUNTED — ${presumed.length}</div>` +
+      presumed.map(row).join('') +
+      `<p class="mem-foot">Their ships were destroyed and no one afterwards says whether ` +
+      `the backups completed. Half of the six at 82 Eridani are on the list above and half ` +
+      `were restored; the books never say which half. They are here rather than in either ` +
+      `column, which is the honest place for them.</p></div>` : '',
+    restored.length ? `<div class="mem-sec"><div class="sec-label">RECOVERED — ${restored.length}</div>` +
+      restored.map(row).join('') +
+      `<p class="mem-foot">Named Bobs who lost a vessel or a body and came back. They are ` +
+      `on this page because they are what the list is measured against.</p></div>` : '',
+    bulk ? `<div class="mem-sec"><div class="sec-label">NOT ON ANY LIST</div>` +
+      `<p class="mem-foot" style="padding-left:0">${esc(bulk.note)} ` +
+      `<span class="dim">${esc(bulk.cite)}</span></p></div>` : ''
+  ].join('');
+
+  return `<div class="mem">${lead}${secs}</div>`;
 }
 
 function renderUnresolved(rows){
@@ -1159,7 +1317,9 @@ function renderDossier(){
 
   const flags = [
     b.conflict ? `<span class="flag warn">SOURCES DISAGREE</span>` : '',
-    b.status === 'lost' ? `<span class="flag warn">DESTROYED OR MISSING</span>` : '',
+    b.fate === 'memorium' ? `<span class="flag warn">IN MEMORIUM</span>` : '',
+    b.fate === 'presumed' ? `<span class="flag warn">FATE UNACCOUNTED</span>` : '',
+    b.fate === 'restored' ? `<span class="flag">RESTORED</span>` : '',
     b.faction ? `<span class="flag">${esc(b.faction.toUpperCase())}</span>` : '',
     b.cite ? `<span class="flag">CITED</span>` : ''
   ].join('');
@@ -1182,7 +1342,8 @@ function renderDossier(){
         ${f('ORIGIN', sysName(b.origin))}
         ${f('VESSEL', b.vessel)}
         ${f('VISITED', sysList(b.visited))}
-        ${f('STATUS', b.status ? STATUS[b.status].replace(/^\S+\s/, '') : '')}
+        ${f('FATE', `${fateOf(b).label} — ${fateOf(b).full}`)}
+        ${f('ON RECORD', b.fateCite)}
         ${f('LOST AT', sysName(b.lostAt))}
         ${f('FACTION', b.faction)}
         ${f('NAMESAKE', b.ref && b.ref !== '—' ? b.ref : '')}
@@ -1202,6 +1363,9 @@ function renderDossier(){
         <div class="kids">${ch.map(c => `<button data-id="${c.id}">${esc(c.name)}</button>`).join('<span class="dim"> · </span>')}</div></div>` : ''}
 
       ${b.partialNote ? `<div class="sec"><div class="sec-label">WHAT THE SOURCE DOES NOT SAY</div><p class="note">${esc(b.partialNote)}</p></div>` : ''}
+      ${b.fateNote ? `<div class="sec"><div class="sec-label">${
+          b.fate === 'memorium' ? 'IN MEMORIUM' : 'VESSEL LOST'
+        }</div><p class="note">${esc(b.fateNote)}</p></div>` : ''}
       ${b.priorClaim ? `<div class="sec"><div class="sec-label">UNVERIFIED LEAD — NOT DRAWN</div><p class="note">${esc(b.priorClaim)}</p></div>` : ''}
       ${b.conflict ? `<div class="sec"><div class="sec-label">DISAGREEMENT</div><p class="note">${esc(b.conflict)}</p></div>` : ''}
       ${b.note ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div><p class="note">${esc(b.note)}</p></div>` : ''}

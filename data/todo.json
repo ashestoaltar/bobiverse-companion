@@ -142,6 +142,17 @@
       "cat": "Sources",
       "text": "Make the suites fail closed",
       "note": "Deriving expectations from data/*.json instead of hardcoding them was the right fix and it has a blind spot in it: a case that computes an expected count of zero and observes zero passes without proving anything happened. A bug that empties a register would sail straight through, and the suite would report it as a pass in the same cheerful tone as everything else. Assert the critical lists are non-empty before comparing them. We have already lost most of a day to a harness that kept saying 2,585 checks passed while the books themselves were sitting deleted on disk; this is that shape again, drawn smaller."
+    },
+    {
+      "cat": "Lineage",
+      "text": "In Memorium built, and it caught two records that were flatly wrong",
+      "note": "Four named Bobs are confirmed beyond recovery — Arthur (booby trap, no backup existed), Milo (transfer cut off mid-send), Homer (his own reactor, after deleting every backup he had) and Gerry (deleted by his own clones). Three more entries are counted and unnamed: Bill totted up three failed transfers among the six vessels lost at 82 Eridani and never said which, so the list carries three rows that can never be filled in. Nine more sit unaccounted, ships destroyed and backups never mentioned again. The old three-value status had no way to say 'destroyed and came back', so it said lost — about Elmer, who Bill confirms made it four paragraphs later, and about Bender, whose recovery is the entire plot of book 4. Taylor spells it In Memorium and validate.py now fails the build if anyone corrects it.",
+      "done": true
+    },
+    {
+      "cat": "Lineage",
+      "text": "The nine unaccounted — is any of them settled somewhere we haven't looked",
+      "note": "Hannibal, Tom, Barney, Fred, Jackson and Hector lost vessels at 82 Eridani in Apr 2185; Jeffrey, Milton and Zeke in Nov 2195. Exactly three of the first six are on the In Memorium list and three were restored, and the second battle never accounts for its backups at all. If any of the nine speaks, is spoken to, or is counted anywhere after his death date, that settles him and shrinks the unnamed pool. Worth a name-by-name sweep of everything after the relevant chapter — this is the same job as the biographical sweep and could ride along with it. Note that a hit is not automatically the same Bob: the corpus holds a Deltan named Fred and a human named Hector Rodriguez, and the Hector collision is still open."
     }
   ]
 }

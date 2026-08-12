@@ -25,7 +25,8 @@ the dossier and never drawn as an edge.
 
 The tier grades **parentage only**. A tier C Bob can still be thoroughly
 documented — Herschel has eighteen POV chapters and announces his own generation
-on the page; we simply never learn who built him.
+on the page; we simply never learn who built him. What became of a Bob is graded
+separately, on its own evidence, in a field of its own.
 
 Tier X is the interesting one. Starfleet stripped its own genealogy and location
 data out of the databases during the war, so for its members the missing lineage
@@ -62,6 +63,14 @@ notes and citations:
   they actually occupy. Fauna only: the Deltans, Quinlans, Pav and the Others are
   people, and people get their own register. That line is enforced by the build,
   because the series is largely Bob working out where to draw it.
+- **In Memorium** — the Bobs who didn't come back. The books put the line at
+  the backup rather than the hull: a Bob whose transfer completed is restored
+  into a new vessel and carries on, so a destroyed ship is not a death. Four
+  names, and three entries that will always be blank — Bill counted three failed
+  transfers after the first battle of 82 Eridani and never said which three, so
+  the list carries them as dashed rows in their place in the chronology. Nine
+  more sit in their own section, ships destroyed and backups never mentioned
+  again, on neither side of the line because the books never put them there.
 - **Peoples** — the sapient species and the polities that claim to speak for
   them, with `contact` recording how each stands with the Bobs: uplifted, walked
   among without being told, aware and unimpressed, or at war. Acronyms are only
@@ -174,6 +183,12 @@ own origin off his serial — so the astrometry is real too, from SIMBAD, with
 distances and Cartesian positions computed from parallax rather than copied. The
 backdrop is 5,070 naked-eye stars from the HYG Database.
 
+**4 Bobs on the In Memorium list**, plus three that are counted and unnamed;
+9 more whose vessels were destroyed and whose fate the books never settle, and 4
+recovered from destroyed vessels. `fate` replaced a three-value `status` that had
+Elmer among the dead and Bender among the lost — the books say plainly that both
+came back, and one of them is the whole plot of book 4.
+
 **9 creatures** in `data/bestiary.json`, each pinned to the world it lives on and
 cited to its first appearance; 2 illustrated so far.
 
@@ -194,10 +209,20 @@ Everything above is checked rather than asserted:
   that drifts gets caught rather than believed.
 - Mention counts in the companion registers are re-derived from the corpus; an
   entry whose name appears nowhere is flagged, because that means we invented it.
-- `make test` runs 2,585 checks across 10 suites against the shipped page,
-  including a golden-master snapshot of 109 rendered states.
+- `make test` runs 2,935 checks across 11 suites against the shipped page,
+  including a golden-master snapshot of 118 rendered states.
+- Where a count comes from the books rather than from us — the three unnamed
+  In Memorium entries — the tests check the page against the cited number, and
+  refuse a pool of candidates small enough that the names would be knowable.
 
-The recurring lesson, which has now bitten in three separate registers: **a word
+The recurring lesson, which has now bitten in four separate registers: **a word
 that looks like a name usually isn't one.** "Landers" is a person, "Spits" is an
-island, "boojums" are drones, "hexghi" is a family, "manny" is a robot body. Check
-what a word denotes before filing it anywhere.
+island, "boojums" are drones, "hexghi" is a family, "manny" is a robot body, the
+"Fred" in book 3 is a Deltan and the "Hector" in book 5 is a human executive.
+Check what a word denotes before filing it anywhere.
+
+Its companion, learned building the In Memorium list: **a category with too few
+values will quietly assert things you never decided.** A three-value status of
+active/lost/unknown had no way to say "his ship was destroyed and he came back",
+so it said he was lost — about Elmer, who is alive on the page four paragraphs
+later, and about Bender, whose recovery is the plot of a whole novel.

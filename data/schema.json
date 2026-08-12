@@ -47,8 +47,14 @@
           "born": { "type": "string", "description": "Activation date, e.g. 'Sep 2205'. Only kept where a chapter of that date names the Bob; dates inherited from the dropped sources were swept out rather than left looking like findings." },
           "origin": { "type": "string", "description": "id of the system where this Bob was built, keyed into data/systems.json. The validator rejects an id that isn't there." },
           "visited": { "type": "array", "items": { "type": "string" }, "description": "System ids, keyed into data/systems.json. Was a comma-separated string; became a list when the systems file gave the ids somewhere to point." },
-          "status": { "type": "string", "enum": ["active", "lost", "unknown"] },
-          "lostAt": { "type": "string", "description": "id of the system where this Bob was destroyed or last known, when status is lost. Places that aren't systems don't belong here — Bender's old value was the phrase \"missing, later located\", which is a note, not a location." },
+          "fate": {
+            "type": "string",
+            "enum": ["active", "restored", "presumed", "memorium"],
+            "description": "What became of the Bob, graded on its own evidence and kept entirely separate from src, which grades parentage only. The books draw the line at the backup, not at the hull: a Bob whose differential completed is restored into a new vessel and carries on, so a destroyed ship is not a death. 'active' — nothing on record. 'restored' — vessel or body destroyed and the Bob recovered, whether from a completed backup (Elmer, Jacques) or a physically intact matrix cube (Mack, Bender). 'presumed' — vessel destroyed and the backup never accounted for either way; the books simply move on. 'memorium' — confirmed beyond recovery, and on Bill's list. Was a three-value 'status' field that collapsed all four into active/lost/unknown, which put Elmer among the dead and Bender among the lost when the books say both came back."
+          },
+          "fateCite": { "type": "string", "description": "Required for every fate except active: the chapter where it happens. Same format as cite." },
+          "fateNote": { "type": "string", "description": "Required for memorium and presumed. Our prose, same bar as note — paraphrase and cite, never book text. For presumed, it must say what the books leave open, because that gap is the whole reason the tier exists." },
+          "lostAt": { "type": "string", "description": "id of the system where the Bob's vessel was destroyed. Places that aren't systems don't belong here — Bender's old value was the phrase \"missing, later located\", which is a note, not a location. Absent where the books don't place it: Bender was recovered from inside Heaven's River, which is a megastructure and not a star system." },
           "faction": {
             "type": "string",
             "enum": ["Starfleet", "Skippies", "Gamers", "Borg"],

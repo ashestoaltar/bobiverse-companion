@@ -28,7 +28,16 @@ TIERS = {
     "c": "no ancestor on record",
     "x": "record deliberately expunged",
 }
-STATUSES = {"active", "lost", "unknown"}
+# Graded on its own evidence, separately from src. The books put the line at
+# the backup rather than the hull, so a destroyed vessel is not a death.
+FATES = {
+    "active":   "nothing on record",
+    "restored": "vessel destroyed, the Bob recovered",
+    "presumed": "vessel destroyed, the backup never accounted for",
+    "memorium": "confirmed beyond recovery",
+}
+FATE_NEEDS_CITE = {"restored", "presumed", "memorium"}
+FATE_NEEDS_NOTE = {"presumed", "memorium"}
 REQUIRED = ("id", "name", "src")
 
 ROOT_ID = "bob1"
@@ -241,6 +250,67 @@ def _check_counts(entries: list[dict], label: str) -> list[str]:
 
 
 PEOPLES = os.path.join(ROOT, "data", "peoples.json")
+MEMORIUM = os.path.join(ROOT, "data", "memorium.json")
+
+
+def _check_memorium(bobs: list[dict], by_id: dict) -> tuple[list[str], list[str]]:
+    """The In Memorium list: the unnamed entries stay honest, and the spelling stays Taylor's.
+
+    The counted-but-unnamed entries are the point of the file, so they get the
+    strictest checks in the project. `n` has to stay smaller than the pool it is
+    drawn from — if it ever equalled it we would know every name and they would
+    not be unnamed — and every id in that pool has to be a real record at fate
+    'presumed', because a Bob we have since resolved must not still be sitting in
+    a bucket of maybes.
+    """
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not os.path.exists(MEMORIUM):
+        return errors, warnings
+    with open(MEMORIUM) as fh:
+        doc = json.load(fh)
+
+    # Taylor spells it "In Memorium" in all three references. Standard English
+    # says Memoriam, so this is exactly the kind of thing a careful reader
+    # corrects on the way past. It is a quotation, not a spelling mistake.
+    # Checked over the payload only — the _comment keys have to be able to say
+    # the wrong spelling in order to warn anyone off it.
+    payload = json.dumps({k: v for k, v in doc.items() if not k.startswith("_")})
+    for text in (payload, "".join(b.get("fateNote", "") for b in bobs)):
+        if re.search(r"[Mm]emoriam", text):
+            errors.append("'Memoriam' — the books spell it 'Memorium'; it is "
+                          "Taylor's word, not a typo. See data/memorium.json.")
+
+    systems = _load_systems()
+    named = {b["id"] for b in bobs if b.get("fate") == "memorium"}
+    if not named:
+        errors.append("memorium.json: no Bob is at fate 'memorium' — the list "
+                      "cannot be empty while the books name four")
+
+    for i, entry in enumerate(doc.get("unnamed", [])):
+        where = f"memorium.json unnamed[{i}]"
+        n = entry.get("n")
+        pool = entry.get("of", [])
+        if not isinstance(n, int) or n < 1:
+            errors.append(f"{where}: n must be a positive integer")
+        if not entry.get("cite"):
+            errors.append(f"{where}: a counted absence still needs the page that counts it")
+        if not entry.get("note"):
+            errors.append(f"{where}: needs a note saying what is and isn't known")
+        if entry.get("where") and entry["where"] not in systems:
+            errors.append(f"{where}: unknown system {entry['where']!r}")
+        for bid in pool:
+            if bid not in by_id:
+                errors.append(f"{where}: candidate {bid!r} is not a record")
+            elif by_id[bid].get("fate") != "presumed":
+                errors.append(f"{where}: candidate {bid!r} is at fate "
+                              f"{by_id[bid].get('fate')!r}, not 'presumed' — either it was "
+                              "resolved and belongs out of the pool, or the pool is stale")
+        if isinstance(n, int) and pool and n >= len(pool):
+            errors.append(f"{where}: {n} unnamed drawn from a pool of {len(pool)} — "
+                          "at n == pool the names would all be known")
+
+    return errors, warnings
 
 
 def _check_peoples() -> tuple[list[str], list[str]]:
@@ -328,8 +398,20 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
         ids.add(bob.get("id"))
         if bob.get("src") not in TIERS:
             errors.append(f"{where}: unknown tier {bob.get('src')!r}")
-        if bob.get("status") and bob["status"] not in STATUSES:
-            errors.append(f"{where}: unknown status {bob['status']!r}")
+        fate = bob.get("fate")
+        if fate not in FATES:
+            errors.append(f"{where}: unknown fate {fate!r}")
+        else:
+            # A fate other than active is a claim about the text and needs a page.
+            if fate in FATE_NEEDS_CITE and not bob.get("fateCite"):
+                errors.append(f"{where}: fate {fate!r} needs a fateCite")
+            if fate in FATE_NEEDS_NOTE and not bob.get("fateNote"):
+                errors.append(f"{where}: fate {fate!r} needs a fateNote")
+            if fate == "active" and (bob.get("fateCite") or bob.get("fateNote")):
+                errors.append(f"{where}: fate is active but carries fate evidence")
+        if bob.get("status") is not None:
+            errors.append(f"{where}: 'status' was replaced by 'fate'; it collapsed "
+                          "restored and presumed into 'lost'")
 
     # referential integrity
     for bob in bobs:
@@ -416,6 +498,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     ppl_errors, ppl_warnings = _check_peoples()
     errors += ppl_errors
     warnings += ppl_warnings
+
+    mem_errors, mem_warnings = _check_memorium(bobs, by_id)
+    errors += mem_errors
+    warnings += mem_warnings
 
     # `gen` is only independent information when the parent chain is broken.
     # Where the chain reaches Bob-1 it's derivable, so any disagreement means one

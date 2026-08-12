@@ -358,6 +358,66 @@ so `make validate` re-runs that comparison and warns if it drifts.
 validator rejects one that doesn't resolve. Scope is books 1–4: the book 5
 wormhole network is a topology, not a distance graph, and needs its own model.
 
+## Fate
+
+`fate` grades what became of a Bob, on its own evidence, entirely separately
+from `src`. Keeping the two apart matters: Herschel is tier C and alive, Arthur
+is tier T and dead, and neither fact tells you anything about the other.
+
+**The books put the line at the backup, not the hull.** A Bob whose differential
+completed is restored into a new vessel and carries on — so a destroyed ship is
+not a death, and a register that treats it as one is simply wrong. Bill states
+the rule when Milo's transfer is cut off mid-send (Bk1 ch51): a forced restore
+from a partial would come back insane or non-viable, so the partial is archived
+and marked In Memorium instead.
+
+| fate | meaning | requirements |
+|---|---|---|
+| `active` | nothing on record | no `fateCite`, no `fateNote` |
+| `restored` | vessel or body destroyed, the Bob recovered | `fateCite` |
+| `presumed` | vessel destroyed, backup never accounted for | `fateCite` + `fateNote` saying what is left open |
+| `memorium` | confirmed beyond recovery | `fateCite` + `fateNote` |
+
+This replaced a three-value `status` of active/lost/unknown, which collapsed all
+four into one and got two records flatly wrong. **Elmer** was filed as lost; his
+ship was destroyed at 82 Eridani covering Khan's retreat, and four paragraphs
+later Bill confirms his backup completed. **Bender** was filed as lost for a
+hundred and sixty years of story time, which the books themselves are careful
+not to do — Bob draws the distinction in Bk4 ch2, and the entire Heaven's River
+expedition exists to get him back, which it does in Bk4 ch64. The validator now
+errors if `status` reappears on any record.
+
+`restored` is not a courtesy tier. It is what the list is measured against: with
+four named Bobs recovered from destroyed vessels, the seven who weren't mean
+something.
+
+### The In Memorium list
+
+Taylor's spelling, and it is **In Memorium** — not the standard *In Memoriam*.
+All three references use it (Bk1 ch47, ch51, ch60). `validate.py` fails the
+build if anyone corrects it, because someone will.
+
+It is Bill's list and Guppy keeps it. Riker forwards an entry about Arthur *for
+the archives*; Bill tells Guppy to archive Milo's partial and mark it; Bill adds
+three more after 82 Eridani. The phrase does not appear after book 1.
+
+`data/memorium.json` holds only what has no record to sit on — chiefly **three
+entries that are known to exist, known to be exactly three, and can never be
+filled in.** Bill counted three failed transfers among the six vessels lost at
+82 Eridani and never said which. They render as dashed rows in their place in
+the chronology, not as a footnote: the count is a fact and the list would look
+complete without them. Elmer is the one name ruled out.
+
+The nine at `presumed` are the other half of it. Their ships were destroyed and
+nobody afterwards mentions the backups either way. They are not on the list.
+They are not off it either, and the register says so rather than picking.
+
+Two things the register cannot hold. The wars killed Bobs in numbers nobody
+counted — Riker watches half a squad die in one pass (Bk3 ch63) — and none of
+them are named, so a register of named Bobs is much smaller than the body count.
+And `lostAt` takes system ids only: Bender was recovered from inside Heaven's
+River, which is a megastructure, so his is empty.
+
 ## Field policy
 
 The books are the only source for biography too, not just lineage. `desig`
@@ -417,9 +477,15 @@ Don't re-run these expecting new names; they're exhausted.
 The same machinery — corpus, extractor, validator, console — carries every
 register. Each needs its own data file, schema and view, and nothing else.
 
-**Built:** the star chart (`systems.json`), the bestiary (`bestiary.json`) and
-peoples and polities (`peoples.json`). **Still to come:** ship designs, and the
-second passes recorded in `data/todo.json`.
+**Built:** the star chart (`systems.json`), the bestiary (`bestiary.json`),
+peoples and polities (`peoples.json`) and In Memorium (`memorium.json`, plus
+`fate` on each Bob). **Still to come:** ship designs, and the second passes
+recorded in `data/todo.json`.
+
+In Memorium is the one that isn't a new dataset — it is a view over `bobs.json`
+plus a small file for the entries with no record to sit on. Worth copying when
+the next register turns out to be an axis on something we already hold rather
+than a new kind of thing.
 
 The pattern that worked, for whatever comes next: survey the corpus first and
 verify the candidate list before writing any of it down — both registers built
