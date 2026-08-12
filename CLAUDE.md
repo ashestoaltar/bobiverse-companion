@@ -190,8 +190,15 @@ a palette.
 
 **The likeness is deliberately ours.** The books describe him as looking like
 Admiral Ackbar, which is a Star Wars character we can't reproduce, so the
-portrait is built from the description instead — amphibious, broad cranium,
-wide-set eyes, gill slits. Don't "improve" it toward the reference.
+portrait is built from what that description implies rather than from the
+reference. Don't "improve" it toward the source image.
+
+**The eyes must break the silhouette.** They sit on bulges mounted at the sides
+of the skull and protrude past its outline. This is the one feature doing the
+work: the first attempt sank them into a rounded skull as dark sockets and came
+out looking like a grey alien. The other load-bearing choices are a tall smooth
+cranium, a broad jowly lower face with no chin taper, and a wide downturned
+mouth with folds beneath it. Lose any of those and it drifts back to generic.
 
 Palette values are **fill-opacity against `currentColor`**, not colours. That is
 what lets one portrait be phosphor green on the boot screen and ash in the
