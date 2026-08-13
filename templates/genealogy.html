@@ -415,7 +415,12 @@
     .main{display:block}
     .stage{overflow:visible; min-height:0}
     .chart-wrap{height:auto}
-    .chart-stage{height:min(58dvh, 420px)}
+    /* flex:none matters. .chart-stage is flex:1 for the desktop layout, which
+       sets flex-basis:0 — and in a column flex container the basis wins over
+       height on the main axis, so setting a height here did nothing and the
+       stage collapsed to zero. The chart was not mis-drawn on a phone; it was
+       zero pixels tall. */
+    .chart-stage{flex:none; height:min(58dvh, 420px)}
     /* fingers need a bigger target than a 3px circle */
     .chart-svg .star{stroke-width:12; stroke:transparent; paint-order:stroke}
     /* let the table be as wide as it needs and scroll inside .scroll-x */

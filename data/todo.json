@@ -185,8 +185,8 @@
     },
     {
       "cat": "BobNet",
-      "text": "Mobile: open it on an actual phone",
-      "note": "The CSS is there — one column under 860px, dossier as a fixed bottom sheet, masthead metadata and optional columns dropped — and it has never been loaded on real hardware. The chart is the doubt: drag-rotate and a year scrubber on a touchscreen, over a 5,070-star canvas backdrop."
+      "text": "Mobile: second pass, the chart especially",
+      "note": "First pass done on a real phone and it found three things. The shell is position:fixed with one grid row doing all the scrolling, so in landscape the furniture ate the whole 390px, the scrolling row collapsed and nothing scrolled at all — below 860px wide or 560px tall it is now an ordinary scrolling document. The register table was width:100% with ellipsised cells, so there was nothing to side-scroll to; it now sets its own width inside a wrapper. And the chart offered three gestures a phone cannot make, now rewritten for multiple pointers: one finger rotates, two pinch and pan, a star selects on release if the gesture travelled under eight pixels.\n\nThen the chart stopped rendering entirely, which was self-inflicted and worth remembering: .chart-stage is flex:1 for the desktop layout, flex:1 sets flex-basis:0, and in a column flex container the basis beats height on the main axis — so the height set for mobile did nothing and the stage was zero pixels tall. Fixed with flex:none, and NOT VERIFIED on a device. That is the first thing to check when this is picked up.\n\nStill open beyond that: whether touch-action:none on the chart traps the page so you cannot scroll past it, whether the labels survive decluttering at phone width, and whether the year scrubber is usable under a thumb."
     },
     {
       "cat": "Sources",
