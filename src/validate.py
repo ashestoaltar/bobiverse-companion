@@ -347,6 +347,59 @@ def _check_memorium(bobs: list[dict], by_id: dict) -> tuple[list[str], list[str]
     return errors, warnings
 
 
+PROSE_FIELDS = ("note", "fateNote", "partialNote", "priorClaim", "conflict")
+
+
+def _book_of(cite: str | None) -> int | None:
+    m = re.search(r"Bk(\d)", cite or "")
+    return int(m.group(1)) if m else None
+
+
+def _check_spoil(bobs: list[dict]) -> tuple[list[str], list[str]]:
+    """`spoil` says how far a record's own prose reaches.
+
+    The console withholds undeclared prose from a reader who has set a reading
+    position, so a missing value costs a blank panel rather than a spoiled book
+    — which is why this reports rather than fails. What it does fail is a value
+    that cannot be true: prose that claims to be safe earlier than the record it
+    annotates is either the wrong number or a note about the wrong Bob.
+    """
+    errors: list[str] = []
+    undeclared: list[str] = []
+    for bob in bobs:
+        has_prose = any(bob.get(f) for f in PROSE_FIELDS)
+        spoil = bob.get("spoil")
+        if spoil is None:
+            if has_prose:
+                undeclared.append(bob["id"])
+            continue
+        if not has_prose:
+            errors.append(f"{bob['id']}: spoil {spoil} but the record carries no prose")
+            continue
+        attested = [n for n in (_book_of(bob.get("cite")), _book_of(bob.get("fateCite"))) if n]
+        if attested and spoil < min(attested):
+            errors.append(
+                f"{bob['id']}: spoil {spoil} is earlier than book {min(attested)}, "
+                f"where the record is first cited — an annotation cannot be safe "
+                f"before the thing it annotates"
+            )
+        # A note that names a later book than it claims to reach gives itself away.
+        for field in PROSE_FIELDS:
+            inline = _book_of(bob.get(field))
+            if inline and inline > spoil:
+                errors.append(
+                    f"{bob['id']}: spoil {spoil} but {field} cites Bk{inline}"
+                )
+    warnings = []
+    if undeclared:
+        warnings.append(
+            f"{len(undeclared)} records carry prose with no `spoil`, so it is withheld "
+            f"from anyone reading with a book limit set: {', '.join(sorted(undeclared)[:6])}"
+            + (" ..." if len(undeclared) > 6 else "")
+        )
+    return errors, warnings
+
+
 def _check_no_passages() -> list[str]:
     """Nothing we publish may contain a passage of the books.
 
@@ -603,6 +656,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     mem_errors, mem_warnings = _check_memorium(bobs, by_id)
     errors += mem_errors
     warnings += mem_warnings
+
+    spoil_errors, spoil_warnings = _check_spoil(bobs)
+    errors += spoil_errors
+    warnings += spoil_warnings
 
     errors += _check_no_passages()
 

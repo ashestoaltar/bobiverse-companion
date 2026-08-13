@@ -127,7 +127,7 @@ def load_art(register: str, cid: str) -> str | None:
 ORDER = ["id", "name", "alias", "parent", "src", "cite", "gen", "desig", "vessel",
          "born", "origin", "visited", "fate", "fateCite", "fateNote", "lostAt",
          "faction", "ref",
-         "conflict", "partialNote", "priorClaim", "note"]
+         "conflict", "partialNote", "priorClaim", "spoil", "note"]
 
 
 def _check_order() -> None:

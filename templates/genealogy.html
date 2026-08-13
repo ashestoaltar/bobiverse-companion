@@ -134,6 +134,24 @@
     flex:none; width:1px; align-self:stretch; margin:0 4px;
     background:var(--ash); opacity:.55;
   }
+  /* Content-affecting, so it reads as part of the instrument rather than as
+     the decoration in the footer. It goes amber when it is actually holding
+     something back — a guard you cannot tell is on is a guard you will forget. */
+  .reading{
+    display:flex; align-items:center; gap:7px; flex:none;
+    font-size:11px; letter-spacing:.13em; color:var(--ash); white-space:nowrap;
+  }
+  .reading select{
+    background:var(--panel-hi); border:1px solid var(--ash); color:var(--amber-dim);
+    font:inherit; font-size:11px; letter-spacing:.1em; padding:2px 5px; cursor:pointer;
+  }
+  .reading.on{color:var(--amber-dim)}
+  .reading.on select{border-color:var(--amber); color:var(--amber)}
+  .held{
+    border:1px dashed var(--rule); padding:9px 11px; margin:0;
+    font-size:12px; letter-spacing:.06em; color:var(--ash);
+  }
+  .held .redacted{letter-spacing:.14em; margin-right:8px}
   .status-tools{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
   .status-tools .chip{font-size:10.5px; padding:3px 8px; letter-spacing:.1em}
 
@@ -573,8 +591,14 @@
       <div class="tabs" id="tabs" role="tablist" aria-label="View"></div>
     </div>
 
-    <!-- emptied and hidden on the views that have no parentage to filter -->
-    <div class="chips" id="chips"></div>
+    <div class="toolbar-row">
+      <label class="reading" id="reading" title="Withholds anything this registry can only cite from a later book. Judged on citations, which record the strongest claim rather than a first appearance — so it errs toward holding things back.">
+        READ THROUGH
+        <select id="book"></select>
+      </label>
+      <!-- emptied and hidden on the views that have no parentage to filter -->
+      <div class="chips" id="chips"></div>
+    </div>
   </div>
 
   <div class="main">
@@ -702,8 +726,13 @@ const COLS = [
   {key:'src',    label:'PROVENANCE', get:b => b.src}
 ];
 
+/* How many books there are, and so what "everything" means. state.book is a
+   reading position: at BOOK_MAX nothing is held and the console behaves as it
+   always did, which is the default because most people arrive having finished. */
+const BOOK_MAX = 5;
+
 const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1,
-               selected:null, beast:null, people:null};
+               selected:null, beast:null, people:null, book:BOOK_MAX};
 
 /* ---- registers --------------------------------------------------------
    Every view is an entry here. The tab bar, the dispatch in render(), the
@@ -739,13 +768,18 @@ const REGISTERS = [
   {id:'unresolved', label:'UNRESOLVED', short:'UNRES', filters:true, render: renderUnresolved},
   {id:'memorium',   label:'IN MEMORIUM', short:'MEM',  filters:true, tabGapAfter:true,
    render: renderMemorium,
-   rows: () => BOBS.filter(b => b.fate === 'memorium' || b.fate === 'presumed'),
+   // A list of the dead is the most spoiling view in the console, so it gates
+   // twice: the record has to be attested by where you have read, and so does
+   // the fate that puts it on the list.
+   rows: () => BOBS.filter(b => (b.fate === 'memorium' || b.fate === 'presumed')
+                                && !heldRecord(b) && !heldFate(b)),
    status: rows => {
-     const named = BOBS.filter(b => b.fate === 'memorium').length;
-     const unnamed = ((MEMORIUM && MEMORIUM.unnamed) || []).reduce((n, u) => n + u.n, 0);
+     const named = rows.filter(b => b.fate === 'memorium').length;
+     const unnamed = ((MEMORIUM && MEMORIUM.unnamed) || [])
+       .filter(u => !heldEntry(u)).reduce((n, u) => n + u.n, 0);
      statusLine(`${named + unnamed} on the list`,
                 `${unnamed} of them without a name`,
-                `${BOBS.filter(b => b.fate === 'presumed').length} unaccounted`);
+                `${rows.filter(b => b.fate === 'presumed').length} unaccounted`);
    },
    onClick: e => {
      const sys = e.target.closest('[data-sys]');
@@ -825,9 +859,82 @@ function sortVal(b, key){
   return b.name.toLowerCase();
 }
 
+/* ---- reading position -------------------------------------------------
+   A companion to a series is a hazard to anyone still reading it. This
+   registry states on its front page that Homer dies, that Bender comes back,
+   that Starfleet cut their own ancestry out of the databases — sorted
+   alphabetically, above the fold, to a reader who might be eighty pages into
+   book one.
+
+   So the console can be told how far along you are, and it withholds the rest.
+   What it holds back is decided by the citations that were already there:
+   provenance forced a book and chapter onto nearly everything, which turns out
+   to be exactly the index this needs.
+
+   Three separate judgements, because they spoil at different rates:
+
+     a record's EXISTENCE — the earliest book we can cite it from,
+     its FATE           — the book where the fate is on record,
+     our ANNOTATIONS    — declared per record in `spoil`, because free prose
+                          can reach anywhere and no citation constrains it.
+
+   Undeclared prose is withheld. A note that turns out to give away an ending
+   cannot be un-read, so the default has to be the safe one rather than the
+   convenient one. */
+const bookOf = cite => { const m = /Bk(\d)/.exec(cite || ''); return m ? +m[1] : null; };
+
+/* Filled in once the control exists. render() runs before that during tests and
+   on the way up, so it has to be safe to call from the first frame. */
+let syncReading = () => {};
+
+/* The earliest book anything on this record is cited from. Not the same as a
+   first appearance — a citation records the strongest claim, not the debut —
+   but it is a bound we actually hold evidence for, which a first-appearance
+   index would not be. No citation anywhere means the record stays back. */
+function attestedAt(b){
+  const ns = [bookOf(b.cite), bookOf(b.fateCite)].filter(Boolean);
+  return ns.length ? Math.min(...ns) : null;
+}
+/* At BOOK_MAX nothing is held and every one of these is false — the console
+   behaves exactly as it did before this existed, which is what makes "ALL" a
+   real default rather than a setting that leaves residue. Note that this is
+   also what keeps "no citation at all" from meaning "never shown": it means
+   held only while a limit is set. */
+const gating = () => state.book < BOOK_MAX;
+
+/* Written the long way on purpose. The compact form was
+   `!(attestedAt(b) <= state.book)` and it leaked every uncited record,
+   because `null <= 1` is true in this language — null coerces to zero, so
+   "we have no idea when this appears" compared as "book zero, safe for
+   everyone". Absence has to be tested for, never compared. */
+const past = (n, limit) => n === null || n === undefined || n > limit;
+const heldRecord = b => gating() && past(attestedAt(b), state.book);
+
+/* A citation field often holds several, semicolon-separated, and the later ones
+   give away that there is more of this Bob's story to come — Homer's cite runs
+   from book one to book five, so printing it whole at book two announces that
+   he is still being talked about two books after he dies. Keep the parts the
+   reader has reached and drop the rest. */
+const citeUpTo = str => {
+  if (!gating() || !str) return str;
+  const kept = String(str).split(';').map(x => x.trim()).filter(Boolean)
+    .filter(part => !past(bookOf(part), state.book));
+  return kept.join('; ');
+};
+const heldFate   = b => gating() && past(bookOf(b.fateCite), state.book);
+const heldProse  = b => gating() && past(b.spoil, state.book);
+
+/* Shown where something has been taken out, rather than closing the gap over
+   it. The registry's whole argument is that an absence is data; a spoiler
+   guard that pretended the record was never there would be the one place the
+   console lied about what it holds. */
+const withheld = what =>
+  `<div class="held"><span class="redacted">▨ ${esc(what)} WITHHELD</span> — past book ${state.book}</div>`;
+
 function visible(){
   const q = state.q.trim().toLowerCase();
   return BOBS.filter(b => {
+    if (heldRecord(b)) return false;
     for (const f of state.filters) {
       const spec = FILTERS.find(x => x.id === f);
       if (spec && !spec.test(b)) return false;
@@ -966,10 +1073,14 @@ function renderMemorium(){
     return (+m[2]) * 12 + mo;
   };
   const byWhen = (a, b) => stamp(a) - stamp(b);
-  const named = BOBS.filter(b => b.fate === 'memorium').sort(byWhen);
-  const presumed = BOBS.filter(b => b.fate === 'presumed').sort(byWhen);
-  const restored = BOBS.filter(b => b.fate === 'restored').sort(byWhen);
-  const unnamed = (MEMORIUM && MEMORIUM.unnamed) || [];
+  // Every list on this view gates on the record AND on the fate: a Bob you
+  // have already met should not appear here because of something that happens
+  // three books after where you have read.
+  const shown = b => !heldRecord(b) && !heldFate(b);
+  const named = BOBS.filter(b => b.fate === 'memorium' && shown(b)).sort(byWhen);
+  const presumed = BOBS.filter(b => b.fate === 'presumed' && shown(b)).sort(byWhen);
+  const restored = BOBS.filter(b => b.fate === 'restored' && shown(b)).sort(byWhen);
+  const unnamed = ((MEMORIUM && MEMORIUM.unnamed) || []).filter(u => !heldEntry(u));
   const bulk = MEMORIUM && MEMORIUM.unnamed_bulk;
 
   const row = b => {
@@ -1017,14 +1128,13 @@ function renderMemorium(){
     presumed.length ? `<div class="mem-sec"><div class="sec-label">VESSEL LOST, FATE UNACCOUNTED — ${presumed.length}</div>` +
       presumed.map(row).join('') +
       `<p class="mem-foot">Their ships were destroyed and no one afterwards says whether ` +
-      `the backups completed. Half of the six at 82 Eridani are on the list above and half ` +
-      `were restored; the books never say which half. They are here rather than in either ` +
-      `column, which is the honest place for them.</p></div>` : '',
+      `the backups completed. They are here rather than in either column, which is the ` +
+      `honest place for them.</p></div>` : '',
     restored.length ? `<div class="mem-sec"><div class="sec-label">RECOVERED — ${restored.length}</div>` +
       restored.map(row).join('') +
       `<p class="mem-foot">Named Bobs who lost a vessel or a body and came back. They are ` +
       `on this page because they are what the list is measured against.</p></div>` : '',
-    bulk ? `<div class="mem-sec"><div class="sec-label">NOT ON ANY LIST</div>` +
+    bulk && !heldEntry(bulk) ? `<div class="mem-sec"><div class="sec-label">NOT ON ANY LIST</div>` +
       `<p class="mem-foot" style="padding-left:0">${esc(bulk.note)} ` +
       `<span class="dim">${esc(bulk.cite)}</span></p></div>` : ''
   ].join('');
@@ -1040,15 +1150,18 @@ function renderUnresolved(rows){
     .map(b => {
       const bits = [];
       { const g = generation(b); if (g) bits.push('GENERATION ' + g.n + (g.stated ? ' (STATED)' : '')); }
-      if (b.cite) bits.push(esc(b.cite));
+      if (b.cite) bits.push(esc(citeUpTo(b.cite)));
       if (b.faction) bits.push(esc(b.faction.toUpperCase()));
       if (b.visited) bits.push(esc(sysList(b.visited)));
       if (b.src === 'x') bits.unshift('<span class="redacted">▨ RECORD EXPUNGED</span>');
       return `<div class="card">
         <h3>${esc(b.name)}</h3>
         <div class="card-sub">${bits.join(' · ') || 'NO SOURCE ON FILE'}</div>
-        ${b.partialNote ? `<p>${esc(b.partialNote)}</p>` : ''}
-        ${b.note ? `<p>${esc(b.note)}</p>` : ''}
+        ${(b.partialNote || b.note)
+            ? (heldProse(b) ? withheld('ANNOTATION')
+                            : `${b.partialNote ? `<p>${esc(b.partialNote)}</p>` : ''}` +
+                              `${b.note ? `<p>${esc(b.note)}</p>` : ''}`)
+            : ''}
         <button data-id="${b.id}">OPEN DOSSIER</button>
       </div>`;
     }).join('');
@@ -1061,6 +1174,16 @@ function renderUnresolved(rows){
 
 function renderTodo(){
   if (!TODO || !TODO.items) return `<p class="empty">[TO-DO UNAVAILABLE]</p>`;
+  /* The backlog is a list of what the books can still settle, written from
+     having read all of them — every second item names a chapter from the end
+     of the series. There is no honest way to show part of it, so with a
+     reading position set it stands aside and says why. */
+  if (gating()) return `<p class="unres-lead">` +
+    `<span class="redacted">[BACKLOG WITHHELD]</span><br><br>` +
+    `The research backlog is written from having finished the series and it ` +
+    `cites the end of it constantly. It cannot be filtered down to book ` +
+    `${state.book} without becoming a different document, so it waits until ` +
+    `you set the reading position to ALL.</p>`;
   const cats = TODO.categories.filter(c => TODO.items.some(i => i.cat === c));
   const open = TODO.items.filter(i => !i.done).length;
   const cleared = TODO.items.length - open;
@@ -1449,12 +1572,16 @@ function renderDossier(){
     const edge = isRoot
       ? `<span class="prov a">○ ORIGIN</span>`
       : `<span class="prov ${h.src}">${ht.mark} ${ht.label}</span>`;
+    // An ancestor can sit past where you have read even when the descendant
+    // does not. The hop keeps its place in the chain — the count of steps back
+    // to Bob-1 is the point of the trace and must not change with the setting.
+    const held = heldRecord(h);
     return `<div class="hop">
         <span class="n">${i + 1}</span>
-        <button data-id="${h.id}">${esc(h.name)}</button>
+        ${held ? `<span class="redacted">▨ HELD</span>` : `<button data-id="${h.id}">${esc(h.name)}</button>`}
         <span class="edge">${edge}</span>
       </div>` +
-      (h.cite && !isRoot ? `<div class="hop-cite">${esc(h.cite)}</div>` : '');
+      (h.cite && !isRoot && !held ? `<div class="hop-cite">${esc(citeUpTo(h.cite))}</div>` : '');
   }).join('');
 
   const last = hops[hops.length - 1];
@@ -1466,11 +1593,14 @@ function renderDossier(){
         : `<div class="trace-end">Trace terminates. No source records who built ${esc(last.name)}, so the route to Bob-1 cannot be completed.</div>`)
     : broken ? `<div class="trace-end">Trace incomplete — ancestry loops.</div>` : '';
 
+  // The fate flags are the loudest spoiler in the dossier — IN MEMORIUM next to
+  // a name says the whole thing before any prose gets a chance to.
+  const fateShown = !heldFate(b);
   const flags = [
     b.conflict ? `<span class="flag warn">SOURCES DISAGREE</span>` : '',
-    b.fate === 'memorium' ? `<span class="flag warn">IN MEMORIUM</span>` : '',
-    b.fate === 'presumed' ? `<span class="flag warn">FATE UNACCOUNTED</span>` : '',
-    b.fate === 'restored' ? `<span class="flag">RESTORED</span>` : '',
+    fateShown && b.fate === 'memorium' ? `<span class="flag warn">IN MEMORIUM</span>` : '',
+    fateShown && b.fate === 'presumed' ? `<span class="flag warn">FATE UNACCOUNTED</span>` : '',
+    fateShown && b.fate === 'restored' ? `<span class="flag">RESTORED</span>` : '',
     b.faction ? `<span class="flag">${esc(b.faction.toUpperCase())}</span>` : '',
     b.cite ? `<span class="flag">CITED</span>` : ''
   ].join('');
@@ -1493,12 +1623,12 @@ function renderDossier(){
         ${f('ORIGIN', sysName(b.origin))}
         ${f('VESSEL', b.vessel)}
         ${f('VISITED', sysList(b.visited))}
-        ${f('FATE', `${fateOf(b).label} — ${fateOf(b).full}`)}
-        ${f('ON RECORD', b.fateCite)}
-        ${f('LOST AT', sysName(b.lostAt))}
+        ${fateShown ? f('FATE', `${fateOf(b).label} — ${fateOf(b).full}`) : ''}
+        ${fateShown ? f('ON RECORD', citeUpTo(b.fateCite)) : ''}
+        ${fateShown ? f('LOST AT', sysName(b.lostAt)) : ''}
         ${f('FACTION', b.faction)}
         ${f('NAMESAKE', b.ref && b.ref !== '—' ? b.ref : '')}
-        ${f('CITATION', b.cite)}
+        ${f('CITATION', citeUpTo(b.cite))}
       </dl>
       </div>
       ${cat ? `<p class="catnote">${cat}</p>` : ''}
@@ -1513,13 +1643,23 @@ function renderDossier(){
       ${ch.length ? `<div class="sec"><div class="sec-label">CLONES ON RECORD — ${ch.length}</div>
         <div class="kids">${ch.map(c => `<button data-id="${c.id}">${esc(c.name)}</button>`).join('<span class="dim"> · </span>')}</div></div>` : ''}
 
-      ${b.partialNote ? `<div class="sec"><div class="sec-label">WHAT THE SOURCE DOES NOT SAY</div>${prose(b.partialNote)}</div>` : ''}
-      ${b.fateNote ? `<div class="sec"><div class="sec-label">${
-          b.fate === 'memorium' ? 'IN MEMORIUM' : 'VESSEL LOST'
-        }</div>${prose(b.fateNote)}</div>` : ''}
-      ${b.priorClaim ? `<div class="sec"><div class="sec-label">UNVERIFIED LEAD — NOT DRAWN</div>${prose(b.priorClaim)}</div>` : ''}
-      ${b.conflict ? `<div class="sec"><div class="sec-label">DISAGREEMENT</div>${prose(b.conflict)}</div>` : ''}
-      ${b.note ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>${prose(b.note)}</div>` : ''}
+      ${(() => {
+        // Our prose is the one thing no citation bounds, so it is held as a
+        // block until the record says how far it reaches. The section headings
+        // stay: knowing an annotation exists is not the spoiler, and hiding
+        // that there is anything here would misrepresent the register.
+        const held = heldProse(b);
+        const sec = (label, body) => body
+          ? `<div class="sec"><div class="sec-label">${label}</div>${held ? withheld('ANNOTATION') : prose(body)}</div>`
+          : '';
+        return [
+          sec('WHAT THE SOURCE DOES NOT SAY', b.partialNote),
+          fateShown ? sec(b.fate === 'memorium' ? 'IN MEMORIUM' : 'VESSEL LOST', b.fateNote) : '',
+          sec('UNVERIFIED LEAD — NOT DRAWN', b.priorClaim),
+          sec('DISAGREEMENT', b.conflict),
+          sec('ANNOTATION — REGISTRY EDITOR, NOT BOBNET', b.note),
+        ].join('');
+      })()}
     </div>`;
 }
 
@@ -1531,8 +1671,13 @@ function renderDossier(){
 
 const ROLE_MARK = {predator: '▲', prey: '▽', megafauna: '⬢', scavenger: '◇', unknown: '·'};
 
+/* The companion registers gate the same way, on the same evidence: an entry
+   whose only citation is from a later book is not shown, and its prose waits
+   for a declared `spoil` exactly as a replicant's does. */
+const heldEntry = e => gating() && past(bookOf(e.cite), state.book);
+
 function beasts(){
-  const all = (BESTIARY && BESTIARY.creatures) || [];
+  const all = ((BESTIARY && BESTIARY.creatures) || []).filter(c => !heldEntry(c));
   const q = state.q.trim().toLowerCase();
   const rows = !q ? all.slice() : all.filter(c =>
     [c.name, c.namedBy, c.role, c.place, sysName(c.system), c.note, c.cite]
@@ -1595,13 +1740,13 @@ function renderBeastDossier(id){
       ${f('NAMED BY', c.namedBy)}
       ${f('SAPIENCE', c.sapience === 'contested' ? 'contested — the books leave it open' : 'none on record')}
       ${f('MENTIONS', c.mentions != null ? `${c.mentions} across the five books` : null)}
-      ${f('FIRST ON RECORD', c.cite)}
+      ${f('FIRST ON RECORD', citeUpTo(c.cite))}
     </dl>
     ${sys ? `<div class="sec"><div class="sec-label">SYSTEM</div>
       <p class="note"><a href="#" data-sys="${esc(c.system)}">${esc(sys.name)}</a>${
         sys.distance_ly ? ` <span class="dim">— ${sys.distance_ly.toFixed(2)} ly</span>` : ''}</p></div>` : ''}
     <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
-      ${prose(c.note)}</div>
+      ${heldProse(c) ? withheld('ANNOTATION') : prose(c.note)}</div>
     ${c.art ? '' : `<div class="sec"><div class="sec-label">ILLUSTRATION</div>
       <p class="note dim">None on file. Drop an SVG at assets/bestiary/${esc(c.id)}.svg and rebuild.</p></div>`}
   </div>`;
@@ -1626,7 +1771,7 @@ const CONTACT_NOTE = {
 const STATUS_MARK = {extant: '◆', extinct: '✕', defunct: '✕', unknown: '·'};
 
 function peoples(){
-  const all = (PEOPLES && PEOPLES.entries) || [];
+  const all = ((PEOPLES && PEOPLES.entries) || []).filter(e => !heldEntry(e));
   const q = state.q.trim().toLowerCase();
   const rows = !q ? all.slice() : all.filter(e =>
     [e.name, e.expansion, e.kind, e.of, e.place, sysName(e.system), e.note, e.cite]
@@ -1692,7 +1837,7 @@ function renderPeopleDossier(id){
       ${e.kind === 'people' ? f('CONTACT', CONTACT_NOTE[e.contact] || e.contact) : ''}
       ${owner ? f('SPEAKS FOR', owner.name) : ''}
       ${f('MENTIONS', e.mentions != null ? `${e.mentions} across the five books` : null)}
-      ${f('FIRST ON RECORD', e.cite)}
+      ${f('FIRST ON RECORD', citeUpTo(e.cite))}
     </dl>
     ${theirs.length ? `<div class="sec"><div class="sec-label">POLITIES — ${theirs.length}</div>
       <div class="kids">${theirs.map(t =>
@@ -1701,7 +1846,7 @@ function renderPeopleDossier(id){
       <p class="note"><a href="#" data-sys="${esc(e.system)}">${esc(sys.name)}</a>${
         sys.distance_ly ? ` <span class="dim">— ${sys.distance_ly.toFixed(2)} ly</span>` : ''}</p></div>` : ''}
     <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
-      ${prose(e.note)}</div>
+      ${heldProse(e) ? withheld('ANNOTATION') : prose(e.note)}</div>
   </div>`;
 }
 
@@ -1785,10 +1930,15 @@ function renderStatus(rows){
   const none = BOBS.filter(b => b.src === 'c').length;
   const purged = BOBS.filter(b => b.src === 'x').length;
   const filtered = rows.length !== BOBS.length;
+  // Say how much is being held rather than quietly serving a shorter list. A
+  // reader who has set a limit should be able to see the size of what is
+  // behind it — that is the difference between withholding and pretending.
+  const held = BOBS.filter(heldRecord).length;
   document.getElementById('status').innerHTML =
     `[${filtered ? `${rows.length} of ${BOBS.length} records` : `${BOBS.length} records`}` +
     ` · ${confirmed} parentage confirmed · ${cited} cited · ${none} no source on file` +
-    `${purged ? ` · ${purged} expunged` : ''}] ` +
+    `${purged ? ` · ${purged} expunged` : ''}` +
+    `${held ? ` · ${held} held past book ${state.book}` : ''}] ` +
     `<span class="cursor">█</span>`;
 }
 
@@ -1839,6 +1989,7 @@ function render(){
   // Whether there are chips at all is now a property of the view, so this has
   // to run on every render rather than only when a chip is clicked.
   renderChips();
+  syncReading();
   syncSheet();
   renderDossier();
   (reg.status || renderStatus)(rows);
@@ -1863,12 +2014,23 @@ function select(id){
    state.selected, the chart in CHART.sel, the bestiary and peoples in their
    own fields. sel() and setSel() are the only two places that know that, so a
    new register declares itself here and nowhere else. */
+const beastById  = id => ((BESTIARY?.creatures || []).find(c => c.id === id));
+const peopleById = id => ((PEOPLES?.entries  || []).find(e => e.id === id));
+
+/* `held` sits here with `ok` for the same reason `ok` does: it is a question
+   only this register can answer, and answering it anywhere else would mean a
+   `state.view === '...'` branch somewhere in the dispatch. Systems are never
+   held — a star is not a spoiler. */
 const SEL = {
-  chart:    {get: () => CHART.sel,       set: v => CHART.sel = v,       ok: v => !!SYS[v]},
-  bestiary: {get: () => state.beast,     set: v => state.beast = v,     ok: v => (BESTIARY?.creatures || []).some(c => c.id === v)},
-  peoples:  {get: () => state.people,    set: v => state.people = v,    ok: v => (PEOPLES?.entries || []).some(e => e.id === v)},
+  chart:    {get: () => CHART.sel,       set: v => CHART.sel = v,       ok: v => !!SYS[v],
+             held: () => false},
+  bestiary: {get: () => state.beast,     set: v => state.beast = v,     ok: v => (BESTIARY?.creatures || []).some(c => c.id === v),
+             held: v => heldEntry(beastById(v) || {})},
+  peoples:  {get: () => state.people,    set: v => state.people = v,    ok: v => (PEOPLES?.entries || []).some(e => e.id === v),
+             held: v => heldEntry(peopleById(v) || {})},
 };
-const DEFAULT_SEL = {get: () => state.selected, set: v => state.selected = v, ok: v => !!byId[v]};
+const DEFAULT_SEL = {get: () => state.selected, set: v => state.selected = v, ok: v => !!byId[v],
+                     held: v => byId[v] ? heldRecord(byId[v]) : false};
 const selOf = view => SEL[view] || DEFAULT_SEL;
 
 function hashFor(){
@@ -1877,6 +2039,9 @@ function hashFor(){
   const q = [];
   if (state.q.trim()) q.push('q=' + encodeURIComponent(state.q.trim()));
   if (state.filters.size) q.push('f=' + [...state.filters].join(','));
+  // Only when it is actually holding something back. A link that says b=5 is
+  // saying nothing, and every link would carry it.
+  if (gating()) q.push('b=' + state.book);
   return '#' + view + (sel ? '/' + encodeURIComponent(sel) : '') +
          (q.length ? '?' + q.join('&') : '');
 }
@@ -1930,7 +2095,17 @@ function applyHash(){
     if (k === 'q' && v) state.q = decodeURIComponent(v.replace(/\+/g, ' '));
     if (k === 'f' && v) decodeURIComponent(v).split(',')
       .filter(id => FILTERS.some(f => f.id === id)).forEach(id => state.filters.add(id));
+    if (k === 'b' && v) {
+      const n = +decodeURIComponent(v);
+      if (n >= 1 && n <= BOOK_MAX) state.book = n;
+    }
   }
+  // The reading position is parsed after the selection, so the check happens
+  // here: a link can perfectly well point at a record that its own b= holds
+  // back, and honouring the selection would defeat the parameter next to it.
+  const chosen = spec.get();
+  if (chosen && spec.held(chosen)) spec.set(null);
+
   const box = document.getElementById('q');
   if (box) box.value = state.q;
   // Record where hashFor() says we are, not where the link said. An old alias
@@ -2212,6 +2387,38 @@ function bootLines(){
 
   el.addEventListener('click', finish);
   document.addEventListener('keydown', skip);
+})();
+
+/* Reading position. Persisted like the display preference, but unlike it this
+   one is also in the URL — a link that says how far its reader has got is the
+   whole point, so you can send this to someone on book two and have it arrive
+   already safe. The URL wins over storage when both are present. */
+(function reading(){
+  const sel = document.getElementById('book');
+  sel.innerHTML = Array.from({length: BOOK_MAX}, (_, i) => {
+    const n = i + 1;
+    return `<option value="${n}">BOOK ${n}${n === BOOK_MAX ? ' — ALL' : ''}</option>`;
+  }).join('');
+  let stored = null;
+  try { stored = +localStorage.getItem('bobnet-book') || null; } catch (e) {}
+  if (stored >= 1 && stored <= BOOK_MAX) state.book = stored;
+  sel.value = String(state.book);
+  sel.addEventListener('change', () => {
+    state.book = Math.max(1, Math.min(BOOK_MAX, +sel.value || BOOK_MAX));
+    try { localStorage.setItem('bobnet-book', String(state.book)); } catch (e) {}
+    // A held record can be selected when the setting moves under it, so drop
+    // any selection the new position no longer allows rather than rendering a
+    // dossier for something the reader has just said they have not reached.
+    const cur = state.selected && byId[state.selected];
+    if (cur && heldRecord(cur)) state.selected = null;
+    render();
+  });
+  const label = document.getElementById('reading');
+  syncReading = () => {
+    sel.value = String(state.book);
+    label.classList.toggle('on', gating());
+  };
+  syncReading();
 })();
 
 /* display preference — persisted, harmless if storage is unavailable */

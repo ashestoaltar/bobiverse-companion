@@ -508,6 +508,54 @@ them are named, so a register of named Bobs is much smaller than the body count.
 And `lostAt` takes system ids only: Bender was recovered from inside Heaven's
 River, which is a megastructure, so his is empty.
 
+## Reading position
+
+A companion to an unfinished series is a hazard to the person reading it. The
+register states on its front page that Homer dies, that Bender comes back, that
+Starfleet cut their own ancestry out of the databases — alphabetically, above
+the fold. `READ THROUGH BOOK N` withholds the rest, and the whole mechanism runs
+off citations that provenance had already forced onto the data.
+
+**Three things gate separately, because they spoil at different rates.**
+
+| what | gated by | absent means |
+|---|---|---|
+| the record exists | earliest book across `cite` and `fateCite` | held |
+| its fate | `fateCite` | held |
+| our prose | `spoil` | held |
+
+The split is the point. Someone you meet in book one dies in book four: the
+record stays and the fate goes. A record-level filter alone gets that wrong.
+
+**Absence is held, never shown.** `spoil` is undeclared on most records, so
+their prose is withheld from anyone reading with a limit set — a blank panel
+rather than a spoiled ending. The validator reports the count so the gap stays
+visible; it does not fail, because declaring 100-odd notes is a data pass rather
+than a blocker. Same for the companion registers, whose schemas do not carry
+`spoil` yet.
+
+**At `ALL` nothing is held and the output is byte-identical** to before the
+feature existed. That is what makes it a real default rather than a setting that
+leaves residue, and the golden master is what proves it.
+
+**Test the negative.** `tests/spoilers.test.js` does not check that things
+render; it checks that things don't. The blunt one earns its keep: no pane, in
+any view, at any position, may contain a `Bk<n>` above the setting. It found
+four leaks the day it was written — the backlog's notes, the memorium bulk
+entry, the unresolved cards rendering prose straight past the gate, and multi-
+part citations printing later chapters (Homer's runs book one to book five, so
+at book two it announced he was still being discussed two books after he died).
+
+**`null <= 1` is true.** The first version of the gate read
+`!(attestedAt(b) <= state.book)` and leaked every uncited record, because null
+coerces to zero and "we have no idea when this appears" compared as "book zero,
+safe for everyone". Absence has to be tested for, never compared — `past()`
+exists for exactly this and the helpers all go through it.
+
+**The TO-DO stands aside entirely.** It is written from having finished the
+series and cites the end of it constantly; there is no honest way to show part
+of it, so with a position set it says so and waits.
+
 ### Where a reading is allowed to live
 
 `note` is the only field on a record that may hold an interpretation, and the

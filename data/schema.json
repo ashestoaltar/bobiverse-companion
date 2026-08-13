@@ -2,13 +2,19 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Bobiverse replicant genealogy",
   "type": "object",
-  "required": ["bobs"],
+  "required": [
+    "bobs"
+  ],
   "properties": {
     "bobs": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "name", "src"],
+        "required": [
+          "id",
+          "name",
+          "src"
+        ],
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -30,41 +36,105 @@
           },
           "src": {
             "type": "string",
-            "enum": ["o", "t", "p", "c", "x"],
+            "enum": [
+              "o",
+              "t",
+              "p",
+              "c",
+              "x"
+            ],
             "description": "How well the BOOKS establish this Bob's parentage. They are the only source: Taylor's 2017 genealogy and the fandom wiki were dropped, because a claim we cannot point at a page for should not be asserted. o=the original, Bob-1, who has no parent to find; t=parent stated in the books, narrative or the Cast of Characters appendix; p=an ancestor is stated but the generations between are not; c=no ancestor on record; x=the record was deliberately expunged. Tier says nothing about how well documented a Bob is otherwise — Herschel is tier C with eighteen POV chapters and a generation he states out loud. Tier X is the narrow, stronger case: we know why the data is missing, because somebody removed it on purpose; it requires a cite and a partialNote."
           },
           "cite": {
             "type": "string",
-            "description": "Chapter reference for whatever this record's strongest textual claim is. Required for tier T, where it must support the parent link. Welcome on any tier \u2014 a tier C Bob may still have a citable generation, death, or first appearance. Format: 'Bk<n> ch<n> \u00b7 <POV>, <date>'."
+            "description": "Chapter reference for whatever this record's strongest textual claim is. Required for tier T, where it must support the parent link. Welcome on any tier — a tier C Bob may still have a citable generation, death, or first appearance. Format: 'Bk<n> ch<n> · <POV>, <date>'."
           },
           "gen": {
             "type": "integer",
             "minimum": 1,
             "description": "Store this ONLY where the books state it out loud and the tree cannot work it out — currently three records. Everywhere else the console counts it down the parent chain, so the two can never drift apart. The validator errors if a stored gen disagrees with tree depth."
           },
-          "desig": { "type": "string", "description": "In-universe designation, and the Bob's actual identity — they all wear the same face, so Guppy identifies them by serial number or not at all (Bk3 ch21). Two schemes: 'Bob-<n>' for the early global numbering, abandoned once coordinating numbers between star systems got unwieldy (Bk1 ch28); and 'HIC<catalogue>-<n>' after, where the Hipparcos Catalog number names the system the Bob was built in and <n> is the index within it (Bk1 ch15). The validator checks HIC prefixes against origin." },
-          "vessel": { "type": "string", "description": "The hull the Bob's matrix flies in, e.g. 'Heaven-2'. Only values printed verbatim in the books — three pattern-extrapolated ones were swept out." },
-          "born": { "type": "string", "description": "Activation date, e.g. 'Sep 2205'. Only kept where a chapter of that date names the Bob; dates inherited from the dropped sources were swept out rather than left looking like findings." },
-          "origin": { "type": "string", "description": "id of the system where this Bob was built, keyed into data/systems.json. The validator rejects an id that isn't there." },
-          "visited": { "type": "array", "items": { "type": "string" }, "description": "System ids, keyed into data/systems.json. Was a comma-separated string; became a list when the systems file gave the ids somewhere to point." },
+          "desig": {
+            "type": "string",
+            "description": "In-universe designation, and the Bob's actual identity — they all wear the same face, so Guppy identifies them by serial number or not at all (Bk3 ch21). Two schemes: 'Bob-<n>' for the early global numbering, abandoned once coordinating numbers between star systems got unwieldy (Bk1 ch28); and 'HIC<catalogue>-<n>' after, where the Hipparcos Catalog number names the system the Bob was built in and <n> is the index within it (Bk1 ch15). The validator checks HIC prefixes against origin."
+          },
+          "vessel": {
+            "type": "string",
+            "description": "The hull the Bob's matrix flies in, e.g. 'Heaven-2'. Only values printed verbatim in the books — three pattern-extrapolated ones were swept out."
+          },
+          "born": {
+            "type": "string",
+            "description": "Activation date, e.g. 'Sep 2205'. Only kept where a chapter of that date names the Bob; dates inherited from the dropped sources were swept out rather than left looking like findings."
+          },
+          "origin": {
+            "type": "string",
+            "description": "id of the system where this Bob was built, keyed into data/systems.json. The validator rejects an id that isn't there."
+          },
+          "visited": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "System ids, keyed into data/systems.json. Was a comma-separated string; became a list when the systems file gave the ids somewhere to point."
+          },
           "fate": {
             "type": "string",
-            "enum": ["active", "restored", "presumed", "memorium"],
+            "enum": [
+              "active",
+              "restored",
+              "presumed",
+              "memorium"
+            ],
             "description": "What became of the Bob, graded on its own evidence and kept entirely separate from src, which grades parentage only. The books draw the line at the backup, not at the hull: a Bob whose differential completed is restored into a new vessel and carries on, so a destroyed ship is not a death. 'active' — nothing on record. 'restored' — vessel or body destroyed and the Bob recovered, whether from a completed backup (Elmer, Jacques) or a physically intact matrix cube (Mack, Bender). 'presumed' — vessel destroyed and the backup never accounted for either way; the books simply move on. 'memorium' — confirmed beyond recovery, and on Bill's list. Was a three-value 'status' field that collapsed all four into active/lost/unknown, which put Elmer among the dead and Bender among the lost when the books say both came back."
           },
-          "fateCite": { "type": "string", "description": "Required for every fate except active: the chapter where it happens. Same format as cite." },
-          "fateNote": { "type": "string", "description": "Required for memorium and presumed. Our prose, same bar as note — paraphrase and cite, never book text. For presumed, it must say what the books leave open, because that gap is the whole reason the tier exists." },
-          "lostAt": { "type": "string", "description": "id of the system where the Bob's vessel was destroyed. Places that aren't systems don't belong here — Bender's old value was the phrase \"missing, later located\", which is a note, not a location. Absent where the books don't place it: Bender was recovered from inside Heaven's River, which is a megastructure and not a star system." },
+          "fateCite": {
+            "type": "string",
+            "description": "Required for every fate except active: the chapter where it happens. Same format as cite."
+          },
+          "fateNote": {
+            "type": "string",
+            "description": "Required for memorium and presumed. Our prose, same bar as note — paraphrase and cite, never book text. For presumed, it must say what the books leave open, because that gap is the whole reason the tier exists."
+          },
+          "lostAt": {
+            "type": "string",
+            "description": "id of the system where the Bob's vessel was destroyed. Places that aren't systems don't belong here — Bender's old value was the phrase \"missing, later located\", which is a note, not a location. Absent where the books don't place it: Bender was recovered from inside Heaven's River, which is a megastructure and not a star system."
+          },
           "faction": {
             "type": "string",
-            "enum": ["Starfleet", "Skippies", "Gamers", "Borg"],
+            "enum": [
+              "Starfleet",
+              "Skippies",
+              "Gamers",
+              "Borg"
+            ],
             "description": "Affiliation, not lineage. The four mutual-interest groups Bill describes as forming once replicative drift made Bobs into 'joiners'. Deliberately separate from the tree because factions cut across branches — Starfleet took joiners from other lines and purged its own genealogy records, so it can never be drawn as a subtree."
           },
-          "ref": { "type": "string", "description": "Namesake. Reader inference, not canon." },
-          "conflict": { "type": "string", "description": "Describe the disagreement between sources and which one the tree follows." },
-          "partialNote": { "type": "string", "description": "Required for tiers P and X. For P, exactly what the books do and don't say about the gap. For X, who removed the record and how we know." },
-          "priorClaim": { "type": "string", "description": "A parentage claim from a source we dropped — Taylor's 2017 tree or the fandom wiki. Recorded as a research lead so the work isn't lost, and deliberately NOT a parent link: the tree only draws what the books support. Delete it if the books ever settle the question." },
-          "note": { "type": "string", "description": "Our prose, shown in the dossier under ANNOTATION and deliberately unbracketed — in the books, square brackets mark machine output, so the registry's own fields are bracketed and this is not." }
+          "ref": {
+            "type": "string",
+            "description": "Namesake. Reader inference, not canon."
+          },
+          "conflict": {
+            "type": "string",
+            "description": "Describe the disagreement between sources and which one the tree follows."
+          },
+          "partialNote": {
+            "type": "string",
+            "description": "Required for tiers P and X. For P, exactly what the books do and don't say about the gap. For X, who removed the record and how we know."
+          },
+          "priorClaim": {
+            "type": "string",
+            "description": "A parentage claim from a source we dropped — Taylor's 2017 tree or the fandom wiki. Recorded as a research lead so the work isn't lost, and deliberately NOT a parent link: the tree only draws what the books support. Delete it if the books ever settle the question."
+          },
+          "spoil": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "The latest book this record's own prose draws on — note, fateNote, partialNote, priorClaim and conflict together. Used only when a reader has set a reading position, and only for the prose: a record's existence is gated by the earliest book its citations reach, and its fate by fateCite, both of which are already on the record. Prose is the one thing no citation bounds, so it has to be declared. ABSENT MEANS UNDECLARED, AND UNDECLARED PROSE IS WITHHELD from a reader who has set a limit. That default is deliberate: a note that turns out to give away an ending cannot be un-read, so the cost of forgetting to declare is a blank panel rather than a spoiled book. Must be at least the book the record is first attested in — an annotation cannot be safe before the record it annotates."
+          },
+          "note": {
+            "type": "string",
+            "description": "Our prose, shown in the dossier under ANNOTATION and deliberately unbracketed — in the books, square brackets mark machine output, so the registry's own fields are bracketed and this is not."
+          }
         }
       }
     }
