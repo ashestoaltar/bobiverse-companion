@@ -127,7 +127,8 @@
     {
       "cat": "BobNet",
       "text": "URL state, so a dossier can actually be linked to",
-      "note": "?bob=riker, #system/82_eridani. There is no location, history or hashchange anywhere in the template, so every link anyone ever sends to this thing is a link to the front door, followed by the word 'scroll'. No backend to fight, which is exactly why it's an hour rather than a feature. Do it before publishing. Doing it after means every link already out there is wrong."
+      "note": "Done. #<view>/<selection>?q=&f= — hash rather than query string, so it still works when the file is opened by double-clicking it, which has to keep being true after publishing. Arriving on a link skips the six-second boot. An unknown view is refused outright and a selection that no longer resolves is dropped rather than obeyed, so a stale link lands on the right register with nothing selected instead of an empty dossier for a ghost. Every register keeps its selection somewhere different — state.selected, CHART.sel, state.beast, state.people — so selOf() is the only place that knows, and tests/url.test.js walks the whole register list to catch the next one that gets wired into the tab bar and forgotten here. Renaming a register keeps its old links working through VIEW_ALIAS: #lineage/ still resolves and the bar respells itself in place.",
+      "done": true
     },
     {
       "cat": "Companion registers",
@@ -186,13 +187,43 @@
     {
       "cat": "BobNet",
       "text": "Mobile: second pass, the chart especially",
-      "note": "First pass done on a real phone and it found three things. The shell is position:fixed with one grid row doing all the scrolling, so in landscape the furniture ate the whole 390px, the scrolling row collapsed and nothing scrolled at all — below 860px wide or 560px tall it is now an ordinary scrolling document. The register table was width:100% with ellipsised cells, so there was nothing to side-scroll to; it now sets its own width inside a wrapper. And the chart offered three gestures a phone cannot make, now rewritten for multiple pointers: one finger rotates, two pinch and pan, a star selects on release if the gesture travelled under eight pixels.\n\nThen the chart stopped rendering entirely, which was self-inflicted and worth remembering: .chart-stage is flex:1 for the desktop layout, flex:1 sets flex-basis:0, and in a column flex container the basis beats height on the main axis — so the height set for mobile did nothing and the stage was zero pixels tall. Fixed with flex:none, and NOT VERIFIED on a device. That is the first thing to check when this is picked up.\n\nStill open beyond that: whether touch-action:none on the chart traps the page so you cannot scroll past it, whether the labels survive decluttering at phone width, and whether the year scrubber is usable under a thumb."
+      "note": "First pass, on a real phone, found three things. The shell is position:fixed with one grid row doing all the scrolling, so in landscape the furniture ate the whole 390px, the scrolling row collapsed and nothing scrolled at all — below 860px wide or 560px tall it is now an ordinary scrolling document. The register table was width:100% with ellipsised cells, so there was nothing to side-scroll to; it now sets its own width inside a wrapper. And the chart offered three gestures a phone cannot make, now rewritten for multiple pointers: one finger rotates, two pinch and pan, a star selects on release if the gesture travelled under eight pixels.\n\nThen the chart stopped rendering entirely, which was self-inflicted and worth remembering: .chart-stage is flex:1 for the desktop layout, flex:1 sets flex-basis:0, and in a column flex container the basis beats height on the main axis — so the height set for mobile did nothing and the stage was zero pixels tall. Fixed with flex:none, and confirmed on the phone.\n\nThe second pass has since fixed the defect that mattered most: the dossier was hidden unless state.selected was set, so on a phone the bestiary, peoples and every jump to a system built their dossier correctly and then hid it. Three of eight registers did nothing visible. Closing was broken the same way at every width. Both now ask the register through selOf(), and tests/mobile.test.js runs at 390px so the next phone-only rule cannot break in silence — every other suite runs at 1400px, where the sheet does not exist and the rule that hides it never executes. Also landed: the tab row scrolls rather than stacking, filters only appear where there is parentage to grade, a real doctype and head, theme-color, safe-area inset under the sheet, and a 16px search box so iOS stops zooming the page on focus.\n\nStill open, and all of it needs a device rather than an opinion: whether touch-action:none on the chart traps the page so you cannot scroll past it, whether the labels survive decluttering at phone width, and whether the year scrubber is usable under a thumb."
     },
     {
       "cat": "Sources",
       "text": "Prior art surveyed on GitHub",
       "note": "About fifty Bobiverse repos. Star maps dominate, then timelines, then a few genealogies. The comparable ones: thunfischtoast/bobiverse-map (2D map and timeline, 19 systems, 50+ Bobs, chapter-gated for spoilers), Mikeda75/bobiverse-starmap (books 1-4, J2000 coordinates, guided camera tours), ruguevara/Bobmap (Three.js, HYG v3.7, ~110 stars, live), sbtn/treeofbob (D3, 47 Bobs, archived), eneko/Bobiverse (GraphViz). Most-starred thing in the whole ecosystem is OpenGUPPIE, a physical Guppy build, at 24. Two findings worth keeping. Not one of them cites the text — thunfischtoast tags chapters but for spoiler gating, not provenance, and nobody anywhere distinguishes stated from inferred or records what is unknown. And they are all downstream of the same secondary source: treeofbob cites a 2017 PDF at kurt-anderson.com, which is almost certainly the tree this project dropped, and which we now know differs from the genealogy printed in book 2. The ecosystem is building on a copy while the original is in the back of the book.",
       "done": true
+    },
+    {
+      "cat": "BobNet",
+      "text": "The chart rebuilds itself on every pointer move",
+      "note": "paintChart() rewrites the whole SVG through innerHTML and repaints the five thousand star backdrop on every pointermove, which on a phone is a repaint per frame of a drag for a scene that has not changed except for its camera. Throttle to requestAnimationFrame, and consider thinning or skipping the backdrop while a gesture is in flight — the sky is the expensive half and nobody reads it mid-rotate. Worth measuring before assuming it is a problem; the phone renders it, the question is what it costs to move it."
+    },
+    {
+      "cat": "BobNet",
+      "text": "The tree overflows sideways with nothing to scroll",
+      "note": "The register table learned this and the tree did not. .tree is white-space:pre, so a deep branch runs past the right edge of a phone with no way to reach it — the same bug the table had, which was fixed by giving it its own width inside a .scroll-x wrapper. Either do that, or tighten the indent per level below 860px. The tree is the one view where the horizontal axis carries meaning, so cutting it off is worse here than anywhere else."
+    },
+    {
+      "cat": "BobNet",
+      "text": "The dossier sheet is a panel wearing a sheet's position",
+      "note": "On a phone it is fixed over a scrolling document with no scrim behind it, no scroll lock under it and no tap-outside to dismiss — so the page keeps scrolling beneath a thing that looks modal, and the only way out is a 24px close button against the ~44px that thumbs actually want. It is also 64dvh over a chart that is 58dvh, which is two numbers that were chosen separately. Wants: a scrim, overflow locked while open, a bigger close target, and one decision about how tall it is."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Focus goes nowhere in particular",
+      "note": "The tab bar has role=tablist but no aria-controls and no roving tabindex, so arrow keys do not move between tabs the way a tablist promises they will. Opening a dossier does not move focus into it and closing one does not put focus back on the row that opened it, which on a keyboard means every close drops you at the top of the document. On a phone it matters more than it looks: with Escape unavailable, focus and the close button are the only ways out."
+    },
+    {
+      "cat": "BobNet",
+      "text": "The boot sequence is a mainframe, and the books describe a SCUT connect",
+      "note": "What Riker and Mulder and Mario actually see on first contact with BobNet is a console listing available connections, system names scrolling past, a register, a connect, a transmitting icon — and then Bill turning up in person, in whatever VR they built. Nobody boots a mainframe. Ours reports its own mounting like an IPL, which is a different genre borrowed from the same decade. This is copy and sequencing rather than architecture, so it is cheap: the boot lines already exist and already read from the data. While in there, CLICK OR PRESS ANY KEY should say TAP on a touch screen."
+    },
+    {
+      "cat": "Sources",
+      "text": "Write down that look-and-feel is always local",
+      "note": "The canon audit settles an argument the project keeps having with itself about how much chrome is too much. There is no official BobNet appearance: every Bob builds his own VR, a visitor arrives inside someone else's metaphor, an undecorated one is a blue room with a hard floor. BobNet is the network — SCUT, blogs, directories, accounts, firewalls, archives — not a house style. Which means the amber console was never a claim about what BobNet looks like; it is Bill's room, and the reader is a guest in it. That belongs in CLAUDE.md as a paragraph, because it decides future questions about skin and shine without relitigating them each time."
     }
   ]
 }
