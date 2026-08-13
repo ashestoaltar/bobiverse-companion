@@ -41,11 +41,12 @@ data out of the databases during the war, so for its members the missing lineage
 isn't a gap in anyone's reading — it's the deletion itself, and the registry says
 so rather than shrugging.
 
-Twenty-eight tier-T records come from an unexpected place: the **appendices at
-the back of book 2**, reprinted in book 4. The Cast of Characters states ten
-parentages outright and turned up a Bob the narrative never introduces; the
-Genealogy is a full tree and settles eighteen more. Back matter rather than
-story, but Taylor's own words printed in the novel.
+Thirty records are sourced to an unexpected place: the **appendices at the back
+of book 2**, reprinted in book 4. The Cast of Characters accounts for twelve and
+turned up a Bob the narrative never introduces; the Genealogy is a full tree and
+settles eighteen more. Back matter rather than story, but Taylor's own words
+printed in the novel — and unreachable by any search until the parser learned to
+read past the last chapter.
 
 Where sources disagree, the disagreement is recorded rather than resolved
 silently — including when the disagreement turns out to be our own fault. We had
@@ -54,8 +55,9 @@ record now says so.
 
 ## The console
 
-Seven registers, with live search across names, aliases, designations, systems,
-notes and citations:
+Eight registers, with live search across names, aliases, designations, systems,
+notes and citations — and every view has an address, so any of them can be
+linked to:
 
 - **Register** — the full list, sortable on every column.
 - **Lineage** — the descent tree. Filtering keeps the ancestors needed to reach
@@ -161,7 +163,7 @@ python src/extract.py --name Thor    # research one Bob
 `make test` needs Node. It runs the shipped script from `dist/index.html` against
 a stub DOM — data integrity, every view under every filter, the chart's
 projection geometry and astrophysics, label legibility, and a golden-master
-snapshot of 109 rendered states.
+snapshot of 118 rendered states.
 
 `src/extract.py` finds passages and prints them with citations. It never writes
 to `data/bobs.json` — deciding what a passage establishes is a judgement call,
@@ -212,10 +214,17 @@ distances and Cartesian positions computed from parallax rather than copied. The
 backdrop is 5,070 naked-eye stars from the HYG Database.
 
 **4 Bobs on the In Memorium list**, plus three that are counted and unnamed;
-9 more whose vessels were destroyed and whose fate the books never settle, and 4
+8 more whose vessels were destroyed and whose fate the books never settle, and 5
 recovered from destroyed vessels. `fate` replaced a three-value `status` that had
 Elmer among the dead and Bender among the lost — the books say plainly that both
 came back, and one of them is the whole plot of book 4.
+
+The three blanks may not stay blank. Bill counted three failed transfers among
+seven vessels lost at 82 Eridani and never said which; Elmer is ruled out on the
+page and Hannibal turned up seventy-two years later commanding a squad, so the
+three are drawn from five. Settle two more and the last three are named by
+subtraction — and the validator errors the moment the pool shrinks to the count,
+because at that point the names are known and the rows should stop being dashes.
 
 **9 creatures** in `data/bestiary.json`, each pinned to the world it lives on and
 cited to its first appearance; 2 illustrated so far.
@@ -243,7 +252,7 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 3,011 checks across 12 suites against the shipped page,
+- `make test` runs 3,014 checks across 12 suites against the shipped page,
   including a golden-master snapshot of 118 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and
