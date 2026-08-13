@@ -1718,13 +1718,34 @@ function renderTabs(){
     `data-view="${r.id}">${esc(r.label)}</button>`).join('');
 }
 
+/* Narrow enough that the dossier stops being a column and becomes a sheet over
+   the page. Must match the breakpoint in the stylesheet; a test checks that it
+   still does, because the two drifting apart is silent. */
+const SHEET_WIDTH = 860;
+
+/* A sheet covering the page has to close when there is nothing to show, and
+   what counts as "something" belongs to whichever register is open: a creature
+   is in state.beast, a system in CHART.sel. Keying this off state.selected
+   alone left the bestiary, peoples and every cross-register system jump looking
+   dead on a phone — the dossier was built correctly and then hidden anyway. */
+function syncSheet(){
+  const el = document.getElementById('dossier');
+  if (el) el.hidden = window.innerWidth <= SHEET_WIDTH && !selOf(state.view).get();
+}
+
+/* Closing asks the register too, for the same reason. Clearing state.selected
+   from the bestiary dismissed nothing, because the creature was never in it. */
+function clearSelection(){
+  selOf(state.view).set(null);
+  render();
+}
+
 function render(){
   const reg = currentRegister();
   const rows = (reg.rows || visible)();
   document.getElementById('stage').innerHTML = reg.render(rows);
   renderTabs();
-  const doss = document.getElementById('dossier');
-  doss.hidden = window.innerWidth <= 860 && !state.selected;
+  syncSheet();
   renderDossier();
   (reg.status || renderStatus)(rows);
   if (reg.paint) reg.paint();
@@ -1904,7 +1925,7 @@ function applyHash(){
         CHART.sel = downOn.dataset.sys;
         renderDossier();
         syncHash();
-        document.getElementById('dossier').hidden = false;
+        syncSheet();
       }
       mode = null; downOn = null; pinch = null;
       const svg = document.getElementById('chart');
@@ -1969,7 +1990,7 @@ document.addEventListener('click', e => {
     render(); return;
   }
 
-  if (e.target.closest('#d-close')) { state.selected = null; render(); return; }
+  if (e.target.closest('#d-close')) { clearSelection(); return; }
 
   const hit = e.target.closest('[data-id]');
   if (hit) select(hit.dataset.id);
@@ -1983,9 +2004,9 @@ document.addEventListener('keydown', e => {
   const q = document.getElementById('q');
   if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); q.select(); return; }
   if (e.key === 'Escape') {
-    if (document.activeElement === q && q.value) { q.value = ''; state.q = ''; }
-    else state.selected = null;
-    render(); return;
+    if (document.activeElement === q && q.value) { q.value = ''; state.q = ''; render(); }
+    else clearSelection();
+    return;
   }
   if (e.key === 'Enter' && document.activeElement.dataset && document.activeElement.dataset.id) {
     select(document.activeElement.dataset.id); return;
@@ -2004,9 +2025,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-window.addEventListener('resize', () => {
-  document.getElementById('dossier').hidden = window.innerWidth <= 860 && !state.selected;
-});
+window.addEventListener('resize', syncSheet);
 
 /* ---- boot ------------------------------------------------------------- */
 /* What the console reports about itself on the way up. Every number is read
