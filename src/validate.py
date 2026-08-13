@@ -474,6 +474,40 @@ BLOG = os.path.join(ROOT, "data", "blog.json")
 VOICES = {"bobnet", "editor"}
 
 
+def _ids(path: str, key: str, field: str = "id") -> set | None:
+    if not os.path.exists(path):
+        return None
+    with open(path) as fh:
+        return {x[field] for x in json.load(fh)[key]}
+
+
+def _bob_ids() -> set | None:
+    if not os.path.exists(DATA):
+        return None
+    with open(DATA) as fh:
+        return {b["id"] for b in json.load(fh)["bobs"]}
+
+
+def _system_ids() -> set | None:
+    systems = _load_systems()
+    return set(systems) if systems else None
+
+
+# Which pool an address's id has to be found in. The replicant views all list
+# the same records, so they share one; todo has no selectable items at all.
+ADDRESSABLE = {
+    "register":   _bob_ids,
+    "genealogy":  _bob_ids,
+    "unresolved": _bob_ids,
+    "memorium":   _bob_ids,
+    "chart":      _system_ids,
+    "bestiary":   lambda: _ids(BESTIARY, "creatures"),
+    "peoples":    lambda: _ids(PEOPLES, "entries"),
+    "blog":       lambda: _ids(BLOG, "posts"),
+    "todo":       lambda: None,
+}
+
+
 def _check_blog() -> tuple[list[str], list[str]]:
     """The feed, and the one rule that keeps it honest.
 
@@ -516,6 +550,19 @@ def _check_blog() -> tuple[list[str], list[str]]:
                     errors.append(f"blog {pid}: a bobnet post says {word!r} — Bill does not "
                                   f"know the books are books. Mark it voice 'editor' or "
                                   f"rewrite it in his.")
+        # `about` is written as console addresses, so it can point at anything
+        # that has one — and a dead address is a link that renders as nothing.
+        for a in post.get("about") or []:
+            view, _, ident = a.partition("/")
+            if view not in ADDRESSABLE:
+                errors.append(f"blog {pid}: about '{a}' names no register")
+                continue
+            if not ident:
+                continue
+            pool = ADDRESSABLE[view]()
+            if pool is not None and ident not in pool:
+                errors.append(f"blog {pid}: about '{a}' points at nothing")
+
         for i, (at, para) in enumerate(_paragraphs(post.get("body"), spoil)):
             if at is None:
                 errors.append(f"blog {pid}: paragraph {i + 1} carries an unreadable @bk marker")

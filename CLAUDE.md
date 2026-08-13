@@ -776,6 +776,32 @@ re-admitting it would undo the rule that found the appendix. Link to it, cite it
 as a lead in `priorClaim` if it ever settles something, and never quote it: his
 prose is his, exactly as the novels are.
 
+## Links between registers
+
+A link from one register into another is **just an address**. `<a href="#chart/82_eridani">`
+inherits `applyHash` — which refuses an unknown view and drops a selection the
+reading position holds back — plus the hashchange listener that renders it, plus
+copy-link-address and middle-click into a new tab. There is no click handler to
+keep in step, and a register becomes linkable the moment it declares itself in
+`SEL`, which is the same place it declares itself to the URL.
+
+`canLink(view, id)` is the gate and `linkTo()` the renderer. The distinction
+that matters: in prose a held target falls back to plain text, but in a **list**
+it vanishes, because in a list the name is the whole content and plain text
+would leak exactly what the link was hiding. `linkList()` is the one to use for
+rows of links.
+
+The blog runs both directions off one declaration. A post's `about` is a list of
+addresses; `ABOUT` inverts it at load, and `feedSection(view, id)` shows a record
+which posts mention it. Two lists would disagree the first time somebody edited
+one. `validate.py` resolves every address against the data file behind that
+view, so a dead link is a build error rather than something that renders as
+nothing.
+
+Anchors had no styling at all until this went in — the two that existed were
+driven by click handlers, and nobody had looked at them on a dark background,
+where the browser default is bright blue and underlined.
+
 ## Companion registers
 
 The same machinery — corpus, extractor, validator, console — carries every

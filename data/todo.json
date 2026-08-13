@@ -123,7 +123,8 @@
     {
       "cat": "BobNet",
       "text": "Cross-register links — make the registers admit the others exist",
-      "note": "The click paths are already in the data and none of them are wired: origin, visited and lostAt point at systems, every creature carries the world it lives on, every people carries how it stands with the Bobs. Six registers sitting in the same window studiously ignoring each other. Herschel to Epsilon Eridani to gorilloids to Deltans ought to be four clicks; today it's four searches, and the search box is the same search box each time. Even one-way links — Bobs built here, fauna of this world — would do most of the work. Raised by an outside review on 11 Aug 2026, and the one structural thing it caught that we hadn't."
+      "note": "Done, and the mechanism turned out to be one already here. A link between registers is just an address — <a href=\"#chart/82_eridani\"> — so it inherits applyHash, which refuses an unknown view and drops a selection the reading position holds back, plus copy-link-address and middle-click, and needs no click handler to stay in step. What links now: a Bob's origin, visited and lost-at into the chart; a system into the fauna and peoples recorded there, which was in the data and never on the page; a creature to the Bob who named it, via a new namedById; and the blog both ways — a post declares what it is about as addresses, and every record reads that same list backwards to show ON THE FEED. One mapping, two directions, so the two cannot disagree. A held target vanishes from a list rather than degrading to its name, because in a list the name is the whole content.",
+      "done": true
     },
     {
       "cat": "BobNet",

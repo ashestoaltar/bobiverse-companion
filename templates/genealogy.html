@@ -607,6 +607,15 @@
   @media (prefers-reduced-motion:reduce){
     *{transition:none !important; animation:none !important}
   }
+  /* Links between registers. There was no rule for anchors at all until they
+     started carrying navigation — the two that existed were driven by click
+     handlers and nobody had looked at them on a dark background, where a
+     browser's default is bright blue and underlined. They read as the buttons
+     beside them instead, because that is what they do. */
+  a{color:var(--amber); text-decoration:none; border-bottom:1px solid var(--rule)}
+  a:hover{color:var(--void); background:var(--amber); border-bottom-color:var(--amber)}
+  .kids a, .note a{border-bottom-color:var(--rule)}
+
   :focus-visible{outline:1px solid var(--amber-hi); outline-offset:2px}
 </style>
 </head>
@@ -1752,8 +1761,24 @@ function renderSystemDossier(sys){
         sys.places.map(pl => `<p class="note"><b style="color:var(--amber-hi);font-weight:400">${esc(pl.name)}</b>${
           pl.kind ? ` <span class="dim">(${esc(pl.kind)})</span>` : ''}${
           pl.note ? '<br>' + esc(pl.note) : ''}</p>`).join('<div style="height:7px"></div>')}</div>` : ''}
+      ${(() => {
+        // The chart knew which Bobs were built and lost here and nothing else,
+        // while the bestiary and the peoples register both carried a system id
+        // pointing back at it. The link existed in the data and not on the page.
+        const here = ((BESTIARY && BESTIARY.creatures) || [])
+          .filter(c => c.system === sys.id && !heldEntry(c));
+        const folk = ((PEOPLES && PEOPLES.entries) || [])
+          .filter(e => e.system === sys.id && !heldEntry(e));
+        const row = (label, list, view) => list.length
+          ? `<div class="sec"><div class="sec-label">${label} — ${list.length}</div><div class="kids">${
+              list.map(x => linkTo(view, x.id, x.name)).join('<span class="dim"> · </span>')}</div></div>`
+          : '';
+        return row('FAUNA ON RECORD', here, 'bestiary') +
+               row('PEOPLES AND POLITIES', folk, 'peoples');
+      })()}
       ${born.length ? `<div class="sec"><div class="sec-label">BUILT HERE — ${born.length}</div><div class="kids">${link(born)}</div></div>` : ''}
       ${lost.length ? `<div class="sec"><div class="sec-label">LOST HERE — ${lost.length}</div><div class="kids">${link(lost)}</div></div>` : ''}
+      ${feedSection('chart', sys.id)}
       ${sys.povs.length ? `<div class="sec"><div class="sec-label">NARRATED FROM HERE</div><p class="note">${esc(sys.povs.join(', '))}</p></div>` : ''}
       ${sys.role ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>${prose(sys.role)}</div>` : ''}
     </div>`;
@@ -1785,6 +1810,7 @@ function renderDossier(){
   const t = TIER[b.src];
   const v = shown(b);              // what any of this is allowed to look like
   const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
+  const fh = (label, html) => html ? `<div class="f"><dt>${label}</dt><dd>${html}</dd></div>` : '';
   // Children are a list of other records and gate like any other list. Bill's
   // dossier was naming seventeen clones at book one, four of which the reader
   // could not have met yet — the trace was careful about this and the roster
@@ -1855,12 +1881,12 @@ function renderDossier(){
       <dl class="fields">
         ${(() => { const g = generation(b); return g ? f('GENERATION', g.stated ? `${g.n} — stated in the books` : `${g.n} — counted down the tree`) : ''; })()}
         ${f('BUILT', b.born)}
-        ${f('ORIGIN', sysName(b.origin))}
+        ${fh('ORIGIN', sysLink(b.origin))}
         ${f('VESSEL', b.vessel)}
-        ${f('VISITED', sysList(b.visited))}
+        ${fh('VISITED', sysLinks(b.visited))}
         ${fateShown ? f('FATE', `${fateOf(v).label} — ${fateOf(v).full}`) : ''}
         ${fateShown ? f('ON RECORD', v.fateCite) : ''}
-        ${fateShown ? f('LOST AT', sysName(v.lostAt)) : ''}
+        ${fateShown ? fh('LOST AT', sysLink(v.lostAt)) : ''}
         ${f('FACTION', v.faction)}
         ${f('NAMESAKE', b.ref && b.ref !== '—' ? b.ref : '')}
         ${f('CITATION', v.cite)}
@@ -1878,6 +1904,7 @@ function renderDossier(){
       ${ch.length ? `<div class="sec"><div class="sec-label">CLONES ON RECORD — ${ch.length}</div>
         <div class="kids">${ch.map(c => `<button data-id="${c.id}">${esc(shown(c).name)}</button>`).join('<span class="dim"> · </span>')}</div></div>` : ''}
 
+      ${feedSection('register', b.id)}
       ${(() => {
         // Our prose is the one thing no citation bounds, so it is held as a
         // block until the record says how far it reaches. The section headings
@@ -1970,6 +1997,7 @@ function renderBeastDossier(id){
   const c = ((BESTIARY && BESTIARY.creatures) || []).find(x => x.id === id);
   if (!c) return null;
   const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
+  const fh = (label, html) => html ? `<div class="f"><dt>${label}</dt><dd>${html}</dd></div>` : '';
   const sys = c.system && SYS[c.system];
   return `<div class="doss">
     <button class="close" id="d-close" aria-label="Close">×</button>
@@ -1978,17 +2006,19 @@ function renderBeastDossier(id){
     <dl class="fields">
       ${f('ROLE', c.role)}
       ${f('WORLD', beastWhere(c))}
-      ${f('NAMED BY', c.namedBy)}
+      ${c.namedById && canLink('register', c.namedById)
+          ? fh('NAMED BY', bobLink(c.namedById)) : f('NAMED BY', c.namedBy)}
       ${f('SAPIENCE', c.sapience === 'contested' ? 'contested — the books leave it open' : 'none on record')}
       ${f('MENTIONS', c.mentions != null ? `${c.mentions} across the five books` : null)}
       ${f('FIRST ON RECORD', citeUpTo(c.cite))}
     </dl>
     ${sys ? `<div class="sec"><div class="sec-label">SYSTEM</div>
-      <p class="note"><a href="#" data-sys="${esc(c.system)}">${esc(sys.name)}</a>${
+      <p class="note"><a href="${addr('chart', c.system)}" data-sys="${esc(c.system)}">${esc(sys.name)}</a>${
         sys.distance_ly ? ` <span class="dim">— ${sys.distance_ly.toFixed(2)} ly</span>` : ''}</p></div>` : ''}
     <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
       ${(() => { const g = proseGated(c.note, c);
           return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}</div>
+      ${feedSection('bestiary', c.id)}
     ${c.art ? '' : `<div class="sec"><div class="sec-label">ILLUSTRATION</div>
       <p class="note dim">None on file. Drop an SVG at assets/bestiary/${esc(c.id)}.svg and rebuild.</p></div>`}
   </div>`;
@@ -2083,13 +2113,14 @@ function renderPeopleDossier(id){
     </dl>
     ${theirs.length ? `<div class="sec"><div class="sec-label">POLITIES — ${theirs.length}</div>
       <div class="kids">${theirs.map(t =>
-        `<a href="#" data-people="${esc(t.id)}">${esc(t.name)}</a>`).join('')}</div></div>` : ''}
+        `<a href="${addr('peoples', t.id)}" data-people="${esc(t.id)}">${esc(t.name)}</a>`).join('')}</div></div>` : ''}
     ${sys ? `<div class="sec"><div class="sec-label">SYSTEM</div>
-      <p class="note"><a href="#" data-sys="${esc(e.system)}">${esc(sys.name)}</a>${
+      <p class="note"><a href="${addr('chart', e.system)}" data-sys="${esc(e.system)}">${esc(sys.name)}</a>${
         sys.distance_ly ? ` <span class="dim">— ${sys.distance_ly.toFixed(2)} ly</span>` : ''}</p></div>` : ''}
     <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
       ${(() => { const g = proseGated(e.note, e);
           return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}</div>
+      ${feedSection('peoples', e.id)}
   </div>`;
 }
 
@@ -2144,6 +2175,61 @@ function guppyBlink(el){
   }, 3200 + Math.random() * 5200);
   again();
 }
+
+/* ---- links between registers -------------------------------------------
+   A link from one register into another is just an address. The hash scheme is
+   already this console's navigation — applyHash refuses an unknown view, drops
+   a selection the reading position holds back, and the hashchange listener
+   renders the result — so a plain <a href> inherits all of it, and gets
+   copy-link-address and middle-click into a new tab besides. No click handler,
+   nothing to keep in step.
+
+   A register becomes linkable the moment it declares itself in SEL, which is
+   the same place it declares itself to the URL. */
+const addr = (view, id) => '#' + view + (id ? '/' + encodeURIComponent(id) : '');
+
+/* Never link to something the reader has not reached — the link text is the
+   name, and a name is a spoiler of its own. Falls back to plain text where the
+   thing exists but is held, and to nothing where it does not exist. */
+const canLink = (view, id) => {
+  if (!REGISTERS.some(r => r.id === view)) return false;
+  if (!id) return true;                       // a whole register is always reachable
+  const spec = SEL[view] || DEFAULT_SEL;
+  return spec.ok(id) && !spec.held(id);
+};
+const linkTo = (view, id, text) =>
+  canLink(view, id) ? `<a href="${addr(view, id)}">${esc(text)}</a>` : esc(text);
+
+/* A held target is dropped from a list rather than falling back to its name —
+   in a list the name IS the content, so plain text would leak exactly what the
+   link was hiding. */
+const linkList = (pairs) => pairs
+  .filter(([view, id]) => canLink(view, id))
+  .map(([view, id, text]) => linkTo(view, id, text))
+  .join('<span class="dim"> · </span>');
+
+/* The feed, read backwards. A post declares what it is about as addresses;
+   this is the same list from the other end, so a record can show that Bill
+   wrote about it without anyone maintaining a second copy of the mapping. */
+const ABOUT = Object.create(null);
+((BLOG && BLOG.posts) || []).forEach(p =>
+  (p.about || []).forEach(a => (ABOUT[a] || (ABOUT[a] = [])).push(p.id)));
+
+const postsAbout = (view, id) =>
+  (ABOUT[id ? `${view}/${id}` : view] || [])
+    .map(postById).filter(p => p && !heldPost(p));
+
+const feedSection = (view, id) => {
+  const list = postsAbout(view, id);
+  return list.length
+    ? `<div class="sec"><div class="sec-label">ON THE FEED — ${list.length}</div><div class="kids">${
+        list.map(p => linkTo('blog', p.id, p.title)).join('<span class="dim"> · </span>')}</div></div>`
+    : '';
+};
+
+const sysLink  = id => id ? linkTo('chart', id, sysName(id)) : '';
+const sysLinks = ids => (ids || []).map(sysLink).filter(Boolean).join('<span class="dim">, </span>');
+const bobLink  = id => byId[id] ? linkTo('register', id, shown(byId[id]).name) : '';
 
 /* ---- blog --------------------------------------------------------------
    Two voices, labelled rather than blended. `bobnet` is Bill talking on his own
@@ -2209,6 +2295,22 @@ function renderPost(id){
       <div class="sec" style="border-top:0; padding-top:10px">
         ${g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('POST')}
       </div>
+      ${(() => {
+        const links = (p.about || []).map(a => {
+          const [view, id] = a.split('/');
+          if (!id) return REGISTERS.some(r => r.id === view)
+            ? [view, null, REGISTERS.find(r => r.id === view).label] : null;
+          const name = view === 'chart' ? sysName(id)
+            : view === 'bestiary' ? (beastById(id) || {}).name
+            : view === 'peoples' ? (peopleById(id) || {}).name
+            : view === 'blog' ? (postById(id) || {}).title
+            : (byId[id] ? shown(byId[id]).name : null);
+          return name ? [view, id, name] : null;
+        }).filter(Boolean);
+        const html = linkList(links);
+        return html ? `<div class="sec"><div class="sec-label">IN THE REGISTRY</div>` +
+                      `<div class="kids">${html}</div></div>` : '';
+      })()}
     </div>`;
 }
 

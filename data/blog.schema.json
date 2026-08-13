@@ -3,14 +3,23 @@
   "title": "BobNet blog",
   "description": "Dated posts, rendered as a peer register. Bill's blog is canon — in Bk4 ch5 he needles Bob with 'You still haven't read my blog yet, have you?' — so posts in his voice are a thing the character does rather than a framing device this project invented. Public features and blogs are named as BobNet features in Bk2 ch32.\n\nWhat is NOT canon is a Bob discussing the novels as novels. Nothing inside the fiction knows the books are books, so a post about appendices, parse errors or provenance rules cannot be Bill's — see `voice`.",
   "type": "object",
-  "required": ["posts"],
+  "required": [
+    "posts"
+  ],
   "properties": {
     "posts": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "date", "voice", "title", "body", "spoil"],
+        "required": [
+          "id",
+          "date",
+          "voice",
+          "title",
+          "body",
+          "spoil"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -24,21 +33,28 @@
           },
           "voice": {
             "type": "string",
-            "enum": ["bobnet", "editor"],
+            "enum": [
+              "bobnet",
+              "editor"
+            ],
             "description": "Who is talking, and the reason this field exists. 'bobnet' is Bill, in-world, first person, and may not refer to the novels or to Dennis E. Taylor — nothing in the fiction knows either exists. 'editor' is this registry's own voice, the same one the dossier labels ANNOTATION — REGISTRY EDITOR, NOT BOBNET, and it may discuss sources, appendices, parse failures and its own mistakes freely. The console labels the two differently rather than letting a reader guess which they are reading."
           },
           "by": {
             "type": "string",
             "description": "Byline. Defaults to Bill for a bobnet post; an editor post is signed as the registry rather than as a person."
           },
-          "title": { "type": "string" },
+          "title": {
+            "type": "string"
+          },
           "dek": {
             "type": "string",
             "description": "One line under the title, shown in the list. The hook, not a summary."
           },
           "tags": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Free-form. Not filters — the chip row grades parentage and has nothing to say about a blog post."
           },
           "body": {
@@ -50,6 +66,14 @@
             "minimum": 1,
             "maximum": 5,
             "description": "The latest book this post draws on. Required rather than optional, because a post is prose all the way down — there is no citation underneath it to fall back on, so an undeclared one would be held forever."
+          },
+          "about": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z]+(/[a-z0-9_-]+)?$"
+            },
+            "description": "What this post is about, written as console addresses — 'register/milo', 'chart/82_eridani', 'memorium'. The same scheme the URL uses, so a post links into any register that has declared itself, and the registry reads the list backwards to show a record which posts mention it. A target the reading position holds back is dropped from both directions rather than shown as plain text: the link text is a name, and a name is a spoiler of its own."
           }
         }
       }

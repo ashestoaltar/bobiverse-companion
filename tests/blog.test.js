@@ -76,6 +76,61 @@ module.exports = ({ok, get, run}) => {
   ok(run('posts()').some(p => p.id === all[0].id),
      `searching '${word}' should find the post it came from`);
 
+  // ---- links, both directions -------------------------------------------
+  // A post declares what it is about as addresses, and a record reads that list
+  // backwards. One mapping, two directions — the alternative is two lists that
+  // disagree the first time anybody edits one.
+  const canLink = get('canLink');
+  const linkTo = get('linkTo');
+  const REGISTERS = get('REGISTERS');
+
+  reset();
+  for (const p of all) {
+    for (const a of p.about || []) {
+      const [view, id] = a.split('/');
+      ok(REGISTERS.some(r => r.id === view), `${p.id}: about '${a}' names no register`);
+      ok(canLink(view, id || null), `${p.id}: about '${a}' does not resolve to anything`);
+    }
+  }
+
+  // forwards: the post carries the links
+  const withLinks = all.find(p => (p.about || []).length);
+  ok(withLinks, 'expected a post that points somewhere');
+  reset();
+  state.blog = withLinks.id;
+  run('render()');
+  const open = doc.getElementById('dossier').innerHTML;
+  for (const a of withLinks.about) {
+    ok(open.includes(`href="#${a}"`), `${withLinks.id}: no link to ${a}`);
+  }
+
+  // backwards: the thing it points at knows about the post
+  const target = withLinks.about.map(a => a.split('/')).find(([, id]) => id);
+  if (target) {
+    const [view, id] = target;
+    reset();
+    state.view = view;
+    run(`selOf(${JSON.stringify(view)})`).set(id);
+    run('render()');
+    const back = doc.getElementById('dossier').innerHTML;
+    ok(back.includes(`href="#blog/${withLinks.id}"`),
+       `${view}/${id} does not link back to the post about it`);
+    ok(back.includes('ON THE FEED'), 'the reverse link is not labelled');
+  }
+
+  // held targets vanish from a link list rather than degrading to their name —
+  // in a list the name is the whole content, so plain text would leak it
+  const held = get('BOBS').find(b => run('attestedAt')(b) >= 4);
+  if (held) {
+    state.book = 1;
+    ok(!canLink('register', held.id), `${held.id} should not be linkable at book 1`);
+    ok(linkTo('register', held.id, held.name) === get('esc')(held.name),
+       'a held link should fall back to plain text when it is prose');
+    ok(!run('linkList')([['register', held.id, held.name]]),
+       'a held link should vanish from a list, not fall back to its name');
+    state.book = get('BOOK_MAX');
+  }
+
   // ---- the chip row has nothing to say here ------------------------------
   // The filters grade parentage. A blog post has none.
   const reg = get('REGISTERS').find(r => r.id === 'blog');

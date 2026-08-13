@@ -35,6 +35,10 @@
             "type": "string",
             "description": "Who coined the name, where the text says. Bob named the gorilloids, Mario the dragons, Howard the trout. Omit rather than guess."
           },
+          "namedById": {
+            "type": "string",
+            "description": "The record id behind `namedBy`, where the namer is a Bob we hold — so the dossier can link to him rather than printing a name that goes nowhere. Absent where the namer is not a single replicant: the Vulcan colonists named the raptors and the brontos, and they are not in this registry."
+          },
           "system": {
             "type": "string",
             "description": "id keyed into data/systems.json. The validator rejects one that isn't there."

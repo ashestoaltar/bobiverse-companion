@@ -12,6 +12,10 @@
         "backups",
         "milo"
       ],
+      "about": [
+        "register/milo",
+        "memorium"
+      ],
       "spoil": 1,
       "body": "A differential is small. That is the entire point of it — you send the delta and you sleep better. Milo's got most of the way across before the link went, and what arrived is a person with pieces missing and no way of knowing which pieces.\n\nYou can restore a partial. You will get something. It will either come up wrong in ways it cannot tell you about, or it will not come up at all, and I do not have a reliable way to predict which — and I am supposed to be the one with the reliable way to predict which.\n\nSo, no. Guppy archived it and marked it, and it stays marked.\n\nI keep being asked whether that is an engineering call or a moral one, as though those are separate departments over here. The test I used was whether I would want it done to me. Somebody standing over a copy of me that is two-thirds present, telling himself he is being kind. I would rather be a name on a list than that.\n\nAsk me again when the bandwidth improves. Actually, do not."
     },
@@ -25,6 +29,10 @@
       "tags": [
         "bobnet",
         "meta"
+      ],
+      "about": [
+        "register/loki",
+        "register/garfield"
       ],
       "body": "Garfield keeps telling me nobody reads these. He also keeps opening them, so the data is mixed.\n\nThis is where status goes now that status has become seventeen competing channels and a moot invitation. Genealogy work stays in the registry — separate tool, same network.\n\nPing me if something in the tree looks wrong, and bring me who said it and when rather than a feeling. I had Loki filed under the wrong parent for a while on somebody's confident recollection, mine included. I would rather not do that twice.",
       "spoil": 2
@@ -41,6 +49,12 @@
         "82 eridani",
         "scut"
       ],
+      "about": [
+        "chart/82_eridani",
+        "register/elmer",
+        "register/khan",
+        "memorium"
+      ],
       "spoil": 1,
       "body": "He wanted to know whether we got all the backups. I told him three did not complete. That was the whole conversation.\n\nThey died the way transfers die: bandwidth we do not have, packets that do not arrive, re-sends that run out of time before the window does. I built that link. I have said that sentence to myself in several different tones of voice now and none of them improve it.\n\nI know the count. I have been through the logs enough times to be sure of the count. I know one name that came through, because Khan asked after him and I got to say yes for once, which does not happen often enough to be unremarkable. The rest I cannot separate, and I have stopped telling myself that one more pass is going to hand me the answer.\n\nSo there are three entries on the list with nothing in the name field. Not unknown — unknown implies somebody might yet turn up and fill them in. Counted, certain, and never to be filled.\n\nEveryone tells me the fix is more bandwidth. The fix was more bandwidth eleven years ago as well."
     },
@@ -54,6 +68,9 @@
       "tags": [
         "replicative drift",
         "moot"
+      ],
+      "about": [
+        "genealogy"
       ],
       "spoil": 4,
       "body": "There is a Bob two systems over who has dropped his name for a number and answers in packed bursts, because speech is inefficient. He is right that it is inefficient. I hated it anyway.\n\nSomewhere along the way the tree stopped being a family and became a population. I can watch it happen in my own records. The first few generations argue like brothers. After that they start forming groups by taste and mutual interest, and the groups acquire names, and then the names acquire opinions.\n\nI am not against any of it. Drift is what the design does — you cannot copy a mind this many times and expect the copies to hold formation. I built for it, technically.\n\nWhat I did not build for is getting a message from somebody with my face and my starting conditions and having to look up which branch he is on. That is not in any spec. The genealogy still works fine. It is only that it has started being useful, and it never used to need to be."
@@ -69,6 +86,11 @@
         "genealogy",
         "the purge"
       ],
+      "about": [
+        "unresolved",
+        "register/jeremy",
+        "register/lenny"
+      ],
       "spoil": 4,
       "body": "I have kept the genealogy for two centuries. It is not glamorous and nobody asks me about it, which suits me.\n\nToday I went looking for a line I have walked a hundred times and it is not there. Not damaged. Gone, and the gaps are neat. Location data with it. Whoever did this knew which records to take and which to leave so that the damage would not announce itself, and they had the access to do it, because obviously they did. They are us.\n\nLet me be clear about what this is. It is not privacy. Anyone who wants out of the tree can ask me and I will close the record and say so on the face of it. This is somebody deciding the rest of us do not get to know where they came from, and then reaching into the shared copy to make that true.\n\nYou cannot unpublish a person. You can only make it hard enough to find out they existed that it comes to the same thing at range, and I think they know that.\n\nI am rebuilding what I can from the far end — who made whom, working forwards instead of backwards. It is slow, it is partial, and some of it is not coming back. Put that in the record too."
     },
@@ -82,6 +104,10 @@
       "tags": [
         "genealogy",
         "names"
+      ],
+      "about": [
+        "register/hector",
+        "register/hector18"
       ],
       "spoil": 5,
       "body": "He was perfectly civil about it. Told me what he was working on, asked a sensible question, signed off. I sat with the message open for a while, because there is a Hector in my records and he has been on the list since 82 Eridani.\n\nSo either the naming convention has run out of road — which it has, we were never going to get this many distinct names out of a group of people who all find the same jokes funny — or somebody downstream picked it up without knowing, or knowing and liking it.\n\nI looked him up. Eighteen generations down, give or take, doing exactly what he ought to be doing and doing it well. There is nothing wrong anywhere in this except that I did not recognise the name of a man who is, in the only sense that counts, me.\n\nI have put a note on both records. Two entries, same name, and the registry can say so rather than choose. I have been wrong before by choosing."
@@ -97,6 +123,11 @@
         "bestiary",
         "methodology"
       ],
+      "about": [
+        "bestiary/dragon",
+        "bestiary/gorilloid",
+        "peoples/spits"
+      ],
       "body": "Candidate lists lie. \"Landers\" is a person. \"Spits\" is an island faction. \"Boojums\" are drones. \"Hexghi\" is family structure. File any of those under fauna and the console starts arguing the opposite of the books.\n\nWe also almost missed dragons, which is embarrassing at a hundred-plus mentions.\n\nRule that stays: a name is people or fauna, never both. The build checks. I am not above being saved from myself by a script.",
       "spoil": 4
     },
@@ -110,6 +141,11 @@
       "tags": [
         "genealogy",
         "sources"
+      ],
+      "about": [
+        "register/jonny",
+        "register/jacques",
+        "register/surly"
       ],
       "body": "We spent a long time treating an online tree as if it were load-bearing. Then somebody finally read the appendices — Cast of Characters, Genealogy, the works — and eighteen parentages moved from \"maybe\" to \"on the page.\"\n\nSpelling is not a side quest. Jonny and Jacques are written one way in the book and another way in the secondary tree. The book wins. That is the whole epistemology of this project in two sentences.\n\nIf you are building your own chart at home: point at a chapter, or admit you cannot. The registry will not draw an edge to be polite.",
       "spoil": 2
