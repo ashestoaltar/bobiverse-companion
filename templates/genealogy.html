@@ -1253,6 +1253,14 @@ function renderMemorium(){
   // Not shown() — that is the field mask, and this is a different question:
   // whether the Bob belongs on this page at all.
   const listable = b => !heldRecord(b) && !heldFate(b);
+  /* Named once each in the whole series, in the chapter where they are lost.
+     Only said when all three can be said — the detail is three names, and a
+     name is a spoiler of its own. */
+  // The one this sweep did move, named only where he can be.
+  const MOVED = byId.hannibal && listable(byId.hannibal) ? shown(byId.hannibal).name : '';
+  const QUIET = ['jackson', 'milton', 'zeke']
+    .filter(id => byId[id] && listable(byId[id]))
+    .map(id => shown(byId[id]).name);
   const named = BOBS.filter(b => b.fate === 'memorium' && listable(b)).sort(byWhen);
   const presumed = BOBS.filter(b => b.fate === 'presumed' && listable(b)).sort(byWhen);
   const restored = BOBS.filter(b => b.fate === 'restored' && listable(b)).sort(byWhen);
@@ -1317,7 +1325,16 @@ function renderMemorium(){
       presumed.map(row).join('') +
       `<p class="mem-foot">Their ships were destroyed and no one afterwards says whether ` +
       `the backups completed. They are here rather than in either column, which is the ` +
-      `honest place for them.</p></div>` : '',
+      `honest place for them.` +
+      // The sweep that moved Hannibal out of this column, run against all of
+      // them: every chapter after each loss searched for the name. It settled
+      // nobody. Recording that is the point — an unsearched gap and a searched
+      // one look identical on the page unless the page says which it is.
+      ` Every chapter after each loss has been searched for the name` +
+      (MOVED ? `, which is how ${MOVED} left this column` : '') + `; none of these came back.` +
+      (QUIET.length === 3 ? ` ${QUIET.join(', ')} are each named once in five books, in the ` +
+        `chapter where they are lost.` : '') +
+      `</p></div>` : '',
     restored.length ? `<div class="mem-sec"><div class="sec-label">RECOVERED — ${restored.length}</div>` +
       restored.map(row).join('') +
       `<p class="mem-foot">Named Bobs who lost a vessel or a body and came back. They are ` +

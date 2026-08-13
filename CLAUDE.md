@@ -52,6 +52,23 @@ replicative drift has gone far enough that Bill starts calling Bobs "joiners"
 Starfleet's purge is the reason its members are so thin on lineage — that gap is
 in-world, not a hole in our research.
 
+**Sweeping for a fate: what the eight unaccounted turned up.** Every chapter
+after each loss was searched for the name, the way Hannibal was moved out of
+`presumed`. Nothing came back — no promotion, and that null result is now on the
+page, because an unsearched gap and a searched one look identical unless the
+page says which it is. Three of them are named exactly once in five books, in
+the chapter where they are lost; a fourth only appears again in the printed
+genealogy. The three blank rows stay drawn from five and the arithmetic does not
+close.
+
+Every later hit was somebody else, which is the finding worth keeping: Tom is
+Tom Cruise and then Tom Sawyer, Jackson is Peter Jackson, Barney is a Quinlan
+hotel. **Fred** is a Deltan hunter from Bk2 ch1 who becomes an antagonist
+through book 3. **Hector Rodriguez** is a human in book 5, and separately there
+is the eighteenth-generation Bob Hector who emails Bill in Bk5 ch38 — three
+distinct Hectors, which is why that record carries a conflict rather than a
+merge.
+
 **Not every name in the books is a Bob.** The text is full of humans, Deltans,
 Quinlans and Pav who sit in sentences right next to replicants. Bridget is Dr.
 Sheehy; Diana is a Deltan; Barb is a Quinlan; the Jeffrey holding court at the
