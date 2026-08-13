@@ -115,6 +115,16 @@ module.exports = ({ok, get, run, ROOT}) => {
   ok(new RegExp(`max-width:\\s*${w}px`).test(html),
      `SHEET_WIDTH is ${w}px but no stylesheet rule uses that breakpoint`);
 
+  // iOS zooms a focused input under 16px and never zooms back. The body drops
+  // to 12.5px on a phone, so the search box has to opt out of it by hand.
+  ok(/\.prompt input\{font-size:16px\}/.test(html),
+     'the search box will trigger iOS zoom at the mobile body size');
+
+  // The sheet is fixed to the bottom edge, which is where the home indicator
+  // is. Without this it renders underneath one.
+  ok(/inset:auto var\(--gap\) max\(var\(--gap\), env\(safe-area-inset-bottom\)\)/.test(html),
+     'the dossier sheet does not clear the home indicator');
+
   reset();
   run('render()');
   console.log(`  ${REGISTERS.length} registers open a dossier at ${PHONE}px, sheet below ${w}px`);

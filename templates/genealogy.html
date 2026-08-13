@@ -1,6 +1,21 @@
+<!doctype html>
+<!-- The doctype is not decoration. Without it every browser renders this in
+     quirks mode, which is a twenty-year-old box model kept alive for pages
+     written before the standard existed. It cost nothing to be standards mode
+     and the page has no business being anywhere else.
+
+     viewport-fit=cover lets the layout reach under a phone's rounded corners
+     and home indicator, which is only safe because the sheet below pads itself
+     back out with env(safe-area-inset-bottom). The two go together. -->
+<html lang="en">
+<head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>BobNet — Registry</title>
+<!-- Tell the browser it is dark before any CSS loads, so form controls and the
+     first painted frame come up dark rather than flashing white. -->
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0A0704">
 <style>
   /* ======================================================================
      BobNet Registry
@@ -449,9 +464,17 @@
     .chart-bar .hint{font-size:10px; letter-spacing:.06em}
     .chart-bar button{padding:6px 12px}
     body{font-size:12.5px}
+    /* iOS zooms the page when a focused input is under 16px and does not zoom
+       back out. The console reads at 12.5px on a phone; the search box is the
+       one element that cannot follow it down. */
+    .prompt input{font-size:16px}
     .main{grid-template-columns:minmax(0,1fr)}
+    /* The sheet sits at the bottom edge, which on a modern phone is where the
+       home indicator lives. Clear it, but never let that shrink the gap on a
+       device that has no inset to report. */
     .dossier{
-      position:fixed; inset:auto var(--gap) var(--gap); z-index:60;
+      position:fixed; z-index:60;
+      inset:auto var(--gap) max(var(--gap), env(safe-area-inset-bottom));
       max-height:min(64dvh, 560px); box-shadow:0 -18px 44px rgba(0,0,0,.8);
     }
     .dossier[hidden]{display:none}
@@ -469,6 +492,9 @@
   }
   :focus-visible{outline:1px solid var(--amber-hi); outline-offset:2px}
 </style>
+</head>
+
+<body>
 
 <div class="crt-scan"></div>
 <div class="crt-vig"></div>
@@ -2150,3 +2176,6 @@ applyHash();
 renderChips();
 render();
 </script>
+
+</body>
+</html>
