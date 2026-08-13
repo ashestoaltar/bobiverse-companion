@@ -51,7 +51,11 @@ function install(sandbox, {width = 1400} = {}) {
   sandbox.window = {
     innerWidth: width,
     innerHeight: 900,
-    matchMedia: () => ({matches: true}),   // reduced motion -> skips boot timers
+    // Answer per query rather than yes to everything. Reduced motion has to be
+    // true so the boot timers never start, but pretending to be a touchscreen
+    // made the golden master record the phone's help text as the canonical
+    // rendering, which is backwards.
+    matchMedia: q => ({matches: /prefers-reduced-motion/.test(String(q))}),
     addEventListener: () => {},
     devicePixelRatio: 1,
     location: {hash: ''},

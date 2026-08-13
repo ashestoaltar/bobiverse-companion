@@ -116,4 +116,16 @@ module.exports = ({ok, get, run, ROOT}) => {
   }
 
   console.log(`  ${PLACED.length} placed, ${UNPLACED.length} unplaced, ${withSpec.length} with spectra`);
+
+  // ---- the help text must only name gestures this device can make ----------
+  // The first mobile pass shipped a chart whose instructions were "wheel zoom"
+  // and "shift-drag pan" on a phone, which is worse than no instructions: it
+  // reads as broken rather than as unsupported. The stub reports a fine
+  // pointer, so the desktop wording is the one that should appear.
+  get('state').view = 'chart';
+  run('render()');
+  const bar = get('document').getElementById('stage').innerHTML;
+  ok(/WHEEL ZOOM/.test(bar), 'a mouse should be told about the wheel');
+  ok(!/PINCH|TWO-FINGER/.test(bar), 'a mouse was offered touch gestures');
+  ok(get('TOUCH') === false, 'TOUCH should be false when the pointer is fine');
 };

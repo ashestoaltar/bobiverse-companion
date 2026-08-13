@@ -26,6 +26,7 @@
 
   *{box-sizing:border-box}
   html,body{height:100%}
+  @supports (height:100dvh){ html,body{height:100dvh} }
   body{
     margin:0; background:var(--void); color:var(--amber);
     font-family:var(--mono); font-size:15px; line-height:1.58;
@@ -109,6 +110,9 @@
   .stage{min-height:0; overflow:auto; scrollbar-width:thin; scrollbar-color:var(--rule) transparent}
   .stage::-webkit-scrollbar{width:9px;height:9px}
   .stage::-webkit-scrollbar-thumb{background:var(--rule)}
+  .scroll-x{overflow-x:auto; -webkit-overflow-scrolling:touch}
+  .scroll-x::-webkit-scrollbar{height:9px}
+  .scroll-x::-webkit-scrollbar-thumb{background:var(--rule)}
 
   /* --- register table ------------------------------------------------- */
   table.reg{width:100%; border-collapse:collapse; font-size:13.5px}
@@ -397,18 +401,48 @@
     .main{grid-template-columns:minmax(0,1fr) 316px}
     .fields .f{grid-template-columns:70px minmax(0,1fr)}
   }
+  /* --- small screens ---------------------------------------------------
+     Below this the console stops pretending to be a fixed-viewport
+     application and becomes an ordinary scrolling document. The desktop
+     shell is `position: fixed` with one row of `minmax(0,1fr)` doing the
+     scrolling, which works until the viewport is shorter than the furniture
+     — on a phone in landscape the masthead, chips and status bar eat the
+     whole 390px and the scrolling row collapses to zero, so nothing scrolls
+     at all. Height is the real trigger, not width, hence both queries. */
+  @media (max-width:860px), (max-height:560px){
+    html,body{height:auto; overflow:visible; overscroll-behavior-y:none}
+    .shell{position:static; inset:auto; display:block; min-height:100dvh}
+    .main{display:block}
+    .stage{overflow:visible; min-height:0}
+    .chart-wrap{height:auto}
+    .chart-stage{height:min(58dvh, 420px)}
+    /* fingers need a bigger target than a 3px circle */
+    .chart-svg .star{stroke-width:12; stroke:transparent; paint-order:stroke}
+    /* let the table be as wide as it needs and scroll inside .scroll-x */
+    table.reg{min-width:600px}
+  }
   @media (max-width:860px){
     :root{--gap:10px}
+    /* the year scrubber gets its own line rather than fighting the buttons */
+    .chart-bar{gap:8px 10px}
+    .chart-bar input[type=range]{flex:1 1 100%; order:5; min-width:0}
+    .chart-bar .hint{font-size:10px; letter-spacing:.06em}
+    .chart-bar button{padding:6px 12px}
     body{font-size:12.5px}
     .main{grid-template-columns:minmax(0,1fr)}
     .dossier{
       position:fixed; inset:auto var(--gap) var(--gap); z-index:60;
-      max-height:64vh; box-shadow:0 -18px 44px rgba(0,0,0,.8);
+      max-height:min(64dvh, 560px); box-shadow:0 -18px 44px rgba(0,0,0,.8);
     }
     .dossier[hidden]{display:none}
     .mast-meta{display:none}
     .reg .opt{display:none}
     .statusbar .keys{display:none}
+    /* the status bar rides with the document rather than pinning to a
+       viewport edge that moves as the browser chrome hides and shows */
+    .statusbar{position:static}
+    .mem-row{grid-template-columns:22px minmax(0,1fr) 96px}
+    .mem-row .mem-where{display:none}
   }
   @media (prefers-reduced-motion:reduce){
     *{transition:none !important; animation:none !important}
@@ -762,7 +796,12 @@ function renderRegister(rows){
     return `<tr tabindex="0" data-id="${b.id}" aria-selected="${sel}">${cells}</tr>`;
   }).join('');
 
-  return `<table class="reg"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+  /* The table sets its own width and scrolls sideways inside this wrapper
+     rather than being squeezed to fit. On a phone the columns were being
+     ellipsised down to nothing, which looks like missing data rather than
+     data you can reach. The page body must never scroll horizontally; this
+     is the thing that does. */
+  return `<div class="scroll-x"><table class="reg"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 
 function renderLineage(rows){
@@ -976,6 +1015,11 @@ const starRadius = sys => {
   if (M == null) return 3.4;
   return Math.max(2.4, Math.min(7.6, 7.6 - (M - 2.8) * 0.6));
 };
+
+/* Coarse pointer means a finger: the chart's help text and hit sizes follow
+   from it. Read once — a device does not grow a mouse mid-session. */
+const TOUCH = typeof window !== 'undefined' && window.matchMedia
+  ? window.matchMedia('(pointer: coarse)').matches : false;
 
 const CHART = {yaw: -0.62, pitch: 0.50, zoom: 1, panx: 0, pany: 0, year: 2345, sel: null};
 const YEAR_MIN = 2133, YEAR_MAX = 2345;
@@ -1212,7 +1256,8 @@ function renderChart(){
         <input id="chart-slider" type="range" min="${YEAR_MIN}" max="${YEAR_MAX}" value="${CHART.year}" aria-label="Year">
         <span class="hint" id="chart-stat"></span>
         <button data-cam="in">+</button><button data-cam="out">&minus;</button><button data-cam="reset">RESET</button>
-        <span class="hint">DRAG ROTATE · WHEEL ZOOM · SHIFT-DRAG PAN</span>
+        <span class="hint">${TOUCH ? 'DRAG ROTATE · PINCH ZOOM · TWO-FINGER PAN · TAP A STAR'
+                                     : 'DRAG ROTATE · WHEEL ZOOM · SHIFT-DRAG PAN'}</span>
       </div>
       <div class="chart-stage">
         <canvas class="chart-sky" id="chart-sky"></canvas>
@@ -1746,55 +1791,120 @@ function applyHash(){
 }
 
 /* ---- chart interaction ------------------------------------------------ */
+/* ---- chart interaction -------------------------------------------------
+   Pointer events rather than mouse events, and multi-pointer rather than one,
+   because the first version was three gestures that a phone cannot make: wheel
+   to zoom, shift-drag to pan, and a star selected on pointerdown — which on a
+   touchscreen means the chart jumps to whatever your thumb landed on before you
+   have started dragging. One finger rotates, two pinch and pan, and a star is
+   selected on release only if the gesture went nowhere. */
 (function chartInput(){
-  let drag = null;
+  const pts = new Map();          // live pointers, by id
+  let mode = null;                // rotate | pan | pinch
+  let pinch = null;               // spread and centroid when the second finger landed
+  let moved = 0;                  // total travel, to tell a tap from a drag
+  let downOn = null;              // the star the gesture began on, if any
+
+  const clampZoom = z => Math.max(0.35, Math.min(9, z));
   const svgOf = e => e.target.closest && e.target.closest('#chart');
+  const centre = () => {
+    let x = 0, y = 0;
+    for (const p of pts.values()) { x += p.x; y += p.y; }
+    return {x: x / pts.size, y: y / pts.size};
+  };
+  const spread = () => {
+    const v = [...pts.values()];
+    return v.length < 2 ? 0 : Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y);
+  };
 
   document.addEventListener('pointerdown', e => {
     const svg = svgOf(e);
     if (!svg) return;
-    const star = e.target.closest('.star');
-    if (star) { CHART.sel = star.dataset.sys; paintChart(); renderDossier(); syncHash();
-                document.getElementById('dossier').hidden = false; return; }
-    drag = {x: e.clientX, y: e.clientY, pan: e.shiftKey};
-    svg.classList.add('drag');
-    svg.setPointerCapture && svg.setPointerCapture(e.pointerId);
-  });
-  document.addEventListener('pointermove', e => {
-    if (!drag) return;
-    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-    drag.x = e.clientX; drag.y = e.clientY;
-    if (drag.pan) { CHART.panx += dx; CHART.pany += dy; }
-    else {
-      CHART.yaw += dx * 0.008;
-      CHART.pitch = Math.max(-1.5, Math.min(1.5, CHART.pitch + dy * 0.008));
+    pts.set(e.pointerId, {x: e.clientX, y: e.clientY});
+    if (pts.size === 1) {
+      moved = 0;
+      downOn = e.target.closest('.star');
+      mode = e.shiftKey ? 'pan' : 'rotate';
+      svg.classList.add('drag');
+      svg.setPointerCapture && svg.setPointerCapture(e.pointerId);
+    } else if (pts.size === 2) {
+      // a second finger converts the gesture; whatever rotation the first one
+      // began stands, but it is no longer a tap and no longer a rotation
+      mode = 'pinch';
+      downOn = null;
+      pinch = {dist: spread(), c: centre(), zoom: CHART.zoom};
     }
+  });
+
+  document.addEventListener('pointermove', e => {
+    const prev = pts.get(e.pointerId);
+    if (!prev) return;
+    const before = pts.size === 2 ? centre() : null;
+    pts.set(e.pointerId, {x: e.clientX, y: e.clientY});
+
+    if (mode === 'pinch' && pts.size === 2) {
+      const d = spread();
+      if (pinch.dist > 0) CHART.zoom = clampZoom(pinch.zoom * (d / pinch.dist));
+      const after = centre();                      // two fingers also pan
+      CHART.panx += after.x - before.x;
+      CHART.pany += after.y - before.y;
+    } else if (mode) {
+      const dx = e.clientX - prev.x, dy = e.clientY - prev.y;
+      moved += Math.abs(dx) + Math.abs(dy);
+      if (mode === 'pan') { CHART.panx += dx; CHART.pany += dy; }
+      else {
+        CHART.yaw += dx * 0.008;
+        CHART.pitch = Math.max(-1.5, Math.min(1.5, CHART.pitch + dy * 0.008));
+      }
+    } else return;
     paintChart();
   });
-  document.addEventListener('pointerup', () => {
-    drag = null;
-    const svg = document.getElementById('chart');
-    if (svg) svg.classList.remove('drag');
-  });
+
+  const release = e => {
+    if (!pts.delete(e.pointerId)) return;
+    if (pts.size === 0) {
+      // A tap that travelled less than a thumb's wobble is a selection. Eight
+      // pixels is generous for a mouse and about right for a finger.
+      if (downOn && moved < 8) {
+        CHART.sel = downOn.dataset.sys;
+        renderDossier();
+        syncHash();
+        document.getElementById('dossier').hidden = false;
+      }
+      mode = null; downOn = null; pinch = null;
+      const svg = document.getElementById('chart');
+      if (svg) svg.classList.remove('drag');
+      paintChart();
+    } else if (pts.size === 1) {
+      // lifting one of two fingers goes back to rotating, but never to a tap
+      mode = 'rotate'; moved = 1e6; pinch = null;
+    }
+  };
+  document.addEventListener('pointerup', release);
+  document.addEventListener('pointercancel', release);
+
   document.addEventListener('wheel', e => {
     if (!svgOf(e)) return;
     e.preventDefault();
-    CHART.zoom = Math.max(0.35, Math.min(9, CHART.zoom * (e.deltaY < 0 ? 1.12 : 1/1.12)));
+    CHART.zoom = clampZoom(CHART.zoom * (e.deltaY < 0 ? 1.12 : 1/1.12));
     paintChart();
   }, {passive: false});
+
   document.addEventListener('input', e => {
     if (e.target.id !== 'chart-slider') return;
     CHART.year = +e.target.value; paintChart();
   });
+
   document.addEventListener('click', e => {
     const b = e.target.closest('.chart-bar button[data-cam]');
     if (!b) return;
     const k = b.dataset.cam;
-    if (k === 'in')  CHART.zoom = Math.min(9, CHART.zoom * 1.25);
-    if (k === 'out') CHART.zoom = Math.max(0.35, CHART.zoom / 1.25);
+    if (k === 'in')  CHART.zoom = clampZoom(CHART.zoom * 1.25);
+    if (k === 'out') CHART.zoom = clampZoom(CHART.zoom / 1.25);
     if (k === 'reset') Object.assign(CHART, {yaw: -0.62, pitch: 0.50, zoom: 1, panx: 0, pany: 0});
     paintChart();
   });
+
   window.addEventListener('resize', () => {
     const on = currentRegister().onResize;
     if (on) on();
