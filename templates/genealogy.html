@@ -48,14 +48,23 @@
     font-family:var(--mono); font-size:15px; line-height:1.58;
     -webkit-font-smoothing:antialiased;
     overflow:hidden;
+    /* Phosphor bloom. This is the half of the CRT toggle that was missing: the
+       rule to turn it off has always been there, and there was nothing on to
+       turn off, so the button only ever changed the star chart. Everything that
+       says text-shadow:inherit is inheriting from here. */
+    text-shadow:0 0 3px rgba(255,176,0,.30);
   }
 
   /* --- CRT atmosphere ------------------------------------------------- */
   .crt-scan,.crt-vig{position:fixed; inset:0; pointer-events:none; z-index:90}
+  /* Scanlines were dark bands multiplied over a background that is already
+     nearly black, which is arithmetic that cannot produce a visible result.
+     A lit line on the dark works; the darker gap between gives it depth. */
   .crt-scan{
     background:repeating-linear-gradient(to bottom,
-      rgba(0,0,0,.18) 0 1px, rgba(0,0,0,0) 1px 3px);
-    mix-blend-mode:multiply; opacity:.42;
+      rgba(255,190,120,.055) 0 1px,
+      rgba(0,0,0,.22) 1px 3px);
+    opacity:.55;
   }
   .crt-vig{
     background:radial-gradient(118% 96% at 50% 46%,
@@ -1999,9 +2008,16 @@ function renderBeastDossier(id){
   const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
   const fh = (label, html) => html ? `<div class="f"><dt>${label}</dt><dd>${html}</dd></div>` : '';
   const sys = c.system && SYS[c.system];
-  return `<div class="doss">
-    <button class="close" id="d-close" aria-label="Close">×</button>
-    <h2>${esc(c.name)}</h2>
+  return `
+    <div class="dossier-head">
+      <div>
+        <div class="serial">[${esc((c.role || 'FAUNA').toUpperCase())}]</div>
+        <h2>${esc(c.name)}</h2>
+        <div class="sub">${esc(beastWhere(c) || 'WORLD NOT ON RECORD')}</div>
+      </div>
+      <button class="dossier-close" id="d-close" aria-label="Close">✕</button>
+    </div>
+    <div class="dossier-body">
     ${beastPlate(c, true)}
     <dl class="fields">
       ${f('ROLE', c.role)}
@@ -2021,7 +2037,7 @@ function renderBeastDossier(id){
       ${feedSection('bestiary', c.id)}
     ${c.art ? '' : `<div class="sec"><div class="sec-label">ILLUSTRATION</div>
       <p class="note dim">None on file. Drop an SVG at assets/bestiary/${esc(c.id)}.svg and rebuild.</p></div>`}
-  </div>`;
+    </div>`;
 }
 
 /* ---- peoples and polities ---------------------------------------------
@@ -2097,10 +2113,16 @@ function renderPeopleDossier(id){
   const sys = e.system && SYS[e.system];
   const owner = e.of && all.find(x => x.id === e.of);
   const theirs = all.filter(x => x.of === e.id);
-  return `<div class="doss">
-    <button class="close" id="d-close" aria-label="Close">×</button>
-    <h2>${esc(e.name)}</h2>
-    ${e.expansion ? `<p class="note dim">${esc(e.expansion)}</p>` : ''}
+  return `
+    <div class="dossier-head">
+      <div>
+        <div class="serial">[${e.kind === 'people' ? 'SAPIENT SPECIES' : 'POLITY'}]</div>
+        <h2>${esc(e.name)}</h2>
+        ${e.expansion ? `<div class="sub">${esc(e.expansion)}</div>` : ''}
+      </div>
+      <button class="dossier-close" id="d-close" aria-label="Close">✕</button>
+    </div>
+    <div class="dossier-body">
     ${e.art ? `<div class="beast-art big">${e.art}</div>` : ''}
     <dl class="fields">
       ${f('KIND', e.kind === 'people' ? 'sapient species' : 'polity')}
@@ -2121,7 +2143,7 @@ function renderPeopleDossier(id){
       ${(() => { const g = proseGated(e.note, e);
           return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}</div>
       ${feedSection('peoples', e.id)}
-  </div>`;
+    </div>`;
 }
 
 /* ---- Guppy ------------------------------------------------------------

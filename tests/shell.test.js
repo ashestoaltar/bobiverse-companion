@@ -53,5 +53,19 @@ module.exports = ({ok, ROOT}) => {
      cover ? 'viewport-fit=cover is declared but nothing honours a safe-area inset'
            : 'something honours a safe-area inset but viewport-fit=cover is not declared');
 
+  // ---- the CRT toggle has something to toggle ----------------------------
+  // body.plain{text-shadow:none} shipped for months against a body that had no
+  // text-shadow, so the control removed nothing outside the star chart. A rule
+  // that turns off something the page never had is a dead control.
+  // Every rule whose selector list includes a bare `body` — the first match of
+  // /body\{/ is `html,body{height:100%}`, which is not the one.
+  const flat = html.replace(/\s+/g, '');
+  const glow = [...flat.matchAll(/(?:^|[};])([^{};]*)\{([^}]*)\}/g)]
+    .filter(m => m[1].split(',').includes('body'))
+    .some(m => /text-shadow:(?!none)/.test(m[2]));
+  ok(glow, 'body has no text-shadow, so turning the CRT off changes nothing');
+  ok(/body\.plain\{text-shadow:none\}/.test(html.replace(/\s+/g, '')),
+     'nothing turns the phosphor glow back off');
+
   console.log(`  ${html.length.toLocaleString()} bytes, standards mode, theme ${themed ? themed[1] : '?'}`);
 };
