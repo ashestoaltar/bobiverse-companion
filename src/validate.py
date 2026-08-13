@@ -372,8 +372,13 @@ def _check_no_passages() -> list[str]:
 
     # Collect from everything that gets published, then scan the corpus once.
     ours: dict[str, str] = {}
+    # The template is scanned too. It carries as much of our prose as the data
+    # does — the idle panel, the trace endings, every sec-label — and all of it
+    # ships inside dist/index.html. It was outside this check purely because the
+    # check was written the day the data was the only place prose lived.
     for path in sorted(glob.glob(os.path.join(ROOT, "data", "*.json"))) + \
-                sorted(glob.glob(os.path.join(ROOT, "*.md"))):
+                sorted(glob.glob(os.path.join(ROOT, "*.md"))) + \
+                sorted(glob.glob(os.path.join(ROOT, "templates", "*.html"))):
         name = os.path.basename(path)
         if name == "skyfield.json":       # packed integers, no prose
             continue

@@ -1,9 +1,10 @@
-.PHONY: help corpus verify-books validate build test snapshots serve clean
+.PHONY: help corpus verify-books validate scan-history build test snapshots serve clean
 
 help:
 	@echo "corpus       parse ebooks in books/ into .cache/corpus.json"
 	@echo "verify-books check books/ against books/MANIFEST.sha256"
 	@echo "validate     check data/bobs.json for schema and integrity errors"
+	@echo "scan-history check every commit ever made for book text"
 	@echo "build        render data/bobs.json into dist/index.html"
 	@echo "test         build, then run the console's test suites"
 	@echo "snapshots    re-record the golden-master snapshots (review the diff!)"
@@ -18,6 +19,12 @@ verify-books:
 
 validate:
 	@python3 src/validate.py
+
+# validate checks the working tree. Publishing publishes the history, and a
+# passage pasted once and paraphrased away later is still in the repository for
+# anyone who clones it. Run before making this public, not after.
+scan-history:
+	@python3 src/scan_history.py
 
 build: validate
 	@python3 src/build.py
