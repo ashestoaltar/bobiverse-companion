@@ -73,8 +73,14 @@ jobs:
       # regardless — it is the CI — so the publishing steps sit behind a
       # condition and switch themselves on the moment the repo goes public.
       # Nothing to remember or change later.
+      # enablement: true turns Pages on for the repository rather than
+      # requiring someone to have clicked through the settings first. Same
+      # reason as the condition below: the workflow should be the whole of what
+      # is needed, so a fork or a fresh clone publishes without a checklist.
       - uses: actions/configure-pages@v5
         if: ${{ !github.event.repository.private }}
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         if: ${{ !github.event.repository.private }}
         with:
