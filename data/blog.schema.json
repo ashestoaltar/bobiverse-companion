@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BobNet blog",
+  "description": "Dated posts, rendered as a peer register. Bill's blog is canon — in Bk4 ch5 he needles Bob with 'You still haven't read my blog yet, have you?' — so posts in his voice are a thing the character does rather than a framing device this project invented. Public features and blogs are named as BobNet features in Bk2 ch32.\n\nWhat is NOT canon is a Bob discussing the novels as novels. Nothing inside the fiction knows the books are books, so a post about appendices, parse errors or provenance rules cannot be Bill's — see `voice`.",
+  "type": "object",
+  "required": ["posts"],
+  "properties": {
+    "posts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "date", "voice", "title", "body", "spoil"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Stable slug. It is the address — #blog/<id> — so changing one breaks every link anybody has to that post."
+          },
+          "date": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+            "description": "In-world date, in the console's own calendar. The feed is dated because a blog is dated; these are not real-world dates and should not be read as a changelog."
+          },
+          "voice": {
+            "type": "string",
+            "enum": ["bobnet", "editor"],
+            "description": "Who is talking, and the reason this field exists. 'bobnet' is Bill, in-world, first person, and may not refer to the novels or to Dennis E. Taylor — nothing in the fiction knows either exists. 'editor' is this registry's own voice, the same one the dossier labels ANNOTATION — REGISTRY EDITOR, NOT BOBNET, and it may discuss sources, appendices, parse failures and its own mistakes freely. The console labels the two differently rather than letting a reader guess which they are reading."
+          },
+          "by": {
+            "type": "string",
+            "description": "Byline. Defaults to Bill for a bobnet post; an editor post is signed as the registry rather than as a person."
+          },
+          "title": { "type": "string" },
+          "dek": {
+            "type": "string",
+            "description": "One line under the title, shown in the list. The hook, not a summary."
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Free-form. Not filters — the chip row grades parentage and has nothing to say about a blog post."
+          },
+          "body": {
+            "type": "string",
+            "description": "Our prose, always. Never a passage from the books, and never a quotation from Taylor's own blog or any other writing of his — paraphrase and cite, exactly as everywhere else. A blank line is a paragraph break, and a paragraph may carry an @bk<n> marker like any other prose in this project."
+          },
+          "spoil": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "The latest book this post draws on. Required rather than optional, because a post is prose all the way down — there is no citation underneath it to fall back on, so an undeclared one would be held forever."
+          }
+        }
+      }
+    }
+  }
+}

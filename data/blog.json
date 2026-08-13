@@ -1,32 +1,47 @@
 {
-  "_comment": "Sample posts for the PREVIEW layout only (dist/preview.html). Not injected into the main console yet. Prose is original — paraphrase and cite the books, never paste them. Voice: Bill, first person, conversational.",
+  "_comment": "Dated posts, rendered as a peer register. Bill's blog is canon (Bk4 ch5). `voice` says who is talking: bobnet is Bill and may not know the novels exist, editor is this registry's own voice and may. Prose is ours in both cases — never a passage from the books, and never a quotation from Taylor's own blog.",
   "posts": [
     {
-      "id": "preview-welcome",
+      "id": "welcome",
       "date": "2345-08-11",
+      "voice": "bobnet",
       "by": "Bill",
       "title": "If you're reading this, SCUT still works",
-      "dek": "Public features include several blogs. This is one of them, or a mock-up of one, depending how pedantic you're feeling.",
-      "tags": ["bobnet", "meta"],
-      "body": "Garfield keeps telling me nobody reads these. He also keeps opening them, so the data is mixed.\n\nThis feed is where status used to go before status became seventeen competing channels and a moot invite. Genealogy work still lives in the registry — separate tool, same network. If the tabs feel crowded, that is not a metaphor. We have a lot of tabs.\n\nPing me if something in the tree looks wrong. Bring a citation. \"I think I remember\" is how we got Loki under the wrong parent for a while, and I would rather not do that again."
+      "dek": "Public features include several blogs. This is one of them.",
+      "tags": [
+        "bobnet",
+        "meta"
+      ],
+      "body": "Garfield keeps telling me nobody reads these. He also keeps opening them, so the data is mixed.\n\nThis feed is where status used to go before status became seventeen competing channels and a moot invite. Genealogy work still lives in the registry — separate tool, same network. If the tabs feel crowded, that is not a metaphor. We have a lot of tabs.\n\nPing me if something in the tree looks wrong. Bring a citation. \"I think I remember\" is how we got Loki under the wrong parent for a while, and I would rather not do that again.",
+      "spoil": 2
     },
     {
       "id": "appendix-vs-pdf",
       "date": "2345-08-10",
-      "by": "Bill",
+      "voice": "editor",
+      "by": "Registry editor",
       "title": "Read the back of the book",
       "dek": "There is a genealogy printed in the novel. There is also a PDF on the open net. They do not always agree, and only one of them is Taylor.",
-      "tags": ["genealogy", "sources"],
-      "body": "We spent a long time treating an online tree as if it were load-bearing. Then somebody finally read the appendices — Cast of Characters, Genealogy, the works — and eighteen parentages moved from \"maybe\" to \"on the page.\"\n\nSpelling is not a side quest. Jonny and Jacques are written one way in the book and another way in the secondary tree. The book wins. That is the whole epistemology of this project in two sentences.\n\nIf you are building your own chart at home: point at a chapter, or admit you cannot. The registry will not draw an edge to be polite."
+      "tags": [
+        "genealogy",
+        "sources"
+      ],
+      "body": "We spent a long time treating an online tree as if it were load-bearing. Then somebody finally read the appendices — Cast of Characters, Genealogy, the works — and eighteen parentages moved from \"maybe\" to \"on the page.\"\n\nSpelling is not a side quest. Jonny and Jacques are written one way in the book and another way in the secondary tree. The book wins. That is the whole epistemology of this project in two sentences.\n\nIf you are building your own chart at home: point at a chapter, or admit you cannot. The registry will not draw an edge to be polite.",
+      "spoil": 2
     },
     {
-      "id": "landers-not-fauna",
+      "id": "a-word-that-looks-like-a-name",
       "date": "2345-08-09",
-      "by": "Bill",
+      "voice": "editor",
+      "by": "Registry editor",
       "title": "A word that looks like a name usually isn't",
       "dek": "Bestiary false positives: field notes from the purge.",
-      "tags": ["bestiary", "methodology"],
-      "body": "Candidate lists lie. \"Landers\" is a person. \"Spits\" is an island faction. \"Boojums\" are drones. \"Hexghi\" is family structure. File any of those under fauna and the console starts arguing the opposite of the books.\n\nWe also almost missed dragons, which is embarrassing at a hundred-plus mentions.\n\nRule that stays: a name is people or fauna, never both. The build checks. I am not above being saved from myself by a script."
+      "tags": [
+        "bestiary",
+        "methodology"
+      ],
+      "body": "Candidate lists lie. \"Landers\" is a person. \"Spits\" is an island faction. \"Boojums\" are drones. \"Hexghi\" is family structure. File any of those under fauna and the console starts arguing the opposite of the books.\n\nWe also almost missed dragons, which is embarrassing at a hundred-plus mentions.\n\nRule that stays: a name is people or fauna, never both. The build checks. I am not above being saved from myself by a script.",
+      "spoil": 4
     }
   ]
 }

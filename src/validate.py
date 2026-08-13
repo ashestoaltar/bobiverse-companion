@@ -470,6 +470,61 @@ def _check_names(bobs: list[dict]) -> list[str]:
     return out
 
 
+BLOG = os.path.join(ROOT, "data", "blog.json")
+VOICES = {"bobnet", "editor"}
+
+
+def _check_blog() -> tuple[list[str], list[str]]:
+    """The feed, and the one rule that keeps it honest.
+
+    `voice` is not decoration. A post marked bobnet is Bill talking on his own
+    network, and nothing inside the fiction knows the novels exist — so a post
+    in that voice may not mention the books, the appendices, or Taylor. A post
+    marked editor is this registry's own voice, the one the dossier labels on
+    every annotation, and it may say all of that. Blending the two silently is
+    the failure this checks for.
+    """
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not os.path.exists(BLOG):
+        return errors, warnings
+    with open(BLOG) as fh:
+        posts = json.load(fh)["posts"]
+
+    # Things a Bob cannot know about. Deliberately blunt: a false positive here
+    # costs one rewritten sentence, and a miss costs the frame.
+    OUTSIDE = ("appendix", "appendices", "taylor", "the novel", "the novels",
+               "the book 2", "chapter ", "the reader", "canon")
+    ids: set[str] = set()
+    for post in posts:
+        pid = post.get("id", "?")
+        if pid in ids:
+            errors.append(f"blog {pid}: duplicate id — it is the address, so it has to be unique")
+        ids.add(pid)
+        voice = post.get("voice")
+        if voice not in VOICES:
+            errors.append(f"blog {pid}: voice {voice!r} is not one of {sorted(VOICES)}")
+            continue
+        spoil = post.get("spoil")
+        if not isinstance(spoil, int) or not 1 <= spoil <= BOOKS:
+            errors.append(f"blog {pid}: spoil {spoil!r} must be a book number — a post is "
+                          f"prose all the way down, with no citation underneath to fall back on")
+        if voice == "bobnet":
+            text = " ".join(str(post.get(k, "")) for k in ("title", "dek", "body")).lower()
+            for word in OUTSIDE:
+                if word in text:
+                    errors.append(f"blog {pid}: a bobnet post says {word!r} — Bill does not "
+                                  f"know the books are books. Mark it voice 'editor' or "
+                                  f"rewrite it in his.")
+        for i, (at, para) in enumerate(_paragraphs(post.get("body"), spoil)):
+            if at is None:
+                errors.append(f"blog {pid}: paragraph {i + 1} carries an unreadable @bk marker")
+            elif _book_of(para) and _book_of(para) > at:
+                errors.append(f"blog {pid}: paragraph {i + 1} is marked safe at book {at} "
+                              f"but cites Bk{_book_of(para)}")
+    return errors, warnings
+
+
 def _check_no_passages() -> list[str]:
     """Nothing we publish may contain a passage of the books.
 
@@ -730,6 +785,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     spoil_errors, spoil_warnings = _check_spoil(bobs)
     errors += spoil_errors
     warnings += spoil_warnings
+
+    blog_errors, blog_warnings = _check_blog()
+    errors += blog_errors
+    warnings += blog_warnings
 
     errors += _check_names(bobs)
     errors += _check_no_passages()

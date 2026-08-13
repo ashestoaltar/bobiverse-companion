@@ -36,6 +36,8 @@ SYS_PLACEHOLDER = "/*__SYSTEMS__*/null"
 SKY_PLACEHOLDER = "/*__SKY__*/null"
 BEST_PLACEHOLDER = "/*__BESTIARY__*/null"
 MEM_PLACEHOLDER = "/*__MEMORIUM__*/null"
+BLOG = os.path.join(ROOT, "data", "blog.json")
+BLOG_PLACEHOLDER = "/*__BLOG__*/null"
 PEOPLE_PLACEHOLDER = "/*__PEOPLES__*/null"
 GUPPY_PLACEHOLDER = "/*__GUPPY__*/null"
 
@@ -214,6 +216,17 @@ def main() -> None:
         sys.exit(1)
     html = html.replace(MEM_PLACEHOLDER, json.dumps(memorium, ensure_ascii=False), 1)
 
+    # Bill's blog. Posts are ours in both voices — never a passage from the
+    # books, and never a quotation from Taylor's own blog either.
+    with open(BLOG) as fh:
+        blog = json.load(fh)
+    for key in [k for k in blog if k.startswith("_")]:
+        blog.pop(key)
+    if BLOG_PLACEHOLDER not in html:
+        print(f"ERROR: placeholder {BLOG_PLACEHOLDER} missing from template")
+        sys.exit(1)
+    html = html.replace(BLOG_PLACEHOLDER, json.dumps(blog, ensure_ascii=False), 1)
+
     with open(GUPPY) as fh:
         guppy = json.load(fh)
     for key in [k for k in guppy if k.startswith("_")]:
@@ -233,6 +246,7 @@ def main() -> None:
           f"{len(systems['systems'])} systems, {sky['count']} backdrop stars, "
           f"{len(bestiary['creatures'])} creatures ({drawn} illustrated), "
           f"{len(peoples['entries'])} peoples and polities ({drawn_p} illustrated), "
+          f"{len(blog['posts'])} posts, "
           f"guppy {guppy['width']}x{guppy['height']} in {len(guppy['frames'])} frames, "
           f"{len(html):,} bytes")
 

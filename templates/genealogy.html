@@ -480,6 +480,24 @@
     .gate-choices button{flex:1 1 100%}
   }
 
+  /* --- blog ------------------------------------------------------------ */
+  .post-list{display:flex; flex-direction:column; gap:11px; padding-bottom:40px}
+  .post{
+    text-align:left; width:100%; cursor:pointer; font:inherit; color:inherit;
+    background:transparent; border:1px solid var(--rule); padding:12px 14px;
+    text-shadow:inherit;
+  }
+  .post:hover, .post[aria-pressed="true"]{border-color:var(--amber); background:var(--panel-hi)}
+  .post-meta{
+    display:flex; justify-content:space-between; gap:12px;
+    font-size:10.5px; letter-spacing:.14em; color:var(--ash);
+  }
+  /* The registry's own posts are marked in the same phosphor the annotations
+     use, so the seam looks the same everywhere it appears. */
+  .post-editor{color:var(--phos); opacity:.85}
+  .post h3{margin:5px 0 6px; font-size:15px; font-weight:500; letter-spacing:.07em; color:var(--amber-hi)}
+  .post .dek{margin:0; font-size:13px; line-height:1.55; color:var(--amber-dim); max-width:70ch}
+
   /* --- status bar ----------------------------------------------------- */
   .statusbar{
     border-top:1px solid var(--rule); margin-top:var(--gap); padding-top:8px;
@@ -733,6 +751,11 @@ const GUPPY = /*__GUPPY__*/null;
    the named ones are Bobs at fate 'memorium'. */
 const MEMORIUM = /*__MEMORIUM__*/null;
 
+/* Bill's blog is canon — Bk4 ch5, "You still haven't read my blog yet, have
+   you?" — and public features and blogs are named as BobNet features in Bk2
+   ch32. So a feed here is a thing the character does, not a device we invented. */
+const BLOG = /*__BLOG__*/null;
+
 /* ---- indexes ---------------------------------------------------------- */
 const SYS = Object.create(null);
 if (SYSTEMS) SYSTEMS.systems.forEach(s => SYS[s.id] = s);
@@ -809,7 +832,7 @@ const COLS = [
 const BOOK_MAX = 5;
 
 const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1,
-               selected:null, beast:null, people:null, book:BOOK_MAX};
+               selected:null, beast:null, people:null, blog:null, book:BOOK_MAX};
 
 /* ---- registers --------------------------------------------------------
    Every view is an entry here. The tab bar, the dispatch in render(), the
@@ -904,6 +927,22 @@ const REGISTERS = [
      const hit = e.target.closest('[data-entry]');
      if (!hit) return false;
      state.people = state.people === hit.dataset.entry ? null : hit.dataset.entry;
+     render();
+     return true;
+   }},
+  {id:'blog',       label:'BLOG',       short:'BLOG',  render: renderBlog,
+   rows: posts,
+   status: rows => {
+     const all = ((BLOG && BLOG.posts) || []).filter(p => !heldPost(p));
+     statusLine(rows.length === all.length ? `${all.length} posts` : `${rows.length} of ${all.length} posts`,
+                `${all.filter(p => p.voice === 'bobnet').length} from Bill`,
+                `${all.filter(p => p.voice === 'editor').length} from the registry`);
+   },
+   dossier: () => state.blog ? renderPost(state.blog) : null,
+   onClick: e => {
+     const hit = e.target.closest('[data-post]');
+     if (!hit) return false;
+     state.blog = state.blog === hit.dataset.post ? null : hit.dataset.post;
      render();
      return true;
    }},
@@ -1874,6 +1913,9 @@ const ROLE_MARK = {predator: '▲', prey: '▽', megafauna: '⬢', scavenger: '�
    whose only citation is from a later book is not shown, and its prose waits
    for a declared `spoil` exactly as a replicant's does. */
 const heldEntry = e => gating() && past(bookOf(e.cite), state.book);
+/* A post has no citation under it to fall back on — it is prose from the title
+   down — so `spoil` gates the whole thing rather than only its paragraphs. */
+const heldPost  = p => gating() && past(p.spoil, state.book);
 
 function beasts(){
   const all = ((BESTIARY && BESTIARY.creatures) || []).filter(c => !heldEntry(c));
@@ -2103,6 +2145,73 @@ function guppyBlink(el){
   again();
 }
 
+/* ---- blog --------------------------------------------------------------
+   Two voices, labelled rather than blended. `bobnet` is Bill talking on his own
+   network and cannot know the novels exist; `editor` is this registry's voice,
+   the one the dossier already labels on every annotation, and it can say
+   "appendix" and "Taylor" because it is not pretending to be in the story. A
+   reader should never have to work out which they are reading. */
+function posts(){
+  const all = ((BLOG && BLOG.posts) || []).filter(p => !heldPost(p));
+  const q = state.q.trim().toLowerCase();
+  const rows = !q ? all.slice() : all.filter(p =>
+    [p.title, p.dek, p.body, p.by, ...(p.tags || [])]
+      .some(v => v && String(v).toLowerCase().includes(q)));
+  // Newest first, the way a feed reads.
+  return rows.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+}
+
+const VOICE = {
+  bobnet: {label: 'BOBNET', by: 'Bill'},
+  editor: {label: 'REGISTRY EDITOR — NOT BOBNET', by: 'Registry editor'},
+};
+
+function renderBlog(rows){
+  const all = ((BLOG && BLOG.posts) || []).filter(p => !heldPost(p));
+  if (!BLOG || !BLOG.posts) return `<p class="empty">[FEED UNAVAILABLE]</p>`;
+  if (!rows.length) return `<p class="empty">${all.length ? 'NO POSTS MATCH THAT QUERY.'
+    : 'NOTHING ON THE FEED YET AT THIS READING POSITION.'}</p>`;
+
+  const lead = `<p class="unres-lead">Blogs are a public feature of BobNet, and Bill keeps one —
+    he needles Bob about not reading it. Posts marked <b>${esc(VOICE.editor.label)}</b> are
+    this registry talking about its own work, which is a different thing wearing the same
+    furniture: nobody inside the story knows the books are books.</p>`;
+
+  const cards = rows.map(p => {
+    const v = VOICE[p.voice] || VOICE.bobnet;
+    const on = state.blog === p.id;
+    return `<button class="post" data-post="${esc(p.id)}" aria-pressed="${on}">` +
+      `<div class="post-meta"><span>${esc(p.date)}</span>` +
+      `<span class="${p.voice === 'editor' ? 'post-editor' : 'dim'}">${esc(v.label)}</span></div>` +
+      `<h3>${esc(p.title)}</h3>` +
+      (p.dek ? `<p class="dek">${esc(p.dek)}</p>` : '') +
+      `</button>`;
+  }).join('');
+  return `<div class="unres">${lead}<div class="post-list">${cards}</div></div>`;
+}
+
+function renderPost(id){
+  const p = postById(id);
+  if (!p || heldPost(p)) return null;
+  const v = VOICE[p.voice] || VOICE.bobnet;
+  const g = proseGated(p.body, p);
+  return `
+    <div class="dossier-head">
+      <div>
+        <div class="serial">[${esc(p.date)}]</div>
+        <h2>${esc(p.title)}</h2>
+        <div class="sub">${esc(p.by || v.by)} · ${esc(v.label)}</div>
+      </div>
+      <button class="dossier-close" id="d-close" aria-label="Close">✕</button>
+    </div>
+    <div class="dossier-body">
+      ${(p.tags || []).map(t => `<span class="flag">${esc(t.toUpperCase())}</span>`).join('')}
+      <div class="sec" style="border-top:0; padding-top:10px">
+        ${g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('POST')}
+      </div>
+    </div>`;
+}
+
 /* ---- shell ------------------------------------------------------------ */
 /* The filters grade parentage. A register that shows none of it declares no
    `filters`, and the row goes away rather than offering to narrow a star chart
@@ -2217,6 +2326,7 @@ function select(id){
    new register declares itself here and nowhere else. */
 const beastById  = id => ((BESTIARY?.creatures || []).find(c => c.id === id));
 const peopleById = id => ((PEOPLES?.entries  || []).find(e => e.id === id));
+const postById   = id => ((BLOG?.posts     || []).find(p => p.id === id));
 
 /* `held` sits here with `ok` for the same reason `ok` does: it is a question
    only this register can answer, and answering it anywhere else would mean a
@@ -2229,6 +2339,8 @@ const SEL = {
              held: v => heldEntry(beastById(v) || {})},
   peoples:  {get: () => state.people,    set: v => state.people = v,    ok: v => (PEOPLES?.entries || []).some(e => e.id === v),
              held: v => heldEntry(peopleById(v) || {})},
+  blog:     {get: () => state.blog,      set: v => state.blog = v,      ok: v => (BLOG?.posts || []).some(p => p.id === v),
+             held: v => heldPost(postById(v) || {})},
 };
 const DEFAULT_SEL = {get: () => state.selected, set: v => state.selected = v, ok: v => !!byId[v],
                      held: v => byId[v] ? heldRecord(byId[v]) : false};

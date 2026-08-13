@@ -732,6 +732,37 @@ Don't re-run these expecting new names; they're exhausted.
   Bob we didn't have at all. The parser rejects it as back matter, so it has to
   be read by hand. Books 4 and 5 have no equivalent.
 
+## The blog, and its two voices
+
+`data/blog.json`, rendered as a peer register at `#blog/<id>`. Bill's blog is
+canon — Bk4 ch5, "You still haven't read my blog yet, have you?" — and public
+features and blogs are named as BobNet features in Bk2 ch32, so a dated feed is
+a thing the character does rather than a device this project invented.
+
+What is **not** canon is a Bob discussing the novels as novels. Building the
+register made that immediate: of the three posts written for it, two were about
+appendices, parse failures and provenance rules, and none of that is knowable
+from inside the story. So a post declares a `voice`:
+
+- **`bobnet`** — Bill, first person, in-world. May not mention the books, the
+  appendices, or Taylor. `validate.py` fails a bobnet post containing any of
+  those words, because that drift arrives one edit at a time and each edit
+  reads fine on its own.
+- **`editor`** — this registry's own voice, the one the dossier already labels
+  ANNOTATION — REGISTRY EDITOR, NOT BOBNET. It may discuss sources, appendices
+  and its own mistakes freely, and it is labelled in the list and in the post
+  so a reader never has to work out which they are reading.
+
+`spoil` is required rather than optional here: a post is prose from the title
+down, with no citation underneath to fall back on, so an undeclared one would be
+held forever rather than defaulting to anything sensible.
+
+**Taylor's own blog is not a source.** It is the same class as the 2017 online
+genealogy this project dropped — the author talking outside the text — and
+re-admitting it would undo the rule that found the appendix. Link to it, cite it
+as a lead in `priorClaim` if it ever settles something, and never quote it: his
+prose is his, exactly as the novels are.
+
 ## Companion registers
 
 The same machinery — corpus, extractor, validator, console — carries every

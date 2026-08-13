@@ -44,6 +44,7 @@ module.exports = ({ok, get, run, ROOT}) => {
     chart:    Object.keys(SYS)[0],
     bestiary: (((BESTIARY && BESTIARY.creatures) || [])[0] || {}).id,
     peoples:  (((PEOPLES && PEOPLES.entries) || [])[0] || {}).id,
+    blog:     (((get('BLOG') || {}).posts || [])[0] || {}).id,
   };
   const sampleFor = view => SAMPLE[view] || BOBS[0].id;
   const specFor = view => run(`selOf(${JSON.stringify(view)})`);

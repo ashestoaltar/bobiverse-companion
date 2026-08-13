@@ -102,7 +102,8 @@
     {
       "cat": "BobNet",
       "text": "Blog posts in Bill's voice",
-      "note": "Bill's blog is canon — he needles Bob about not reading it in Bk4 ch5. Site updates belong as dated posts, not changelogs. See the voice guide in CLAUDE.md. First post writes itself now: the fan ecosystem builds its genealogies on a 2017 PDF at kurt-anderson.com, which is what sbtn/treeofbob cites, while Taylor's own genealogy sits in the back matter of book 2 — and the two disagree about how to spell Jonny and Jacques. The book is right. Second and third: the Surly discovery, and the landers/spits/boojums purge."
+      "note": "Done — `data/blog.json` and a peer register at #blog/<id>. Three posts, and the build of it turned up a problem worth recording: two of the three could not be Bill's. A post about appendices, parse failures or provenance rules is written from outside the story, and Bill does not know the books are books. So posts carry a `voice` — bobnet or editor — labelled in the list and in the dossier, the same seam the annotations already draw. The validator fails a bobnet post that says appendix, Taylor, novel or canon, because that drift happens one edit at a time and reads fine each time.",
+      "done": true
     },
     {
       "cat": "BobNet",
