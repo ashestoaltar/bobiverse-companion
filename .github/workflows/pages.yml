@@ -68,13 +68,21 @@ jobs:
           fi
           echo "no external hosts beyond the SVG namespace and credit links"
 
+      # Pages is not available for a private repository on the free plan, and
+      # this one starts private on purpose. Everything above is worth running
+      # regardless — it is the CI — so the publishing steps sit behind a
+      # condition and switch themselves on the moment the repo goes public.
+      # Nothing to remember or change later.
       - uses: actions/configure-pages@v5
+        if: ${{ !github.event.repository.private }}
       - uses: actions/upload-pages-artifact@v3
+        if: ${{ !github.event.repository.private }}
         with:
           path: dist
 
   deploy:
     needs: build
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages
