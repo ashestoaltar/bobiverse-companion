@@ -70,7 +70,8 @@ def _check_cites(bobs: list[dict]) -> list[str]:
 
     out = []
     for bob in bobs:
-        for bk, sq, pov, when in CITE.findall(bob.get("cite", "") or ""):
+        cites = (bob.get("cite", "") or "") + "; " + (bob.get("nameFrom", "") or "")
+        for bk, sq, pov, when in CITE.findall(cites):
             bk, sq, when = int(bk), int(sq), when.strip()
             chapter = index.get((bk, sq))
             if chapter is None:
@@ -423,6 +424,23 @@ def _check_spoil(bobs: list[dict]) -> tuple[list[str], list[str]]:
     return errors, warnings
 
 
+def _check_names(bobs: list[dict]) -> list[str]:
+    """`nameFrom` is the chapter a Bob started going by the name we file him under.
+
+    It only means anything next to `alias`: without one there is no earlier name
+    to fall back to, and the field would be recording a change from nothing.
+    """
+    out = []
+    for bob in bobs:
+        if bob.get("nameFrom") and not bob.get("alias"):
+            out.append(f"{bob['id']}: nameFrom without an alias — there is no earlier "
+                       f"name to show before that chapter")
+        if bob.get("alias") and not bob.get("nameFrom"):
+            out.append(f"{bob['id']}: has an alias but no nameFrom, so a reader with a "
+                       f"book limit set will be shown a name he has not taken yet")
+    return out
+
+
 def _check_no_passages() -> list[str]:
     """Nothing we publish may contain a passage of the books.
 
@@ -684,6 +702,7 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     errors += spoil_errors
     warnings += spoil_warnings
 
+    errors += _check_names(bobs)
     errors += _check_no_passages()
 
     # `gen` is only independent information when the parent chain is broken.

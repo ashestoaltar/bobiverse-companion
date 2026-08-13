@@ -348,23 +348,52 @@ module.exports = ({ok, get, run}) => {
   run('openGate()');
   ok(gate.hidden === true, 'the question should not be asked twice');
 
-  // The counts on the buttons are the honest part — a reader who picks book one
-  // and finds twenty-one records has to have been told that is the guard.
   askAgain();
   run('ARRIVED_ON_LINK = false');
   run('openGate()');
   const buttons = doc.getElementById('gate-books').innerHTML;
   for (let n = 1; n < BOOK_MAX; n++) {
-    reset(n);
-    const want = run('visible()').length;
-    ok(buttons.includes(`BOOK ${n} <span class="n">· ${want} of ${BOBS.length}</span>`),
-       `the prompt should offer book ${n} with its true count of ${want}`);
+    ok(buttons.includes(`data-book="${n}">BOOK ${n}<`), `the prompt should offer book ${n}`);
   }
-  reset();
-  ok(run('visibleAt(1)') < run('visibleAt(BOOK_MAX)'),
-     'visibleAt should report fewer records the earlier you have read');
-  ok(run('visibleAt(BOOK_MAX)') === BOBS.length, 'visibleAt(ALL) should be everything');
-  ok(state.book === BOOK_MAX, 'visibleAt must not leave the reading position moved');
+  ok(!buttons.includes(' of '), 'the prompt should not quote record counts');
+  ok(!buttons.includes(`data-book="${BOOK_MAX}"`),
+     'ALL belongs on the finished button, not among the still-reading ones');
+
+  // ---- a Bob is called what he was called at the time --------------------
+  // Riker becomes Will in Bk3 ch57. Printing Will to someone on book one gives
+  // the change away and is also just wrong about who he was for two books.
+  const renamed = BOBS.filter(b => b.alias && b.nameFrom);
+  ok(renamed.length > 0, 'expected a record with a recorded rename');
+  for (const b of renamed) {
+    const at_ = bookOf(b.nameFrom);
+    if (at_ > 1) {
+      at(at_ - 1, () => {
+        ok(run('shown')(b).name === b.alias,
+           `${b.id} should still be ${b.alias} at book ${at_ - 1}`);
+        ok(!run('shown')(b).alias, `${b.id} should not carry both names before the change`);
+      });
+    }
+    at(at_, () => ok(run('shown')(b).name === b.name,
+       `${b.id} should be ${b.name} once the reader reaches book ${at_}`));
+  }
+
+  // and it has to hold everywhere the name is printed, not just in shown()
+  const will = BOBS.find(b => b.id === 'riker');
+  if (will) {
+    at(1, () => {
+      for (const reg of REGISTERS) {
+        state.view = reg.id;
+        state.selected = 'riker';
+        run('render()');
+        const html = panes();
+        ok(!/\bWill\b/.test(html), `book 1, ${reg.id}: calls him Will`);
+        if (html.includes('data-id="riker"')) {
+          ok(/\bRiker\b/.test(html), `book 1, ${reg.id}: he is on the page under neither name`);
+        }
+      }
+      state.selected = null;
+    });
+  }
 
   // ---- the safe link -----------------------------------------------------
   // A reader mid-series who wants to send someone a record should not have to

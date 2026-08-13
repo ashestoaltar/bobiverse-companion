@@ -229,7 +229,8 @@
     {
       "cat": "BobNet",
       "text": "Two Bobs are wearing names they have not taken yet",
-      "note": "The reading position holds records, fates and prose, and then prints 'Will' to someone on book one. He is Riker until Bk3 ch57 and Jeremy is Morlock from Bk4 ch3 — the rename is on the page, with a chapter, which is the same kind of evidence everything else here gates on. What is missing is somewhere to put it: `name` is a single value with no date, and `alias` holds the old name without saying when it stopped being the current one. A `nameFrom` beside `alias` would settle both records and cost two fields. Worth doing when a third rename turns up, or sooner if it grates — it is the one place the guard shows its seams."
+      "note": "Done. `nameFrom` records the chapter a Bob took the name we file him under — Bk3 ch57 for Will, Bk4 ch3 for Morlock — and it is a citation rather than a number, so the same check that verifies every other citation against the corpus verifies this one. Below that book the console calls him by his alias and drops the second name entirely: at book one he is Riker in the register, in the tree, in the trace, and in Homer's SOURCE BOB column. It folds into shown(), so it reached all of those at once. The validator now errors on an alias with no nameFrom, since that combination is exactly the bug this fixed.",
+      "done": true
     }
   ]
 }

@@ -553,6 +553,14 @@ Gamers appear in books 4 and 5 only. The tags are masked, and the filter chips
 are removed — a row of faction filters tells a book-one reader that the
 Bobiverse eventually splits, and names the pieces, before anything is clicked.
 
+**A name is a spoiler too.** `nameFrom` records the chapter a Bob took the name
+we file him under, as a citation like any other, so `_check_cites` verifies it
+against the corpus. Below that book the console uses `alias` and drops the
+second name: at book one he is Riker in the register, the tree, the trace and in
+Homer's SOURCE BOB column. It folds into `shown()`, which is how it reached all
+of those at once. An `alias` with no `nameFrom` is now a validation error — that
+combination is the bug.
+
 **Prose written into the template leaks too**, and the mask cannot see it. The
 unresolved lead named Herschel, Marcus and Starfleet; the In Memorium lead named
 Mack and Jacques; the note explaining the three blanks rules Hannibal out by way

@@ -124,7 +124,7 @@ def load_art(register: str, cid: str) -> str | None:
 # the console without being added here, so the HAS LEAD chip filtered to nothing
 # and Will's "/ Riker" never appeared. _check_order() below makes the schema and
 # this list agree, so the next field can't go missing the same way.
-ORDER = ["id", "name", "alias", "parent", "src", "cite", "gen", "desig", "vessel",
+ORDER = ["id", "name", "alias", "nameFrom", "parent", "src", "cite", "gen", "desig", "vessel",
          "born", "origin", "visited", "fate", "fateCite", "fateNote", "lostAt",
          "faction", "ref",
          "conflict", "partialNote", "priorClaim", "spoil", "note"]

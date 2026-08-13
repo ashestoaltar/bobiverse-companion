@@ -30,6 +30,10 @@
             "type": "string",
             "description": "The name this Bob left behind. `name` is what he goes by now, `alias` is what he was called before — Will was Riker, Morlock was Jeremy. Recorded rather than overwritten so both stay searchable, and so the id can stay stable when other records point at it as a parent."
           },
+          "nameFrom": {
+            "type": "string",
+            "description": "The chapter where this Bob took the name in `name`, in the same format as `cite`. Only meaningful alongside `alias`, and only used when a reader has set a reading position: before this chapter he is still called by `alias`, because printing the later name to someone who has not reached the change both spoils it and is simply wrong about who he was at that point. Riker becomes Will in Bk3 ch57; Jeremy becomes Morlock in Bk4 ch3. Absent means the name has always been the name."
+          },
           "parent": {
             "type": "string",
             "description": "id of the source Bob. Omit entirely for tiers C and X, which have no ancestor on record. For tier P this is an ancestor, not necessarily a direct parent."

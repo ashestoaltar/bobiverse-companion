@@ -612,8 +612,8 @@
 <div class="gate" id="gate" hidden>
   <div class="gate-inner">
     <p class="gate-from">REGISTRY EDITOR — NOT BOBNET</p>
-    <p class="gate-ask">This registry covers all five books, and it says on its front page
-      who dies. How far have you read?</p>
+    <p class="gate-ask">This registry covers all five books, and contains spoilers.
+      How far have you read?</p>
     <div class="gate-choices">
       <button data-book="5">I&rsquo;VE FINISHED</button>
       <button id="gate-more">STILL READING &rarr;</button>
@@ -797,7 +797,7 @@ const COLS = [
   {key:'desig',  label:'DESIGNATION',get:b => b.desig || '—',             cls:'dim', opt:true},
   {key:'gen',    label:'GEN',        get:b => { const g = generation(b); return g ? (g.stated ? g.n + '*' : g.n) : '—'; }, cls:'dim'},
   {key:'parent', label:'SOURCE BOB',
-   get:b => !b.parent ? '—' : (heldRecord(byId[b.parent]) ? '▨' : byId[b.parent].name), cls:'dim'},
+   get:b => !b.parent ? '—' : (heldRecord(byId[b.parent]) ? '▨' : shown(byId[b.parent]).name), cls:'dim'},
   {key:'origin', label:'ORIGIN',     get:b => sysName(b.origin) || sysList(b.visited) || '—', cls:'dim max', opt:true},
   {key:'fate',   label:'FATE',       get:b => b.fate || 'active'},
   {key:'src',    label:'PROVENANCE', get:b => b.src}
@@ -931,11 +931,11 @@ function sortVal(raw, key){
   if (key === 'gen')    { const g = generation(b); return g ? g.n : 999; }
   if (key === 'src')    return 'otpcx'.indexOf(b.src);
   if (key === 'parent') return !b.parent ? '~'
-    : (heldRecord(byId[b.parent]) ? '~~' : byId[b.parent].name.toLowerCase());
+    : (heldRecord(byId[b.parent]) ? '~~' : shown(byId[b.parent]).name.toLowerCase());
   if (key === 'fate')   return ['memorium','presumed','restored','active'].indexOf(b.fate || 'active');
   if (key === 'origin') return (sysName(b.origin) || sysList(b.visited) || '~').toLowerCase();
   if (key === 'desig')  return (b.desig || '~').toLowerCase();
-  return b.name.toLowerCase();
+  return b.name.toLowerCase();      // b is already masked
 }
 
 /* ---- reading position -------------------------------------------------
@@ -1028,6 +1028,10 @@ function shown(b){
     out.fateCite = out.fateNote = out.lostAt = '';
   }
   if (past(FACTION_BOOK, state.book)) out.faction = '';
+  // A name is a spoiler of its own. Riker does not become Will until Bk3 ch57,
+  // and printing Will to someone on book one both gives the change away and is
+  // wrong about who he was — he was Riker for two books and most of a century.
+  if (b.alias && past(bookOf(b.nameFrom), state.book)) { out.name = b.alias; out.alias = ''; }
   if (heldProse(b)) out.note = out.partialNote = out.priorClaim = out.conflict = out.fateNote = '';
   out.cite = citeUpTo(b.cite);
   return out;
@@ -1134,7 +1138,7 @@ function renderGenealogy(rows){
     if (v.faction) bits.push(v.faction);
     out.push(
       `<div${dim}><span class="branch">${branch}</span>` +
-      `<button class="node" data-id="${node.id}" aria-selected="${state.selected === node.id}">${esc(node.name)}</button>` +
+      `<button class="node" data-id="${node.id}" aria-selected="${state.selected === node.id}">${esc(v.name)}</button>` +
       `<span class="prov ${node.src}"> ${t.mark}</span>` +
       (bits.length ? `<span class="meta">  ${esc(bits.join(' · '))}</span>` : '') +
       `</div>`
@@ -1184,10 +1188,12 @@ function renderMemorium(){
   // Every list on this view gates on the record AND on the fate: a Bob you
   // have already met should not appear here because of something that happens
   // three books after where you have read.
-  const shown = b => !heldRecord(b) && !heldFate(b);
-  const named = BOBS.filter(b => b.fate === 'memorium' && shown(b)).sort(byWhen);
-  const presumed = BOBS.filter(b => b.fate === 'presumed' && shown(b)).sort(byWhen);
-  const restored = BOBS.filter(b => b.fate === 'restored' && shown(b)).sort(byWhen);
+  // Not shown() — that is the field mask, and this is a different question:
+  // whether the Bob belongs on this page at all.
+  const listable = b => !heldRecord(b) && !heldFate(b);
+  const named = BOBS.filter(b => b.fate === 'memorium' && listable(b)).sort(byWhen);
+  const presumed = BOBS.filter(b => b.fate === 'presumed' && listable(b)).sort(byWhen);
+  const restored = BOBS.filter(b => b.fate === 'restored' && listable(b)).sort(byWhen);
   const unnamed = ((MEMORIUM && MEMORIUM.unnamed) || []).filter(u => !heldEntry(u));
   const bulk = MEMORIUM && MEMORIUM.unnamed_bulk;
 
@@ -1195,7 +1201,7 @@ function renderMemorium(){
     const sel = state.selected === b.id;
     return `<button class="mem-row" data-id="${b.id}" aria-selected="${sel}">` +
       `<span class="mem-mark" aria-hidden="true">${fateOf(b).mark}</span>` +
-      `<span class="mem-name">${esc(b.name)}</span>` +
+      `<span class="mem-name">${esc(shown(b).name)}</span>` +
       `<span class="mem-when dim">${esc(when(b).replace(/^,\s*/, ''))}</span>` +
       `<span class="mem-where dim">${esc(sysName(b.lostAt) || '—')}</span></button>`;
   };
@@ -1292,7 +1298,7 @@ function renderUnresolved(rows){
      names is someone the reader could have met. */
   const EGS = [
     [['herschel', 'neil'],  'Herschel and Neil state their own generation on the page'],
-    [['riker', 'marcus'],   'Will and Marcus carry POV chapters'],
+    [['riker', 'marcus'],   `${shown(byId.riker).name} and Marcus carry POV chapters`],
   ].filter(([ids]) => ids.every(id => byId[id] && !heldRecord(byId[id])))
    .map(([, text]) => text);
 
@@ -1628,7 +1634,7 @@ function renderSystemDossier(sys){
   const lost = bobs.filter(b => shown(b).lostAt === sys.id);
   const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
   const link = list => list.map(b =>
-    `<button data-id="${b.id}">${esc(b.name)}</button>`).join('<span class="dim"> · </span>');
+    `<button data-id="${b.id}">${esc(shown(b).name)}</button>`).join('<span class="dim"> · </span>');
   return `
     <div class="dossier-head">
       <div>
@@ -1720,7 +1726,7 @@ function renderDossier(){
     const held = heldRecord(h);
     return `<div class="hop">
         <span class="n">${i + 1}</span>
-        ${held ? `<span class="redacted">▨ HELD</span>` : `<button data-id="${h.id}">${esc(h.name)}</button>`}
+        ${held ? `<span class="redacted">▨ HELD</span>` : `<button data-id="${h.id}">${esc(shown(h).name)}</button>`}
         <span class="edge">${edge}</span>
       </div>` +
       (h.cite && !isRoot && !held ? `<div class="hop-cite">${esc(citeUpTo(h.cite))}</div>` : '');
@@ -1751,7 +1757,7 @@ function renderDossier(){
     <div class="dossier-head">
       <div>
         <div class="serial">${b.desig ? '[' + esc(b.desig) + ']' : '<span class="none">[no serial on file]</span>'}</div>
-        <h2>${esc(b.name)}${b.alias ? ` <span class="dim">/ ${esc(b.alias)}</span>` : ''}</h2>
+        <h2>${esc(v.name)}${v.alias ? ` <span class="dim">/ ${esc(v.alias)}</span>` : ''}</h2>
         <div class="sub">${t.mark} ${t.label} — ${esc(t.full)}</div>
       </div>
       <button class="dossier-close" id="d-close" aria-label="Close dossier">✕</button>
@@ -1783,7 +1789,7 @@ function renderDossier(){
       </div>
 
       ${ch.length ? `<div class="sec"><div class="sec-label">CLONES ON RECORD — ${ch.length}</div>
-        <div class="kids">${ch.map(c => `<button data-id="${c.id}">${esc(c.name)}</button>`).join('<span class="dim"> · </span>')}</div></div>` : ''}
+        <div class="kids">${ch.map(c => `<button data-id="${c.id}">${esc(shown(c).name)}</button>`).join('<span class="dim"> · </span>')}</div></div>` : ''}
 
       ${(() => {
         // Our prose is the one thing no citation bounds, so it is held as a
@@ -2459,14 +2465,6 @@ window.addEventListener('resize', syncSheet);
    in front of it is worse than the risk; the sender gets a copyable link that
    carries the setting instead. And anyone who skips, who gets exactly what the
    console did before this existed. */
-function visibleAt(book){
-  const was = state.book;
-  state.book = book;
-  const n = BOBS.filter(b => !heldRecord(b)).length;
-  state.book = was;
-  return n;
-}
-
 /* Whether THIS arrival carried a link, read once at load. It cannot be checked
    later: render() writes the console's own address into the bar on the first
    frame, so by the time the boot has finished typing, location.hash says
@@ -2494,10 +2492,8 @@ let openGate = () => {};
   // The counts are the honest part. A reader who picks book one and finds
   // twenty-one records should have been told that is the guard working, not
   // the project being thin.
-  books.innerHTML = Array.from({length: BOOK_MAX - 1}, (_, i) => {
-    const n = i + 1;
-    return `<button data-book="${n}">BOOK ${n} <span class="n">· ${visibleAt(n)} of ${BOBS.length}</span></button>`;
-  }).join('');
+  books.innerHTML = Array.from({length: BOOK_MAX - 1}, (_, i) =>
+    `<button data-book="${i + 1}">BOOK ${i + 1}</button>`).join('');
 
   document.getElementById('gate-more').addEventListener('click', () => {
     books.hidden = false;
