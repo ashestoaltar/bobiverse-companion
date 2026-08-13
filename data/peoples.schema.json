@@ -2,21 +2,40 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Bobiverse peoples and polities",
   "type": "object",
-  "required": ["entries"],
+  "required": [
+    "entries"
+  ],
   "properties": {
-    "_comment": {"type": "string"},
+    "_comment": {
+      "type": "string"
+    },
     "entries": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "name", "kind", "cite", "note"],
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "cite",
+          "note"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
-          "name": {"type": "string", "description": "As the books use it, including the article where the article is part of the name — 'the Others', 'the Administrator'."},
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "name": {
+            "type": "string",
+            "description": "As the books use it, including the article where the article is part of the name — 'the Others', 'the Administrator'."
+          },
           "kind": {
             "type": "string",
-            "enum": ["people", "polity"],
+            "enum": [
+              "people",
+              "polity"
+            ],
             "description": "A people is a sapient species. A polity is anything that governs, organises or speaks for one — a state, a council, a movement, an enclave, a resistance. They share a register because in this series they are the same argument seen from two angles: who counts as a person, and who gets to decide."
           },
           "of": {
@@ -27,26 +46,64 @@
             "type": "string",
             "description": "What an acronym or short name stands for, ONLY where a character expands it on the page. FAITH has no expansion field because the books never unpack it, and inventing a plausible one would be the exact failure this project exists to avoid."
           },
-          "system": {"type": "string", "description": "id keyed into data/systems.json."},
-          "place": {"type": "string", "description": "World within that system, matching a `places` entry in systems.json."},
+          "system": {
+            "type": "string",
+            "description": "id keyed into data/systems.json."
+          },
+          "place": {
+            "type": "string",
+            "description": "World within that system, matching a `places` entry in systems.json."
+          },
           "status": {
             "type": "string",
-            "enum": ["extant", "extinct", "defunct", "unknown"],
+            "enum": [
+              "extant",
+              "extinct",
+              "defunct",
+              "unknown"
+            ],
             "description": "extant = still going as of book 5. extinct = the species is gone. defunct = the polity is. unknown = the books don't say, which is a real answer."
           },
           "contact": {
             "type": "string",
-            "enum": ["origin", "uplifted", "covert", "aware", "hostile", "uncontacted", "unknown"],
+            "enum": [
+              "origin",
+              "uplifted",
+              "covert",
+              "aware",
+              "hostile",
+              "uncontacted",
+              "unknown"
+            ],
             "description": "For a people: how it stands with the Bobs. This is the Prime Directive thread made into a field — 'uplifted' is Bob deciding that watching was also a choice, 'covert' is the Bobs walking among Quinlans without telling them, 'aware' is a people that knows and has its own opinion."
           },
-          "mentions": {"type": "integer", "minimum": 1, "description": "Re-derived from the corpus at validate time."},
+          "mentions": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Re-derived from the corpus at validate time."
+          },
           "mentionPattern": {
             "type": "string",
             "description": "Regex to count by, where the name alone is ambiguous. Required in practice for acronyms and common words: matching 'USE' case-insensitively finds the verb 286 times instead of the state 51 times, and 'the Others' finds the ordinary word. Case-sensitive unless the pattern says otherwise."
           },
-          "cite": {"type": "string", "description": "First substantive appearance, 'Bk<n> ch<n> · <POV>, <date>'."},
-          "note": {"type": "string", "description": "Our prose. Never quoted book text."},
-          "art": {"type": "string", "description": "Filled by the build from assets/peoples/<id>.svg. Not hand-edited."}
+          "cite": {
+            "type": "string",
+            "description": "First substantive appearance, 'Bk<n> ch<n> · <POV>, <date>'."
+          },
+          "note": {
+            "type": "string",
+            "description": "Our prose. Never quoted book text."
+          },
+          "art": {
+            "type": "string",
+            "description": "Filled by the build from assets/peoples/<id>.svg. Not hand-edited."
+          },
+          "spoil": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "The latest book this entry's own note draws on. Used only when a reader has set a reading position: the entry itself is gated by `cite`, but the note is free prose and no citation bounds it. Absent means undeclared, and undeclared prose is withheld — a blank panel rather than a spoiled ending. Must be at least the book of `cite`."
+          }
         }
       }
     }

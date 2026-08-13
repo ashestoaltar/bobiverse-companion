@@ -70,16 +70,30 @@ module.exports = ({ok, get, run}) => {
   for (let n = 1; n < BOOK_MAX; n++) {
     at(n, () => {
       const hidden = held();
+      const ids = hidden.map(b => b.id);
       ok(hidden.length > 0, `book ${n} should be holding something back`);
+      const scan = where => {
+        const html = panes();
+        for (const id of ids) {
+          ok(!html.includes(`data-id="${id}"`), `book ${n}, ${where}: held '${id}' is on the page`);
+        }
+      };
       for (const reg of REGISTERS) {
         state.view = reg.id;
         run('render()');
-        const html = panes();
-        for (const b of hidden) {
-          ok(!html.includes(`data-id="${b.id}"`),
-             `book ${n}, ${reg.id}: held record '${b.id}' is on the page`);
-        }
+        scan(reg.id);
       }
+      // And with every record open, not just the default view. A dossier lists
+      // other records — the trace, the roster of clones — and those are exactly
+      // the places a gate gets forgotten: Bill's dossier named four clones at
+      // book one that the reader could not have met.
+      state.view = 'register';
+      for (const b of run('visible()')) {
+        state.selected = b.id;
+        run('render()');
+        scan(`dossier:${b.id}`);
+      }
+      state.selected = null;
     });
   }
 
@@ -103,19 +117,45 @@ module.exports = ({ok, get, run}) => {
   }
 
   // ---- prose is held until it says how far it reaches --------------------
-  const withProse = BOBS.filter(b => b.note && !b.spoil);
-  ok(withProse.length > 0, 'expected undeclared prose to test with');
-  const subject = withProse.find(b => run('attestedAt')(b) === 1) || withProse[0];
-  at(Math.max(1, run('attestedAt')(subject) || 1), () => {
-    state.view = 'register';
-    state.selected = subject.id;
-    run('render()');
-    const doss = doc.getElementById('dossier').innerHTML;
-    ok(doss.includes(subject.name), `${subject.id} should still be readable at its own book`);
-    ok(doss.includes('WITHHELD'), `${subject.id}'s undeclared prose should be withheld`);
-    ok(!doss.includes(subject.note.slice(0, 40)),
-       `${subject.id}'s note text is on the page despite being undeclared`);
-  });
+  // Notes are escaped on the way into the page, so compare like for like —
+  // Bill's "R&D" ships as "R&amp;D" and a raw substring never matches it.
+  const esc = get('esc');
+  const opening = b => esc(b.note.slice(0, 40));
+
+  const dossierAt = (book, id) => {
+    let html = '';
+    at(book, () => {
+      state.view = 'register';
+      state.selected = id;
+      run('render()');
+      html = doc.getElementById('dossier').innerHTML;
+    });
+    return html;
+  };
+
+  // Anything still undeclared stays withheld. This is empty as of the pass that
+  // declared them all, and it is kept because the next record added will not be.
+  for (const b of BOBS.filter(b => b.note && !b.spoil).slice(0, 5)) {
+    const doss = dossierAt(Math.max(1, run('attestedAt')(b) || 1), b.id);
+    ok(doss.includes('WITHHELD'), `${b.id}'s undeclared prose should be withheld`);
+    ok(!doss.includes(opening(b)), `${b.id}'s undeclared note is on the page`);
+  }
+
+  // Declared prose turns up at the book it declares and not one earlier. Only
+  // records whose prose reaches past their own citation can be tested both
+  // ways — the rest are held as records before their prose is even a question.
+  const reaching = BOBS.filter(b => b.note && b.spoil &&
+                                    b.spoil > (run('attestedAt')(b) || BOOK_MAX));
+  ok(reaching.length > 0, 'expected prose that reaches past its own record');
+  for (const b of reaching.slice(0, 8)) {
+    const before = dossierAt(b.spoil - 1, b.id);
+    ok(before.includes(b.name), `${b.id} should be readable at book ${b.spoil - 1}`);
+    ok(!before.includes(opening(b)),
+       `${b.id}'s note reaches book ${b.spoil} but showed at ${b.spoil - 1}`);
+    const after = dossierAt(b.spoil, b.id);
+    ok(after.includes(opening(b)),
+       `${b.id}'s note is declared safe at book ${b.spoil} and did not appear`);
+  }
 
   // no note text of any kind may survive at book 1
   at(1, () => {
@@ -126,7 +166,7 @@ module.exports = ({ok, get, run}) => {
       for (const b of BOBS) {
         if (!b.note || b.note.length < 40) continue;
         if (b.spoil === 1) continue;                 // declared safe, may appear
-        ok(!html.includes(b.note.slice(0, 40)),
+        ok(!html.includes(esc(b.note.slice(0, 40))),
            `book 1, ${reg.id}: ${b.id}'s note is on the page`);
       }
     }

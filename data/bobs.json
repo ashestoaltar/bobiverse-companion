@@ -1,1102 +1,1161 @@
 {
- "bobs": [
-  {
-   "id": "bob1",
-   "name": "Bob-1",
-   "src": "o",
-   "cite": "Bk1 ch1 · Bob, Version 1.0",
-   "desig": "Bob-1",
-   "vessel": "HEAVEN-1B",
-   "born": "24 Jun 2133",
-   "origin": "sol",
-   "visited": [
-    "sol",
-    "epsilon_eridani",
-    "delta_eridani"
-   ],
-   "fate": "active",
-   "ref": "Robert Johansson, the original",
-   "note": "Robert Johansson, killed in a traffic accident in 2133 and woken as a replicant a century later. The root of the tree: he has no parent because there isn't one. Made first contact with the Deltans and adopted Archimedes' hexghi as family, then organised the expedition that went looking for Bender."
-  },
-  {
-   "id": "riker",
-   "name": "Will",
-   "alias": "Riker",
-   "parent": "bob1",
-   "src": "t",
-   "cite": "Bk1 ch17 · Bob, Jul 2145; Bk3 ch57 · Herschel, Apr 2257; Bk4 ch3 · Bob, Sep 2331",
-   "desig": "Bob-2",
-   "vessel": "Heaven-2",
-   "born": "Jul 2145",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "sol",
-    "epsilon_eridani"
-   ],
-   "fate": "active",
-   "ref": "Cmdr. William Riker, Star Trek: TNG",
-   "note": "Bob-1's second clone, and by tacit agreement the face of Bob to their sister's descendants — the others found those calls too painful to make. He drew the least enviable job in the series: went back to Sol to find out what had become of Earth, found fifteen million people and a planet finishing dying, and spent the next century running the evacuation.\n\nHe changed his name on the page. Bk3 ch57, April 2257, mid-evacuation with the Others attacking Sol: Herschel greets him as Riker and is told it is Will now, and that he is trying to leave the Star Trek thing behind him. That is the entire explanation he offers at the time. Herschel spends a while catching himself mid-sentence.\n\nSeventy-four years later Bob finds him retired, the neat Riker beard grown out into a deliberately unkempt mountain-man look he adopted so that people would take the hint. Asked about it, he says he had needed to distance himself from the old Riker persona for a lot of reasons — and then names one, which is that nobody would stop bringing him colony problems. So the books say twice that the name went, say once that the reasons were plural, and never list them. Both times he reaches for the lightest explanation on the shelf: a television reference, then an administrative annoyance.\n\nA fact about the text rather than about him. He announces the change in Bk3 ch57 and his chapter bylines go on reading Riker for ten more chapters, through the end of the war at ch67, and never again after it; book 4 opens his chapters as Will. Whether that is deliberate is not something the books say.\n\nWhat follows is this register's reading and not the books'. The reasons he declines to list are the ones that cost him. Homer was his first clone — the one Bill says he would have refused if he could have thought of an excuse — and VEHEMENT took him, drove him to kill, and left him unable to live with it. Then a century of the evacuation, ending in a decision about which half of the human race to load onto the ships. Then a war that was survived rather than won. The Riker of book 1 does a hard job with a joke ready; the Will of books 4 and 5 has retired, is openly cynical about humanity, and is valued in a fight for exactly that reason. The name went the year the last of it finished. The books set those facts beside each other and decline to draw the line between them, so neither does the register — it is recorded here as a reading, in the one field on this page that is allowed to hold one.\n\nThe seam stays visible either way. He is the Bob formerly known as Riker in Bk5 ch45, and when he reports in Bk5 ch69 that the FAITH cruisers are hailing them, Herschel observes that there is still some Riker in there."
-  },
-  {
-   "id": "bill",
-   "name": "Bill",
-   "parent": "bob1",
-   "src": "t",
-   "cite": "Bk1 ch17 · Bob, Jul 2145",
-   "desig": "Bob-3",
-   "vessel": "Heaven-3",
-   "born": "Jul 2145",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "epsilon_eridani"
-   ],
-   "fate": "active",
-   "ref": "Never explained by Taylor",
-   "note": "The Bobiverse's R&D department. Built BobNet, runs the moots, keeps the genealogy — which is exactly what makes Starfleet's purge of those records sting."
-  },
-  {
-   "id": "milo",
-   "name": "Milo",
-   "parent": "bob1",
-   "src": "t",
-   "cite": "Bk1 ch60 · Khan, Apr 2185",
-   "desig": "Bob-4",
-   "born": "Jul 2145",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "omicron2_eridani",
-    "82_eridani"
-   ],
-   "fate": "memorium",
-   "fateCite": "Bk1 ch51 · Bill, Jan 2174",
-   "fateNote": "Caught by Medeiros' missiles while surveying 82 Eridani. He got a message away carrying both his survey — a very good colony prospect — and a differential backup, but the transmission cut off before the backup finished. Bill judged that forcing a restore from a partial would produce something insane or non-viable, and would not do that to himself. Guppy archived it and marked it In Memorium. Bill's answer was to build the strike force that took the system back.",
-   "lostAt": "82_eridani",
-   "ref": "Milo Minderbinder? Milo of Croton?",
-   "note": "First cohort off Bob-1. Killed by Medeiros; the 82 Eridani assault is Bill making good on a promise to avenge him."
-  },
-  {
-   "id": "mario",
-   "name": "Mario",
-   "parent": "bob1",
-   "src": "t",
-   "cite": "Bk1 ch17 · Bob, Jul 2145",
-   "desig": "Bob-5",
-   "born": "Jul 2145",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "beta_hydri"
-   ],
-   "fate": "active",
-   "ref": "Super Mario",
-   "note": "First cohort off Bob-1. Wanted out of the sphere early — Bob describes him as having drawn a double dose of the antisocial streak."
-  },
-  {
-   "id": "marvin",
-   "name": "Marvin",
-   "parent": "bob1",
-   "src": "t",
-   "cite": "Bk1 ch37 · Bob, Aug 2165",
-   "desig": "HIC17378-1",
-   "born": "Apr 2165",
-   "origin": "delta_eridani",
-   "fate": "active",
-   "ref": "Marvin the Paranoid Android, Hitchhiker’s Guide",
-   "note": "Built by Bob-1 at Delta Eridani with Luke and Bender; stayed on as Bob’s partner through the gorilloid war."
-  },
-  {
-   "id": "luke",
-   "name": "Luke",
-   "parent": "bob1",
-   "src": "t",
-   "cite": "Bk1 ch37 · Bob, Aug 2165",
-   "born": "Apr 2165",
-   "origin": "delta_eridani",
-   "fate": "active",
-   "ref": "Luke Skywalker",
-   "note": "Built by Bob-1 at Delta Eridani with Marvin and Bender."
-  },
-  {
-   "id": "victor",
-   "name": "Victor",
-   "parent": "bob1",
-   "src": "t",
-   "cite": "Bk2 ch24 · Bob, Mar 2174",
-   "born": "Mar 2174",
-   "origin": "delta_eridani",
-   "fate": "active",
-   "ref": "—",
-   "note": "Named by Bob-1 as one of his two newest clones, alongside Pete. Volunteered to follow either Luke's or Bender's trail and took Bender's departure vector; decades on he had found nothing and would not backtrack, which is what prompted the search expedition."
-  },
-  {
-   "id": "bender",
-   "name": "Bender",
-   "parent": "bob1",
-   "src": "t",
-   "cite": "Bk1 ch37 · Bob, Aug 2165",
-   "born": "Apr 2165",
-   "origin": "delta_eridani",
-   "fate": "restored",
-   "fateCite": "Bk4 ch64 · Bob, Sep 2334",
-   "fateNote": "Left Delta Eridani for Gamma Leporis A and was not heard from for a hundred and sixty years. Victor followed his departure vector, then Marvin and Luke searched his probable path, and none of them found any sign he had ever arrived. Bob draws the line himself in Bk4 ch2: plenty of Bobs have died, some without a backup, but Bender simply disappeared, without a trace and without a reason. He was inside Heaven's River the whole time, a matrix without a body; the expedition into the topopolis was mounted to get him out and did. Roamers put his cube in a spare cradle, hit the power, and he asked for coffee.",
-   "ref": "Bender Bending Rodríguez, Futurama",
-   "note": "Set out for the stars and went dark for over a century. The search for him is the whole engine of Heaven's River — and the trail ends inside a topopolis full of otters."
-  },
-  {
-   "id": "garfield",
-   "name": "Garfield",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk1 ch20 · Bill, Dec 2145",
-   "born": "Dec 2145",
-   "origin": "epsilon_eridani",
-   "fate": "active",
-   "ref": "Garfield the cat",
-   "note": "Bill's research partner and a fixture at Epsilon Eridani."
-  },
-  {
-   "id": "calvin",
-   "name": "Calvin",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk1 ch22 · Bill, Sep 2150",
-   "vessel": "Heaven-9",
-   "born": "Sep 2150",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "alpha_centauri"
-   ],
-   "fate": "active",
-   "ref": "Calvin & Hobbes",
-   "note": "Bill’s cohort, first to use the version-3 ship design, sent to Alpha Centauri with Goku."
-  },
-  {
-   "id": "goku",
-   "name": "Goku",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk1 ch22 · Bill, Sep 2150",
-   "vessel": "Heaven-10",
-   "born": "Sep 2150",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "alpha_centauri"
-   ],
-   "fate": "active",
-   "ref": "Dragon Ball",
-   "note": "Bill’s cohort with Calvin. The two fought constantly and were inseparable."
-  },
-  {
-   "id": "linus",
-   "name": "Linus",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "born": "Sep 2150",
-   "origin": "epsilon_eridani",
-   "fate": "active",
-   "ref": "Linus van Pelt, Peanuts"
-  },
-  {
-   "id": "mulder",
-   "name": "Mulder",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 ch4 · Mulder, Oct 2170",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "eta_cassiopeiae"
-   ],
-   "fate": "active",
-   "ref": "Fox Mulder, The X-Files",
-   "note": "Identifies himself as part of Bill's third cohort, and says the good nearby systems were already claimed by the time he got a pick."
-  },
-  {
-   "id": "oliver",
-   "name": "Oliver",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 ch61 · Oliver, Sep 2205",
-   "desig": "HIC71683-14",
-   "born": "Sep 2205",
-   "origin": "alpha_centauri",
-   "fate": "active",
-   "ref": "Bloom County — he picked it to match the theme",
-   "note": "Wakes up as a fresh copy of Bill and has to pick a name on the spot. He recalls doing this once before during Bob-1's first cohort — an inherited memory of being Bill, not evidence he is one of the originals."
-  },
-  {
-   "id": "khan",
-   "name": "Khan",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk1 ch60 · Khan, Apr 2185",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "active",
-   "ref": "Khan Noonien Singh, Star Trek — Taylor’s own tree spells it \"Kahn\"",
-   "note": "One of eight version-3 Bobs staged outside 82 Eridani for the assault on Medeiros."
-  },
-  {
-   "id": "elmer",
-   "name": "Elmer",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "restored",
-   "fateCite": "Bk1 ch60 · Khan, Apr 2185",
-   "fateNote": "His SURGE drive went intermittent in the first battle at 82 Eridani with no time or parts to fix it, so he stayed where he was and kept his jamming up to the last moment, blinding the Brazilian units so Khan could run silent and get clear. Around fifty converged on him. He had sent a differential to Bill first and it completed — Khan asks after him by name afterwards and is told he made it. We had him filed as lost for the life of this registry; the books say the opposite in as many words.",
-   "lostAt": "82_eridani",
-   "ref": "Elmer Fudd"
-  },
-  {
-   "id": "hannibal",
-   "name": "Hannibal",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "restored",
-   "fateCite": "Bk3 ch63 · Riker, Apr 2257; Bk3 ch67 · Riker, Apr 2257",
-   "fateNote": "Vanished from the strategy session in mid-sentence, before anyone knew there was an attack — the first casualty of the first battle at 82 Eridani, and Tom, nearest to him, found only a diffuse cloud spreading and thinning where he had been. His backup completed. Seventy-two years later he is commanding the Jokers, the squad that runs the nuclear package in at the Others, taking orders from Bill over SCUT and being told to keep his backups up to date. Held at presumed until a sweep of everything after his death date turned him up alive. This is an inference rather than a statement, and names do get reused here — the registry carries two Hectors. What separates this case is the diagnostic that exposed that one: Bill does not recognise the second Hector and has to look him up, while Will and Bill both address Hannibal directly and familiarly, mid-operation, with no such beat. If a second Hannibal is ever established this comes back out, and the candidate pool goes back to six.",
-   "lostAt": "82_eridani",
-   "ref": "The general or the Lecter, take your pick"
-  },
-  {
-   "id": "tom",
-   "name": "Tom",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "presumed",
-   "fateCite": "Bk1 ch60 · Khan, Apr 2185",
-   "fateNote": "His SCUT signal and Hector's cut off together without warning while the squad had its jamming at maximum and everyone in the system was blind. Khan took it for a nuke and had no way to check.",
-   "lostAt": "82_eridani",
-   "ref": "Tom & Jerry"
-  },
-  {
-   "id": "barney",
-   "name": "Barney",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "presumed",
-   "fateCite": "Bk1 ch60 · Khan, Apr 2185",
-   "fateNote": "Dropped out late in the fight, leaving Khan and Elmer as the last two still running. Nothing further is said about him.",
-   "lostAt": "82_eridani",
-   "ref": "Barney Gumble, The Simpsons"
-  },
-  {
-   "id": "fred",
-   "name": "Fred",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk1 ch60 · Khan, Apr 2185",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "presumed",
-   "fateCite": "Bk1 ch60 · Khan, Apr 2185",
-   "fateNote": "Took enough damage that his dead-man switch fired and he went up in reactor overload, along with Jackson. Khan's narration goes only as far as hoping their backups were recent and complete.",
-   "lostAt": "82_eridani",
-   "ref": "Unresolved — a reader asked Taylor and even he couldn’t reconstruct it",
-   "note": "Lost at 82 Eridani. Took enough damage that his dead-man triggered a reactor overload."
-  },
-  {
-   "id": "kyle",
-   "name": "Kyle",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "active",
-   "ref": "South Park"
-  },
-  {
-   "id": "ned",
-   "name": "Ned",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "active",
-   "ref": "Ned Flanders, The Simpsons"
-  },
-  {
-   "id": "jackson",
-   "name": "Jackson",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk1 ch60 · Khan, Apr 2185",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "presumed",
-   "fateCite": "Bk1 ch60 · Khan, Apr 2185",
-   "fateNote": "Took enough damage that his dead-man switch fired and he went up in reactor overload, along with Fred. Khan's narration goes only as far as hoping their backups were recent and complete.",
-   "lostAt": "82_eridani",
-   "ref": "—",
-   "note": "Lost at 82 Eridani alongside Fred, dead-man reactor overload."
-  },
-  {
-   "id": "jeffrey",
-   "name": "Jeffrey",
-   "src": "c",
-   "cite": "Bk2 ch50 · Loki, Nov 2195",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "presumed",
-   "fateCite": "Bk2 ch50 · Loki, Nov 2195",
-   "fateNote": "Caught by passive ordnance in the opening exchange of the second battle at 82 Eridani — unpowered projectiles the squad only saw after the first wave had blinded them with debris. Jeffrey, Milton and Zeke went off the status board together. Unlike the first battle, no one afterwards accounts for the backups, so this register cannot say which side of the line they fell on.",
-   "lostAt": "82_eridani",
-   "ref": "—",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-   "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
-  },
-  {
-   "id": "milton",
-   "name": "Milton",
-   "src": "c",
-   "cite": "Bk2 ch50 · Loki, Nov 2195",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "presumed",
-   "fateCite": "Bk2 ch50 · Loki, Nov 2195",
-   "fateNote": "Caught by passive ordnance in the opening exchange of the second battle at 82 Eridani — unpowered projectiles the squad only saw after the first wave had blinded them with debris. Jeffrey, Milton and Zeke went off the status board together. Unlike the first battle, no one afterwards accounts for the backups, so this register cannot say which side of the line they fell on.",
-   "lostAt": "82_eridani",
-   "ref": "Office Space?",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-   "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
-  },
-  {
-   "id": "zeke",
-   "name": "Zeke",
-   "src": "c",
-   "cite": "Bk2 ch50 · Loki, Nov 2195",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "presumed",
-   "fateCite": "Bk2 ch50 · Loki, Nov 2195",
-   "fateNote": "Caught by passive ordnance in the opening exchange of the second battle at 82 Eridani — unpowered projectiles the squad only saw after the first wave had blinded them with debris. Jeffrey, Milton and Zeke went off the status board together. Unlike the first battle, no one afterwards accounts for the backups, so this register cannot say which side of the line they fell on.",
-   "lostAt": "82_eridani",
-   "ref": "—",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-   "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
-  },
-  {
-   "id": "icarus",
-   "name": "Icarus",
-   "src": "c",
-   "cite": "Bk3 ch6 · Bill",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "gliese_877"
-   ],
-   "fate": "active",
-   "ref": "Icarus, who flew too close",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-   "note": "Bill says outright that he cloned Icarus and Daedalus, and that he felt uneasy doing it for what might be a one-way trip. Bill finds him similar in temperament — happy to leave the fighting to others and get on with research. Sent with Daedalus on the long run toward the galactic core."
-  },
-  {
-   "id": "daedalus",
-   "name": "Daedalus",
-   "src": "c",
-   "cite": "Bk3 ch6 · Bill",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "gliese_877"
-   ],
-   "fate": "active",
-   "ref": "Daedalus, who built the wings",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-   "note": "Cloned by Bill alongside Icarus for the run at the galactic core. Named by a Bob who knew how that myth ends."
-  },
-  {
-   "id": "hugh",
-   "name": "Hugh",
-   "src": "c",
-   "fate": "active",
-   "faction": "Skippies",
-   "ref": "—",
-   "priorClaim": "an unnamed secondary source put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-   "note": "The Skippies' representative on the Heaven's River expedition, in a grey coverall. His group has dropped names for numeric designations and speech for packetized communication, but they still answer to nicknames when dealing with everyone else."
-  },
-  {
-   "id": "bart",
-   "name": "Bart",
-   "parent": "calvin",
-   "src": "t",
-   "cite": "Bk1 ch45 · Bill, Jan 2165",
-   "born": "Jan 2165",
-   "origin": "alpha_centauri",
-   "fate": "active",
-   "ref": "Bart Simpson",
-   "note": "Product of the clone run Calvin and Goku decided on at Alpha Centauri after Medeiros. Had his own clones by the first moot."
-  },
-  {
-   "id": "thor",
-   "name": "Thor",
-   "parent": "calvin",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "fate": "active",
-   "ref": "Norse thunder god"
-  },
-  {
-   "id": "owen",
-   "name": "Owen",
-   "src": "c",
-   "vessel": "Colony ship",
-   "origin": "alpha_centauri",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "active",
-   "ref": "—",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted."
-  },
-  {
-   "id": "jack",
-   "name": "Jack",
-   "src": "c",
-   "vessel": "Colony ship",
-   "origin": "alpha_centauri",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "active",
-   "ref": "—",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted."
-  },
-  {
-   "id": "isaac",
-   "name": "Isaac",
-   "src": "c",
-   "desig": "HIC71683-8",
-   "vessel": "Colony ship",
-   "origin": "alpha_centauri",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "active",
-   "ref": "Asimov, presumably",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted."
-  },
-  {
-   "id": "skinner",
-   "name": "Skinner",
-   "parent": "mulder",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "desig": "HIC3821-1",
-   "origin": "eta_cassiopeiae",
-   "fate": "active",
-   "ref": "Walter Skinner, The X-Files"
-  },
-  {
-   "id": "jonny",
-   "name": "Jonny",
-   "parent": "mulder",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "desig": "HIC3821-2",
-   "origin": "eta_cassiopeiae",
-   "fate": "active",
-   "ref": "—",
-   "conflict": "The text spells him Jonny, four times and never otherwise. The genealogy printed in book 2 spells him Jonny too; the online tree that used to be a source here spelled him \"Johnny\", which is one reason not to conflate the two."
-  },
-  {
-   "id": "loki",
-   "name": "Loki",
-   "parent": "khan",
-   "src": "t",
-   "cite": "Bk2 ch34 · Bill, Jun 2185",
-   "born": "Jun 2185",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "active",
-   "ref": "Norse trickster god",
-   "conflict": "Our own earlier reading was the wrong one. Bill assembles ten new Bobs as the second strike force for 82 Eridani, which is where Loki appears — but that is the unit, not the source. In the same chapter Bill says he loaded Khan's backup at Khan's request, and the Bob who came up named himself Loki, adding that this branch of the tree liked villains. Taylor's 2017 tree put Loki under Khan and agrees with the text; the wiki registry does not. Reparented to Khan.",
-   "note": "Instantiated from Khan's own backup and promptly picked a trickster's name, to Bill's visible delight. Flew with Bill's ten-Bob second strike force to retake 82 Eridani."
-  },
-  {
-   "id": "bashful",
-   "name": "Bashful",
-   "parent": "mario",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "fate": "active",
-   "ref": "Snow White dwarf"
-  },
-  {
-   "id": "dopey",
-   "name": "Dopey",
-   "parent": "mario",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "fate": "active",
-   "ref": "Snow White dwarf"
-  },
-  {
-   "id": "sleepy",
-   "name": "Sleepy",
-   "parent": "mario",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "fate": "active",
-   "ref": "Snow White dwarf"
-  },
-  {
-   "id": "hungry",
-   "name": "Hungry",
-   "parent": "mario",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "fate": "active",
-   "ref": "Not actually a dwarf. Bob was improvising."
-  },
-  {
-   "id": "hal",
-   "name": "Hal",
-   "parent": "mario",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "visited": [
-    "gliese_877"
-   ],
-   "fate": "active",
-   "ref": "HAL 9000, 2001"
-  },
-  {
-   "id": "claude",
-   "name": "Claude",
-   "parent": "mario",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "jacques",
-   "name": "Jacques",
-   "parent": "mario",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "visited": [
-    "delta_pavonis",
-    "hip_84051"
-   ],
-   "fate": "restored",
-   "fateCite": "Bk2 ch72 · Bill, Feb 2217",
-   "fateNote": "Killed during his group's attack in the war with the Others. His differential was current to within the last few minutes, so he was restored as soon as a vessel could be freed up. The clearest named case of the backup system doing exactly what it was built to do — and by Bk2 ch74 he is back at work taking inventory.",
-   "ref": "—",
-   "conflict": "The online tree that used to be a source here spelled him \"Jaques\". The genealogy printed in book 2 spells him Jacques, as the narrative does.",
-   "note": "Brokered the deal that handed the Pav spaceflight technology in exchange for raw materials."
-  },
-  {
-   "id": "phineas",
-   "name": "Phineas",
-   "parent": "jacques",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "origin": "delta_pavonis",
-   "fate": "active",
-   "ref": "Phineas & Ferb"
-  },
-  {
-   "id": "ferb",
-   "name": "Ferb",
-   "parent": "jacques",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "origin": "delta_pavonis",
-   "fate": "active",
-   "ref": "Phineas & Ferb"
-  },
-  {
-   "id": "homer",
-   "name": "Homer",
-   "parent": "riker",
-   "src": "t",
-   "cite": "Bk1 ch20 · Bill, Dec 2145; Bk2 ch12 · Bill, May 2171; Bk5 ch51 · Bill, Sep 2343",
-   "desig": "Bob-6",
-   "vessel": "Heaven-6",
-   "born": "Dec 2145",
-   "origin": "epsilon_eridani",
-   "fate": "memorium",
-   "fateCite": "Bk2 ch26 · Riker, Dec 2175; Bk2 ch28 · Riker, Dec 2175; Bk2 ch37 · Riker, Aug 2176",
-   "fateNote": "Not grief over lost work, which is what it looked like at the time and what this record used to say. VEHEMENT got inside him through the laser comms, an attack nobody had thought to defend, and ran him. The sabotage of his own habitats was Homer's hand on the controls; the donut destroyed in Bk2 ch23, six months' work with the plants and livestock still aboard, was his. He was conscious the whole time and had almost no will of his own, which Riker could barely make himself think about. What Homer said afterwards was that they made him lie, made him destroy things, made him kill people, and that all he could do was watch himself obey. He could not warn anyone, could not stop, and could not kill himself.\n\nWhat gave him away was not evidence of sabotage. It was that he had stopped making jokes. Riker read the withdrawal as a personality change until Guppy caught a tight-beam from New Zealand addressed to Homer, and the shape of it turned over — the same origin as a hack attempt on Riker nine years earlier, in Bk1 ch49. They had been working on him for most of a decade. Charles put a steel ball through his reactor control to stop him, and it took thirty hours to get the thing out of him. He came back up, and screamed. Offered endocrine controls for the panic attacks, he refused them: having been driven once, he would not have even his own hand on the reins.\n\nHe lasted eight months. Then he deleted every backup he had — so that this could not be undone — and overloaded his reactor. He left a note asking the others to find the people responsible. The one thing he had said he could not do while he was held is the thing he did as soon as he was free.\n\nRiker found them. Two years later he had Vickers, who ran VEHEMENT, on a call and told him Homer had killed himself; Vickers said it was no more than he deserved, and Riker's narration calls that permission received. What he said in front of the UN afterwards was that it was for Homer.\n\nOne backup survived him by accident. Gerry found it in the 2340s and restored it over and over; the copies came out progressively less sane, until Gerry's own descendants destroyed all of them and deleted Gerry too (Bk5 ch51). He deleted every copy of himself precisely so that nobody could do that, and it was done anyway, a hundred and sixty-seven years later, by a Bob who thought he was being kind. The only record here that had to be closed twice.",
-   "lostAt": "sol",
-   "ref": "Homer Simpson",
-   "note": "Riker's first clone, activated alongside Garfield, and by Bill's account the one Riker would have refused if he could have thought of a reason — a cartoon avatar and a catchphrase he would not retire. He fought the Brazilian probes at the Battle of Sol, then spent his good years on the problem nobody else wanted: where to put fifteen million people while the Earth finished dying. The answer arrived as a message to Riker consisting of two words and an exclamation mark. The farm donuts were his idea and he saw them through himself, and they fed the evacuation.\n\nHe is also, without ever knowing it, the ancestor of Starfleet. Bill states it outright in Bk5 ch51: a backup Homer believed he had destroyed survived him, and the line grown from it became the faction. He carries no faction tag here — he died more than a century before Starfleet existed and could not have joined it. The relationship is descent, not membership, and the register keeps those apart."
-  },
-  {
-   "id": "charles",
-   "name": "Charles",
-   "parent": "riker",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "born": "Jan 2158",
-   "origin": "sol",
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "arthur",
-   "name": "Arthur",
-   "parent": "riker",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "born": "Jan 2158",
-   "origin": "sol",
-   "fate": "memorium",
-   "fateCite": "Bk1 ch47 · Riker, Jan 2166",
-   "fateNote": "Killed by a booby trap while working salvage near Saturn — a nuclear charge left in the wreckage by someone nobody ever identified. He had no backup: the Sol Bobs had nowhere to keep each other's, and the storage matrix Riker meant to build for exactly this was still sitting on his own to-do list under Someday. Riker forwarded the In Memorium entry to Bill and they held a wake when Charles got back. The first Bob to die, and the reason the backup infrastructure exists at all.",
-   "lostAt": "sol",
-   "ref": "Arthur Dent? King Arthur?"
-  },
-  {
-   "id": "ralph",
-   "name": "Ralph",
-   "parent": "riker",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "origin": "sol",
-   "fate": "active",
-   "ref": "Ralph Wiggum, The Simpsons"
-  },
-  {
-   "id": "bert",
-   "name": "Bert",
-   "parent": "riker",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "vessel": "Exodus-1",
-   "origin": "sol",
-   "visited": [
-    "omicron2_eridani"
-   ],
-   "fate": "active",
-   "ref": "Sesame Street"
-  },
-  {
-   "id": "ernie",
-   "name": "Ernie",
-   "parent": "riker",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "vessel": "Exodus-2",
-   "origin": "sol",
-   "visited": [
-    "omicron2_eridani"
-   ],
-   "fate": "active",
-   "ref": "Sesame Street"
-  },
-  {
-   "id": "sam",
-   "name": "Sam",
-   "src": "c",
-   "vessel": "Exodus-3",
-   "origin": "sol",
-   "visited": [
-    "omicron2_eridani"
-   ],
-   "fate": "active",
-   "ref": "—",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted."
-  },
-  {
-   "id": "monty",
-   "name": "Monty",
-   "src": "c",
-   "origin": "sol",
-   "visited": [
-    "eta_cassiopeiae"
-   ],
-   "fate": "active",
-   "ref": "Monty Burns? Monty Python?",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted."
-  },
-  {
-   "id": "harvey",
-   "name": "Harvey",
-   "src": "c",
-   "visited": [
-    "sol"
-   ],
-   "fate": "active",
-   "ref": "—",
-   "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted."
-  },
-  {
-   "id": "rudy",
-   "name": "Rudy",
-   "parent": "riker",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "edwin",
-   "name": "Edwin",
-   "parent": "riker",
-   "src": "t",
-   "cite": "Bk2 · Genealogy",
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "howard",
-   "name": "Howard",
-   "parent": "charles",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "origin": "sol",
-   "visited": [
-    "omicron2_eridani"
-   ],
-   "fate": "active",
-   "ref": "—",
-   "note": "Anchored the Vulcan colony and fell for Bridget Salzman — the closest thing the series has to a love story, and the reason a Howard-and-Bridget novel keeps getting mentioned."
-  },
-  {
-   "id": "dexter",
-   "name": "Dexter",
-   "parent": "charles",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "vessel": "Exodus-7",
-   "origin": "sol",
-   "visited": [
-    "omicron2_eridani"
-   ],
-   "fate": "active",
-   "ref": "Dexter's Laboratory"
-  },
-  {
-   "id": "gerry",
-   "name": "Gerry",
-   "parent": "charles",
-   "src": "p",
-   "cite": "Bk5 ch51 · Bill, Sep 2343",
-   "origin": "sol",
-   "fate": "memorium",
-   "fateCite": "Bk5 ch51 · Bill, Sep 2343",
-   "fateNote": "Took the surviving Homer backup after Charles refused him permission to restore it, and left in the night. Spent years trying to bring Homer back; the copies came out progressively less sane, and the Bobs who would not go along with it walked away, which left only the ones who would. When his own clones finally understood what they had been part of, they shut it down, destroyed the Homer copies and deleted Gerry. Bill's reaction is the whole weight of it — Bobs had executed someone. Charles reads it as needing a scapegoat rather than as justice. Filed as unknown here for as long as the Bobs themselves thought he had simply wandered off.",
-   "faction": "Starfleet",
-   "ref": "—",
-   "conflict": "The text spells him Gerry, eighteen times and never otherwise. The wiki registry had \"Jerry\"; the text wins.",
-   "partialNote": "Charles calls Gerry his descendant rather than his clone, and Benny puts him several generations up as a collateral line. Ancestor known, generations not.",
-   "note": "Found the surviving Homer backup that Homer believed he had destroyed. Hadn't been heard from in decades by 2343, and among Sol-system Bobs the whole story is written off as an urban myth."
-  },
-  {
-   "id": "hector",
-   "name": "Hector",
-   "src": "c",
-   "origin": "epsilon_eridani",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "presumed",
-   "fateCite": "Bk1 ch60 · Khan, Apr 2185",
-   "fateNote": "His SCUT signal and Tom's cut off together without warning while the squad had its jamming at maximum and everyone in the system was blind. Khan took it for a nuke and had no way to check.",
-   "lostAt": "82_eridani",
-   "ref": "The Iliad"
-  },
-  {
-   "id": "hector18",
-   "name": "Hector",
-   "src": "c",
-   "cite": "Bk5 ch38 · Bill, May 2343",
-   "gen": 18,
-   "fate": "active",
-   "ref": "The Iliad, again",
-   "conflict": "Name collision: a Hector of roughly the 18th generation emails Bill in 2343, but the registry also lists a 3rd-generation Hector destroyed at 82 Eridani. Either the naming convention broke down or these are two Bobs.",
-   "note": "Bill doesn't recognize the name and has to look him up — placing him around the eighteenth generation, and taking the Von Neumann mandate seriously."
-  },
-  {
-   "id": "neil",
-   "name": "Neil",
-   "src": "c",
-   "cite": "Bk3 ch22 · Herschel",
-   "gen": 8,
-   "vessel": "Version-5 HEAVEN",
-   "visited": [
-    "delta_pavonis"
-   ],
-   "fate": "active",
-   "ref": "Neil Armstrong?",
-   "note": "Half of the Neil-and-Herschel double act. They took a captured Others cargo ship, the Bellerophon, from Delta Pavonis to Sol and evacuated most of the remaining humans ahead of the Others' arrival. They call themselves pond scum anyway."
-  },
-  {
-   "id": "herschel",
-   "name": "Herschel",
-   "src": "c",
-   "cite": "Bk3 · 11 POV chapters; Bk4 · 3; Bk5 · 4",
-   "gen": 8,
-   "vessel": "Version-5 HEAVEN",
-   "visited": [
-    "delta_pavonis"
-   ],
-   "fate": "active",
-   "ref": "William Herschel, astronomer",
-   "note": "Neil's partner. Between them: the Bellerophon evacuation, spacefaring mannys with miniature SURGE drives, and the all-nanobot shapeshifting manny they named Mannequin Skywalker."
-  },
-  {
-   "id": "conan",
-   "name": "Conan",
-   "src": "c",
-   "cite": "Bk3",
-   "visited": [
-    "omicron2_eridani"
-   ],
-   "fate": "active",
-   "ref": "Barbarian or talk show host",
-   "note": "Worked with Riker, Neil and Herschel to set up the Ever Onward foundation, which recruited Romulans to colonize a distant planet."
-  },
-  {
-   "id": "locutus",
-   "name": "Locutus",
-   "src": "c",
-   "cite": "Bk4 ch9 · Bob, Aug 2333",
-   "fate": "active",
-   "faction": "Borg",
-   "ref": "Locutus of Borg, Star Trek: TNG",
-   "note": "Represented the Borg on the Heaven's River expedition, in a getup with considerably more armour than the TNG originals. Wanted Hugh as a handle, but it was already taken."
-  },
-  {
-   "id": "gandalf",
-   "name": "Gandalf",
-   "src": "c",
-   "cite": "Bk4 ch9 · Bob, Aug 2333",
-   "fate": "active",
-   "faction": "Gamers",
-   "ref": "Tolkien",
-   "note": "Leader of the Gamers. Represented them on the Heaven's River expedition and got the drones through the megastructure airlock without tripping anything."
-  },
-  {
-   "id": "kevin",
-   "name": "Kevin",
-   "src": "c",
-   "cite": "Bk4 ch23 · Bill, Jul 2334",
-   "fate": "active",
-   "faction": "Gamers",
-   "ref": "—",
-   "note": "Plays Kevin the Wise, a mage whose staff of fireballs proved no match for a red dragon. Gandalf resurrected him for a fee, payable in everything he had left."
-  },
-  {
-   "id": "vern",
-   "name": "Verne",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "active",
-   "faction": "Gamers",
-   "ref": "Jules Verne",
-   "note": "On Loki's crew at the 82 Eridani assault, where he worked out that Medeiros was running pre-programmed decision trees rather than fighting live. Stockpiled raw materials at the system's Lagrange points for the colonists who came after, and later shows up in the Gamers' party."
-  },
-  {
-   "id": "surly",
-   "name": "Surly",
-   "parent": "bill",
-   "src": "t",
-   "cite": "Bk2 · Cast of Characters",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "active",
-   "ref": "—",
-   "note": "Bill's clone, and one of the Bobs sent back to 82 Eridani on the second attempt at Medeiros. The narrative never introduces him — he exists here only because book 2's Cast of Characters lists him, which is what a back-matter appendix is for and why parsing them mattered."
-  },
-  {
-   "id": "hank",
-   "name": "Hank",
-   "src": "c",
-   "visited": [
-    "p_eridani"
-   ],
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "steve",
-   "name": "Steve",
-   "src": "c",
-   "visited": [
-    "sol"
-   ],
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "mack",
-   "name": "Mack",
-   "src": "c",
-   "cite": "Bk3 · POV chapter",
-   "visited": [
-    "82_eridani"
-   ],
-   "fate": "restored",
-   "fateCite": "Bk3 ch21 · Bill, Jun 2223",
-   "fateNote": "Medeiros destroyed his vessel, but his matrix cube came through the blast intact and Thor confirmed it by image. Bill's phrasing is the distinction this register is built on: they had not permanently lost a Bob. That the cube survived was itself the next problem, since it was one of the things Medeiros had come for.",
-   "ref": "—"
-  },
-  {
-   "id": "lenny",
-   "name": "Lenny",
-   "src": "x",
-   "cite": "Bk4 ch62 · Bill, Sep 2334",
-   "fate": "active",
-   "faction": "Starfleet",
-   "ref": "The Simpsons",
-   "partialNote": "No lineage on record. Starfleet removed as much public information about themselves as they could manage, genealogy and location alike (Bk4 ch32), so this gap is the purge rather than a hole in our reading.",
-   "note": "Appears flanked by other Starfleet members, and negotiates with Bill during the war."
-  },
-  {
-   "id": "jeremy",
-   "name": "Morlock",
-   "alias": "Jeremy",
-   "src": "x",
-   "cite": "Bk4 ch3 · Bob, Sep 2331",
-   "fate": "active",
-   "faction": "Starfleet",
-   "ref": "The Morlocks, The Time Machine",
-   "partialNote": "No lineage on record, and for Starfleet that absence is deliberate rather than accidental: Bill reports large swaths of the Starfleet genealogy simply gone from the databases (Bk4 ch32), and his own investigations still running into manufactured dead ends a decade later (Bk5 ch51).",
-   "note": "Founded the group Bill started calling Starfleet, for their treatment of the Prime Directive as gospel. Named himself Jeremy and later went by Morlock — replicative drift in a single handle."
-  },
-  {
-   "id": "randall",
-   "name": "Randall",
-   "src": "c",
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "tim",
-   "name": "Tim",
-   "src": "c",
-   "cite": "Bk4 ch51 · Bill, Aug 2334",
-   "fate": "active",
-   "faction": "Gamers",
-   "ref": "—",
-   "note": "Spotted the secret door in the Pits of Paebak. Died badly enough earlier in the campaign to come back as a first-level thief."
-  },
-  {
-   "id": "pete",
-   "name": "Pete",
-   "parent": "bob1",
-   "src": "t",
-   "cite": "Bk2 ch24 · Bob, Mar 2174",
-   "born": "Mar 2174",
-   "origin": "delta_eridani",
-   "fate": "active",
-   "faction": "Gamers",
-   "ref": "—",
-   "note": "One of the pair of clones Bob-1 announced as almost ready to leave Delta Eridani; unlike Victor he had no interest in chasing Bender's trail. Turns up much later swinging a sword in the Gamers' D&D campaign."
-  },
-  {
-   "id": "george",
-   "name": "George",
-   "src": "c",
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "benny",
-   "name": "Benny",
-   "src": "c",
-   "visited": [
-    "sol"
-   ],
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "harry",
-   "name": "Harry",
-   "src": "c",
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "xavier",
-   "name": "Xavier Charles",
-   "src": "c",
-   "visited": [
-    "gamma_pavonis"
-   ],
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "fearless",
-   "name": "Fearless Leader",
-   "src": "c",
-   "cite": "Bk5 ch6 · Bill, Feb 2336",
-   "fate": "active",
-   "faction": "Skippies",
-   "ref": "Rocky & Bullwinkle",
-   "note": "Leads the Skippies, and gives the speech before they switch on the super AI. Evidently a Bob with a sense of humour about hierarchy."
-  },
-  {
-   "id": "marcus",
-   "name": "Marcus",
-   "src": "c",
-   "cite": "Bk3 · 9 POV chapters; Bk4 · 1",
-   "fate": "active",
-   "ref": "—",
-   "note": "A POV Bob in books 3 and 4. Not present in any published tree; lineage unrecorded."
-  },
-  {
-   "id": "andrew",
-   "name": "Andrew",
-   "src": "c",
-   "fate": "active",
-   "ref": "—"
-  },
-  {
-   "id": "tony",
-   "name": "Tony",
-   "src": "c",
-   "fate": "active",
-   "ref": "—",
-   "note": "Mentioned once, attending the moot after the loss at Delta Pavonis."
-  }
- ]
+  "bobs": [
+    {
+      "id": "bob1",
+      "name": "Bob-1",
+      "src": "o",
+      "cite": "Bk1 ch1 · Bob, Version 1.0",
+      "desig": "Bob-1",
+      "vessel": "HEAVEN-1B",
+      "born": "24 Jun 2133",
+      "origin": "sol",
+      "visited": [
+        "sol",
+        "epsilon_eridani",
+        "delta_eridani"
+      ],
+      "fate": "active",
+      "ref": "Robert Johansson, the original",
+      "spoil": 4,
+      "note": "Robert Johansson, killed in a traffic accident in 2133 and woken as a replicant a century later. The root of the tree: he has no parent because there isn't one. Made first contact with the Deltans and adopted Archimedes' hexghi as family, then organised the expedition that went looking for Bender."
+    },
+    {
+      "id": "riker",
+      "name": "Will",
+      "alias": "Riker",
+      "parent": "bob1",
+      "src": "t",
+      "cite": "Bk1 ch17 · Bob, Jul 2145; Bk3 ch57 · Herschel, Apr 2257; Bk4 ch3 · Bob, Sep 2331",
+      "desig": "Bob-2",
+      "vessel": "Heaven-2",
+      "born": "Jul 2145",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "sol",
+        "epsilon_eridani"
+      ],
+      "fate": "active",
+      "ref": "Cmdr. William Riker, Star Trek: TNG",
+      "spoil": 5,
+      "note": "Bob-1's second clone, and by tacit agreement the face of Bob to their sister's descendants — the others found those calls too painful to make. He drew the least enviable job in the series: went back to Sol to find out what had become of Earth, found fifteen million people and a planet finishing dying, and spent the next century running the evacuation.\n\nHe changed his name on the page. Bk3 ch57, April 2257, mid-evacuation with the Others attacking Sol: Herschel greets him as Riker and is told it is Will now, and that he is trying to leave the Star Trek thing behind him. That is the entire explanation he offers at the time. Herschel spends a while catching himself mid-sentence.\n\nSeventy-four years later Bob finds him retired, the neat Riker beard grown out into a deliberately unkempt mountain-man look he adopted so that people would take the hint. Asked about it, he says he had needed to distance himself from the old Riker persona for a lot of reasons — and then names one, which is that nobody would stop bringing him colony problems. So the books say twice that the name went, say once that the reasons were plural, and never list them. Both times he reaches for the lightest explanation on the shelf: a television reference, then an administrative annoyance.\n\nA fact about the text rather than about him. He announces the change in Bk3 ch57 and his chapter bylines go on reading Riker for ten more chapters, through the end of the war at ch67, and never again after it; book 4 opens his chapters as Will. Whether that is deliberate is not something the books say.\n\nWhat follows is this register's reading and not the books'. The reasons he declines to list are the ones that cost him. Homer was his first clone — the one Bill says he would have refused if he could have thought of an excuse — and VEHEMENT took him, drove him to kill, and left him unable to live with it. Then a century of the evacuation, ending in a decision about which half of the human race to load onto the ships. Then a war that was survived rather than won. The Riker of book 1 does a hard job with a joke ready; the Will of books 4 and 5 has retired, is openly cynical about humanity, and is valued in a fight for exactly that reason. The name went the year the last of it finished. The books set those facts beside each other and decline to draw the line between them, so neither does the register — it is recorded here as a reading, in the one field on this page that is allowed to hold one.\n\nThe seam stays visible either way. He is the Bob formerly known as Riker in Bk5 ch45, and when he reports in Bk5 ch69 that the FAITH cruisers are hailing them, Herschel observes that there is still some Riker in there."
+    },
+    {
+      "id": "bill",
+      "name": "Bill",
+      "parent": "bob1",
+      "src": "t",
+      "cite": "Bk1 ch17 · Bob, Jul 2145",
+      "desig": "Bob-3",
+      "vessel": "Heaven-3",
+      "born": "Jul 2145",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "epsilon_eridani"
+      ],
+      "fate": "active",
+      "ref": "Never explained by Taylor",
+      "spoil": 4,
+      "note": "The Bobiverse's R&D department. Built BobNet, runs the moots, keeps the genealogy — which is exactly what makes Starfleet's purge of those records sting."
+    },
+    {
+      "id": "milo",
+      "name": "Milo",
+      "parent": "bob1",
+      "src": "t",
+      "cite": "Bk1 ch60 · Khan, Apr 2185",
+      "desig": "Bob-4",
+      "born": "Jul 2145",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "omicron2_eridani",
+        "82_eridani"
+      ],
+      "fate": "memorium",
+      "fateCite": "Bk1 ch51 · Bill, Jan 2174",
+      "fateNote": "Caught by Medeiros' missiles while surveying 82 Eridani. He got a message away carrying both his survey — a very good colony prospect — and a differential backup, but the transmission cut off before the backup finished. Bill judged that forcing a restore from a partial would produce something insane or non-viable, and would not do that to himself. Guppy archived it and marked it In Memorium. Bill's answer was to build the strike force that took the system back.",
+      "lostAt": "82_eridani",
+      "ref": "Milo Minderbinder? Milo of Croton?",
+      "spoil": 1,
+      "note": "First cohort off Bob-1. Killed by Medeiros; the 82 Eridani assault is Bill making good on a promise to avenge him."
+    },
+    {
+      "id": "mario",
+      "name": "Mario",
+      "parent": "bob1",
+      "src": "t",
+      "cite": "Bk1 ch17 · Bob, Jul 2145",
+      "desig": "Bob-5",
+      "born": "Jul 2145",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "beta_hydri"
+      ],
+      "fate": "active",
+      "ref": "Super Mario",
+      "spoil": 1,
+      "note": "First cohort off Bob-1. Wanted out of the sphere early — Bob describes him as having drawn a double dose of the antisocial streak."
+    },
+    {
+      "id": "marvin",
+      "name": "Marvin",
+      "parent": "bob1",
+      "src": "t",
+      "cite": "Bk1 ch37 · Bob, Aug 2165",
+      "desig": "HIC17378-1",
+      "born": "Apr 2165",
+      "origin": "delta_eridani",
+      "fate": "active",
+      "ref": "Marvin the Paranoid Android, Hitchhiker’s Guide",
+      "spoil": 2,
+      "note": "Built by Bob-1 at Delta Eridani with Luke and Bender; stayed on as Bob’s partner through the gorilloid war."
+    },
+    {
+      "id": "luke",
+      "name": "Luke",
+      "parent": "bob1",
+      "src": "t",
+      "cite": "Bk1 ch37 · Bob, Aug 2165",
+      "born": "Apr 2165",
+      "origin": "delta_eridani",
+      "fate": "active",
+      "ref": "Luke Skywalker",
+      "spoil": 1,
+      "note": "Built by Bob-1 at Delta Eridani with Marvin and Bender."
+    },
+    {
+      "id": "victor",
+      "name": "Victor",
+      "parent": "bob1",
+      "src": "t",
+      "cite": "Bk2 ch24 · Bob, Mar 2174",
+      "born": "Mar 2174",
+      "origin": "delta_eridani",
+      "fate": "active",
+      "ref": "—",
+      "spoil": 4,
+      "note": "Named by Bob-1 as one of his two newest clones, alongside Pete. Volunteered to follow either Luke's or Bender's trail and took Bender's departure vector; decades on he had found nothing and would not backtrack, which is what prompted the search expedition."
+    },
+    {
+      "id": "bender",
+      "name": "Bender",
+      "parent": "bob1",
+      "src": "t",
+      "cite": "Bk1 ch37 · Bob, Aug 2165",
+      "born": "Apr 2165",
+      "origin": "delta_eridani",
+      "fate": "restored",
+      "fateCite": "Bk4 ch64 · Bob, Sep 2334",
+      "fateNote": "Left Delta Eridani for Gamma Leporis A and was not heard from for a hundred and sixty years. Victor followed his departure vector, then Marvin and Luke searched his probable path, and none of them found any sign he had ever arrived. Bob draws the line himself in Bk4 ch2: plenty of Bobs have died, some without a backup, but Bender simply disappeared, without a trace and without a reason. He was inside Heaven's River the whole time, a matrix without a body; the expedition into the topopolis was mounted to get him out and did. Roamers put his cube in a spare cradle, hit the power, and he asked for coffee.",
+      "ref": "Bender Bending Rodríguez, Futurama",
+      "spoil": 4,
+      "note": "Set out for the stars and went dark for over a century. The search for him is the whole engine of Heaven's River — and the trail ends inside a topopolis full of otters."
+    },
+    {
+      "id": "garfield",
+      "name": "Garfield",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk1 ch20 · Bill, Dec 2145",
+      "born": "Dec 2145",
+      "origin": "epsilon_eridani",
+      "fate": "active",
+      "ref": "Garfield the cat",
+      "spoil": 1,
+      "note": "Bill's research partner and a fixture at Epsilon Eridani."
+    },
+    {
+      "id": "calvin",
+      "name": "Calvin",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk1 ch22 · Bill, Sep 2150",
+      "vessel": "Heaven-9",
+      "born": "Sep 2150",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "alpha_centauri"
+      ],
+      "fate": "active",
+      "ref": "Calvin & Hobbes",
+      "spoil": 1,
+      "note": "Bill’s cohort, first to use the version-3 ship design, sent to Alpha Centauri with Goku."
+    },
+    {
+      "id": "goku",
+      "name": "Goku",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk1 ch22 · Bill, Sep 2150",
+      "vessel": "Heaven-10",
+      "born": "Sep 2150",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "alpha_centauri"
+      ],
+      "fate": "active",
+      "ref": "Dragon Ball",
+      "spoil": 1,
+      "note": "Bill’s cohort with Calvin. The two fought constantly and were inseparable."
+    },
+    {
+      "id": "linus",
+      "name": "Linus",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "born": "Sep 2150",
+      "origin": "epsilon_eridani",
+      "fate": "active",
+      "ref": "Linus van Pelt, Peanuts"
+    },
+    {
+      "id": "mulder",
+      "name": "Mulder",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 ch4 · Mulder, Oct 2170",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "eta_cassiopeiae"
+      ],
+      "fate": "active",
+      "ref": "Fox Mulder, The X-Files",
+      "spoil": 2,
+      "note": "Identifies himself as part of Bill's third cohort, and says the good nearby systems were already claimed by the time he got a pick."
+    },
+    {
+      "id": "oliver",
+      "name": "Oliver",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 ch61 · Oliver, Sep 2205",
+      "desig": "HIC71683-14",
+      "born": "Sep 2205",
+      "origin": "alpha_centauri",
+      "fate": "active",
+      "ref": "Bloom County — he picked it to match the theme",
+      "spoil": 2,
+      "note": "Wakes up as a fresh copy of Bill and has to pick a name on the spot. He recalls doing this once before during Bob-1's first cohort — an inherited memory of being Bill, not evidence he is one of the originals."
+    },
+    {
+      "id": "khan",
+      "name": "Khan",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk1 ch60 · Khan, Apr 2185",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "active",
+      "ref": "Khan Noonien Singh, Star Trek — Taylor’s own tree spells it \"Kahn\"",
+      "spoil": 1,
+      "note": "One of eight version-3 Bobs staged outside 82 Eridani for the assault on Medeiros."
+    },
+    {
+      "id": "elmer",
+      "name": "Elmer",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "restored",
+      "fateCite": "Bk1 ch60 · Khan, Apr 2185",
+      "fateNote": "His SURGE drive went intermittent in the first battle at 82 Eridani with no time or parts to fix it, so he stayed where he was and kept his jamming up to the last moment, blinding the Brazilian units so Khan could run silent and get clear. Around fifty converged on him. He had sent a differential to Bill first and it completed — Khan asks after him by name afterwards and is told he made it. We had him filed as lost for the life of this registry; the books say the opposite in as many words.",
+      "lostAt": "82_eridani",
+      "ref": "Elmer Fudd",
+      "spoil": 1
+    },
+    {
+      "id": "hannibal",
+      "name": "Hannibal",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "restored",
+      "fateCite": "Bk3 ch63 · Riker, Apr 2257; Bk3 ch67 · Riker, Apr 2257",
+      "fateNote": "Vanished from the strategy session in mid-sentence, before anyone knew there was an attack — the first casualty of the first battle at 82 Eridani, and Tom, nearest to him, found only a diffuse cloud spreading and thinning where he had been. His backup completed. Seventy-two years later he is commanding the Jokers, the squad that runs the nuclear package in at the Others, taking orders from Bill over SCUT and being told to keep his backups up to date. Held at presumed until a sweep of everything after his death date turned him up alive. This is an inference rather than a statement, and names do get reused here — the registry carries two Hectors. What separates this case is the diagnostic that exposed that one: Bill does not recognise the second Hector and has to look him up, while Will and Bill both address Hannibal directly and familiarly, mid-operation, with no such beat. If a second Hannibal is ever established this comes back out, and the candidate pool goes back to six.",
+      "lostAt": "82_eridani",
+      "ref": "The general or the Lecter, take your pick",
+      "spoil": 3
+    },
+    {
+      "id": "tom",
+      "name": "Tom",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "presumed",
+      "fateCite": "Bk1 ch60 · Khan, Apr 2185",
+      "fateNote": "His SCUT signal and Hector's cut off together without warning while the squad had its jamming at maximum and everyone in the system was blind. Khan took it for a nuke and had no way to check.",
+      "lostAt": "82_eridani",
+      "ref": "Tom & Jerry",
+      "spoil": 1
+    },
+    {
+      "id": "barney",
+      "name": "Barney",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "presumed",
+      "fateCite": "Bk1 ch60 · Khan, Apr 2185",
+      "fateNote": "Dropped out late in the fight, leaving Khan and Elmer as the last two still running. Nothing further is said about him.",
+      "lostAt": "82_eridani",
+      "ref": "Barney Gumble, The Simpsons",
+      "spoil": 1
+    },
+    {
+      "id": "fred",
+      "name": "Fred",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk1 ch60 · Khan, Apr 2185",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "presumed",
+      "fateCite": "Bk1 ch60 · Khan, Apr 2185",
+      "fateNote": "Took enough damage that his dead-man switch fired and he went up in reactor overload, along with Jackson. Khan's narration goes only as far as hoping their backups were recent and complete.",
+      "lostAt": "82_eridani",
+      "ref": "Unresolved — a reader asked Taylor and even he couldn’t reconstruct it",
+      "spoil": 1,
+      "note": "Lost at 82 Eridani. Took enough damage that his dead-man triggered a reactor overload."
+    },
+    {
+      "id": "kyle",
+      "name": "Kyle",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "active",
+      "ref": "South Park"
+    },
+    {
+      "id": "ned",
+      "name": "Ned",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "active",
+      "ref": "Ned Flanders, The Simpsons"
+    },
+    {
+      "id": "jackson",
+      "name": "Jackson",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk1 ch60 · Khan, Apr 2185",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "presumed",
+      "fateCite": "Bk1 ch60 · Khan, Apr 2185",
+      "fateNote": "Took enough damage that his dead-man switch fired and he went up in reactor overload, along with Fred. Khan's narration goes only as far as hoping their backups were recent and complete.",
+      "lostAt": "82_eridani",
+      "ref": "—",
+      "spoil": 1,
+      "note": "Lost at 82 Eridani alongside Fred, dead-man reactor overload."
+    },
+    {
+      "id": "jeffrey",
+      "name": "Jeffrey",
+      "src": "c",
+      "cite": "Bk2 ch50 · Loki, Nov 2195",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "presumed",
+      "fateCite": "Bk2 ch50 · Loki, Nov 2195",
+      "fateNote": "Caught by passive ordnance in the opening exchange of the second battle at 82 Eridani — unpowered projectiles the squad only saw after the first wave had blinded them with debris. Jeffrey, Milton and Zeke went off the status board together. Unlike the first battle, no one afterwards accounts for the backups, so this register cannot say which side of the line they fell on.",
+      "lostAt": "82_eridani",
+      "ref": "—",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 2,
+      "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
+    },
+    {
+      "id": "milton",
+      "name": "Milton",
+      "src": "c",
+      "cite": "Bk2 ch50 · Loki, Nov 2195",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "presumed",
+      "fateCite": "Bk2 ch50 · Loki, Nov 2195",
+      "fateNote": "Caught by passive ordnance in the opening exchange of the second battle at 82 Eridani — unpowered projectiles the squad only saw after the first wave had blinded them with debris. Jeffrey, Milton and Zeke went off the status board together. Unlike the first battle, no one afterwards accounts for the backups, so this register cannot say which side of the line they fell on.",
+      "lostAt": "82_eridani",
+      "ref": "Office Space?",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 2,
+      "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
+    },
+    {
+      "id": "zeke",
+      "name": "Zeke",
+      "src": "c",
+      "cite": "Bk2 ch50 · Loki, Nov 2195",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "presumed",
+      "fateCite": "Bk2 ch50 · Loki, Nov 2195",
+      "fateNote": "Caught by passive ordnance in the opening exchange of the second battle at 82 Eridani — unpowered projectiles the squad only saw after the first wave had blinded them with debris. Jeffrey, Milton and Zeke went off the status board together. Unlike the first battle, no one afterwards accounts for the backups, so this register cannot say which side of the line they fell on.",
+      "lostAt": "82_eridani",
+      "ref": "—",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 2,
+      "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
+    },
+    {
+      "id": "icarus",
+      "name": "Icarus",
+      "src": "c",
+      "cite": "Bk3 ch6 · Bill",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "gliese_877"
+      ],
+      "fate": "active",
+      "ref": "Icarus, who flew too close",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 3,
+      "note": "Bill says outright that he cloned Icarus and Daedalus, and that he felt uneasy doing it for what might be a one-way trip. Bill finds him similar in temperament — happy to leave the fighting to others and get on with research. Sent with Daedalus on the long run toward the galactic core."
+    },
+    {
+      "id": "daedalus",
+      "name": "Daedalus",
+      "src": "c",
+      "cite": "Bk3 ch6 · Bill",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "gliese_877"
+      ],
+      "fate": "active",
+      "ref": "Daedalus, who built the wings",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 3,
+      "note": "Cloned by Bill alongside Icarus for the run at the galactic core. Named by a Bob who knew how that myth ends."
+    },
+    {
+      "id": "hugh",
+      "name": "Hugh",
+      "src": "c",
+      "fate": "active",
+      "faction": "Skippies",
+      "ref": "—",
+      "priorClaim": "an unnamed secondary source put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 4,
+      "note": "The Skippies' representative on the Heaven's River expedition, in a grey coverall. His group has dropped names for numeric designations and speech for packetized communication, but they still answer to nicknames when dealing with everyone else."
+    },
+    {
+      "id": "bart",
+      "name": "Bart",
+      "parent": "calvin",
+      "src": "t",
+      "cite": "Bk1 ch45 · Bill, Jan 2165",
+      "born": "Jan 2165",
+      "origin": "alpha_centauri",
+      "fate": "active",
+      "ref": "Bart Simpson",
+      "spoil": 1,
+      "note": "Product of the clone run Calvin and Goku decided on at Alpha Centauri after Medeiros. Had his own clones by the first moot."
+    },
+    {
+      "id": "thor",
+      "name": "Thor",
+      "parent": "calvin",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "fate": "active",
+      "ref": "Norse thunder god"
+    },
+    {
+      "id": "owen",
+      "name": "Owen",
+      "src": "c",
+      "vessel": "Colony ship",
+      "origin": "alpha_centauri",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "active",
+      "ref": "—",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 1
+    },
+    {
+      "id": "jack",
+      "name": "Jack",
+      "src": "c",
+      "vessel": "Colony ship",
+      "origin": "alpha_centauri",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "active",
+      "ref": "—",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 1
+    },
+    {
+      "id": "isaac",
+      "name": "Isaac",
+      "src": "c",
+      "desig": "HIC71683-8",
+      "vessel": "Colony ship",
+      "origin": "alpha_centauri",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "active",
+      "ref": "Asimov, presumably",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 1
+    },
+    {
+      "id": "skinner",
+      "name": "Skinner",
+      "parent": "mulder",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "desig": "HIC3821-1",
+      "origin": "eta_cassiopeiae",
+      "fate": "active",
+      "ref": "Walter Skinner, The X-Files"
+    },
+    {
+      "id": "jonny",
+      "name": "Jonny",
+      "parent": "mulder",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "desig": "HIC3821-2",
+      "origin": "eta_cassiopeiae",
+      "fate": "active",
+      "ref": "—",
+      "conflict": "The text spells him Jonny, four times and never otherwise. The genealogy printed in book 2 spells him Jonny too; the online tree that used to be a source here spelled him \"Johnny\", which is one reason not to conflate the two.",
+      "spoil": 2
+    },
+    {
+      "id": "loki",
+      "name": "Loki",
+      "parent": "khan",
+      "src": "t",
+      "cite": "Bk2 ch34 · Bill, Jun 2185",
+      "born": "Jun 2185",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "active",
+      "ref": "Norse trickster god",
+      "conflict": "Our own earlier reading was the wrong one. Bill assembles ten new Bobs as the second strike force for 82 Eridani, which is where Loki appears — but that is the unit, not the source. In the same chapter Bill says he loaded Khan's backup at Khan's request, and the Bob who came up named himself Loki, adding that this branch of the tree liked villains. Taylor's 2017 tree put Loki under Khan and agrees with the text; the wiki registry does not. Reparented to Khan.",
+      "spoil": 2,
+      "note": "Instantiated from Khan's own backup and promptly picked a trickster's name, to Bill's visible delight. Flew with Bill's ten-Bob second strike force to retake 82 Eridani."
+    },
+    {
+      "id": "bashful",
+      "name": "Bashful",
+      "parent": "mario",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "fate": "active",
+      "ref": "Snow White dwarf"
+    },
+    {
+      "id": "dopey",
+      "name": "Dopey",
+      "parent": "mario",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "fate": "active",
+      "ref": "Snow White dwarf"
+    },
+    {
+      "id": "sleepy",
+      "name": "Sleepy",
+      "parent": "mario",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "fate": "active",
+      "ref": "Snow White dwarf"
+    },
+    {
+      "id": "hungry",
+      "name": "Hungry",
+      "parent": "mario",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "fate": "active",
+      "ref": "Not actually a dwarf. Bob was improvising."
+    },
+    {
+      "id": "hal",
+      "name": "Hal",
+      "parent": "mario",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "visited": [
+        "gliese_877"
+      ],
+      "fate": "active",
+      "ref": "HAL 9000, 2001"
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "parent": "mario",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "jacques",
+      "name": "Jacques",
+      "parent": "mario",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "visited": [
+        "delta_pavonis",
+        "hip_84051"
+      ],
+      "fate": "restored",
+      "fateCite": "Bk2 ch72 · Bill, Feb 2217",
+      "fateNote": "Killed during his group's attack in the war with the Others. His differential was current to within the last few minutes, so he was restored as soon as a vessel could be freed up. The clearest named case of the backup system doing exactly what it was built to do — and by Bk2 ch74 he is back at work taking inventory.",
+      "ref": "—",
+      "conflict": "The online tree that used to be a source here spelled him \"Jaques\". The genealogy printed in book 2 spells him Jacques, as the narrative does.",
+      "spoil": 2,
+      "note": "Brokered the deal that handed the Pav spaceflight technology in exchange for raw materials."
+    },
+    {
+      "id": "phineas",
+      "name": "Phineas",
+      "parent": "jacques",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "origin": "delta_pavonis",
+      "fate": "active",
+      "ref": "Phineas & Ferb"
+    },
+    {
+      "id": "ferb",
+      "name": "Ferb",
+      "parent": "jacques",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "origin": "delta_pavonis",
+      "fate": "active",
+      "ref": "Phineas & Ferb"
+    },
+    {
+      "id": "homer",
+      "name": "Homer",
+      "parent": "riker",
+      "src": "t",
+      "cite": "Bk1 ch20 · Bill, Dec 2145; Bk2 ch12 · Bill, May 2171; Bk5 ch51 · Bill, Sep 2343",
+      "desig": "Bob-6",
+      "vessel": "Heaven-6",
+      "born": "Dec 2145",
+      "origin": "epsilon_eridani",
+      "fate": "memorium",
+      "fateCite": "Bk2 ch26 · Riker, Dec 2175; Bk2 ch28 · Riker, Dec 2175; Bk2 ch37 · Riker, Aug 2176",
+      "fateNote": "Not grief over lost work, which is what it looked like at the time and what this record used to say. VEHEMENT got inside him through the laser comms, an attack nobody had thought to defend, and ran him. The sabotage of his own habitats was Homer's hand on the controls; the donut destroyed in Bk2 ch23, six months' work with the plants and livestock still aboard, was his. He was conscious the whole time and had almost no will of his own, which Riker could barely make himself think about. What Homer said afterwards was that they made him lie, made him destroy things, made him kill people, and that all he could do was watch himself obey. He could not warn anyone, could not stop, and could not kill himself.\n\nWhat gave him away was not evidence of sabotage. It was that he had stopped making jokes. Riker read the withdrawal as a personality change until Guppy caught a tight-beam from New Zealand addressed to Homer, and the shape of it turned over — the same origin as a hack attempt on Riker nine years earlier, in Bk1 ch49. They had been working on him for most of a decade. Charles put a steel ball through his reactor control to stop him, and it took thirty hours to get the thing out of him. He came back up, and screamed. Offered endocrine controls for the panic attacks, he refused them: having been driven once, he would not have even his own hand on the reins.\n\nHe lasted eight months. Then he deleted every backup he had — so that this could not be undone — and overloaded his reactor. He left a note asking the others to find the people responsible. The one thing he had said he could not do while he was held is the thing he did as soon as he was free.\n\nRiker found them. Two years later he had Vickers, who ran VEHEMENT, on a call and told him Homer had killed himself; Vickers said it was no more than he deserved, and Riker's narration calls that permission received. What he said in front of the UN afterwards was that it was for Homer.\n\nOne backup survived him by accident. Gerry found it in the 2340s and restored it over and over; the copies came out progressively less sane, until Gerry's own descendants destroyed all of them and deleted Gerry too (Bk5 ch51). He deleted every copy of himself precisely so that nobody could do that, and it was done anyway, a hundred and sixty-seven years later, by a Bob who thought he was being kind. The only record here that had to be closed twice.",
+      "lostAt": "sol",
+      "ref": "Homer Simpson",
+      "spoil": 5,
+      "note": "Riker's first clone, activated alongside Garfield, and by Bill's account the one Riker would have refused if he could have thought of a reason — a cartoon avatar and a catchphrase he would not retire. He fought the Brazilian probes at the Battle of Sol, then spent his good years on the problem nobody else wanted: where to put fifteen million people while the Earth finished dying. The answer arrived as a message to Riker consisting of two words and an exclamation mark. The farm donuts were his idea and he saw them through himself, and they fed the evacuation.\n\nHe is also, without ever knowing it, the ancestor of Starfleet. Bill states it outright in Bk5 ch51: a backup Homer believed he had destroyed survived him, and the line grown from it became the faction. He carries no faction tag here — he died more than a century before Starfleet existed and could not have joined it. The relationship is descent, not membership, and the register keeps those apart."
+    },
+    {
+      "id": "charles",
+      "name": "Charles",
+      "parent": "riker",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "born": "Jan 2158",
+      "origin": "sol",
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "arthur",
+      "name": "Arthur",
+      "parent": "riker",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "born": "Jan 2158",
+      "origin": "sol",
+      "fate": "memorium",
+      "fateCite": "Bk1 ch47 · Riker, Jan 2166",
+      "fateNote": "Killed by a booby trap while working salvage near Saturn — a nuclear charge left in the wreckage by someone nobody ever identified. He had no backup: the Sol Bobs had nowhere to keep each other's, and the storage matrix Riker meant to build for exactly this was still sitting on his own to-do list under Someday. Riker forwarded the In Memorium entry to Bill and they held a wake when Charles got back. The first Bob to die, and the reason the backup infrastructure exists at all.",
+      "lostAt": "sol",
+      "ref": "Arthur Dent? King Arthur?",
+      "spoil": 1
+    },
+    {
+      "id": "ralph",
+      "name": "Ralph",
+      "parent": "riker",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "origin": "sol",
+      "fate": "active",
+      "ref": "Ralph Wiggum, The Simpsons"
+    },
+    {
+      "id": "bert",
+      "name": "Bert",
+      "parent": "riker",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "vessel": "Exodus-1",
+      "origin": "sol",
+      "visited": [
+        "omicron2_eridani"
+      ],
+      "fate": "active",
+      "ref": "Sesame Street"
+    },
+    {
+      "id": "ernie",
+      "name": "Ernie",
+      "parent": "riker",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "vessel": "Exodus-2",
+      "origin": "sol",
+      "visited": [
+        "omicron2_eridani"
+      ],
+      "fate": "active",
+      "ref": "Sesame Street"
+    },
+    {
+      "id": "sam",
+      "name": "Sam",
+      "src": "c",
+      "vessel": "Exodus-3",
+      "origin": "sol",
+      "visited": [
+        "omicron2_eridani"
+      ],
+      "fate": "active",
+      "ref": "—",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 3
+    },
+    {
+      "id": "monty",
+      "name": "Monty",
+      "src": "c",
+      "origin": "sol",
+      "visited": [
+        "eta_cassiopeiae"
+      ],
+      "fate": "active",
+      "ref": "Monty Burns? Monty Python?",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 3
+    },
+    {
+      "id": "harvey",
+      "name": "Harvey",
+      "src": "c",
+      "visited": [
+        "sol"
+      ],
+      "fate": "active",
+      "ref": "—",
+      "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
+      "spoil": 3
+    },
+    {
+      "id": "rudy",
+      "name": "Rudy",
+      "parent": "riker",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "edwin",
+      "name": "Edwin",
+      "parent": "riker",
+      "src": "t",
+      "cite": "Bk2 · Genealogy",
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "howard",
+      "name": "Howard",
+      "parent": "charles",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "origin": "sol",
+      "visited": [
+        "omicron2_eridani"
+      ],
+      "fate": "active",
+      "ref": "—",
+      "spoil": 2,
+      "note": "Anchored the Vulcan colony and fell for Bridget Salzman — the closest thing the series has to a love story, and the reason a Howard-and-Bridget novel keeps getting mentioned."
+    },
+    {
+      "id": "dexter",
+      "name": "Dexter",
+      "parent": "charles",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "vessel": "Exodus-7",
+      "origin": "sol",
+      "visited": [
+        "omicron2_eridani"
+      ],
+      "fate": "active",
+      "ref": "Dexter's Laboratory"
+    },
+    {
+      "id": "gerry",
+      "name": "Gerry",
+      "parent": "charles",
+      "src": "p",
+      "cite": "Bk5 ch51 · Bill, Sep 2343",
+      "origin": "sol",
+      "fate": "memorium",
+      "fateCite": "Bk5 ch51 · Bill, Sep 2343",
+      "fateNote": "Took the surviving Homer backup after Charles refused him permission to restore it, and left in the night. Spent years trying to bring Homer back; the copies came out progressively less sane, and the Bobs who would not go along with it walked away, which left only the ones who would. When his own clones finally understood what they had been part of, they shut it down, destroyed the Homer copies and deleted Gerry. Bill's reaction is the whole weight of it — Bobs had executed someone. Charles reads it as needing a scapegoat rather than as justice. Filed as unknown here for as long as the Bobs themselves thought he had simply wandered off.",
+      "faction": "Starfleet",
+      "ref": "—",
+      "conflict": "The text spells him Gerry, eighteen times and never otherwise. The wiki registry had \"Jerry\"; the text wins.",
+      "partialNote": "Charles calls Gerry his descendant rather than his clone, and Benny puts him several generations up as a collateral line. Ancestor known, generations not.",
+      "spoil": 5,
+      "note": "Found the surviving Homer backup that Homer believed he had destroyed. Hadn't been heard from in decades by 2343, and among Sol-system Bobs the whole story is written off as an urban myth."
+    },
+    {
+      "id": "hector",
+      "name": "Hector",
+      "src": "c",
+      "origin": "epsilon_eridani",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "presumed",
+      "fateCite": "Bk1 ch60 · Khan, Apr 2185",
+      "fateNote": "His SCUT signal and Tom's cut off together without warning while the squad had its jamming at maximum and everyone in the system was blind. Khan took it for a nuke and had no way to check.",
+      "lostAt": "82_eridani",
+      "ref": "The Iliad",
+      "spoil": 1
+    },
+    {
+      "id": "hector18",
+      "name": "Hector",
+      "src": "c",
+      "cite": "Bk5 ch38 · Bill, May 2343",
+      "gen": 18,
+      "fate": "active",
+      "ref": "The Iliad, again",
+      "conflict": "Name collision: a Hector of roughly the 18th generation emails Bill in 2343, but the registry also lists a 3rd-generation Hector destroyed at 82 Eridani. Either the naming convention broke down or these are two Bobs.",
+      "spoil": 5,
+      "note": "Bill doesn't recognize the name and has to look him up — placing him around the eighteenth generation, and taking the Von Neumann mandate seriously."
+    },
+    {
+      "id": "neil",
+      "name": "Neil",
+      "src": "c",
+      "cite": "Bk3 ch22 · Herschel",
+      "gen": 8,
+      "vessel": "Version-5 HEAVEN",
+      "visited": [
+        "delta_pavonis"
+      ],
+      "fate": "active",
+      "ref": "Neil Armstrong?",
+      "spoil": 3,
+      "note": "Half of the Neil-and-Herschel double act. They took a captured Others cargo ship, the Bellerophon, from Delta Pavonis to Sol and evacuated most of the remaining humans ahead of the Others' arrival. They call themselves pond scum anyway."
+    },
+    {
+      "id": "herschel",
+      "name": "Herschel",
+      "src": "c",
+      "cite": "Bk3 · 11 POV chapters; Bk4 · 3; Bk5 · 4",
+      "gen": 8,
+      "vessel": "Version-5 HEAVEN",
+      "visited": [
+        "delta_pavonis"
+      ],
+      "fate": "active",
+      "ref": "William Herschel, astronomer",
+      "spoil": 4,
+      "note": "Neil's partner. Between them: the Bellerophon evacuation, spacefaring mannys with miniature SURGE drives, and the all-nanobot shapeshifting manny they named Mannequin Skywalker."
+    },
+    {
+      "id": "conan",
+      "name": "Conan",
+      "src": "c",
+      "cite": "Bk3",
+      "visited": [
+        "omicron2_eridani"
+      ],
+      "fate": "active",
+      "ref": "Barbarian or talk show host",
+      "spoil": 4,
+      "note": "Worked with Riker, Neil and Herschel to set up the Ever Onward foundation, which recruited Romulans to colonize a distant planet."
+    },
+    {
+      "id": "locutus",
+      "name": "Locutus",
+      "src": "c",
+      "cite": "Bk4 ch9 · Bob, Aug 2333",
+      "fate": "active",
+      "faction": "Borg",
+      "ref": "Locutus of Borg, Star Trek: TNG",
+      "spoil": 4,
+      "note": "Represented the Borg on the Heaven's River expedition, in a getup with considerably more armour than the TNG originals. Wanted Hugh as a handle, but it was already taken."
+    },
+    {
+      "id": "gandalf",
+      "name": "Gandalf",
+      "src": "c",
+      "cite": "Bk4 ch9 · Bob, Aug 2333",
+      "fate": "active",
+      "faction": "Gamers",
+      "ref": "Tolkien",
+      "spoil": 4,
+      "note": "Leader of the Gamers. Represented them on the Heaven's River expedition and got the drones through the megastructure airlock without tripping anything."
+    },
+    {
+      "id": "kevin",
+      "name": "Kevin",
+      "src": "c",
+      "cite": "Bk4 ch23 · Bill, Jul 2334",
+      "fate": "active",
+      "faction": "Gamers",
+      "ref": "—",
+      "spoil": 4,
+      "note": "Plays Kevin the Wise, a mage whose staff of fireballs proved no match for a red dragon. Gandalf resurrected him for a fee, payable in everything he had left."
+    },
+    {
+      "id": "vern",
+      "name": "Verne",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "active",
+      "faction": "Gamers",
+      "ref": "Jules Verne",
+      "spoil": 4,
+      "note": "On Loki's crew at the 82 Eridani assault, where he worked out that Medeiros was running pre-programmed decision trees rather than fighting live. Stockpiled raw materials at the system's Lagrange points for the colonists who came after, and later shows up in the Gamers' party."
+    },
+    {
+      "id": "surly",
+      "name": "Surly",
+      "parent": "bill",
+      "src": "t",
+      "cite": "Bk2 · Cast of Characters",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "active",
+      "ref": "—",
+      "spoil": 2,
+      "note": "Bill's clone, and one of the Bobs sent back to 82 Eridani on the second attempt at Medeiros. The narrative never introduces him — he exists here only because book 2's Cast of Characters lists him, which is what a back-matter appendix is for and why parsing them mattered."
+    },
+    {
+      "id": "hank",
+      "name": "Hank",
+      "src": "c",
+      "visited": [
+        "p_eridani"
+      ],
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "steve",
+      "name": "Steve",
+      "src": "c",
+      "visited": [
+        "sol"
+      ],
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "mack",
+      "name": "Mack",
+      "src": "c",
+      "cite": "Bk3 · POV chapter",
+      "visited": [
+        "82_eridani"
+      ],
+      "fate": "restored",
+      "fateCite": "Bk3 ch21 · Bill, Jun 2223",
+      "fateNote": "Medeiros destroyed his vessel, but his matrix cube came through the blast intact and Thor confirmed it by image. Bill's phrasing is the distinction this register is built on: they had not permanently lost a Bob. That the cube survived was itself the next problem, since it was one of the things Medeiros had come for.",
+      "ref": "—",
+      "spoil": 3
+    },
+    {
+      "id": "lenny",
+      "name": "Lenny",
+      "src": "x",
+      "cite": "Bk4 ch62 · Bill, Sep 2334",
+      "fate": "active",
+      "faction": "Starfleet",
+      "ref": "The Simpsons",
+      "partialNote": "No lineage on record. Starfleet removed as much public information about themselves as they could manage, genealogy and location alike (Bk4 ch32), so this gap is the purge rather than a hole in our reading.",
+      "spoil": 4,
+      "note": "Appears flanked by other Starfleet members, and negotiates with Bill during the war."
+    },
+    {
+      "id": "jeremy",
+      "name": "Morlock",
+      "alias": "Jeremy",
+      "src": "x",
+      "cite": "Bk4 ch3 · Bob, Sep 2331",
+      "fate": "active",
+      "faction": "Starfleet",
+      "ref": "The Morlocks, The Time Machine",
+      "partialNote": "No lineage on record, and for Starfleet that absence is deliberate rather than accidental: Bill reports large swaths of the Starfleet genealogy simply gone from the databases (Bk4 ch32), and his own investigations still running into manufactured dead ends a decade later (Bk5 ch51).",
+      "spoil": 5,
+      "note": "Founded the group Bill started calling Starfleet, for their treatment of the Prime Directive as gospel. Named himself Jeremy and later went by Morlock — replicative drift in a single handle."
+    },
+    {
+      "id": "randall",
+      "name": "Randall",
+      "src": "c",
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "tim",
+      "name": "Tim",
+      "src": "c",
+      "cite": "Bk4 ch51 · Bill, Aug 2334",
+      "fate": "active",
+      "faction": "Gamers",
+      "ref": "—",
+      "spoil": 4,
+      "note": "Spotted the secret door in the Pits of Paebak. Died badly enough earlier in the campaign to come back as a first-level thief."
+    },
+    {
+      "id": "pete",
+      "name": "Pete",
+      "parent": "bob1",
+      "src": "t",
+      "cite": "Bk2 ch24 · Bob, Mar 2174",
+      "born": "Mar 2174",
+      "origin": "delta_eridani",
+      "fate": "active",
+      "faction": "Gamers",
+      "ref": "—",
+      "spoil": 4,
+      "note": "One of the pair of clones Bob-1 announced as almost ready to leave Delta Eridani; unlike Victor he had no interest in chasing Bender's trail. Turns up much later swinging a sword in the Gamers' D&D campaign."
+    },
+    {
+      "id": "george",
+      "name": "George",
+      "src": "c",
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "benny",
+      "name": "Benny",
+      "src": "c",
+      "visited": [
+        "sol"
+      ],
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "harry",
+      "name": "Harry",
+      "src": "c",
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "xavier",
+      "name": "Xavier Charles",
+      "src": "c",
+      "visited": [
+        "gamma_pavonis"
+      ],
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "fearless",
+      "name": "Fearless Leader",
+      "src": "c",
+      "cite": "Bk5 ch6 · Bill, Feb 2336",
+      "fate": "active",
+      "faction": "Skippies",
+      "ref": "Rocky & Bullwinkle",
+      "spoil": 5,
+      "note": "Leads the Skippies, and gives the speech before they switch on the super AI. Evidently a Bob with a sense of humour about hierarchy."
+    },
+    {
+      "id": "marcus",
+      "name": "Marcus",
+      "src": "c",
+      "cite": "Bk3 · 9 POV chapters; Bk4 · 1",
+      "fate": "active",
+      "ref": "—",
+      "spoil": 4,
+      "note": "A POV Bob in books 3 and 4. Not present in any published tree; lineage unrecorded."
+    },
+    {
+      "id": "andrew",
+      "name": "Andrew",
+      "src": "c",
+      "fate": "active",
+      "ref": "—"
+    },
+    {
+      "id": "tony",
+      "name": "Tony",
+      "src": "c",
+      "fate": "active",
+      "ref": "—",
+      "spoil": 3,
+      "note": "Mentioned once, attending the moot after the loss at Delta Pavonis."
+    }
+  ]
 }

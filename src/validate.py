@@ -390,6 +390,29 @@ def _check_spoil(bobs: list[dict]) -> tuple[list[str], list[str]]:
                 errors.append(
                     f"{bob['id']}: spoil {spoil} but {field} cites Bk{inline}"
                 )
+    # the companion registers gate their prose the same way and get the same
+    # two checks — a note cannot be safe before its entry, and cannot name a
+    # book past the one it claims to reach
+    for path, key in ((BESTIARY, "creatures"), (PEOPLES, "entries")):
+        if not os.path.exists(path):
+            continue
+        with open(path) as fh:
+            entries = json.load(fh)[key]
+        name = os.path.basename(path).split(".")[0]
+        for e in entries:
+            spoil, note = e.get("spoil"), e.get("note")
+            if spoil is None:
+                if note:
+                    undeclared.append(f"{name}/{e['id']}")
+                continue
+            cited = _book_of(e.get("cite"))
+            if cited and spoil < cited:
+                errors.append(f"{name} {e['id']}: spoil {spoil} is earlier than its own "
+                              f"citation in Bk{cited}")
+            inline = _book_of(note)
+            if inline and inline > spoil:
+                errors.append(f"{name} {e['id']}: spoil {spoil} but the note cites Bk{inline}")
+
     warnings = []
     if undeclared:
         warnings.append(

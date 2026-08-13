@@ -2,14 +2,24 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Bobiverse bestiary — non-sapient fauna",
   "type": "object",
-  "required": ["creatures"],
+  "required": [
+    "creatures"
+  ],
   "properties": {
-    "_comment": {"type": "string"},
+    "_comment": {
+      "type": "string"
+    },
     "creatures": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "name", "sapience", "cite", "note"],
+        "required": [
+          "id",
+          "name",
+          "sapience",
+          "cite",
+          "note"
+        ],
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -35,12 +45,21 @@
           },
           "role": {
             "type": "string",
-            "enum": ["predator", "prey", "megafauna", "scavenger", "unknown"],
+            "enum": [
+              "predator",
+              "prey",
+              "megafauna",
+              "scavenger",
+              "unknown"
+            ],
             "description": "Ecological role as the text presents it, not as a formal taxonomy. Nothing here is a scientific claim."
           },
           "sapience": {
             "type": "string",
-            "enum": ["none", "contested"],
+            "enum": [
+              "none",
+              "contested"
+            ],
             "description": "Whether the books treat this as a person. 'none' needs the text to settle it — Bk1 ch35 says outright there is nothing but animal intelligence behind a gorilloid. 'contested' is for creatures the books deliberately leave open. There is no 'sapient' value: a sapient species is a people, and belongs in the peoples register. The validator enforces that, because filing the Deltans under 'beasts' would argue against the books."
           },
           "mentions": {
@@ -59,6 +78,12 @@
           "art": {
             "type": "string",
             "description": "Inline SVG for the illustration. NOT hand-edited: the build fills this from assets/bestiary/<id>.svg so artwork can be dropped in as a file. Kept in the schema so the field is documented rather than mysterious."
+          },
+          "spoil": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "The latest book this entry's own note draws on. Used only when a reader has set a reading position: the entry itself is gated by `cite`, but the note is free prose and no citation bounds it. Absent means undeclared, and undeclared prose is withheld — a blank panel rather than a spoiled ending. Must be at least the book of `cite`."
           }
         }
       }

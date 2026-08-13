@@ -1,109 +1,118 @@
 {
- "_comment": "Non-sapient fauna only. Sapient species — Deltans, Quinlans, Pav, the Others — belong in the peoples register, not here; the validator refuses a sapient entry. The line matters: the moral spine of the series is Bob working out who counts as a person, and filing the Deltans under 'beasts' would argue the opposite of the books. Where the text leaves it open, say so with sapience 'contested' rather than picking.",
- "creatures": [
-  {
-   "id": "gorilloid",
-   "name": "Gorilloid",
-   "namedBy": "Bob",
-   "system": "delta_eridani",
-   "place": "Eden",
-   "role": "predator",
-   "sapience": "none",
-   "mentions": 166,
-   "cite": "Bk1 ch35 · Bob, July 2165",
-   "note": "Delta's apex predator, and the reason Bob broke his own non-interference rule. Hunts Deltans as food, raiding camps in small groups and dragging bodies off to be fought over rather than shared. Bob watched long enough to satisfy himself there was nothing behind the eyes but animal intelligence — no organisation, no plan — which is what let him arm the Deltans against them without deciding he was picking a side in someone else's war. Their hides and bones became tools in turn."
-  },
-  {
-   "id": "pigoid",
-   "name": "Pigoid",
-   "namedBy": "Bob",
-   "system": "delta_eridani",
-   "place": "Eden",
-   "role": "prey",
-   "sapience": "none",
-   "mentions": 29,
-   "cite": "Bk1 ch35 · Bob, July 2165",
-   "note": "Delta's staple game animal, and the proof of concept for Bob's whole uplift project. It charges anything that threatens it, which makes it reliably suicidal against a braced spear — and it never learns, so the tactic keeps working. Sharper, straighter spears turned an occasional kill into a dependable food supply, which fed the adults who could then stay home and guard the camp."
-  },
-  {
-   "id": "raptor",
-   "name": "Raptor",
-   "namedBy": "the Vulcan colonists",
-   "system": "omicron2_eridani",
-   "place": "Vulcan",
-   "role": "predator",
-   "sapience": "none",
-   "mentions": 48,
-   "cite": "Bk2 ch2 · Howard, September 2188",
-   "note": "Theropod-shaped pack hunters, tagged with the obvious name by the colonists who kept meeting them at the perimeter. They attack machinery as readily as people — an early incident cost a backhoe its paint and the raptors most of their pack — and they are one of the standing reasons Vulcan's fence needed electrifying."
-  },
-  {
-   "id": "bronto",
-   "name": "Bronto",
-   "namedBy": "the Vulcan colonists",
-   "system": "omicron2_eridani",
-   "place": "Vulcan",
-   "role": "megafauna",
-   "sapience": "none",
-   "mentions": 22,
-   "cite": "Bk2 ch2 · Howard, September 2188",
-   "note": "Vulcan's megaherbivore, and a hazard by sheer mass rather than appetite — Howard's summary is that they won't eat you, they'll accidentally step on you. They also chew on fencing, which is the other half of why the colony's perimeter ended up wired."
-  },
-  {
-   "id": "kraken",
-   "name": "Kraken",
-   "namedBy": "Mulder",
-   "system": "eta_cassiopeiae",
-   "place": "Poseidon",
-   "role": "predator",
-   "sapience": "none",
-   "mentions": 11,
-   "cite": "Bk2 ch6 · Mulder, April 2171",
-   "note": "The headline animal of Poseidon's survey — Mulder reckoned it needed a chapter of its own. Tentacled, large enough to be a standing hazard to anyone on the water, and the creature the colonists most wanted to see for themselves, which says something about colonists."
-  },
-  {
-   "id": "hydra",
-   "name": "Hydra",
-   "system": "eta_cassiopeiae",
-   "place": "Poseidon",
-   "role": "predator",
-   "sapience": "none",
-   "mentions": 1,
-   "cite": "Bk3 ch26 · Marcus, September 2215",
-   "note": "One of Poseidon's large marine predators, named in the same breath as the kraken whenever anyone weighs up whether open water is worth the risk. Marcus's judgement was that it isn't."
-  },
-  {
-   "id": "leviathan",
-   "name": "Leviathan",
-   "system": "eta_cassiopeiae",
-   "place": "Poseidon",
-   "role": "megafauna",
-   "sapience": "none",
-   "mentions": 6,
-   "cite": "Bk3 ch35 · Marcus, October 2215",
-   "note": "Poseidon's largest recorded animal — Bob's reading put a full-grown one at roughly airliner scale, and the one he actually saw was bigger than that. Krakens, hydrae and leviathans together were still not the biggest things in that ocean; the survey kept turning up new ones, usually the hard way."
-  },
-  {
-   "id": "dragon",
-   "name": "Dragon",
-   "namedBy": "Mario",
-   "system": "jabberwocky",
-   "role": "predator",
-   "sapience": "none",
-   "mentions": 191,
-   "cite": "Bk4 ch6 · Bob, May 2333",
-   "note": "The most-discussed animal in the whole series, and the one the Bobs ended up flying as. Built to swoop a lake and take fish on the wing — long legs, the wingspan for it, and enough of a flight envelope that Garfield had to work out the reflexes before anyone could pilot one. Mario named them."
-  },
-  {
-   "id": "trout",
-   "name": "Trout",
-   "namedBy": "Howard",
-   "system": "jabberwocky",
-   "role": "prey",
-   "sapience": "none",
-   "mentions": 13,
-   "cite": "Bk5 ch29 · Howard, October 2342",
-   "note": "The dragons' preferred prey fish, and a name Howard assigned on sight of a single image without troubling anyone for a second opinion. Bridget, who had never seen a trout, declined to argue."
-  }
- ]
+  "_comment": "Non-sapient fauna only. Sapient species — Deltans, Quinlans, Pav, the Others — belong in the peoples register, not here; the validator refuses a sapient entry. The line matters: the moral spine of the series is Bob working out who counts as a person, and filing the Deltans under 'beasts' would argue the opposite of the books. Where the text leaves it open, say so with sapience 'contested' rather than picking.",
+  "creatures": [
+    {
+      "id": "gorilloid",
+      "name": "Gorilloid",
+      "namedBy": "Bob",
+      "system": "delta_eridani",
+      "place": "Eden",
+      "role": "predator",
+      "sapience": "none",
+      "mentions": 166,
+      "cite": "Bk1 ch35 · Bob, July 2165",
+      "note": "Delta's apex predator, and the reason Bob broke his own non-interference rule. Hunts Deltans as food, raiding camps in small groups and dragging bodies off to be fought over rather than shared. Bob watched long enough to satisfy himself there was nothing behind the eyes but animal intelligence — no organisation, no plan — which is what let him arm the Deltans against them without deciding he was picking a side in someone else's war. Their hides and bones became tools in turn.",
+      "spoil": 1
+    },
+    {
+      "id": "pigoid",
+      "name": "Pigoid",
+      "namedBy": "Bob",
+      "system": "delta_eridani",
+      "place": "Eden",
+      "role": "prey",
+      "sapience": "none",
+      "mentions": 29,
+      "cite": "Bk1 ch35 · Bob, July 2165",
+      "note": "Delta's staple game animal, and the proof of concept for Bob's whole uplift project. It charges anything that threatens it, which makes it reliably suicidal against a braced spear — and it never learns, so the tactic keeps working. Sharper, straighter spears turned an occasional kill into a dependable food supply, which fed the adults who could then stay home and guard the camp.",
+      "spoil": 1
+    },
+    {
+      "id": "raptor",
+      "name": "Raptor",
+      "namedBy": "the Vulcan colonists",
+      "system": "omicron2_eridani",
+      "place": "Vulcan",
+      "role": "predator",
+      "sapience": "none",
+      "mentions": 48,
+      "cite": "Bk2 ch2 · Howard, September 2188",
+      "note": "Theropod-shaped pack hunters, tagged with the obvious name by the colonists who kept meeting them at the perimeter. They attack machinery as readily as people — an early incident cost a backhoe its paint and the raptors most of their pack — and they are one of the standing reasons Vulcan's fence needed electrifying.",
+      "spoil": 2
+    },
+    {
+      "id": "bronto",
+      "name": "Bronto",
+      "namedBy": "the Vulcan colonists",
+      "system": "omicron2_eridani",
+      "place": "Vulcan",
+      "role": "megafauna",
+      "sapience": "none",
+      "mentions": 22,
+      "cite": "Bk2 ch2 · Howard, September 2188",
+      "note": "Vulcan's megaherbivore, and a hazard by sheer mass rather than appetite — Howard's summary is that they won't eat you, they'll accidentally step on you. They also chew on fencing, which is the other half of why the colony's perimeter ended up wired.",
+      "spoil": 2
+    },
+    {
+      "id": "kraken",
+      "name": "Kraken",
+      "namedBy": "Mulder",
+      "system": "eta_cassiopeiae",
+      "place": "Poseidon",
+      "role": "predator",
+      "sapience": "none",
+      "mentions": 11,
+      "cite": "Bk2 ch6 · Mulder, April 2171",
+      "note": "The headline animal of Poseidon's survey — Mulder reckoned it needed a chapter of its own. Tentacled, large enough to be a standing hazard to anyone on the water, and the creature the colonists most wanted to see for themselves, which says something about colonists.",
+      "spoil": 2
+    },
+    {
+      "id": "hydra",
+      "name": "Hydra",
+      "system": "eta_cassiopeiae",
+      "place": "Poseidon",
+      "role": "predator",
+      "sapience": "none",
+      "mentions": 1,
+      "cite": "Bk3 ch26 · Marcus, September 2215",
+      "note": "One of Poseidon's large marine predators, named in the same breath as the kraken whenever anyone weighs up whether open water is worth the risk. Marcus's judgement was that it isn't.",
+      "spoil": 3
+    },
+    {
+      "id": "leviathan",
+      "name": "Leviathan",
+      "system": "eta_cassiopeiae",
+      "place": "Poseidon",
+      "role": "megafauna",
+      "sapience": "none",
+      "mentions": 6,
+      "cite": "Bk3 ch35 · Marcus, October 2215",
+      "note": "Poseidon's largest recorded animal — Bob's reading put a full-grown one at roughly airliner scale, and the one he actually saw was bigger than that. Krakens, hydrae and leviathans together were still not the biggest things in that ocean; the survey kept turning up new ones, usually the hard way.",
+      "spoil": 3
+    },
+    {
+      "id": "dragon",
+      "name": "Dragon",
+      "namedBy": "Mario",
+      "system": "jabberwocky",
+      "role": "predator",
+      "sapience": "none",
+      "mentions": 191,
+      "cite": "Bk4 ch6 · Bob, May 2333",
+      "note": "The most-discussed animal in the whole series, and the one the Bobs ended up flying as. Built to swoop a lake and take fish on the wing — long legs, the wingspan for it, and enough of a flight envelope that Garfield had to work out the reflexes before anyone could pilot one. Mario named them.",
+      "spoil": 4
+    },
+    {
+      "id": "trout",
+      "name": "Trout",
+      "namedBy": "Howard",
+      "system": "jabberwocky",
+      "role": "prey",
+      "sapience": "none",
+      "mentions": 13,
+      "cite": "Bk5 ch29 · Howard, October 2342",
+      "note": "The dragons' preferred prey fish, and a name Howard assigned on sight of a single image without troubling anyone for a second opinion. Bridget, who had never seen a trout, declined to argue.",
+      "spoil": 5
+    }
+  ]
 }

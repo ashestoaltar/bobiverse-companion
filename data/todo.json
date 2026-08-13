@@ -225,6 +225,11 @@
       "cat": "Sources",
       "text": "Write down that look-and-feel is always local",
       "note": "The canon audit settles an argument the project keeps having with itself about how much chrome is too much. There is no official BobNet appearance: every Bob builds his own VR, a visitor arrives inside someone else's metaphor, an undecorated one is a blue room with a hard floor. BobNet is the network — SCUT, blogs, directories, accounts, firewalls, archives — not a house style. Which means the amber console was never a claim about what BobNet looks like; it is Bill's room, and the reader is a guest in it. That belongs in CLAUDE.md as a paragraph, because it decides future questions about skin and shine without relitigating them each time."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Two Bobs are wearing names they have not taken yet",
+      "note": "The reading position holds records, fates and prose, and then prints 'Will' to someone on book one. He is Riker until Bk3 ch57 and Jeremy is Morlock from Bk4 ch3 — the rename is on the page, with a chapter, which is the same kind of evidence everything else here gates on. What is missing is somewhere to put it: `name` is a single value with no date, and `alias` holds the old name without saying when it stopped being the current one. A `nameFrom` beside `alias` would settle both records and cost two fields. Worth doing when a third rename turns up, or sooner if it grates — it is the one place the guard shows its seams."
     }
   ]
 }

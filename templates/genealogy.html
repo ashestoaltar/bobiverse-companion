@@ -1555,7 +1555,12 @@ function renderDossier(){
 
   const t = TIER[b.src];
   const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
-  const ch = (kids[b.id] || []).sort((x, y) => x.name.localeCompare(y.name));
+  // Children are a list of other records and gate like any other list. Bill's
+  // dossier was naming seventeen clones at book one, four of which the reader
+  // could not have met yet — the trace was careful about this and the roster
+  // right under it was not.
+  const ch = (kids[b.id] || []).filter(c => !heldRecord(c))
+                               .sort((x, y) => x.name.localeCompare(y.name));
 
   // Bk1 ch15: the Hipparcos number in a designation names the build system.
   const hic = /^HIC(\d+)-\d+$/.exec(b.desig || '');
