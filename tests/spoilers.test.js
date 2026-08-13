@@ -258,6 +258,63 @@ module.exports = ({ok, get, run}) => {
     });
   }
 
+  // ---- the question, and who gets asked it -------------------------------
+  // The control alone protected only people who already knew to look for it.
+  // The prompt is the fix, so what matters is that it appears for a first
+  // arrival, never twice, and never in front of someone who followed a link.
+  const gate = doc.getElementById('gate');
+  const store = get('localStorage');
+  const askAgain = () => { store.removeItem('bobnet-asked'); store.removeItem('bobnet-book'); };
+
+  reset();
+  askAgain();
+  win.location.hash = '';
+  gate.hidden = true;
+  run('openGate()');
+  ok(gate.hidden === false, 'a first arrival should be asked how far it has read');
+
+  askAgain();
+  win.location.hash = '#memorium/homer';
+  gate.hidden = true;
+  run('openGate()');
+  ok(gate.hidden === true, 'someone who followed a link should not be stopped by the question');
+
+  askAgain();
+  win.location.hash = '';
+  store.setItem('bobnet-asked', '1');
+  gate.hidden = true;
+  run('openGate()');
+  ok(gate.hidden === true, 'the question should not be asked twice');
+
+  // The counts on the buttons are the honest part — a reader who picks book one
+  // and finds twenty-one records has to have been told that is the guard.
+  askAgain();
+  win.location.hash = '';
+  run('openGate()');
+  const buttons = doc.getElementById('gate-books').innerHTML;
+  for (let n = 1; n < BOOK_MAX; n++) {
+    reset(n);
+    const want = run('visible()').length;
+    ok(buttons.includes(`BOOK ${n} <span class="n">· ${want} of ${BOBS.length}</span>`),
+       `the prompt should offer book ${n} with its true count of ${want}`);
+  }
+  reset();
+  ok(run('visibleAt(1)') < run('visibleAt(BOOK_MAX)'),
+     'visibleAt should report fewer records the earlier you have read');
+  ok(run('visibleAt(BOOK_MAX)') === BOBS.length, 'visibleAt(ALL) should be everything');
+  ok(state.book === BOOK_MAX, 'visibleAt must not leave the reading position moved');
+
+  // ---- the safe link -----------------------------------------------------
+  // A reader mid-series who wants to send someone a record should not have to
+  // hand over one that spoils them.
+  reset(2);
+  run('syncReading()');
+  ok(doc.getElementById('share').hidden === false, 'the safe link should be offered while gating');
+  reset(BOOK_MAX);
+  run('syncReading()');
+  ok(doc.getElementById('share').hidden === true, 'nothing to make safe when nothing is held');
+
+  askAgain();
   reset();
   run('render()');
   console.log(`  ${BOBS.length} records · ` +

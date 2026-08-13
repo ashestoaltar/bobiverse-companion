@@ -552,6 +552,30 @@ coerces to zero and "we have no idea when this appears" compared as "book zero,
 safe for everyone". Absence has to be tested for, never compared — `past()`
 exists for exactly this and the helpers all go through it.
 
+**The question is asked once, and only of people who need it.** The control on
+its own defaulted to showing everything, which made it protection for readers
+who already knew to look for it — everyone else was spoiled in the first second
+and found the setting afterwards. So the boot hands off to one prompt: how far
+have you read, finished or still reading, with the true record count beside each
+book so a sparse register reads as the guard working rather than the project
+being thin.
+
+It is **unbracketed and signed** — REGISTRY EDITOR, NOT BOBNET. Square brackets
+are machine speech and nothing inside the fiction knows the books are books, so
+dressing this up as an in-world clearance check would have been the console
+lying about what a control does. Same seam the dossier already labels.
+
+Three arrivals are not asked. Anyone who has answered before, because the answer
+is remembered and asking twice is a nuisance. Anyone arriving on a link, because
+someone chose to send them somewhere specific — they get COPY SAFE LINK on the
+sender's side instead, which carries `b=` so a reader mid-series can share a
+record without spoiling whoever opens it. And anyone who skips, who gets exactly
+what the console did before any of this existed.
+
+Note that reduced motion removes the boot outright rather than hurrying it, so
+the handoff is wired to that path too. A prompt that only existed inside an
+animation would have missed everyone who asked not to be animated.
+
 **The TO-DO stands aside entirely.** It is written from having finished the
 series and cites the end of it constantly; there is no honest way to show part
 of it, so with a position set it says so and waits.

@@ -139,13 +139,14 @@
      something back — a guard you cannot tell is on is a guard you will forget. */
   .reading{
     display:flex; align-items:center; gap:7px; flex:none;
-    font-size:11px; letter-spacing:.13em; color:var(--ash); white-space:nowrap;
+    font-size:11px; letter-spacing:.13em; color:var(--amber-dim); white-space:nowrap;
+    border:1px solid var(--rule); padding:3px 8px;
   }
   .reading select{
     background:var(--panel-hi); border:1px solid var(--ash); color:var(--amber-dim);
     font:inherit; font-size:11px; letter-spacing:.1em; padding:2px 5px; cursor:pointer;
   }
-  .reading.on{color:var(--amber-dim)}
+  .reading.on{color:var(--amber); border-color:var(--amber)}
   .reading.on select{border-color:var(--amber); color:var(--amber)}
   .held{
     border:1px dashed var(--rule); padding:9px 11px; margin:0;
@@ -437,6 +438,48 @@
      as part of the idle panel rather than competing with it. */
   .idle .guppy{width:96px; margin:0 auto 20px; color:var(--ash); opacity:.9}
 
+  /* --- the reading question ------------------------------------------- */
+  /* Same furniture as the boot screen, deliberately: it arrives in the same
+     place, in the same phosphor, so it reads as the last beat of coming up
+     rather than as a cookie banner. What it does NOT reuse is Guppy's voice —
+     see the markup. */
+  .gate{
+    position:fixed; inset:0; z-index:200; background:var(--void);
+    display:flex; align-items:center; justify-content:center; padding:30px;
+  }
+  .gate[hidden]{display:none}
+  .gate-inner{max-width:560px; width:100%}
+  .gate-from{
+    font-size:10.5px; letter-spacing:.2em; color:var(--ash); margin:0 0 14px;
+  }
+  .gate-ask{
+    color:var(--phos); font-size:15px; line-height:1.65; margin:0 0 6px;
+  }
+  .gate-cost{
+    color:var(--ash); font-size:12px; line-height:1.6; margin:10px 0 20px; max-width:52ch;
+  }
+  .gate-choices{display:flex; gap:10px; flex-wrap:wrap}
+  .gate button{
+    background:transparent; border:1px solid var(--ash); color:var(--phos);
+    font:inherit; font-size:12px; letter-spacing:.14em; padding:9px 16px;
+    cursor:pointer; text-shadow:inherit;
+  }
+  .gate button:hover{border-color:var(--phos); background:rgba(124,255,155,.08)}
+  .gate-books{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
+  .gate-books button{font-size:11.5px; padding:8px 12px; letter-spacing:.1em}
+  .gate-books .n{color:var(--ash); letter-spacing:.06em}
+  .gate-skip{
+    margin-top:22px; font-size:11px; letter-spacing:.1em; color:var(--ash);
+  }
+  .gate-skip button{border:0; padding:0; color:var(--ash); font-size:11px; letter-spacing:.1em}
+  .gate-skip button:hover{color:var(--amber-dim); background:transparent}
+  @media (max-width:860px), (max-height:560px){
+    .gate{padding:22px; align-items:flex-start; overflow-y:auto}
+    .gate-inner{margin-top:8dvh}
+    .gate-ask{font-size:14px}
+    .gate-choices button{flex:1 1 100%}
+  }
+
   /* --- status bar ----------------------------------------------------- */
   .statusbar{
     border-top:1px solid var(--rule); margin-top:var(--gap); padding-top:8px;
@@ -563,6 +606,24 @@
   <div class="boot-hint">CLICK OR PRESS ANY KEY TO SKIP</div>
 </div>
 
+<!-- The one question the console asks. Unbracketed and signed, because square
+     brackets are machine speech and nothing inside the fiction knows that the
+     books are books. Same seam the dossier already labels on every annotation. -->
+<div class="gate" id="gate" hidden>
+  <div class="gate-inner">
+    <p class="gate-from">REGISTRY EDITOR — NOT BOBNET</p>
+    <p class="gate-ask">This registry covers all five books, and it says on its front page
+      who dies. How far have you read?</p>
+    <div class="gate-choices">
+      <button data-book="5">I&rsquo;VE FINISHED</button>
+      <button id="gate-more">STILL READING &rarr;</button>
+    </div>
+    <div class="gate-books" id="gate-books" hidden></div>
+    <p class="gate-cost" id="gate-cost"></p>
+    <div class="gate-skip"><button id="gate-skip">skip &mdash; show me everything</button></div>
+  </div>
+</div>
+
 <div class="shell">
 
   <header class="masthead">
@@ -596,6 +657,10 @@
         READ THROUGH
         <select id="book"></select>
       </label>
+      <!-- Only while gating. The alternative for a reader mid-series who wants
+           to send someone a record is to hand over a link that spoils them. -->
+      <button class="chip" id="share" hidden
+              title="Copy a link that carries this reading position, so whoever opens it sees the same register you do.">COPY SAFE LINK</button>
       <!-- emptied and hidden on the views that have no parentage to filter -->
       <div class="chips" id="chips"></div>
     </div>
@@ -2301,6 +2366,75 @@ document.addEventListener('keydown', e => {
 
 window.addEventListener('resize', syncSheet);
 
+/* ---- the reading question ---------------------------------------------
+   Asked once, on a first visit, after the boot has finished saying its piece.
+
+   It exists because the control alone was protection only for people who
+   already knew to look for it: the default shows everything, so anyone still
+   reading the series was spoiled in the first second and found the setting
+   afterwards. A guard you have to know about is not a guard.
+
+   Three arrivals never see it, on purpose. Anyone who has answered before —
+   asking twice is a nuisance, and the answer is remembered. Anyone arriving on
+   a link, because someone chose to send them somewhere specific and a question
+   in front of it is worse than the risk; the sender gets a copyable link that
+   carries the setting instead. And anyone who skips, who gets exactly what the
+   console did before this existed. */
+function visibleAt(book){
+  const was = state.book;
+  state.book = book;
+  const n = BOBS.filter(b => !heldRecord(b)).length;
+  state.book = was;
+  return n;
+}
+
+let openGate = () => {};
+(function gate(){
+  const el = document.getElementById('gate');
+  if (!el) return;
+  const books = document.getElementById('gate-books');
+  const cost = document.getElementById('gate-cost');
+
+  const remember = () => { try { localStorage.setItem('bobnet-asked', '1'); } catch (e) {} };
+  const close = () => { el.hidden = true; remember(); };
+
+  const choose = n => {
+    state.book = n;
+    try { localStorage.setItem('bobnet-book', String(n)); } catch (e) {}
+    close();
+    render();
+  };
+
+  // The counts are the honest part. A reader who picks book one and finds
+  // twenty-one records should have been told that is the guard working, not
+  // the project being thin.
+  books.innerHTML = Array.from({length: BOOK_MAX - 1}, (_, i) => {
+    const n = i + 1;
+    return `<button data-book="${n}">BOOK ${n} <span class="n">· ${visibleAt(n)} of ${BOBS.length}</span></button>`;
+  }).join('');
+
+  document.getElementById('gate-more').addEventListener('click', () => {
+    books.hidden = false;
+    cost.textContent = `The registry holds back anything it can only cite from a later book, ` +
+      `so it will look sparse on purpose. Fates and annotations are held separately — ` +
+      `someone you have met can still have an ending you have not reached. You can change ` +
+      `this at any time from READ THROUGH, above the register.`;
+  });
+  document.getElementById('gate-skip').addEventListener('click', close);
+  el.addEventListener('click', e => {
+    const btn = e.target.closest('[data-book]');
+    if (btn) choose(+btn.dataset.book);
+  });
+
+  openGate = () => {
+    let asked = false;
+    try { asked = !!localStorage.getItem('bobnet-asked'); } catch (e) {}
+    if (asked) return;
+    if (String(window.location.hash || '').length > 1) return;
+    el.hidden = false;
+  };
+})();
+
 /* ---- boot ------------------------------------------------------------- */
 /* What the console reports about itself on the way up. Every number is read
    from the data rather than written down, so the boot screen can't drift out of
@@ -2345,15 +2479,15 @@ function bootLines(){
     if (timer) clearTimeout(timer);
     document.removeEventListener('keydown', skip);   // or it eats the first '/' later
     el.classList.add('done');
-    setTimeout(() => el.remove(), 380);
+    setTimeout(() => { el.remove(); openGate(); }, 380);
   };
   const skip = () => finish();
 
   // Anyone who has asked not to be animated gets the console straight away.
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.remove(); return; }
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.remove(); openGate(); return; }
   // So does anyone arriving on a link. A hash means you were sent somewhere
   // specific, and six seconds of machine noise between you and it is rude.
-  if (String(window.location.hash || '').length > 1) { el.remove(); return; }
+  if (String(window.location.hash || '').length > 1) { el.remove(); return; }   // openGate declines this arrival too
 
   const lines = bootLines();
   const SPEED = BOOT_SPEED;
@@ -2419,9 +2553,43 @@ function bootLines(){
     render();
   });
   const label = document.getElementById('reading');
+  const share = document.getElementById('share');
+
+  /* Copying is best-effort by design. The clipboard API needs a secure context
+     and this page is meant to survive being opened by double-clicking it, so a
+     refusal falls back to selecting the text and saying so rather than failing
+     silently. */
+  let restore = null;
+  share.addEventListener('click', async () => {
+    const url = String(window.location.href).split('#')[0] + hashFor();
+    const say = msg => {
+      if (restore) clearTimeout(restore);
+      share.textContent = msg;
+      restore = setTimeout(() => { share.textContent = 'COPY SAFE LINK'; }, 1800);
+    };
+    try {
+      await navigator.clipboard.writeText(url);
+      say('COPIED');
+    } catch (e) {
+      // Older path, and the one file:// actually takes: a throwaway textarea,
+      // selected and copied, gone again. The search box is not a scratchpad.
+      try {
+        const pad = document.createElement('textarea');
+        pad.value = url;
+        pad.setAttribute('style', 'position:fixed;top:-1000px;opacity:0');
+        document.body.appendChild(pad);
+        pad.select();
+        const won = document.execCommand && document.execCommand('copy');
+        pad.remove();
+        say(won ? 'COPIED' : 'PRESS CTRL+C');
+      } catch (e2) { say('PRESS CTRL+C'); }
+    }
+  });
+
   syncReading = () => {
     sel.value = String(state.book);
     label.classList.toggle('on', gating());
+    share.hidden = !gating();
   };
   syncReading();
 })();
