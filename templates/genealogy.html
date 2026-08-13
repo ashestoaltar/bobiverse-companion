@@ -415,6 +415,20 @@
     .main{display:block}
     .stage{overflow:visible; min-height:0}
     .chart-wrap{height:auto}
+    /* The boot screen laid Guppy beside the text at a fixed 13px: 118px of
+       portrait, a 26px gap and a 49-character line came to about 526px, in a
+       390px viewport, inside a position:fixed layer with nothing to scroll. A
+       phone's only recourse is to let you zoom out, which is what it did.
+       Stack them, and size the type so the widest line fits the screen it is
+       actually on — monospace runs about 0.6em per character, so 30 characters
+       to the available width keeps a 49-character line inside it. pre-wrap is
+       the backstop for the day a longer line gets added. */
+    .boot{padding:22px}
+    .boot-inner{flex-direction:column; gap:15px; max-width:100%}
+    .boot-face{width:86px}
+    .boot pre{font-size:min(13px, calc((100vw - 48px) / 30)); white-space:pre-wrap}
+    .boot-hint{bottom:12px; font-size:10px}
+
     /* flex:none matters. .chart-stage is flex:1 for the desktop layout, which
        sets flex-basis:0 — and in a column flex container the basis wins over
        height on the main axis, so setting a height here did nothing and the
