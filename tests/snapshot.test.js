@@ -22,24 +22,30 @@ module.exports = ({ok, get, run, snapshot}) => {
   const views = REGISTERS ? REGISTERS.map(r => r.id)
                           : ['register', 'genealogy', 'unresolved', 'chart', 'todo'];
 
-  const reset = () => {
-    Object.assign(state, {q: '', sort: 'name', dir: 1, selected: null});
-    state.filters = new Set();
-    Object.assign(CHART, {yaw: -0.62, pitch: 0.50, zoom: 1, panx: 0, pany: 0,
-                          year: 2345, sel: null});
-  };
-
   // Every element render() writes to. Capturing only #stage left a blind spot:
   // a change to a filter chip's label sailed straight through a "passing"
   // golden master, because chips live in their own element.
   // Some panes are written with innerHTML and some with textContent
   // (chart-stat, chart-year), so read whichever the console actually set.
   const PANES = ['stage', 'dossier', 'status', 'chips', 'tabs', 'chart-stat', 'chart-year'];
-  const pane = id => {
-    const el = get('document').getElementById(id);
-    return el.innerHTML || el.textContent || '';
-  };
+  const el = id => get('document').getElementById(id);
+  const pane = id => el(id).innerHTML || el(id).textContent || '';
   const all = () => Object.fromEntries(PANES.map(id => [id, pane(id)]));
+
+  const reset = () => {
+    Object.assign(state, {q: '', sort: 'name', dir: 1, selected: null});
+    state.filters = new Set();
+    Object.assign(CHART, {yaw: -0.62, pitch: 0.50, zoom: 1, panx: 0, pany: 0,
+                          year: 2345, sel: null});
+    // Wipe the panes too. The stub keeps every element it ever handed out, so
+    // a pane this render does not write keeps whatever the last one — or the
+    // last SUITE — left in it. That made these snapshots depend on the order
+    // the panes happened to be written in: reordering the register list moved
+    // the chart later, and four views started capturing chart status text that
+    // the chart suite had written minutes earlier. Each state now records only
+    // what its own render() produced.
+    for (const id of PANES) { el(id).innerHTML = ''; el(id).textContent = ''; }
+  };
 
   const stage = () => pane('stage');
   const dossier = () => pane('dossier');

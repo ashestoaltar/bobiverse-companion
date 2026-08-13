@@ -83,36 +83,71 @@
   .mast-meta b{display:block; color:var(--amber-hi); font-weight:500; letter-spacing:.2em}
 
   /* --- toolbar -------------------------------------------------------- */
+  /* Two deliberate rows rather than one wrapping one. Wrapping put the search
+     box, eight tabs and the whole filter set in a single run that reflowed into
+     a wall of controls on a narrow screen — the reader met the instrument panel
+     before they met the registry. Search and tabs share a row that never wraps;
+     filters get their own and disappear where they mean nothing. */
   .toolbar{
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    padding:9px 0; border-bottom:1px solid var(--rule);
+    display:flex; flex-direction:column; align-items:stretch; gap:8px;
+    padding:9px 0; border-bottom:1px solid var(--rule); min-width:0;
   }
-  .prompt{display:flex; align-items:center; gap:7px; flex:1 1 240px; min-width:190px}
+  .toolbar-row{display:flex; align-items:center; gap:10px; flex-wrap:nowrap; min-width:0}
+  .prompt{display:flex; align-items:center; gap:7px; flex:0 1 240px; min-width:160px}
   .prompt span{color:var(--phos); font-weight:600}
   .prompt input{
     flex:1; background:transparent; border:0; outline:0; padding:3px 0;
     font:inherit; color:var(--amber-hi); text-shadow:inherit;
-    border-bottom:1px solid var(--rule);
+    border-bottom:1px solid var(--rule); min-width:0;
   }
   .prompt input::placeholder{color:var(--ash)}
   .prompt input:focus{border-bottom-color:var(--amber)}
 
-  .tabs{display:flex; gap:0; border:1px solid var(--ash)}
+  /* One row that scrolls, rather than several that stack. Eight registers do
+     not fit across a phone and never will, so the bar admits it: it keeps its
+     line and slides. A second row of tabs reads as a second kind of thing. */
+  .tabs{
+    display:flex; gap:0; border:1px solid var(--ash);
+    flex:1 1 auto; min-width:0;
+    overflow-x:auto; overflow-y:hidden; flex-wrap:nowrap;
+    -webkit-overflow-scrolling:touch; scrollbar-width:thin;
+    scrollbar-color:var(--rule) transparent;
+  }
+  .tabs::-webkit-scrollbar{height:6px}
+  .tabs::-webkit-scrollbar-thumb{background:var(--rule)}
   .tab{
     background:transparent; border:0; border-right:1px solid var(--ash);
     font:inherit; font-size:12px; letter-spacing:.13em; color:var(--amber-dim);
-    padding:6px 14px; cursor:pointer; text-shadow:inherit;
+    padding:6px 12px; cursor:pointer; text-shadow:inherit;
+    flex:none; white-space:nowrap;
   }
   .tab:last-child{border-right:0}
   .tab:hover{color:var(--amber-hi); background:var(--panel-hi)}
   .tab[aria-selected="true"]{background:var(--amber); color:var(--void); text-shadow:none}
+  /* Full names where there is room, abbreviations where there is not. Both are
+     always in the markup so the accessible name never changes with the width. */
+  .tab .tab-full{display:inline}
+  .tab .tab-short{display:none}
+  /* The registers fall into three kinds — the Bobs, the places they went, and
+     the housekeeping. A hairline is enough to say so without labelling it. */
+  .tab-gap{
+    flex:none; width:1px; align-self:stretch; margin:0 4px;
+    background:var(--ash); opacity:.55;
+  }
+  .status-tools{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+  .status-tools .chip{font-size:10.5px; padding:3px 8px; letter-spacing:.1em}
 
   body.plain .crt-scan,body.plain .crt-vig{display:none}
   body.plain{text-shadow:none}
   body.plain .banner{text-shadow:none}
   body.plain .star circle[fill^="url"]{display:none}
 
-  .chips{display:flex; gap:5px; flex-wrap:wrap}
+  /* The filters grade parentage, so they belong to the views that show it. A
+     row of provenance chips above the star chart is noise offering to filter
+     nothing. [hidden] needs the !important to beat display:flex. */
+  .chips{display:flex; gap:5px; flex-wrap:wrap; min-width:0}
+  .chips[hidden]{display:none !important}
+  .chips:empty{display:none}
   .chip{
     background:transparent; border:1px solid var(--ash); font:inherit;
     font-size:11.5px; letter-spacing:.11em; color:var(--amber-dim);
@@ -486,6 +521,9 @@
     .statusbar{position:static}
     .mem-row{grid-template-columns:22px minmax(0,1fr) 96px}
     .mem-row .mem-where{display:none}
+    .tab .tab-full{display:none}
+    .tab .tab-short{display:inline}
+    .tab{padding:6px 10px; letter-spacing:.08em; font-size:11px}
   }
   @media (prefers-reduced-motion:reduce){
     *{transition:none !important; animation:none !important}
@@ -524,18 +562,18 @@
   </header>
 
   <div class="toolbar">
-    <label class="prompt">
-      <span>&gt;</span>
-      <input id="q" autocomplete="off" spellcheck="false"
-             placeholder="search name, designation, system, namesake, notes">
-    </label>
+    <div class="toolbar-row">
+      <label class="prompt">
+        <span>&gt;</span>
+        <input id="q" autocomplete="off" spellcheck="false"
+               placeholder="search name, designation, system, namesake, notes">
+      </label>
 
-    <!-- filled from REGISTERS; adding a register must not mean editing markup -->
-    <div class="tabs" id="tabs" role="tablist" aria-label="View"></div>
+      <!-- filled from REGISTERS; adding a register must not mean editing markup -->
+      <div class="tabs" id="tabs" role="tablist" aria-label="View"></div>
+    </div>
 
-    <button class="chip" id="crt" aria-pressed="true"
-            title="Bobs each build their own VR to taste. Turn the CRT off if you'd rather just read.">CRT</button>
-
+    <!-- emptied and hidden on the views that have no parentage to filter -->
     <div class="chips" id="chips"></div>
   </div>
 
@@ -546,7 +584,14 @@
 
   <footer class="statusbar">
     <div id="status"></div>
-    <div class="keys">↑↓ MOVE · ENTER OPEN · ESC CLEAR · / SEARCH</div>
+    <div class="status-tools">
+      <!-- Sat in the main toolbar at the same weight as the filters, unlabelled
+           and load-bearing on nothing. It is a preference about how the console
+           looks, so it lives down here with the other furniture. -->
+      <button class="chip" id="crt" aria-pressed="true"
+              title="Scanlines and phosphor glow. Turn them off if you'd rather just read.">SCANLINES</button>
+      <div class="keys">↑↓ MOVE · ENTER OPEN · ESC CLEAR · / SEARCH</div>
+    </div>
   </footer>
 </div>
 
@@ -689,14 +734,29 @@ const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1,
    Function declarations hoist, so naming renderChart here before it appears
    further down is fine. */
 const REGISTERS = [
-  {id:'register',   label:'REGISTER',   render: renderRegister},
-  {id:'genealogy',  label:'GENEALOGY',  render: renderGenealogy},
-  {id:'unresolved', label:'UNRESOLVED', render: renderUnresolved},
-  {id:'chart',      label:'CHART',      render: renderChart,
+  {id:'register',   label:'REGISTER',   short:'REG',   filters:true, render: renderRegister},
+  {id:'genealogy',  label:'GENEALOGY',  short:'GEN',   filters:true, render: renderGenealogy},
+  {id:'unresolved', label:'UNRESOLVED', short:'UNRES', filters:true, render: renderUnresolved},
+  {id:'memorium',   label:'IN MEMORIUM', short:'MEM',  filters:true, tabGapAfter:true,
+   render: renderMemorium,
+   rows: () => BOBS.filter(b => b.fate === 'memorium' || b.fate === 'presumed'),
+   status: rows => {
+     const named = BOBS.filter(b => b.fate === 'memorium').length;
+     const unnamed = ((MEMORIUM && MEMORIUM.unnamed) || []).reduce((n, u) => n + u.n, 0);
+     statusLine(`${named + unnamed} on the list`,
+                `${unnamed} of them without a name`,
+                `${BOBS.filter(b => b.fate === 'presumed').length} unaccounted`);
+   },
+   onClick: e => {
+     const sys = e.target.closest('[data-sys]');
+     if (sys) { state.view = 'chart'; CHART.sel = sys.dataset.sys; render(); return true; }
+     return false;
+   }},
+  {id:'chart',      label:'CHART',      short:'CHART', render: renderChart,
    paint: paintChart,
    onResize: paintChart,
    dossier: () => (CHART.sel && SYS[CHART.sel]) ? renderSystemDossier(SYS[CHART.sel]) : null},
-  {id:'bestiary',   label:'BESTIARY',   render: renderBestiary,
+  {id:'bestiary',   label:'BESTIARY',   short:'BEST',  render: renderBestiary,
    rows: beasts,
    status: rows => {
      const all = (BESTIARY && BESTIARY.creatures) || [];
@@ -715,21 +775,7 @@ const REGISTERS = [
      render();
      return true;
    }},
-  {id:'memorium',   label:'IN MEMORIUM', render: renderMemorium,
-   rows: () => BOBS.filter(b => b.fate === 'memorium' || b.fate === 'presumed'),
-   status: rows => {
-     const named = BOBS.filter(b => b.fate === 'memorium').length;
-     const unnamed = ((MEMORIUM && MEMORIUM.unnamed) || []).reduce((n, u) => n + u.n, 0);
-     statusLine(`${named + unnamed} on the list`,
-                `${unnamed} of them without a name`,
-                `${BOBS.filter(b => b.fate === 'presumed').length} unaccounted`);
-   },
-   onClick: e => {
-     const sys = e.target.closest('[data-sys]');
-     if (sys) { state.view = 'chart'; CHART.sel = sys.dataset.sys; render(); return true; }
-     return false;
-   }},
-  {id:'peoples',    label:'PEOPLES',    render: renderPeoples,
+  {id:'peoples',    label:'PEOPLES',    short:'PEOP',  tabGapAfter:true, render: renderPeoples,
    rows: peoples,
    status: rows => {
      const all = (PEOPLES && PEOPLES.entries) || [];
@@ -750,7 +796,7 @@ const REGISTERS = [
      render();
      return true;
    }},
-  {id:'todo',       label:'TO-DO',      render: renderTodo},
+  {id:'todo',       label:'TO-DO',      short:'TODO',  render: renderTodo},
 ];
 
 /* Looked up on demand rather than cached in a map, so a register appended at
@@ -1712,8 +1758,16 @@ function guppyBlink(el){
 }
 
 /* ---- shell ------------------------------------------------------------ */
+/* The filters grade parentage. A register that shows none of it declares no
+   `filters`, and the row goes away rather than offering to narrow a star chart
+   by how well sourced somebody's father is. The set stays in state either way,
+   so it is still there when you come back to a view that uses it. */
 function renderChips(){
-  document.getElementById('chips').innerHTML = FILTERS.map(f =>
+  const host = document.getElementById('chips');
+  const reg = currentRegister();
+  if (!reg.filters) { host.innerHTML = ''; host.hidden = true; return; }
+  host.hidden = false;
+  host.innerHTML = FILTERS.map(f =>
     `<button class="chip" data-filter="${f.id}" aria-pressed="${state.filters.has(f.id)}">${f.label}</button>`).join('');
 }
 
@@ -1738,10 +1792,21 @@ function renderStatus(rows){
     `<span class="cursor">█</span>`;
 }
 
+/* Both spellings of every label ship, and CSS picks one by width. Swapping the
+   text itself would change the accessible name depending on the size of the
+   window, which is a strange thing for a screen reader to be told. */
 function renderTabs(){
-  document.getElementById('tabs').innerHTML = REGISTERS.map(r =>
-    `<button class="tab" role="tab" id="tab-${r.id}" aria-selected="${r.id === state.view}" ` +
-    `data-view="${r.id}">${esc(r.label)}</button>`).join('');
+  const bits = [];
+  for (const r of REGISTERS) {
+    bits.push(
+      `<button class="tab" role="tab" id="tab-${r.id}" aria-selected="${r.id === state.view}" ` +
+      `data-view="${r.id}" title="${esc(r.label)}">` +
+      `<span class="tab-full">${esc(r.label)}</span>` +
+      `<span class="tab-short">${esc(r.short || r.label)}</span></button>`
+    );
+    if (r.tabGapAfter) bits.push(`<span class="tab-gap" aria-hidden="true"></span>`);
+  }
+  document.getElementById('tabs').innerHTML = bits.join('');
 }
 
 /* Narrow enough that the dossier stops being a column and becomes a sheet over
@@ -1771,6 +1836,9 @@ function render(){
   const rows = (reg.rows || visible)();
   document.getElementById('stage').innerHTML = reg.render(rows);
   renderTabs();
+  // Whether there are chips at all is now a property of the view, so this has
+  // to run on every render rather than only when a chip is clicked.
+  renderChips();
   syncSheet();
   renderDossier();
   (reg.status || renderStatus)(rows);
@@ -2006,7 +2074,7 @@ document.addEventListener('click', e => {
   if (chip) {
     const id = chip.dataset.filter;
     state.filters.has(id) ? state.filters.delete(id) : state.filters.add(id);
-    renderChips(); render(); return;
+    render(); return;
   }
 
   const th = e.target.closest('th[data-sort]');
@@ -2173,7 +2241,6 @@ window.addEventListener('hashchange', () => {
 });
 
 applyHash();
-renderChips();
 render();
 </script>
 

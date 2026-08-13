@@ -38,6 +38,29 @@ module.exports = ({ok, get, run}) => {
   ok((tabs.match(/aria-selected="true"/g) || []).length === 1,
      'exactly one tab should be selected');
 
+  // Both spellings ship and CSS chooses; swapping the text by width would mean
+  // a screen reader hears a different name depending on the size of the window.
+  for (const r of REGISTERS) {
+    ok(tabs.includes(`<span class="tab-short">${r.short || r.label}</span>`),
+       `${r.id}: no short label in the tab bar`);
+  }
+
+  // ---- filters belong to the views that have parentage to filter ----
+  // The chips grade how well sourced a Bob's parents are, which is nothing to
+  // offer above a star chart. Declared per register, so this has to be checked
+  // per register — and it has to be re-evaluated on every render, since the
+  // first version of this only ran when a chip was clicked and so never
+  // updated when you switched tabs.
+  const chips = doc.getElementById('chips');
+  for (const r of REGISTERS) {
+    state.view = r.id;
+    run('render()');
+    ok(chips.hidden === !r.filters,
+       `${r.id}: filters are ${r.filters ? 'declared' : 'not declared'} but the chip row is ` +
+       `${chips.hidden ? 'hidden' : 'shown'}`);
+    if (!r.filters) ok(chips.innerHTML === '', `${r.id}: hidden chips still hold markup`);
+  }
+
   // ---- selection follows state ----
   for (const v of views) {
     state.view = v;
