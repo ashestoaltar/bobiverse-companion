@@ -753,6 +753,19 @@ from inside the story. So a post declares a `voice`:
   and its own mistakes freely, and it is labelled in the list and in the post
   so a reader never has to work out which they are reading.
 
+**Bill's posts are dated near what they are about; the registry's are dated
+now.** He spans Sept 2145 to June 2345 across 69 POV chapters, so his feed can
+run the whole two centuries — which makes the blog the one register that reads
+as a sequence. The others are alphabetical or structural. It also gates by
+itself: the feed grows as somebody reads, from two posts at book one to eight at
+the end, instead of sitting at one date with most of it withheld.
+
+The dates are anchored to real chapters rather than invented — Milo's partial is
+Bk1 ch51, Jan 2174; the losses at 82 Eridani are Bk1 ch60, Apr 2185; the purge
+is Bk4 ch32, Jul 2334; the second Hector is Bk5 ch51, Sep 2343. A post carries
+no citation on its face, because Bill would not cite a chapter at anybody, but
+the date has to be a date he could have written on.
+
 `spoil` is required rather than optional here: a post is prose from the title
 down, with no citation underneath to fall back on, so an undeclared one would be
 held forever rather than defaulting to anything sensible.
