@@ -350,6 +350,28 @@ def _check_memorium(bobs: list[dict], by_id: dict) -> tuple[list[str], list[str]
 
 PROSE_FIELDS = ("note", "fateNote", "partialNote", "priorClaim", "conflict")
 
+BOOKS = 5
+PARA_MARK = re.compile(r"^@bk(\d+)\s+")
+
+
+def _paragraphs(text: str | None, fallback: int | None):
+    """Split prose into (book, text), honouring a paragraph's own @bk marker.
+
+    A note can span books — four of Homer's five fate paragraphs are the book he
+    dies in and the fifth is the coda two books later. The marker travels with
+    the paragraph rather than sitting in a parallel array, so editing the prose
+    cannot silently misalign it.
+    """
+    out = []
+    for para in [p.strip() for p in (text or "").split("\n\n") if p.strip()]:
+        m = PARA_MARK.match(para)
+        if not m:
+            out.append((fallback, para))
+            continue
+        n = int(m.group(1))
+        out.append((n if 1 <= n <= BOOKS else None, para[m.end():]))
+    return out
+
 
 def _book_of(cite: str | None) -> int | None:
     m = re.search(r"Bk(\d)", cite or "")
@@ -384,13 +406,20 @@ def _check_spoil(bobs: list[dict]) -> tuple[list[str], list[str]]:
                 f"where the record is first cited — an annotation cannot be safe "
                 f"before the thing it annotates"
             )
-        # A note that names a later book than it claims to reach gives itself away.
+        # A paragraph that names a later book than it is safe at gives itself
+        # away. Checked per paragraph, since a paragraph may carry its own
+        # marker: Homer's fate note is book two for four paragraphs and book
+        # five for the fifth, and the whole-field check called that a conflict.
         for field in PROSE_FIELDS:
-            inline = _book_of(bob.get(field))
-            if inline and inline > spoil:
-                errors.append(
-                    f"{bob['id']}: spoil {spoil} but {field} cites Bk{inline}"
-                )
+            for i, (at, text) in enumerate(_paragraphs(bob.get(field), spoil)):
+                if at is None:
+                    errors.append(f"{bob['id']}: {field} paragraph {i + 1} carries an "
+                                  f"unreadable @bk marker")
+                    continue
+                inline = _book_of(text)
+                if inline and inline > at:
+                    errors.append(f"{bob['id']}: {field} paragraph {i + 1} is marked safe "
+                                  f"at book {at} but cites Bk{inline}")
     # the companion registers gate their prose the same way and get the same
     # two checks — a note cannot be safe before its entry, and cannot name a
     # book past the one it claims to reach

@@ -569,6 +569,26 @@ argument, gate the examples individually rather than the paragraph — the
 sentence shortens and stays true, and at ALL it reproduces what was written by
 hand, byte for byte.
 
+**A note can span books, so paragraphs carry their own marker.** `spoil` is the
+record's default; `@bk5 ` at the head of a paragraph overrides it for that
+paragraph alone. Homer's fate note is five paragraphs — four are the book he
+dies in and the fifth is the coda two books later — and holding the block
+because of the last one told a reader who had just finished book two nothing
+about a death they had just read. A partly held section says how much is
+missing rather than serving four of five in silence.
+
+The marker travels with the text rather than sitting in a parallel array,
+because a positional scheme misaligns silently the first time somebody edits a
+paragraph. It is stripped at render and a test asserts it never reaches the
+page.
+
+**This is a courtesy, not a boundary.** The whole dataset ships in the page —
+every held record, every withheld paragraph, markers and all — and the console
+chooses what to draw. Anyone who opens the source can read all of it. That is
+inherent to a single self-contained file with no backend, and the alternative
+is a server this project does not want. Do not describe it to a reader as
+anything stronger than what it is.
+
 **Test the negative.** `tests/spoilers.test.js` does not check that things
 render; it checks that things don't. The blunt one earns its keep: no pane, in
 any view, at any position, may contain a `Bk<n>` above the setting. It found

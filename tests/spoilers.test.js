@@ -222,6 +222,55 @@ module.exports = ({ok, get, run}) => {
     }
   });
 
+  // ---- a note can span books ---------------------------------------------
+  // Homer's fate note is five paragraphs: four are the book he dies in and the
+  // fifth is the coda two books later. Holding the block because of the last
+  // one told a reader who had just finished book two nothing about a death
+  // they had just read.
+  const spanning = BOBS.filter(b => /@bk\d/.test((b.note || '') + (b.fateNote || '')));
+  ok(spanning.length > 0, 'expected prose with paragraph markers');
+
+  for (const b of spanning) {
+    for (const field of ['note', 'fateNote']) {
+      if (!b[field]) continue;
+      const parts = run('proseParts')(b[field], b.spoil);
+      for (const part of parts) {
+        const doss = dossierAt(part.book, b.id);
+        ok(doss.includes(esc(part.text.slice(0, 40))),
+           `${b.id}: a paragraph marked book ${part.book} did not appear at book ${part.book}`);
+        if (part.book > 1) {
+          const before = dossierAt(part.book - 1, b.id);
+          ok(!before.includes(esc(part.text.slice(0, 40))),
+             `${b.id}: a paragraph marked book ${part.book} showed at ${part.book - 1}`);
+        }
+      }
+    }
+  }
+
+  // A section that is partly here says so. Serving four paragraphs of five in
+  // silence would be the register quietly editing itself.
+  const homer = BOBS.find(b => b.id === 'homer');
+  if (homer && homer.spoil < BOOK_MAX) {
+    const doss = dossierAt(homer.spoil, 'homer');
+    ok(/FURTHER PARAGRAPHS? WITHHELD/.test(doss),
+       'a partly withheld section should say how much is missing');
+    ok(!/ANNOTATION WITHHELD/.test(doss.slice(doss.indexOf('IN MEMORIUM'))),
+       'a section with paragraphs on the page should not also claim to be withheld');
+  }
+
+  // The markers are an editing convention and must never reach the page.
+  for (let n = 1; n <= BOOK_MAX; n++) {
+    at(n, () => {
+      for (const reg of REGISTERS) {
+        state.view = reg.id;
+        state.selected = 'homer';
+        run('render()');
+        ok(!/@bk\d/.test(panes()), `book ${n}, ${reg.id}: a paragraph marker rendered`);
+      }
+      state.selected = null;
+    });
+  }
+
   // ---- a fate can be held while the Bob is not --------------------------
   // Someone you met in book one dies in book four. The record stays; the fate
   // goes. This is the case a record-level filter alone would get wrong.
