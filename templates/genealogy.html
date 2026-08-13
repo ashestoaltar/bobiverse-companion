@@ -460,6 +460,26 @@
     .gate-choices button{flex:1 1 100%}
   }
 
+  /* --- timeline --------------------------------------------------------- */
+  .tl{display:flex; flex-direction:column; padding-bottom:40px}
+  .tl-row{
+    display:grid; grid-template-columns:62px 18px minmax(0,1fr); gap:8px;
+    align-items:baseline; padding:3px 0; font-size:13px; line-height:1.6;
+  }
+  /* The rule runs down the mark column, so the years read as a spine rather
+     than as a list that happens to start with numbers. */
+  .tl-mark{
+    text-align:center; color:var(--ash);
+    border-left:1px solid var(--rule); margin-left:-8px; padding-left:7px;
+  }
+  .tl-year{color:var(--amber-hi); letter-spacing:.08em; font-size:12px}
+  .tl-what{color:var(--amber-dim); min-width:0}
+  .tl-when{color:var(--ash); font-size:11.5px; letter-spacing:.06em; margin-left:8px}
+  .tl-fate{color:var(--alert)}
+  .tl-blank{color:var(--alert)}
+  .tl-reached{color:var(--phos)}
+  .tl-post{color:var(--phos)}
+
   /* --- blog ------------------------------------------------------------ */
   .post-list{display:flex; flex-direction:column; gap:11px; padding-bottom:40px}
   .post{
@@ -909,6 +929,13 @@ const REGISTERS = [
      render();
      return true;
    }},
+  {id:'timeline',   label:'TIMELINE',   short:'TIME',  render: renderTimeline,
+   rows: events,
+   status: rows => {
+     const yrs = new Set(rows.map(e => e.y));
+     const span = rows.length ? `${rows[0].y}\u2013${rows[rows.length - 1].y}` : '\u2014';
+     statusLine(`${rows.length} dated events`, `${yrs.size} years on record`, span);
+   }},
   {id:'blog',       label:'BLOG',       short:'BLOG',  render: renderBlog,
    rows: posts,
    status: rows => {
@@ -983,6 +1010,22 @@ const somewithheld = n =>
   `<div class="held"><span class="redacted">▨ ${n} FURTHER PARAGRAPH${n === 1 ? '' : 'S'} WITHHELD</span>` +
   ` — past book ${state.book}</div>`;
 const year = b => { const m = /(\d{4})/.exec(b.born || ''); return m ? +m[1] : 9999; };
+
+/* Dates arrive in two shapes here — a build date like "Jul 2145", and a
+   citation with the date at its end — and both want the same three answers:
+   which year, which month, and how to print it. One parser, because two drift.
+   A month of 0 means only a year was given, which sorts it ahead of anything
+   dated inside that year rather than pretending to a precision it hasn't got. */
+const MONTHS = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
+function dateIn(text){
+  const md = /\b([A-Z][a-z]{2})[a-z]*\.?\s+(\d{4})\b/.exec(text || '');
+  if (md) {
+    const m = MONTHS.indexOf(md[1]) + 1;
+    return {y: +md[2], m, at: +md[2] * 12 + m, text: `${md[1]} ${md[2]}`};
+  }
+  const y = /\b(\d{4})\b/.exec(text || '');
+  return y ? {y: +y[1], m: 0, at: +y[1] * 12, text: y[1]} : null;
+}
 
 function sortVal(raw, key){
   const b = shown(raw);
@@ -2174,6 +2217,98 @@ function guppyBlink(el){
     }, 140);
   }, 3200 + Math.random() * 5200);
   again();
+}
+
+/* ---- timeline ----------------------------------------------------------
+   The one axis nothing else reads. Every other register is sorted by name, by
+   structure or by how loud a thing is; none of them says what happened when.
+
+   No new data file, for the same reason In Memorium didn't need one: the dates
+   are already here, spread across four registers that each keep their own. What
+   this does is put them in one column.
+
+   Only what carries a date can appear, and that is worth being plain about —
+   the field policy swept seventeen build dates out for coming from sources this
+   project dropped, so most Bobs have no birthday here. A sparse timeline that
+   is true beats a full one that is furnished. */
+function events(){
+  const out = [];
+  const add = (date, kind, mark, html) => { if (date) out.push({...date, kind, mark, html}); };
+
+  for (const b of BOBS) {
+    if (heldRecord(b)) continue;
+    // Nobody built the original. He is told the date on the day he wakes up,
+    // a hundred and seventeen years after dying, which is a different verb.
+    add(dateIn(b.born), 'built', '+',
+        `${linkTo('register', b.id, shown(b).name)} ${b.parent ? 'built' : 'woken'}` +
+        (b.origin ? ` at ${sysLink(b.origin)}` : ''));
+    if (b.fate && b.fate !== 'active' && !heldFate(b)) {
+      const f = fateOf(b);
+      add(dateIn(b.fateCite), 'fate', f.mark,
+          `${linkTo('register', b.id, shown(b).name)} — ${f.label.toLowerCase()}` +
+          (b.lostAt ? ` at ${sysLink(b.lostAt)}` : ''));
+    }
+  }
+
+  /* A system enters the story when somebody the reader has met has been there.
+     Dating first contact off the systems file alone would put places on the
+     page before anyone has any business knowing they exist. */
+  const known = new Set();
+  for (const b of BOBS) {
+    if (heldRecord(b)) continue;
+    [b.origin, b.lostAt, ...(b.visited || [])].filter(Boolean).forEach(id => known.add(id));
+  }
+
+  /* Bill's posts only. The registry's own are dated to now rather than to
+     anything that happened, and dropping them into the chronology would put
+     this project's commentary inside the story it is commenting on — and
+     stretch the visible span to a year nobody has read to yet. */
+  for (const p of ((BLOG && BLOG.posts) || [])) {
+    if (heldPost(p) || p.voice !== 'bobnet') continue;
+    add(dateIn(p.date.replace(/^(\d{4})-(\d{2}).*/, (_, y, m) => `${MONTHS[+m - 1]} ${y}`)),
+        'post', '>', `${linkTo('blog', p.id, p.title)}`);
+  }
+
+  for (const u of ((MEMORIUM && MEMORIUM.unnamed) || [])) {
+    if (heldEntry(u)) continue;
+    add(dateIn(u.when), 'blank', '\u25a8',
+        `${u.n} transfers failed at ${sysLink(u.where)} — never named`);
+  }
+
+  /* And no later than the records themselves reach. A system carries a first
+     contact year and no citation to gate it with, so a place a visible Bob
+     merely passed through could otherwise date itself past the last thing the
+     reader has read — book two knew Gliese 877 in 2187 and was being told about
+     somewhere in 2247. The bound is the latest dated thing already on the page. */
+  const horizon = gating()
+    ? out.reduce((n, e) => Math.max(n, e.at), 0)
+    : Infinity;
+  for (const sys of (SYSTEMS && SYSTEMS.systems) || []) {
+    if (!sys.first_year || !known.has(sys.id)) continue;
+    const at = dateIn(String(sys.first_year));
+    if (at && at.at <= horizon) add(at, 'reached', '*', `${sysLink(sys.id)} first on record`);
+  }
+
+  return out.sort((a, b) => a.at - b.at || a.kind.localeCompare(b.kind));
+}
+
+function renderTimeline(rows){
+  if (!rows.length) return `<p class="empty">NOTHING ON RECORD AT THIS READING POSITION.</p>`;
+  let last = null;
+  const body = rows.map(e => {
+    const head = e.y === last ? '' : e.y;
+    last = e.y;
+    return `<div class="tl-row">` +
+      `<span class="tl-year">${head}</span>` +
+      `<span class="tl-mark tl-${e.kind}">${e.mark}</span>` +
+      `<span class="tl-what">${e.html}<span class="tl-when">${esc(e.m ? e.text : '')}</span></span>` +
+      `</div>`;
+  }).join('');
+  const lead = `<p class="unres-lead">Everything the registry holds that carries a date, in
+    one column. Only what carries one can be here: build dates were swept out wherever they
+    came from a source this project dropped, so most records have no birthday and the gaps
+    are the honest shape of what is known.</p>`;
+  return `<div class="unres">${lead}<div class="tl">${body}</div></div>`;
 }
 
 /* ---- links between registers -------------------------------------------

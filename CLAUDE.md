@@ -793,6 +793,35 @@ re-admitting it would undo the rule that found the appendix. Link to it, cite it
 as a lead in `priorClaim` if it ever settles something, and never quote it: his
 prose is his, exactly as the novels are.
 
+## The timeline
+
+`#timeline`, and it owns no data. Every event is derived from a date already
+held elsewhere: build dates on records, fate citations, first contact on
+systems, Bill's posts, the failed transfers at 82 Eridani. It is an axis over
+what exists, the way In Memorium was — copy that shape before inventing a new
+file.
+
+`dateIn()` is the one parser both date shapes go through, because there were two
+of them living in the memorium view and two drift. A month of 0 means only a
+year was given, and sorts ahead of anything dated inside that year rather than
+claiming a precision it hasn't got.
+
+Three rules worth keeping:
+
+- **The original is woken, not built.** Bk1 ch2 — Landers gives him the date,
+  a hundred and seventeen years after he died. The verb is conditional on
+  having a parent.
+- **The registry's own posts are not events in the story.** They are dated to
+  now, so only `voice: bobnet` appears in the chronology.
+- **A place is bounded by how far the records reach.** A system carries a
+  first-contact year and no citation to gate it against, so a system a visible
+  Bob merely passed through could date itself past the last thing the reader has
+  read. Book two knew Gliese 877 in 2187 and was being told about somewhere in
+  2247. The bound is the latest dated thing already on the page.
+
+The visible span tracks the reading position — 2185, 2217, 2257, 2334, 2343 —
+which is the property that makes it worth having at all.
+
 ## Links between registers
 
 A link from one register into another is **just an address**. `<a href="#chart/82_eridani">`
