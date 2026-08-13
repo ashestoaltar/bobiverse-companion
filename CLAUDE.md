@@ -148,8 +148,10 @@ data/bestiary.json non-sapient fauna; data/bestiary.schema.json documents it
 data/peoples.json  sapient species and their polities; peoples.schema.json too
 data/guppy.json   Guppy's pixel portrait — palette plus one grid per frame
 assets/<register>/ <id>.svg illustrations, inlined into the page by the build
-templates/genealogy.html   the console — register, lineage, unresolved, chart,
-                 bestiary, peoples, to-do
+data/blog.json   dated posts in two voices; blog.schema.json documents them
+data/memorium.json entries with no record to sit on — the three blank rows
+templates/genealogy.html   the console — register, genealogy, unresolved,
+                 in memorium, chart, bestiary, peoples, timeline, blog, to-do
 books/MANIFEST.sha256  hashes + chapter counts of your ebooks; the one thing in
                  books/ that IS committed, because it's facts about the files
 src/parse_ebook.py  MOBI + EPUB -> chapters, refuses DRM
@@ -175,9 +177,19 @@ schema and `ORDER` disagree in either direction.
 make corpus      # once, after adding ebooks
 make validate    # before every commit
 make build       # writes dist/index.html
+make test        # build, then every suite against the shipped page
+make workbench   # the built page at four phone sizes, on :8000
+make scan-history  # every version of every publishable file, and every commit
+                   # message, checked for book text — run before going public
 python src/extract.py --name Thor       # research one Bob
 python src/extract.py --unresolved      # work the tier C and P backlog
 ```
+
+**`make validate` runs before every commit and `make test` before every push.**
+Four of the validator's checks — citation re-verification, mention counts, the
+appendix pool and the no-passages scan — skip rather than fail when `.cache/` is
+absent, because CI has no books. They are exactly the checks that need the
+corpus, so the machine that has it is the one that has to run them.
 
 `extract.py` prints passages with citations; it never edits `data/bobs.json`.
 Reading the passage and deciding what it establishes is the human's job.
@@ -303,7 +315,18 @@ scoped to the eval.)
 | `chart` | projection invariants, the fiction's own distances, astrophysics |
 | `legibility` | label decluttering, ring labels, spectral colour survival, WCAG contrast |
 | `backdrop` | the HYG starfield, unit-vector invariants, NaN sweeps |
-| `snapshot` | golden master — exact HTML of 95 states |
+| `snapshot` | golden master — exact HTML of 132 states |
+| `spoilers` | what the reading position withholds — and a sweep of every register at every position for what leaks |
+| `timeline` | the derived chronology: order, sourcing, and where it stops |
+| `blog` | the feed, and keeping Bill's voice apart from the registry's |
+| `registers` | the REGISTERS contract, with a synthetic register added at runtime |
+| `url` | every view addressable, and stale links degrading rather than throwing |
+| `mobile` | the rules that only fire under a media query, run at 390px |
+| `shell` | doctype, theme colour, safe areas — the parts that are no register's |
+| `boot` | the SCUT connect: derived figures, and the order of the handshake |
+| `memorium` | the list, the blanks, and Taylor's spelling |
+| `peoples`, `bestiary` | the people/fauna boundary, both directions |
+| `guppy` | the pixel portrait — ragged grids, and a blink that must not move the silhouette |
 
 **Assertions derive their expectations from `data/*.json` rather than hardcoding
 counts.** The old scratch harness asserted "86 records" for a whole session after
@@ -313,7 +336,7 @@ absolute magnitude of 4.83, Bill's stated distances.
 
 ### The golden master
 
-`tests/__snapshots__/views.json` holds the exact HTML for 95 states — every view,
+`tests/__snapshots__/views.json` holds the exact HTML for 132 states — every view,
 filter, search, sort direction, a sample of dossiers, and the chart at pinned
 cameras. It exists so a refactor can be checked by diff instead of by eye, which
 is what makes restructuring safe to do aggressively.
@@ -854,9 +877,16 @@ The same machinery — corpus, extractor, validator, console — carries every
 register. Each needs its own data file, schema and view, and nothing else.
 
 **Built:** the star chart (`systems.json`), the bestiary (`bestiary.json`),
-peoples and polities (`peoples.json`) and In Memorium (`memorium.json`, plus
-`fate` on each Bob). **Still to come:** ship designs, and the second passes
-recorded in `data/todo.json`.
+peoples and polities (`peoples.json`), In Memorium (`memorium.json`, plus `fate`
+on each Bob), the blog (`blog.json`) and the timeline, which owns no file at all.
+**Still to come:** ship designs, the holotank, and the second passes recorded in
+`data/todo.json`.
+
+Two of those are worth copying rather than the other three. **In Memorium** and
+**the timeline** are axes over data already held — a view plus, at most, a small
+file for what has no record to sit on. Before writing a new dataset, check
+whether the next register is a new kind of thing or a column that already
+exists.
 
 In Memorium is the one that isn't a new dataset — it is a view over `bobs.json`
 plus a small file for the entries with no record to sit on. Worth copying when

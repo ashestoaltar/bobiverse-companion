@@ -55,9 +55,10 @@ record now says so.
 
 ## The console
 
-Eight registers, with live search across names, aliases, designations, systems,
+Ten registers, with live search across names, aliases, designations, systems,
 notes and citations — and every view has an address, so any of them can be
-linked to:
+linked to, in either direction: a post says what it is about and every record it
+names shows that the post exists.
 
 - **Register** — the full list, sortable on every column.
 - **Genealogy** — the descent tree (Bill's word for the work; the books never
@@ -80,17 +81,55 @@ linked to:
   into a new vessel and carries on, so a destroyed ship is not a death. Four
   names, and three entries that will always be blank — Bill counted three failed
   transfers after the first battle of 82 Eridani and never said which three, so
-  the list carries them as dashed rows in their place in the chronology. Nine
+  the list carries them as dashed rows in their place in the chronology. Eight
   more sit in their own section, ships destroyed and backups never mentioned
   again, on neither side of the line because the books never put them there.
+  Every chapter after each of those losses has since been searched for the name,
+  which is how one of them left that column; none of the rest came back, and the
+  page says the search was run rather than leaving the gap looking unexamined.
 - **Peoples** — the sapient species and the polities that claim to speak for
   them, with `contact` recording how each stands with the Bobs: uplifted, walked
   among without being told, aware and unimpressed, or at war. Acronyms are only
   expanded where the books expand them — on the page by a character, or in book
   2's List of Terms, which is where FAITH finally gets unpacked after five books
   of nobody in the story ever saying it out loud.
+- **Timeline** — the one axis nothing else reads. It owns no data: every event
+  is a date already held somewhere else — a build date, a fate citation, first
+  contact with a system, a post, the transfers that failed at 82 Eridani — put
+  in one column. Only what carries a date can appear, so the gaps are the honest
+  shape of what is known.
+- **Blog** — dated posts, because Bill's blog is canon; he needles Bob about not
+  reading it. Two voices, labelled rather than blended: his, which cannot know
+  the books are books, and this registry's, which can. A post that mentions an
+  appendix in his voice fails the build.
 - **To-do** — the research backlog, reported the way Guppy reports Bob's:
   a bracketed count divided into categories. It has never once got shorter.
+
+## Reading position
+
+A companion to an unfinished series is a hazard to whoever is still reading it.
+This one states on its front page who dies. So it asks, once, how far you have
+got, and withholds the rest — and the whole mechanism runs off citations the
+provenance work had already forced onto the data.
+
+Three things gate separately, because they spoil at different rates: whether a
+record exists at all, by the earliest book it can be cited from; its fate, by
+the chapter where that fate is on record; and our own annotations, declared per
+record and down to the paragraph. Four of Homer's five fate paragraphs are the
+book he dies in and only the fifth is the coda two books later, so a reader who
+has just finished that book gets four of them.
+
+Factions are held until book 4, when they exist. Names are held until they are
+taken — Riker is not Will until Bk3 ch57. Citations are trimmed to the books you
+have read, filters that would answer a held question disappear, and the timeline
+stops where you have stopped. At the top setting nothing is held and the page is
+byte-identical to a build without any of it, which the golden master checks.
+
+It is a courtesy rather than a boundary: the whole dataset ships in the page and
+the console chooses what to draw, so anyone who opens the source can read all of
+it. That is inherent to one self-contained file with no backend, and it is said
+plainly rather than implied. Links carry the setting, so a reader mid-series can
+send somebody a record without spoiling them.
 
 Selecting a record pulls its dossier and traces the route back to Bob-1
 hop by hop, **grading each link separately**. A chain can be solid for two hops
@@ -156,6 +195,8 @@ gitignored, so git cannot bring them back. Keep your ebooks backed up elsewhere.
 ```bash
 make validate                        # schema, referential integrity, tier rules
 make test                            # build, then run the console's test suites
+make workbench                       # the page at four phone sizes at once
+make scan-history                    # every commit ever made, checked for book text
 python src/extract.py --unresolved   # candidate passages for the tier C and P backlog
 python src/extract.py --name Thor    # research one Bob
 ```
@@ -163,7 +204,7 @@ python src/extract.py --name Thor    # research one Bob
 `make test` needs Node. It runs the shipped script from `dist/index.html` against
 a stub DOM — data integrity, every view under every filter, the chart's
 projection geometry and astrophysics, label legibility, and a golden-master
-snapshot of 118 rendered states.
+snapshot of 132 rendered states.
 
 `src/extract.py` finds passages and prints them with citations. It never writes
 to `data/bobs.json` — deciding what a passage establishes is a judgement call,
@@ -252,8 +293,8 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 3,014 checks across 12 suites against the shipped page,
-  including a golden-master snapshot of 118 rendered states.
+- `make test` runs 12,788 checks across 17 suites against the shipped page,
+  including a golden-master snapshot of 132 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and
   refuse a pool of candidates small enough that the names would be knowable.
