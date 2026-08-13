@@ -44,6 +44,34 @@ module.exports = ({ok, get, run}) => {
   ok(all.includes(`${polities} polities`), 'boot misreports the polity count');
   ok(/STATUS: Ready/.test(all), 'boot never says it is ready');
 
+  // ---- it is a SCUT connect, not a mainframe coming up -------------------
+  // The books show this twice and agree — Riker in Bk1 ch41, Mulder in Bk2 ch6.
+  // Turn it on, the console lists the systems already on the network, register
+  // yourself, pick one, connect, transmit, the far end answers. Nobody mounts
+  // anything, and nothing indexes itself at a Bob.
+  for (const wrong of ['Mounting', 'Indexing', 'Loading', 'Initialising', 'Initializing']) {
+    ok(!all.includes(wrong), `boot says '${wrong}', which is a mainframe and not a transceiver`);
+  }
+  const at = re => lines.findIndex(([t]) => re.test(t));
+  const available = at(/Connections available/);
+  const connect = at(/connect\]/);
+  const ready = at(/STATUS: Ready/);
+  ok(available >= 0, 'boot never lists the connections available');
+  ok(connect > available, 'boot connects before it has offered anywhere to connect to');
+  ok(ready === lines.length - 1, 'the sequence should land on ready, not pass through it');
+
+  // The systems it offers are derived, not typed: the earliest contacted, in
+  // order. That they come out as the four the books print is checkable rather
+  // than asserted, and it stops the list going stale if a system is added.
+  const reached = SYSTEMS.systems.filter(s => s.first_year)
+    .sort((a, b) => a.first_year - b.first_year).slice(0, 4).map(s => s.name);
+  ok(reached.length === 4, 'not enough dated systems to offer a connection list');
+  for (const name of reached) {
+    ok(lines[available][0].includes(name), `connections list omits ${name}`);
+  }
+  ok(lines[connect][0].includes(reached[0]),
+     'the console should connect to the first system on the network, as Mulder does');
+
   // Long enough to read. 8 lines that nobody can follow is just a flash.
   // The multiplier has to come from the page, not be repeated here — a test
   // that computes a duration the console doesn't actually use is worse than no

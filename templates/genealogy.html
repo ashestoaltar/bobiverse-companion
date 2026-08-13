@@ -494,7 +494,7 @@
   }
   .boot-inner{display:flex; align-items:center; gap:26px}
   .boot-face{width:118px; flex:none; color:var(--phos)}
-  .boot pre{margin:0; font-size:13px; line-height:1.85; color:var(--phos); min-height:15.5em}
+  .boot pre{margin:0; font-size:13px; line-height:1.85; color:var(--phos); min-height:19em}
   /* Pixel art, so it must not be smoothed at any size. */
   .guppy .pix{display:block; width:100%; height:auto; image-rendering:pixelated}
   .boot.done{opacity:0; pointer-events:none; transition:opacity .32s ease}
@@ -533,7 +533,7 @@
        actually on — monospace runs about 0.6em per character, so 30 characters
        to the available width keeps a 49-character line inside it. pre-wrap is
        the backstop for the day a longer line gets added. */
-    .boot{padding:22px}
+    .boot{padding:22px; overflow-y:auto; align-items:flex-start}
     .boot-inner{flex-direction:column; gap:15px; max-width:100%}
     .boot-face{width:86px}
     .boot pre{font-size:min(13px, calc((100vw - 48px) / 30)); white-space:pre-wrap}
@@ -2790,29 +2790,52 @@ let openGate = () => {};
    date the way a hardcoded splash would. Each line carries the pause that
    follows it — uniform timing reads as an animation, but varied timing reads as
    a machine doing work of different sizes, which is the effect we want. */
-/* Pacing for the whole boot sequence, as one multiplier. 1 was about 3.4
-   seconds and read as hurried. 1.55 gives roughly 6, which is long enough to
-   watch the machine work rather than just catch that it did. Any key or click
-   skips, so the cost of erring slow is small. */
-const BOOT_SPEED = 1.55;
+/* Pacing for the whole boot sequence, as one multiplier. It used to be 1.55
+   over eight lines, which came to about six seconds. The sequence is longer now
+   and the budget is the same, so this is lower: a handshake should read briskly
+   and the part worth reading is what the archive says it holds. */
+const BOOT_SPEED = 1.35;
 
+/* What a Bob sees the first time he switches a SCUT on, which is not what a
+   mainframe does. The books show it twice and agree: turn it on, and the
+   console lists the systems already on the network; work through the menus and
+   register yourself; pick one and connect; the transmitting icon comes up; the
+   far end answers. Riker in Bk1 ch41, Mulder in Bk2 ch6. Nobody mounts
+   anything.
+
+   The four systems it offers are derived rather than typed — the earliest
+   contacted, in order — and they come out as the same four the books print,
+   which is a nice thing to be able to check rather than assert.
+
+   Every figure below is read from the data for the same reason it always was:
+   the first thing anyone reads should not be able to go stale. */
 function bootLines(){
   const systems = (SYSTEMS && SYSTEMS.systems) || [];
   const beasts  = (BESTIARY && BESTIARY.creatures) || [];
   const folk    = (PEOPLES && PEOPLES.entries) || [];
   const stars   = SKYFIELD ? SKYFIELD.count : 0;
+
+  const reached = systems.filter(x => x.first_year)
+    .sort((a, b) => a.first_year - b.first_year);
+  const available = reached.slice(0, 4).map(x => x.name).join(' \u00b7 ');
+  const home = (reached[0] && reached[0].name) || 'Epsilon Eridani';
+
   return [
-    ['[BobNet link established · Epsilon Eridani relay]', 240],
-    ['[Mounting registry: OK]', 130],
-    [`[Indexing ${BOBS.length} replicant records: OK]`, 170],
-    [`[${BOBS.filter(b => b.src === 'c').length} with no source on file, ` +
-     `${BOBS.filter(b => b.src === 'x').length} expunged]`, 260],
-    [`[Star chart: ${systems.length} systems · ${stars.toLocaleString()} background stars]`, 170],
-    [`[Bestiary: ${beasts.length} creatures]`, 120],
-    [`[Peoples: ${folk.filter(e => e.kind === 'people').length} species · ` +
-     `${folk.filter(e => e.kind === 'polity').length} polities]`, 240],
+    ['[SCUT transceiver: online]', 150],
+    [`[Connections available: ${available}]`, 240],
+    ['[Registered on the network]', 140],
+    [`[${home}: connect]`, 170],
+    ['[Transmitting]', 320],
+    [`[Link established \u00b7 ${home} relay]`, 200],
+    [`[Registry: ${BOBS.length} replicant records, ` +
+     `${BOBS.filter(b => b.src === 'c').length} with no source on file, ` +
+     `${BOBS.filter(b => b.src === 'x').length} expunged]`, 150],
+    [`[Chart: ${systems.length} systems \u00b7 ${stars.toLocaleString()} background stars]`, 130],
+    [`[Bestiary: ${beasts.length} creatures \u00b7 Peoples: ` +
+     `${folk.filter(e => e.kind === 'people').length} species, ` +
+     `${folk.filter(e => e.kind === 'polity').length} polities]`, 180],
     // A real hold on the last line — the sequence should land, not stop.
-    ['[STATUS: Ready]', 880],
+    ['[STATUS: Ready]', 700],
   ];
 }
 
@@ -2867,6 +2890,9 @@ function bootLines(){
 
   // Guppy comes up with the link, before any text. The console has an
   // operator, and he was always the one talking.
+  const hint = document.querySelector('.boot-hint');
+  if (hint && TOUCH) hint.textContent = 'TAP TO SKIP';
+
   const face = document.getElementById('boot-face');
   if (face) { face.innerHTML = pixelSvg('idle'); guppyBlink(face); }
 

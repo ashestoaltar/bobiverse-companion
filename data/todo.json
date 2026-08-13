@@ -224,7 +224,8 @@
     {
       "cat": "BobNet",
       "text": "The boot sequence is a mainframe, and the books describe a SCUT connect",
-      "note": "What Riker and Mulder and Mario actually see on first contact with BobNet is a console listing available connections, system names scrolling past, a register, a connect, a transmitting icon — and then Bill turning up in person, in whatever VR they built. Nobody boots a mainframe. Ours reports its own mounting like an IPL, which is a different genre borrowed from the same decade. This is copy and sequencing rather than architecture, so it is cheap: the boot lines already exist and already read from the data. While in there, CLICK OR PRESS ANY KEY should say TAP on a touch screen."
+      "note": "Done. The books show a first SCUT connect twice and agree — Riker in Bk1 ch41, Mulder in Bk2 ch6. Turn it on; the console lists the systems already on the network; work the menus and register yourself; pick one and connect; the transmitting icon comes up; the far end answers. Nobody mounts anything. The sequence now reads that way and ends where it always did, on STATUS: Ready.\n\nThe four systems it offers are derived — earliest contacted, in order — and come out as Epsilon Eridani, Omicron² Eridani, Sol and Alpha Centauri, which is the same four the books print on Mulder's console. Being able to check that rather than assert it is the whole reason to derive it. Every figure is still read from the data, and a test now rejects the words a mainframe would use.\n\nTwo lines longer than before at the same six seconds, so BOOT_SPEED came down: a handshake should read briskly and the part worth reading is what the archive says it holds. On a touch screen the hint says TAP rather than naming a key nobody has.",
+      "done": true
     },
     {
       "cat": "Sources",
