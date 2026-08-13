@@ -1,4 +1,4 @@
-.PHONY: help corpus verify-books validate scan-history build test snapshots serve clean
+.PHONY: help corpus verify-books validate scan-history build test snapshots serve workbench clean
 
 help:
 	@echo "corpus       parse ebooks in books/ into .cache/corpus.json"
@@ -9,6 +9,7 @@ help:
 	@echo "test         build, then run the console's test suites"
 	@echo "snapshots    re-record the golden-master snapshots (review the diff!)"
 	@echo "serve        build, then serve dist/ on :8000"
+	@echo "workbench    the console at four phone sizes at once, on :8000"
 	@echo "clean        remove dist/ and .cache/ (never books/)"
 
 corpus:
@@ -39,6 +40,14 @@ snapshots: build
 	@node tests/run.js --update-snapshots
 
 serve: build
+	@cd dist && python3 -m http.server 8000
+
+# Copied next to the page rather than served from tools/, because it reads
+# index.html with fetch() and the two have to be the same origin. It reads the
+# real built page, so there is no second copy of the console to drift.
+workbench: build
+	@cp tools/workbench.html dist/workbench.html
+	@echo "workbench at http://127.0.0.1:8000/workbench.html"
 	@cd dist && python3 -m http.server 8000
 
 clean:

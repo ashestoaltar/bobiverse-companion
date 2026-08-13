@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workbench — the console at phone sizes</title>
+<!--
+  Every device at once, so a layout change can be judged by looking rather than
+  by copying a file to a phone and unlocking it.
+
+  It loads the REAL dist/index.html, not a copy, so there is nothing here that
+  can disagree with what ships. Width-based media queries fire against the frame
+  rather than the window, and dvh resolves against the frame too, so the mobile
+  layout this shows is the mobile layout.
+
+  What it cannot do is touch. Pointer emulation below rewrites the answer to
+  `(pointer: coarse)` so the console renders its touch help text and its larger
+  star targets, but no browser will let a page synthesise a pinch. Gestures
+  still want DevTools device mode or a real phone. Everything else — the sheet,
+  the tab row, the chips, the chart's height, the boot screen — is honest here.
+-->
+<style>
+  :root{--void:#0A0704; --panel:#120D07; --rule:#3A2A16; --amber:#FFB000;
+        --amber-dim:#C98A14; --ash:#6E5A3C; --phos:#7CFF9B}
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--void); color:var(--amber-dim);
+    font:13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  header{
+    position:sticky; top:0; z-index:10; background:var(--panel);
+    border-bottom:1px solid var(--rule); padding:10px 14px;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  h1{margin:0; font-size:13px; font-weight:500; letter-spacing:.18em; color:var(--amber)}
+  label{display:flex; align-items:center; gap:6px; letter-spacing:.08em}
+  button, select, input{
+    background:transparent; border:1px solid var(--ash); color:var(--amber-dim);
+    font:inherit; padding:4px 9px; cursor:pointer;
+  }
+  button:hover{color:var(--amber); border-color:var(--amber-dim)}
+  input{cursor:text; min-width:210px}
+  .note{color:var(--ash); letter-spacing:.06em; margin-left:auto}
+
+  .rack{display:flex; gap:22px; padding:22px 14px 60px; align-items:flex-start; overflow-x:auto}
+  .device{flex:none}
+  .cap{
+    display:flex; justify-content:space-between; gap:10px;
+    font-size:11px; letter-spacing:.12em; color:var(--ash);
+    margin-bottom:6px; text-transform:uppercase;
+  }
+  .cap b{color:var(--amber-dim); font-weight:500}
+  /* The frame is sized in real CSS pixels and then scaled as a whole, so the
+     page inside still believes it is on a 393px screen. Scaling the iframe's
+     width instead would just be a narrower desktop. */
+  .screen{
+    border:1px solid var(--rule); background:#000;
+    transform-origin:top left; transition:none;
+  }
+  iframe{border:0; display:block; background:var(--void)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>WORKBENCH</h1>
+  <label>SCALE
+    <select id="scale">
+      <option value="1">100%</option>
+      <option value="0.8" selected>80%</option>
+      <option value="0.6">60%</option>
+      <option value="0.45">45%</option>
+    </select>
+  </label>
+  <label><input type="checkbox" id="rotate" style="min-width:0"> LANDSCAPE</label>
+  <label><input type="checkbox" id="touch" style="min-width:0" checked> EMULATE TOUCH</label>
+  <label>GO TO <input id="hash" placeholder="#bestiary/dragon" spellcheck="false"></label>
+  <button id="reload">RELOAD ALL</button>
+  <span class="note">real dist/index.html · gestures still want a phone</span>
+</header>
+
+<div class="rack" id="rack"></div>
+
+<script>
+const DEVICES = [
+  {name:'iPhone SE',       w:375, h:667},
+  {name:'iPhone 15 Pro',   w:393, h:852},
+  {name:'Pixel 8',         w:412, h:915},
+  {name:'iPad mini',       w:744, h:1024},
+];
+
+const rack   = document.getElementById('rack');
+const scale  = document.getElementById('scale');
+const rotate = document.getElementById('rotate');
+const touch  = document.getElementById('touch');
+const hash   = document.getElementById('hash');
+
+/* Runs inside each frame before the console's own script. matchMedia is the
+   only thing the console asks about the pointer, so answering it is the whole
+   of the emulation — and it has to be in place before the page evaluates
+   `const TOUCH = ...`, which is why the document is written rather than
+   pointed at with src. */
+const SHIM = `<script>(function(){
+  const real = window.matchMedia.bind(window);
+  window.matchMedia = q => /pointer:\\s*coarse|hover:\\s*none/.test(String(q))
+    ? {matches:true, media:String(q), addListener(){}, removeListener(){},
+       addEventListener(){}, removeEventListener(){}}
+    : real(q);
+})();<\/script>`;
+
+let source = null;   // the shipped page, fetched once and reused by every frame
+
+async function build(){
+  if (!source) {
+    const res = await fetch('index.html', {cache:'no-store'});
+    if (!res.ok) throw new Error('cannot read index.html — run `make workbench`');
+    source = await res.text();
+  }
+  const z = parseFloat(scale.value);
+  rack.innerHTML = '';
+
+  for (const d of DEVICES) {
+    const w = rotate.checked ? d.h : d.w;
+    const h = rotate.checked ? d.w : d.h;
+
+    const box = document.createElement('div');
+    box.className = 'device';
+    box.innerHTML =
+      `<div class="cap"><b>${d.name}</b><span>${w}×${h}</span></div>` +
+      `<div class="screen" style="width:${w}px; height:${h}px; transform:scale(${z})"></div>`;
+    // The scaled frame still reserves its unscaled box, which would leave a
+    // gap the size of the shrinkage. Reserve what it actually occupies.
+    box.style.width  = (w * z) + 'px';
+    box.style.height = (h * z + 26) + 'px';
+    rack.appendChild(box);
+
+    const frame = document.createElement('iframe');
+    frame.width = w; frame.height = h;
+    box.querySelector('.screen').appendChild(frame);
+
+    const doc = frame.contentDocument;
+    doc.open();
+    doc.write(touch.checked ? source.replace('<head>', '<head>' + SHIM) : source);
+    doc.close();
+
+    if (hash.value.trim()) {
+      const want = '#' + hash.value.trim().replace(/^#/, '');
+      frame.contentWindow.location.hash = want;
+    }
+  }
+}
+
+for (const el of [scale, rotate, touch]) el.addEventListener('change', build);
+document.getElementById('reload').addEventListener('click', () => build());
+hash.addEventListener('keydown', e => { if (e.key === 'Enter') build(); });
+
+build().catch(e => {
+  rack.innerHTML = `<p style="color:#FF6B6B; padding:20px">${e.message}</p>`;
+});
+</script>
+
+</body>
+</html>
