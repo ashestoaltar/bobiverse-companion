@@ -1,0 +1,84 @@
+# Build the console and publish it.
+#
+# dist/ is gitignored on purpose: the page is a pure function of data/ and
+# templates/, so committing the build output would only create a way for the
+# two to disagree. CI rebuilds it from source on every push, which means what
+# is published can never drift from what is in the repository.
+#
+# The books are not here and cannot be — they are gitignored and would not be
+# distributable if they weren't. The pipeline is built to work without them:
+# `make build` runs the full validator, and the four checks that need the
+# parsed corpus (citation re-verification, mention counts, the appendix pool,
+# and the no-passages scan) skip rather than fail. Those are the checks that
+# have to run on a machine that has the ebooks, which is why `make test` is
+# also run locally before a push rather than only here.
+
+name: Build and publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a run finish rather than cancelling it — a half-finished deploy of a page
+# this small buys nothing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # No dependency install step of any kind, and that is deliberate. The
+      # pipeline is Python 3.10+ standard library and the test harness is bare
+      # Node; the page itself makes no external request at runtime either.
+      - name: Validate and build
+        run: make build
+
+      - name: Test the shipped page
+        run: make test
+
+      - name: Confirm the page is self-contained
+        run: |
+          # The promise is zero external requests. Anything reaching a remote
+          # host would break it silently, so check the built artefact rather
+          # than trusting that nobody added a font or a CDN script.
+          if grep -Eoi 'https?://[^"'"'"' )<]+' dist/index.html \
+             | grep -vE '^https?://(www\.)?(w3\.org|simbad\.u-strasbg\.fr|codeberg\.org|creativecommons\.org)' \
+             | grep -q .; then
+            echo "External URL found in dist/index.html:"
+            grep -Eoi 'https?://[^"'"'"' )<]+' dist/index.html | sort -u
+            exit 1
+          fi
+          echo "no external hosts beyond the SVG namespace and credit links"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
