@@ -50,7 +50,7 @@ module.exports = ({ok, get, run, ROOT}) => {
     check();
     ok(run('hashFor()') === hash, `${label}: ${hash} came back as ${run('hashFor()')}`);
   };
-  trip('#lineage/bill', () => ok(state.view === 'lineage' && state.selected === 'bill'), 'lineage');
+  trip('#genealogy/bill', () => ok(state.view === 'genealogy' && state.selected === 'bill'), 'genealogy');
   trip('#chart/82_eridani', () => ok(state.view === 'chart' && get('CHART').sel === '82_eridani'), 'chart');
   trip('#bestiary/dragon', () => ok(state.view === 'bestiary' && state.beast === 'dragon'), 'bestiary');
   trip('#peoples/deltans', () => ok(state.view === 'peoples' && state.people === 'deltans'), 'peoples');
@@ -66,6 +66,30 @@ module.exports = ({ok, get, run, ROOT}) => {
     ok(run('applyHash()'), `register '${reg.id}' is not addressable`);
     ok(state.view === reg.id, `#${reg.id} did not select that register`);
     ok(run('hashFor()') === '#' + reg.id, `#${reg.id} round-tripped as ${run('hashFor()')}`);
+  }
+
+  // ---- a renamed register keeps its old links ----------------------------
+  // #lineage/ was the address until the register took Bill's word for the work.
+  // A link is a promise, and the alias is the whole of how it stays one. The
+  // bar should end up spelling it the new way without a history entry, so the
+  // back button goes where the reader came from rather than to a dead name.
+  reset();
+  win.location.hash = '#lineage/bill';
+  ok(run('applyHash()') === true, 'the old #lineage/ address should still resolve');
+  ok(state.view === 'genealogy', `#lineage/bill landed on '${state.view}'`);
+  ok(state.selected === 'bill', 'the selection should survive the alias');
+  ok(run('hashFor()') === '#genealogy/bill', `alias came back as ${run('hashFor()')}`);
+
+  win.history.calls.length = 0;
+  run('syncHash()');
+  ok(win.history.calls.length === 1 && win.history.calls[0][0] === 'replace',
+     `an aliased link should be respelled in place, not pushed: ${JSON.stringify(win.history.calls)}`);
+
+  // every alias has to point at a register that exists, or it is just a 404
+  // with extra steps
+  for (const [old, now] of Object.entries(run('VIEW_ALIAS'))) {
+    ok(REGISTERS.some(r => r.id === now), `alias '${old}' points at missing register '${now}'`);
+    ok(!REGISTERS.some(r => r.id === old), `alias '${old}' shadows a live register`);
   }
 
   // ---- hostile input -----------------------------------------------------

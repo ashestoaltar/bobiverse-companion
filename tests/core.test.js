@@ -57,7 +57,7 @@ module.exports = ({ok, get, run, ROOT}) => {
   // ---- every view renders under every filter, empty state and search ----
   const REGISTERS = get('REGISTERS');
   const views = REGISTERS ? REGISTERS.map(r => r.id)
-                          : ['register', 'lineage', 'unresolved', 'chart', 'todo'];
+                          : ['register', 'genealogy', 'unresolved', 'chart', 'todo'];
   ok(views.length >= 5, `expected at least 5 views, found ${views.length}`);
 
   const attempt = (label, fn) => {
@@ -80,7 +80,7 @@ module.exports = ({ok, get, run, ROOT}) => {
   // ---- the dossier renders for every record, in every list view ----
   Object.assign(state, {q: '', selected: null});
   state.filters = new Set();
-  for (const v of ['register', 'lineage', 'unresolved']) {
+  for (const v of ['register', 'genealogy', 'unresolved']) {
     state.view = v;
     for (const b of BOBS) {
       state.selected = b.id;

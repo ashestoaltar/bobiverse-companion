@@ -20,7 +20,7 @@ module.exports = ({ok, get, run, snapshot}) => {
   const BOBS = get('BOBS');
   const REGISTERS = get('REGISTERS');
   const views = REGISTERS ? REGISTERS.map(r => r.id)
-                          : ['register', 'lineage', 'unresolved', 'chart', 'todo'];
+                          : ['register', 'genealogy', 'unresolved', 'chart', 'todo'];
 
   const reset = () => {
     Object.assign(state, {q: '', sort: 'name', dir: 1, selected: null});
@@ -59,7 +59,7 @@ module.exports = ({ok, get, run, snapshot}) => {
     .filter(id => BOBS.some(b => b.id === id));
   ok(sample.length >= 3, `snapshot needs stable sample ids; found ${sample.length}`);
 
-  for (const v of ['register', 'lineage', 'unresolved']) {
+  for (const v of ['register', 'genealogy', 'unresolved']) {
     for (const id of sample) {
       reset();
       Object.assign(state, {view: v, selected: id});

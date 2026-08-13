@@ -60,9 +60,19 @@ function install(sandbox, {width = 1400} = {}) {
     devicePixelRatio: 1,
     location: {hash: ''},
     // the console writes its address here; the stub just records it
+    // Records which method was used, not just the result — "was this a new
+    // place or the same place respelled?" is the whole distinction syncHash
+    // draws, and it is invisible if you only look at the resulting hash.
     history: {
-      pushState(_a, _b, url) { sandbox.window.location.hash = String(url).replace(/^[^#]*/, ''); },
-      replaceState(_a, _b, url) { this.pushState(_a, _b, url); },
+      calls: [],
+      pushState(_a, _b, url) {
+        this.calls.push(['push', String(url)]);
+        sandbox.window.location.hash = String(url).replace(/^[^#]*/, '');
+      },
+      replaceState(_a, _b, url) {
+        this.calls.push(['replace', String(url)]);
+        sandbox.window.location.hash = String(url).replace(/^[^#]*/, '');
+      },
     },
   };
   sandbox.navigator = {userAgent: 'test'};

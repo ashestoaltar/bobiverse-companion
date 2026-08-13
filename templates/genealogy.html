@@ -1,12 +1,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BobNet — Lineage Registry</title>
+<title>BobNet — Registry</title>
 <style>
   /* ======================================================================
-     BobNet Lineage Registry
-     An amber console. Tiers are rendered as record integrity, not as a
-     legend: a lineage we can't source reads as missing data, because
-     in-world that is exactly what it is.
+     BobNet Registry
+     An amber console. Genealogy is one register among peers (chart, bestiary,
+     peoples, memorium). Tiers are record integrity, not a legend: a parentage
+     we can't source reads as missing data, because in-world that is exactly
+     what it is.
      ====================================================================== */
 
   :root{
@@ -185,7 +186,7 @@
     .mem-row .mem-when, .mem-row .mem-where{display:none}
   }
 
-  /* --- lineage tree --------------------------------------------------- */
+  /* --- genealogy tree ------------------------------------------------- */
   .tree{font-size:14px; line-height:1.66; white-space:pre; padding-bottom:40px}
   .tree .branch{color:var(--ash)}
   .tree .node{
@@ -489,9 +490,10 @@
 ██   ██ ██    ██ ██   ██ ██  ██ ██ ██         ██
 ██████   ██████  ██████  ██   ████ ███████    ██</pre>
     <div class="mast-meta">
-      <b>LINEAGE REGISTRY</b>
+      <b>REGISTRY</b>
       MAINTAINED BY BILL · EPSILON ERIDANI<br>
-      SOURCES: BK1–5 / TAYLOR 2017 / WIKI
+      BOBNET · PUBLIC FEATURES + ARCHIVES<br>
+      SOURCES: BK1–5, APPENDICES INCLUDED
     </div>
   </header>
 
@@ -662,7 +664,7 @@ const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1,
    further down is fine. */
 const REGISTERS = [
   {id:'register',   label:'REGISTER',   render: renderRegister},
-  {id:'lineage',    label:'LINEAGE',    render: renderLineage},
+  {id:'genealogy',  label:'GENEALOGY',  render: renderGenealogy},
   {id:'unresolved', label:'UNRESOLVED', render: renderUnresolved},
   {id:'chart',      label:'CHART',      render: renderChart,
    paint: paintChart,
@@ -823,7 +825,7 @@ function renderRegister(rows){
   return `<div class="scroll-x"><table class="reg"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 
-function renderLineage(rows){
+function renderGenealogy(rows){
   const keep = new Set(rows.map(b => b.id));
   const root = byId.bob1;
   if (!root) return `<p class="empty">NO ROOT RECORD.</p>`;
@@ -1783,11 +1785,19 @@ function syncHash(){
   }
 }
 
+/* Renaming a register leaves every link to it behind. The whole point of these
+   addresses is that one you sent keeps working, so the old spelling resolves to
+   the new register and syncHash quietly rewrites the bar to the current name.
+   Aliases are cheap and permanent: removing one breaks a link somebody already
+   has, and there is no way to know who. */
+const VIEW_ALIAS = {lineage: 'genealogy'};
+
 function applyHash(){
   const raw = String(window.location.hash || '').replace(/^#/, '');
   if (!raw) return false;
   const [path, query] = raw.split('?');
-  const [view, rawSel] = path.split('/');
+  const [rawView, rawSel] = path.split('/');
+  const view = VIEW_ALIAS[rawView] || rawView;
   if (!REGISTERS.some(r => r.id === view)) return false;
   state.view = view;
 
@@ -1808,7 +1818,10 @@ function applyHash(){
   }
   const box = document.getElementById('q');
   if (box) box.value = state.q;
-  lastPath = '#' + path;
+  // Record where hashFor() says we are, not where the link said. An old alias
+  // or a selection we dropped then gets replaced in the bar rather than pushed,
+  // so the back button doesn't walk the reader through spellings of one place.
+  lastPath = hashFor().split('?')[0];
   return true;
 }
 
@@ -2014,7 +2027,7 @@ function bootLines(){
   const stars   = SKYFIELD ? SKYFIELD.count : 0;
   return [
     ['[BobNet link established · Epsilon Eridani relay]', 240],
-    ['[Mounting lineage registry: OK]', 130],
+    ['[Mounting registry: OK]', 130],
     [`[Indexing ${BOBS.length} replicant records: OK]`, 170],
     [`[${BOBS.filter(b => b.src === 'c').length} with no source on file, ` +
      `${BOBS.filter(b => b.src === 'x').length} expunged]`, 260],

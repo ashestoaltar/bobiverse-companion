@@ -60,8 +60,9 @@ notes and citations — and every view has an address, so any of them can be
 linked to:
 
 - **Register** — the full list, sortable on every column.
-- **Lineage** — the descent tree. Filtering keeps the ancestors needed to reach
-  a match, so branches never float free of the root.
+- **Genealogy** — the descent tree (Bill's word for the work; the books never
+  say "lineage"). Filtering keeps the ancestors needed to reach a match, so
+  branches never float free of the root.
 - **Unresolved** — the Bobs whose trace can't reach Bob-1, with the two kinds of
   absence distinguished: never recorded, versus deleted.
 - **Chart** — the star chart. Real positions from real astrometry, drag to
