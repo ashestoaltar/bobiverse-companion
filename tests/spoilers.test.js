@@ -10,7 +10,7 @@
 // holding". It walks every book, every register, and every element render()
 // writes to, and looks for leaks by id and by prose.
 
-module.exports = ({ok, get, run}) => {
+module.exports = ({ok, get, run, ROOT}) => {
   const state = get('state');
   const doc = get('document');
   const BOBS = get('BOBS');
@@ -443,6 +443,17 @@ module.exports = ({ok, get, run}) => {
       state.selected = null;
     });
   }
+
+  // Both ways out of the boot have to hand off. The stub forces reduced motion
+  // so the timers never start, which means every test above exercises the skip
+  // branch and none of them watches the boot actually finish typing — so this
+  // is a source check, and says so rather than pretending to be more.
+  const shipped = require('fs').readFileSync(
+    require('path').join(ROOT, 'dist', 'index.html'), 'utf8');
+  ok(/setTimeout\(\(\) => \{ el\.remove\(\); openGate\(\); \}/.test(shipped),
+     'the boot finishing should hand off to the question');
+  ok(/matches\) \{ el\.remove\(\); openGate\(\); return; \}/.test(shipped),
+     'skipping the boot for reduced motion should still hand off');
 
   // ---- the safe link -----------------------------------------------------
   // A reader mid-series who wants to send someone a record should not have to
