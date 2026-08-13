@@ -179,12 +179,14 @@
     {
       "cat": "BobNet",
       "text": "Publish it",
-      "note": "Every comparable project is live and this one is on localhost, which is the entire gap between us and them — treeofbob, Mikeda75/bobiverse-starmap and Bobmap are all on the open web. dist/index.html is the whole site, so GitHub Pages or any static host does it. Needs a root LICENSE that states the split before anything goes out: code MIT or Apache, data CC0 or CC BY since it is facts plus our own prose, and data/skyfield.json stays CC BY-SA because HYG's ShareAlike propagates to anything embedding it. books/ never ships and the README already says bring your own. Do URL state first — publishing without it means every link anyone sends is a link to the front door."
+      "note": "Done. Live at ashestoaltar.github.io/bobiverse-companion, and on the custom domain as well. Two things stood in the way that the workflow could not do for itself: Pages had never been switched on for the repository, and the workflow's own token is not allowed to switch it on — enabled from the CLI, with enablement:true left in the workflow so a fork with a permissive token needs no steps at all. The LICENSE split and the self-contained check were already in place. Before flipping public, `make scan-history` checked every version of every publishable file and every commit message for book text; it found two historical fragments, both since paraphrased away or moot, and the decision to publish as-is was the owner's.",
+      "done": true
     },
     {
       "cat": "BobNet",
       "text": "Spoiler gating, stolen from thunfischtoast/bobiverse-map",
-      "note": "Their map lets you pick the book and chapter you have reached and hides everything after it. It is the best idea in the prior art and we are better placed to do it than they are: they tag events by hand for this one purpose, while we already carry Bk/ch on every citation for provenance, so the same field does both jobs. A reader halfway through book 2 could open the register and see only what is established by then — including watching the tier of a record change as they read, which nobody else can offer because nobody else knows where their claims came from. Records whose only citation is Bk2 · Genealogy or Bk2 · Cast of Characters need a rule of their own: back matter is the end of the book it sits in."
+      "note": "Done, and it grew well past a filter. READ THROUGH BOOK N, asked once on the way in and addressable as ?b=. Three things gate separately because they spoil at different rates: whether a record exists, by the earliest book it is cited from; its fate, by fateCite; and our prose, by a declared `spoil` — down to the paragraph, because four of Homer's five fate paragraphs are the book he dies in and only the fifth is the coda. Also gated: factions, which are book 4; names, since Riker is not Will until Bk3 ch57; multi-part citations; filters; search; sorting; and the chip row itself. Everything a record shows goes through one masking function so a field added later is held by default. tests/spoilers.test.js walks every register at every position looking for leaks and found seven that per-site gating had missed.",
+      "done": true
     },
     {
       "cat": "BobNet",
@@ -226,7 +228,8 @@
     {
       "cat": "Sources",
       "text": "Write down that look-and-feel is always local",
-      "note": "The canon audit settles an argument the project keeps having with itself about how much chrome is too much. There is no official BobNet appearance: every Bob builds his own VR, a visitor arrives inside someone else's metaphor, an undecorated one is a blue room with a hard floor. BobNet is the network — SCUT, blogs, directories, accounts, firewalls, archives — not a house style. Which means the amber console was never a claim about what BobNet looks like; it is Bill's room, and the reader is a guest in it. That belongs in CLAUDE.md as a paragraph, because it decides future questions about skin and shine without relitigating them each time."
+      "note": "Already written, and had been before this item was raised — CLAUDE.md has carried it under what the books establish about BobNet. There is no BobNet lobby and no house style: connecting means standing inside somebody else's VR, an undecorated one is a bare blue room, and the Moot VR gets reconfigured per occasion. Which is what makes the amber console legitimate rather than invented: canon is consistent that presentation is personal. It is also, in the end, why the CRT overlay came out — the styling is Bill's room, and his room did not need scanlines to be his.",
+      "done": true
     },
     {
       "cat": "BobNet",
