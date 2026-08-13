@@ -53,19 +53,15 @@ module.exports = ({ok, ROOT}) => {
      cover ? 'viewport-fit=cover is declared but nothing honours a safe-area inset'
            : 'something honours a safe-area inset but viewport-fit=cover is not declared');
 
-  // ---- the CRT toggle has something to toggle ----------------------------
-  // body.plain{text-shadow:none} shipped for months against a body that had no
-  // text-shadow, so the control removed nothing outside the star chart. A rule
-  // that turns off something the page never had is a dead control.
-  // Every rule whose selector list includes a bare `body` — the first match of
-  // /body\{/ is `html,body{height:100%}`, which is not the one.
-  const flat = html.replace(/\s+/g, '');
-  const glow = [...flat.matchAll(/(?:^|[};])([^{};]*)\{([^}]*)\}/g)]
-    .filter(m => m[1].split(',').includes('body'))
-    .some(m => /text-shadow:(?!none)/.test(m[2]));
-  ok(glow, 'body has no text-shadow, so turning the CRT off changes nothing');
-  ok(/body\.plain\{text-shadow:none\}/.test(html.replace(/\s+/g, '')),
-     'nothing turns the phosphor glow back off');
+  // ---- the CRT came out whole ---------------------------------------------
+  // Scanlines, vignette and phosphor bloom are gone, and the thing to check is
+  // that nothing was left behind: a rule with no element, a class nobody sets,
+  // a stored preference nothing reads. Half-removed is worse than either state,
+  // and this one had already shipped a switch for an effect that did not exist.
+  for (const orphan of ['crt-scan', 'crt-vig', 'body.plain', 'bobnet-crt',
+                        'status-tools', 'SCANLINES', 'text-shadow:inherit']) {
+    ok(!html.includes(orphan), `'${orphan}' survived the CRT removal`);
+  }
 
   console.log(`  ${html.length.toLocaleString()} bytes, standards mode, theme ${themed ? themed[1] : '?'}`);
 };

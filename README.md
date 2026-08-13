@@ -123,8 +123,7 @@ key.
 
 Everything is one self-contained HTML file with no external requests: no fonts,
 no scripts, no images. The artwork is inline SVG and the star backdrop is packed
-integers. A **CRT** toggle drops the scanlines and glow if you'd rather just
-read.
+integers.
 
 ## Setup
 

@@ -48,27 +48,6 @@
     font-family:var(--mono); font-size:15px; line-height:1.58;
     -webkit-font-smoothing:antialiased;
     overflow:hidden;
-    /* Phosphor bloom. This is the half of the CRT toggle that was missing: the
-       rule to turn it off has always been there, and there was nothing on to
-       turn off, so the button only ever changed the star chart. Everything that
-       says text-shadow:inherit is inheriting from here. */
-    text-shadow:0 0 4px rgba(255,176,0,.38);
-  }
-
-  /* --- CRT atmosphere ------------------------------------------------- */
-  .crt-scan,.crt-vig{position:fixed; inset:0; pointer-events:none; z-index:90}
-  /* Scanlines were dark bands multiplied over a background that is already
-     nearly black, which is arithmetic that cannot produce a visible result.
-     A lit line on the dark works; the darker gap between gives it depth. */
-  .crt-scan{
-    background:repeating-linear-gradient(to bottom,
-      rgba(255,190,120,.10) 0 1px,
-      rgba(0,0,0,.34) 1px 3px);
-    opacity:.78;
-  }
-  .crt-vig{
-    background:radial-gradient(118% 96% at 50% 46%,
-      rgba(255,180,84,.05) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,.62) 100%);
   }
 
   /* --- shell ---------------------------------------------------------- */
@@ -106,7 +85,7 @@
   .prompt span{color:var(--phos); font-weight:600}
   .prompt input{
     flex:1; background:transparent; border:0; outline:0; padding:3px 0;
-    font:inherit; color:var(--amber-hi); text-shadow:inherit;
+    font:inherit; color:var(--amber-hi);
     border-bottom:1px solid var(--rule); min-width:0;
   }
   .prompt input::placeholder{color:var(--ash)}
@@ -127,12 +106,12 @@
   .tab{
     background:transparent; border:0; border-right:1px solid var(--ash);
     font:inherit; font-size:12px; letter-spacing:.13em; color:var(--amber-dim);
-    padding:6px 12px; cursor:pointer; text-shadow:inherit;
+    padding:6px 12px; cursor:pointer;
     flex:none; white-space:nowrap;
   }
   .tab:last-child{border-right:0}
   .tab:hover{color:var(--amber-hi); background:var(--panel-hi)}
-  .tab[aria-selected="true"]{background:var(--amber); color:var(--void); text-shadow:none}
+  .tab[aria-selected="true"]{background:var(--amber); color:var(--void)}
   /* Full names where there is room, abbreviations where there is not. Both are
      always in the markup so the accessible name never changes with the width. */
   .tab .tab-full{display:inline}
@@ -162,13 +141,7 @@
     font-size:12px; letter-spacing:.06em; color:var(--ash);
   }
   .held .redacted{letter-spacing:.14em; margin-right:8px}
-  .status-tools{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
-  .status-tools .chip{font-size:10.5px; padding:3px 8px; letter-spacing:.1em}
 
-  body.plain .crt-scan,body.plain .crt-vig{display:none}
-  body.plain{text-shadow:none}
-  body.plain .banner{text-shadow:none}
-  body.plain .star circle[fill^="url"]{display:none}
 
   /* The filters grade parentage, so they belong to the views that show it. A
      row of provenance chips above the star chart is noise offering to filter
@@ -179,10 +152,10 @@
   .chip{
     background:transparent; border:1px solid var(--ash); font:inherit;
     font-size:11.5px; letter-spacing:.11em; color:var(--amber-dim);
-    padding:4px 9px; cursor:pointer; text-shadow:inherit;
+    padding:4px 9px; cursor:pointer;
   }
   .chip:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
-  .chip[aria-pressed="true"]{background:var(--amber-dim); color:var(--void); border-color:var(--amber-dim); text-shadow:none}
+  .chip[aria-pressed="true"]{background:var(--amber-dim); color:var(--void); border-color:var(--amber-dim)}
 
   /* --- main ----------------------------------------------------------- */
   .main{display:grid; grid-template-columns:minmax(0,1fr) 404px; gap:var(--gap); min-height:0; padding-top:var(--gap)}
@@ -205,7 +178,7 @@
   .reg thead th .dir{color:var(--amber)}
   .reg tbody tr{border-bottom:1px solid rgba(46,35,18,.55); cursor:pointer}
   .reg tbody tr:hover{background:var(--panel-hi)}
-  .reg tbody tr[aria-selected="true"]{background:var(--amber); color:var(--void); text-shadow:none}
+  .reg tbody tr[aria-selected="true"]{background:var(--amber); color:var(--void)}
   .reg tbody tr[aria-selected="true"] .dim,
   .reg tbody tr[aria-selected="true"] .nm{color:var(--void)}
   .reg tbody tr:focus-visible{outline:1px solid var(--amber-hi); outline-offset:-1px}
@@ -269,7 +242,7 @@
   .tree .branch{color:var(--ash)}
   .tree .node{
     background:transparent; border:0; padding:0; font:inherit; cursor:pointer;
-    color:var(--amber-hi); letter-spacing:.06em; text-shadow:inherit;
+    color:var(--amber-hi); letter-spacing:.06em;
   }
   .tree .node:hover{color:var(--void); background:var(--amber)}
   .tree .node[aria-selected="true"]{color:var(--void); background:var(--amber)}
@@ -288,7 +261,7 @@
   .chart-bar .hint{font-size:11px; letter-spacing:.1em; color:var(--ash)}
   .chart-bar button{
     background:transparent; border:1px solid var(--ash); font:inherit; font-size:11.5px;
-    letter-spacing:.11em; color:var(--amber-dim); padding:3px 9px; cursor:pointer; text-shadow:inherit;
+    letter-spacing:.11em; color:var(--amber-dim); padding:3px 9px; cursor:pointer;
   }
   .chart-bar button:hover{color:var(--amber-hi)}
   .chart-stage{position:relative; flex:1; min-height:0}
@@ -312,8 +285,6 @@
   .sky-eq{fill:none; stroke:var(--rule); stroke-width:1; stroke-dasharray:3 5; opacity:.75}
   .sky-pole{fill:var(--ash); font-size:9px; letter-spacing:.14em; text-anchor:middle}
   .spike{stroke-width:.9; opacity:.30}
-  body.plain .chart-sky{display:none}
-  body.plain .spike{display:none}
 
 
   /* --- unresolved register -------------------------------------------- */
@@ -367,7 +338,7 @@
   .card button{
     background:transparent; border:1px solid var(--ash); font:inherit; font-size:11.5px;
     letter-spacing:.11em; color:var(--amber-dim); padding:3px 9px; margin-top:7px;
-    cursor:pointer; text-shadow:inherit;
+    cursor:pointer;
   }
   .card button:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
 
@@ -387,7 +358,7 @@
   .dossier-close{
     background:transparent; border:1px solid var(--ash); color:var(--amber-dim);
     font:inherit; font-size:12px; width:24px; height:24px; cursor:pointer;
-    flex:none; text-shadow:inherit;
+    flex:none;
   }
   .dossier-close:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
   .dossier-body{padding:12px 13px 22px; overflow:auto; scrollbar-width:thin; scrollbar-color:var(--rule) transparent}
@@ -420,7 +391,7 @@
   .hop .n{color:var(--ash); text-align:right}
   .hop button{
     background:transparent; border:0; padding:0; font:inherit; text-align:left;
-    color:var(--amber-hi); letter-spacing:.07em; cursor:pointer; text-shadow:inherit;
+    color:var(--amber-hi); letter-spacing:.07em; cursor:pointer;
   }
   .hop button:hover{text-decoration:underline}
   .hop .edge{font-size:11.5px; letter-spacing:.09em; white-space:nowrap}
@@ -437,7 +408,7 @@
   .kids{display:flex; flex-wrap:wrap; gap:0 5px}
   .kids button{
     background:transparent; border:0; padding:0; font:inherit; font-size:13px;
-    color:var(--amber); cursor:pointer; text-shadow:inherit;
+    color:var(--amber); cursor:pointer;
   }
   .kids button:hover{color:var(--amber-hi); text-decoration:underline}
 
@@ -471,7 +442,7 @@
   .gate button{
     background:transparent; border:1px solid var(--ash); color:var(--phos);
     font:inherit; font-size:12px; letter-spacing:.14em; padding:9px 16px;
-    cursor:pointer; text-shadow:inherit;
+    cursor:pointer;
   }
   .gate button:hover{border-color:var(--phos); background:rgba(124,255,155,.08)}
   .gate-books{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px}
@@ -494,7 +465,7 @@
   .post{
     text-align:left; width:100%; cursor:pointer; font:inherit; color:inherit;
     background:transparent; border:1px solid var(--rule); padding:12px 14px;
-    text-shadow:inherit;
+   
   }
   .post:hover, .post[aria-pressed="true"]{border-color:var(--amber); background:var(--panel-hi)}
   .post-meta{
@@ -631,9 +602,6 @@
 
 <body>
 
-<div class="crt-scan"></div>
-<div class="crt-vig"></div>
-
 <div class="boot" id="boot" aria-hidden="true">
   <div class="boot-inner">
     <div class="guppy boot-face" id="boot-face"></div>
@@ -709,14 +677,7 @@
 
   <footer class="statusbar">
     <div id="status"></div>
-    <div class="status-tools">
-      <!-- Sat in the main toolbar at the same weight as the filters, unlabelled
-           and load-bearing on nothing. It is a preference about how the console
-           looks, so it lives down here with the other furniture. -->
-      <button class="chip" id="crt" aria-pressed="true"
-              title="Scanlines and phosphor glow. Turn them off if you'd rather just read.">SCANLINES</button>
-      <div class="keys">↑↓ MOVE · ENTER OPEN · ESC CLEAR · / SEARCH</div>
-    </div>
+    <div class="keys">↑↓ MOVE · ENTER OPEN · ESC CLEAR · / SEARCH</div>
   </footer>
 </div>
 
@@ -2963,23 +2924,6 @@ function bootLines(){
     share.hidden = !gating();
   };
   syncReading();
-})();
-
-/* display preference — persisted, harmless if storage is unavailable */
-(function display(){
-  const btn = document.getElementById('crt');
-  let on = true;
-  try { on = localStorage.getItem('bobnet-crt') !== 'off'; } catch (e) {}
-  const apply = () => {
-    document.body.classList.toggle('plain', !on);
-    btn.setAttribute('aria-pressed', String(on));
-    btn.textContent = on ? 'CRT' : 'CRT OFF';
-  };
-  btn.addEventListener('click', () => {
-    on = !on; apply();
-    try { localStorage.setItem('bobnet-crt', on ? 'on' : 'off'); } catch (e) {}
-  });
-  apply();
 })();
 
 window.addEventListener('hashchange', () => {
