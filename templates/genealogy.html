@@ -765,6 +765,13 @@ const FATE = {
 };
 const fateOf = b => FATE[b.fate] || FATE.active;
 
+/* Factions are book 4. Bill only starts calling Bobs joiners once replicative
+   drift has gone far enough for the groups to exist (Bk4 ch5), and the corpus
+   agrees: Starfleet, Skippies and Gamers appear in books 4 and 5 only, and the
+   Borg avatar crowd arrives with Locutus in book 4. A faction tag on a record
+   the reader met in book one gives away that the Bobiverse eventually splits. */
+const FACTION_BOOK = 4;
+
 const FILTERS = [
   {id:'t',         label:'TEXT',      test:b => b.src === 't'},
   {id:'p',         label:'PARTIAL',   test:b => b.src === 'p'},
@@ -775,17 +782,22 @@ const FILTERS = [
   {id:'presumed',  label:'PRESUMED',  test:b => b.fate === 'presumed'},
   {id:'cited',     label:'CITED',     test:b => !!b.cite},
   {id:'conflict',  label:'DISPUTED',  test:b => !!b.conflict},
-  {id:'starfleet', label:'STARFLEET', test:b => b.faction === 'Starfleet'},
-  {id:'skippies',  label:'SKIPPIES',  test:b => b.faction === 'Skippies'},
-  {id:'gamers',    label:'GAMERS',    test:b => b.faction === 'Gamers'},
-  {id:'borg',      label:'BORG',      test:b => b.faction === 'Borg'}
+  // `since` is the book that has to have been read before a chip means
+  // anything. The row of faction filters is itself the spoiler here: it tells a
+  // reader on book one that the Bobiverse eventually splits, and names the
+  // pieces, before anything is clicked.
+  {id:'starfleet', label:'STARFLEET', since:FACTION_BOOK, test:b => b.faction === 'Starfleet'},
+  {id:'skippies',  label:'SKIPPIES',  since:FACTION_BOOK, test:b => b.faction === 'Skippies'},
+  {id:'gamers',    label:'GAMERS',    since:FACTION_BOOK, test:b => b.faction === 'Gamers'},
+  {id:'borg',      label:'BORG',      since:FACTION_BOOK, test:b => b.faction === 'Borg'}
 ];
 
 const COLS = [
   {key:'name',   label:'NAME',       get:b => b.alias ? `${b.name} / ${b.alias}` : b.name, cls:'nm'},
   {key:'desig',  label:'DESIGNATION',get:b => b.desig || '—',             cls:'dim', opt:true},
   {key:'gen',    label:'GEN',        get:b => { const g = generation(b); return g ? (g.stated ? g.n + '*' : g.n) : '—'; }, cls:'dim'},
-  {key:'parent', label:'SOURCE BOB', get:b => b.parent ? byId[b.parent].name : '—', cls:'dim'},
+  {key:'parent', label:'SOURCE BOB',
+   get:b => !b.parent ? '—' : (heldRecord(byId[b.parent]) ? '▨' : byId[b.parent].name), cls:'dim'},
   {key:'origin', label:'ORIGIN',     get:b => sysName(b.origin) || sysList(b.visited) || '—', cls:'dim max', opt:true},
   {key:'fate',   label:'FATE',       get:b => b.fate || 'active'},
   {key:'src',    label:'PROVENANCE', get:b => b.src}
@@ -914,10 +926,12 @@ const prose = s => esc(s).split(/\n\s*\n/).map(p => p.trim()).filter(Boolean)
   .map(p => `<p class="note">${p}</p>`).join('');
 const year = b => { const m = /(\d{4})/.exec(b.born || ''); return m ? +m[1] : 9999; };
 
-function sortVal(b, key){
+function sortVal(raw, key){
+  const b = shown(raw);
   if (key === 'gen')    { const g = generation(b); return g ? g.n : 999; }
   if (key === 'src')    return 'otpcx'.indexOf(b.src);
-  if (key === 'parent') return b.parent ? byId[b.parent].name.toLowerCase() : '~';
+  if (key === 'parent') return !b.parent ? '~'
+    : (heldRecord(byId[b.parent]) ? '~~' : byId[b.parent].name.toLowerCase());
   if (key === 'fate')   return ['memorium','presumed','restored','active'].indexOf(b.fate || 'active');
   if (key === 'origin') return (sysName(b.origin) || sysList(b.visited) || '~').toLowerCase();
   if (key === 'desig')  return (b.desig || '~').toLowerCase();
@@ -996,10 +1010,37 @@ const heldProse  = b => gating() && past(b.spoil, state.book);
 const withheld = what =>
   `<div class="held"><span class="redacted">▨ ${esc(what)} WITHHELD</span> — past book ${state.book}</div>`;
 
+/* What a record is allowed to look like right now.
+
+   Gating field by field at each render site is how the leaks got in: the
+   dossier was careful about fate and the table beside it printed RESTORED next
+   to Bender at book one, which gives away the plot of book four. Everything
+   that displays a record goes through here instead, so a field added later is
+   masked by default rather than by remembering.
+   
+   Prose is masked here too, for search — the dossier does its own thing with
+   it, because it has to say WITHHELD rather than silently show nothing. */
+function shown(b){
+  if (!gating()) return b;
+  const out = Object.assign({}, b);
+  if (heldFate(b)) {
+    out.fate = 'active';                 // the honest default: nothing on record
+    out.fateCite = out.fateNote = out.lostAt = '';
+  }
+  if (past(FACTION_BOOK, state.book)) out.faction = '';
+  if (heldProse(b)) out.note = out.partialNote = out.priorClaim = out.conflict = out.fateNote = '';
+  out.cite = citeUpTo(b.cite);
+  return out;
+}
+
 function visible(){
   const q = state.q.trim().toLowerCase();
-  return BOBS.filter(b => {
-    if (heldRecord(b)) return false;
+  return BOBS.filter(raw => {
+    if (heldRecord(raw)) return false;
+    // Filters and search both read the masked record, or IN MEMORIUM would list
+    // Bobs whose deaths the reader has not reached and a search for a withheld
+    // note would confirm it exists by finding it.
+    const b = shown(raw);
     for (const f of state.filters) {
       const spec = FILTERS.find(x => x.id === f);
       if (spec && !spec.test(b)) return false;
@@ -1045,7 +1086,8 @@ function renderRegister(rows){
       on ? ` <span class="dir">${state.dir > 0 ? '▲' : '▼'}</span>` : ''}</th>`;
   }).join('');
 
-  const body = rows.map(b => {
+  const body = rows.map(raw => {
+    const b = shown(raw);
     const cells = COLS.map(c => {
       if (c.key === 'src') {
         const t = TIER[b.src];
@@ -1084,11 +1126,12 @@ function renderGenealogy(rows){
     const t = TIER[node.src];
     const branch = depth === 0 ? '' : prefix + (last ? '└─ ' : '├─ ');
     const dim = keep.has(node.id) ? '' : ' style="opacity:.42"';
+    const v = shown(node);
     const bits = [];
     const ng = generation(node); if (ng) bits.push('gen ' + ng.n + (ng.stated ? '*' : ''));
-    if (node.fate && node.fate !== 'active')
-      bits.push(fateOf(node).label.toLowerCase() + (node.lostAt ? ' · ' + sysName(node.lostAt) : ''));
-    if (node.faction) bits.push(node.faction);
+    if (v.fate && v.fate !== 'active')
+      bits.push(fateOf(v).label.toLowerCase() + (v.lostAt ? ' · ' + sysName(v.lostAt) : ''));
+    if (v.faction) bits.push(v.faction);
     out.push(
       `<div${dim}><span class="branch">${branch}</span>` +
       `<button class="node" data-id="${node.id}" aria-selected="${state.selected === node.id}">${esc(node.name)}</button>` +
@@ -1175,20 +1218,32 @@ function renderMemorium(){
     .sort((a, b) => a.at - b.at)
     .map(e => e.html);
   const blanks = unnamed.flatMap(u => Array.from({length: u.n}, (_, i) => blank(u, i)));
+  /* The examples are the argument — the list is short because the backups
+     usually work, and three names prove it. Each is dropped on its own if the
+     reader has not reached that recovery yet, so the sentence shortens rather
+     than the paragraph turning into a claim with nothing behind it. */
+  const CAME_BACK = [
+    ['elmer',   "Elmer lost his ship covering Khan's retreat and came back"],
+    ['mack',    "Mack's cube came through the blast"],
+    ['jacques', "Jacques was killed and restored inside the week"],
+  ].filter(([id]) => byId[id] && !heldRecord(byId[id]) && !heldFate(byId[id]))
+   .map(([, text]) => text);
+
   const lead =
     `<p class="unres-lead"><span class="redacted">[</span>` +
     `${named.length + blanks.length} on the In Memorium list` +
     `<span class="redacted">]</span><br><br>` +
-    `A Bob is only dead when the backup didn't finish. Elmer lost his ship covering ` +
-    `Khan's retreat and came back; Mack's cube came through the blast; Jacques was ` +
-    `killed and restored inside the week. So this list is short, and every name on ` +
+    `A Bob is only dead when the backup didn't finish. ` +
+    (CAME_BACK.length ? CAME_BACK.join('; ') + `. ` : '') +
+    `So this list is short, and every name on ` +
     `it is here because a transfer failed, or because someone made sure there was ` +
     `nothing left to restore.</p>`;
 
   const secs = [
     `<div class="mem-sec"><div class="sec-label">ON THE LIST</div>` +
       entries.join('') +
-      (unnamed.length ? `<p class="mem-foot">${esc(unnamed[0].note)}</p>` : '') +
+      (unnamed.length ? (heldProse(unnamed[0]) ? withheld('NOTE')
+                                                : `<p class="mem-foot">${esc(unnamed[0].note)}</p>`) : '') +
     `</div>`,
     presumed.length ? `<div class="mem-sec"><div class="sec-label">VESSEL LOST, FATE UNACCOUNTED — ${presumed.length}</div>` +
       presumed.map(row).join('') +
@@ -1199,7 +1254,7 @@ function renderMemorium(){
       restored.map(row).join('') +
       `<p class="mem-foot">Named Bobs who lost a vessel or a body and came back. They are ` +
       `on this page because they are what the list is measured against.</p></div>` : '',
-    bulk && !heldEntry(bulk) ? `<div class="mem-sec"><div class="sec-label">NOT ON ANY LIST</div>` +
+    bulk && !heldEntry(bulk) && !heldProse(bulk) ? `<div class="mem-sec"><div class="sec-label">NOT ON ANY LIST</div>` +
       `<p class="mem-foot" style="padding-left:0">${esc(bulk.note)} ` +
       `<span class="dim">${esc(bulk.cite)}</span></p></div>` : ''
   ].join('');
@@ -1212,7 +1267,8 @@ function renderUnresolved(rows){
   if (!list.length) return `<p class="empty">NO UNRESOLVED RECORDS MATCH THAT QUERY.</p>`;
   const cards = list
     .sort((a, b) => (b.cite ? 1 : 0) - (a.cite ? 1 : 0) || a.name.localeCompare(b.name))
-    .map(b => {
+    .map(raw => {
+      const b = shown(raw);
       const bits = [];
       { const g = generation(b); if (g) bits.push('GENERATION ' + g.n + (g.stated ? ' (STATED)' : '')); }
       if (b.cite) bits.push(esc(citeUpTo(b.cite)));
@@ -1230,11 +1286,24 @@ function renderUnresolved(rows){
         <button data-id="${b.id}">OPEN DOSSIER</button>
       </div>`;
     }).join('');
+  /* Both halves of this lead name Bobs, and one of them names a faction that
+     does not exist until book 4 — which is how "Starfleet" was on the page for
+     a reader on book one. Each example stands or falls on whether every Bob it
+     names is someone the reader could have met. */
+  const EGS = [
+    [['herschel', 'neil'],  'Herschel and Neil state their own generation on the page'],
+    [['riker', 'marcus'],   'Will and Marcus carry POV chapters'],
+  ].filter(([ids]) => ids.every(id => byId[id] && !heldRecord(byId[id])))
+   .map(([, text]) => text);
+
+  const purge = !(gating() && past(FACTION_BOOK, state.book))
+    ? ` Starfleet stripped its own genealogy and location data from the databases during
+       the war, so for its members the silence is the evidence.` : '';
+
   return `<div class="unres">
-    <p class="unres-lead">Bobs whose trace cannot reach Bob-1. Most are simply never accounted for — Herschel and Neil
-    state their own generation on the page, Will and Marcus carry POV chapters, but no source names a parent.
-    A ▨ marks the other kind of gap: a record that existed and was removed. Starfleet stripped its own genealogy
-    and location data from the databases during the war, so for its members the silence is the evidence.</p>${cards}</div>`;
+    <p class="unres-lead">Bobs whose trace cannot reach Bob-1. Most are simply never accounted for${
+      EGS.length ? ' — ' + EGS.join(', ') + ',' : ','} but no source names a parent.
+    A ▨ marks the other kind of gap: a record that existed and was removed.${purge}</p>${cards}</div>`;
 }
 
 function renderTodo(){
@@ -1554,7 +1623,9 @@ function renderSystemDossier(sys){
   const bobs = BOBS.filter(b => b.origin === sys.id || b.lostAt === sys.id ||
                                 (b.visited || []).includes(sys.id));
   const born = bobs.filter(b => b.origin === sys.id);
-  const lost = bobs.filter(b => b.lostAt === sys.id);
+  // Where a Bob was lost is fate information wearing an astrometry hat: at book
+  // one, Delta Eridani listing Bender would answer the question book four asks.
+  const lost = bobs.filter(b => shown(b).lostAt === sys.id);
   const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
   const link = list => list.map(b =>
     `<button data-id="${b.id}">${esc(b.name)}</button>`).join('<span class="dim"> · </span>');
@@ -1619,6 +1690,7 @@ function renderDossier(){
   }
 
   const t = TIER[b.src];
+  const v = shown(b);              // what any of this is allowed to look like
   const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
   // Children are a list of other records and gate like any other list. Bill's
   // dossier was naming seventeen clones at book one, four of which the reader
@@ -1671,7 +1743,7 @@ function renderDossier(){
     fateShown && b.fate === 'memorium' ? `<span class="flag warn">IN MEMORIUM</span>` : '',
     fateShown && b.fate === 'presumed' ? `<span class="flag warn">FATE UNACCOUNTED</span>` : '',
     fateShown && b.fate === 'restored' ? `<span class="flag">RESTORED</span>` : '',
-    b.faction ? `<span class="flag">${esc(b.faction.toUpperCase())}</span>` : '',
+    v.faction ? `<span class="flag">${esc(v.faction.toUpperCase())}</span>` : '',
     b.cite ? `<span class="flag">CITED</span>` : ''
   ].join('');
 
@@ -1693,12 +1765,12 @@ function renderDossier(){
         ${f('ORIGIN', sysName(b.origin))}
         ${f('VESSEL', b.vessel)}
         ${f('VISITED', sysList(b.visited))}
-        ${fateShown ? f('FATE', `${fateOf(b).label} — ${fateOf(b).full}`) : ''}
-        ${fateShown ? f('ON RECORD', citeUpTo(b.fateCite)) : ''}
-        ${fateShown ? f('LOST AT', sysName(b.lostAt)) : ''}
-        ${f('FACTION', b.faction)}
+        ${fateShown ? f('FATE', `${fateOf(v).label} — ${fateOf(v).full}`) : ''}
+        ${fateShown ? f('ON RECORD', v.fateCite) : ''}
+        ${fateShown ? f('LOST AT', sysName(v.lostAt)) : ''}
+        ${f('FACTION', v.faction)}
         ${f('NAMESAKE', b.ref && b.ref !== '—' ? b.ref : '')}
-        ${f('CITATION', citeUpTo(b.cite))}
+        ${f('CITATION', v.cite)}
       </dl>
       </div>
       ${cat ? `<p class="catnote">${cat}</p>` : ''}
@@ -1982,7 +2054,7 @@ function renderChips(){
   const reg = currentRegister();
   if (!reg.filters) { host.innerHTML = ''; host.hidden = true; return; }
   host.hidden = false;
-  host.innerHTML = FILTERS.map(f =>
+  host.innerHTML = FILTERS.filter(f => !(gating() && past(f.since || 1, state.book))).map(f =>
     `<button class="chip" data-filter="${f.id}" aria-pressed="${state.filters.has(f.id)}">${f.label}</button>`).join('');
 }
 
@@ -2170,6 +2242,13 @@ function applyHash(){
       if (n >= 1 && n <= BOOK_MAX) state.book = n;
     }
   }
+  // A link can carry both f=starfleet and b=1. Honouring the filter would
+  // answer the question the position is holding back, so the position wins.
+  for (const id of [...state.filters]) {
+    const spec = FILTERS.find(f => f.id === id);
+    if (spec && gating() && past(spec.since || 1, state.book)) state.filters.delete(id);
+  }
+
   // The reading position is parsed after the selection, so the check happens
   // here: a link can perfectly well point at a record that its own b= holds
   // back, and honouring the selection would defeat the parameter next to it.
@@ -2388,6 +2467,13 @@ function visibleAt(book){
   return n;
 }
 
+/* Whether THIS arrival carried a link, read once at load. It cannot be checked
+   later: render() writes the console's own address into the bar on the first
+   frame, so by the time the boot has finished typing, location.hash says
+   '#register' whether or not anybody was sent here — which is why the question
+   never got asked. A snapshot, not a check. */
+let ARRIVED_ON_LINK = String(window.location.hash || '').length > 1;
+
 let openGate = () => {};
 (function gate(){
   const el = document.getElementById('gate');
@@ -2430,7 +2516,7 @@ let openGate = () => {};
     let asked = false;
     try { asked = !!localStorage.getItem('bobnet-asked'); } catch (e) {}
     if (asked) return;
-    if (String(window.location.hash || '').length > 1) return;
+    if (ARRIVED_ON_LINK) return;
     el.hidden = false;
   };
 })();

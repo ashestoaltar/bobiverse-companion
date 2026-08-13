@@ -116,6 +116,56 @@ module.exports = ({ok, get, run}) => {
     });
   }
 
+  // ---- the sweep ---------------------------------------------------------
+  // Everything above tests a rule someone thought of. This walks every view at
+  // every position and looks for the leaks nobody thought of, which is how the
+  // register came to print RESTORED beside Bender at book one — the dossier
+  // gated fate and the table next to it did not.
+  const FACTION_BOOK = get('FACTION_BOOK');
+  const FACTIONS = ['Starfleet', 'Skippies', 'Gamers', 'Borg'];
+  const FATE = get('FATE');
+
+  for (let n = 1; n < BOOK_MAX; n++) {
+    at(n, () => {
+      for (const reg of REGISTERS) {
+        state.view = reg.id;
+        run('render()');
+        const html = panes();
+
+        // The factions do not exist until book 4 — not as tags, not as filter
+        // chips, and not in the prose explaining why Starfleet records are bare.
+        if (n < FACTION_BOOK) {
+          for (const f of FACTIONS) {
+            ok(!new RegExp(`\\b${f}\\b`).test(html),
+               `book ${n}, ${reg.id}: names the ${f} faction`);
+          }
+        }
+
+        // A fate the reader has not reached must not appear beside the Bob it
+        // belongs to. Bender is the case that matters: book one knows him, and
+        // book four is about getting him back.
+        for (const b of BOBS) {
+          if (!run('heldFate')(b) || !b.fate || b.fate === 'active') continue;
+          const i = html.indexOf(`data-id="${b.id}"`);
+          if (i < 0) continue;
+          const end = html.indexOf('</tr>', i);
+          const row = html.slice(i, end > 0 ? end : i + 500);
+          ok(!row.includes(FATE[b.fate].label),
+             `book ${n}, ${reg.id}: ${b.id} shows ${FATE[b.fate].label}`);
+        }
+
+        // Held records must not be named in prose either. Short names are too
+        // common to match on, and Hector is a genuine collision — a 3rd
+        // generation Hector is on the page while the 18th is held.
+        for (const b of BOBS) {
+          if (!run('heldRecord')(b) || b.name.length < 5 || b.id === 'hector18') continue;
+          ok(!new RegExp(`\\b${b.name}\\b`).test(html),
+             `book ${n}, ${reg.id}: names held record '${b.name}'`);
+        }
+      }
+    });
+  }
+
   // ---- prose is held until it says how far it reaches --------------------
   // Notes are escaped on the way into the page, so compare like for like —
   // Bill's "R&D" ships as "R&amp;D" and a raw substring never matches it.
@@ -268,19 +318,31 @@ module.exports = ({ok, get, run}) => {
 
   reset();
   askAgain();
-  win.location.hash = '';
+  run('ARRIVED_ON_LINK = false');
   gate.hidden = true;
   run('openGate()');
   ok(gate.hidden === false, 'a first arrival should be asked how far it has read');
 
   askAgain();
-  win.location.hash = '#memorium/homer';
+  run('ARRIVED_ON_LINK = true');
   gate.hidden = true;
   run('openGate()');
   ok(gate.hidden === true, 'someone who followed a link should not be stopped by the question');
 
+  // The bug this replaced: the check used to read location.hash when the boot
+  // finished, six seconds after render() had written '#register' into the bar
+  // on the first frame. Every visitor looked like they had followed a link, so
+  // nobody was ever asked. It has to be a snapshot taken at load.
+  run('ARRIVED_ON_LINK = false');
   askAgain();
-  win.location.hash = '';
+  win.location.hash = '#register';
+  gate.hidden = true;
+  run('openGate()');
+  ok(gate.hidden === false,
+     'the console writing its own address must not count as arriving on a link');
+
+  askAgain();
+  run('ARRIVED_ON_LINK = false');
   store.setItem('bobnet-asked', '1');
   gate.hidden = true;
   run('openGate()');
@@ -289,7 +351,7 @@ module.exports = ({ok, get, run}) => {
   // The counts on the buttons are the honest part — a reader who picks book one
   // and finds twenty-one records has to have been told that is the guard.
   askAgain();
-  win.location.hash = '';
+  run('ARRIVED_ON_LINK = false');
   run('openGate()');
   const buttons = doc.getElementById('gate-books').innerHTML;
   for (let n = 1; n < BOOK_MAX; n++) {

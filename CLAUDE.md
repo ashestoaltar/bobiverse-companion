@@ -538,6 +538,29 @@ than a blocker. Same for the companion registers, whose schemas do not carry
 feature existed. That is what makes it a real default rather than a setting that
 leaves residue, and the golden master is what proves it.
 
+**Everything a record shows goes through `shown()`.** Gating field by field at
+each render site is how the leaks got in: the dossier was careful about fate and
+the table beside it printed RESTORED next to Bender at book one, which gives
+away the plot of book four. One masking function now stands between the data and
+every renderer, so a field added later is held by default rather than by
+somebody remembering. Search and the filters read the masked record too —
+otherwise IN MEMORIUM lists Bobs whose deaths the reader has not reached, and a
+search for a withheld note confirms it exists by finding it.
+
+**Factions are book 4** (`FACTION_BOOK`). Bill only starts calling Bobs joiners
+once drift has gone far enough, and the corpus agrees: Starfleet, Skippies and
+Gamers appear in books 4 and 5 only. The tags are masked, and the filter chips
+are removed — a row of faction filters tells a book-one reader that the
+Bobiverse eventually splits, and names the pieces, before anything is clicked.
+
+**Prose written into the template leaks too**, and the mask cannot see it. The
+unresolved lead named Herschel, Marcus and Starfleet; the In Memorium lead named
+Mack and Jacques; the note explaining the three blanks rules Hannibal out by way
+of a squad he commands two books later. Where a sentence's examples are the
+argument, gate the examples individually rather than the paragraph — the
+sentence shortens and stays true, and at ALL it reproduces what was written by
+hand, byte for byte.
+
 **Test the negative.** `tests/spoilers.test.js` does not check that things
 render; it checks that things don't. The blunt one earns its keep: no pane, in
 any view, at any position, may contain a `Bk<n>` above the setting. It found
@@ -551,6 +574,13 @@ at book two it announced he was still being discussed two books after he died).
 coerces to zero and "we have no idea when this appears" compared as "book zero,
 safe for everyone". Absence has to be tested for, never compared — `past()`
 exists for exactly this and the helpers all go through it.
+
+**The prompt reads a snapshot, not the address bar.** `ARRIVED_ON_LINK` is
+captured at load, because `render()` writes the console's own address into the
+bar on the first frame — by the time the boot has finished typing, six seconds
+later, `location.hash` says `#register` whether or not anybody was sent here.
+Checking it then meant every visitor looked like they had followed a link, and
+nobody was ever asked.
 
 **The question is asked once, and only of people who need it.** The control on
 its own defaulted to showing everything, which made it protection for readers

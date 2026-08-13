@@ -1,21 +1,26 @@
 {
- "_comment": "The In Memorium list is Bill's, and Guppy keeps it. Riker forwards an entry about Arthur for the archives (Bk1 ch47); Bill tells Guppy to archive Milo's partial backup and mark it In Memorium (Bk1 ch51); Bill adds three more after 82 Eridani (Bk1 ch60). All three references are book 1 and the phrase does not recur. NOTE THE SPELLING: Taylor writes 'In Memorium', not the standard 'In Memoriam', consistently across all three. It is not a typo to fix — validate.py fails the build if anyone corrects it.",
-
- "_named": "The named entries live on the Bob records themselves, as fate: memorium. This file holds only what has no record to sit on.",
-
- "unnamed": [
-  {
-   "n": 3,
-   "when": "Apr 2185",
-   "where": "82_eridani",
-   "cite": "Bk1 ch60 · Khan, Apr 2185",
-   "of": ["tom", "barney", "fred", "jackson", "hector"],
-   "note": "Seven vessels were destroyed in the first battle at 82 Eridani — eight Bobs went in and only Khan flew out. Afterwards Khan asks Bill whether they got all the backups, and Bill answers that three did not complete — SCUT bandwidth was not dependable enough, and the transfers died of dropped packets and re-sends. He added those three to the In Memorium list. Which three is never said, and nobody in five books ever goes back to it. So the list carries three entries that are known to exist, known to be exactly three, and can never be filled in. Elmer is the one name ruled out: Khan asks after him and is told he made it, which leaves three failures spread across the other six. Hannibal has since been ruled out too — he turns up seventy-two years later commanding a squad against the Others — so the three are drawn from five. The arithmetic closes from this end: settle two more as restored and the remaining three are named by subtraction, and these rows stop being blank."
+  "_comment": "The In Memorium list is Bill's, and Guppy keeps it. Riker forwards an entry about Arthur for the archives (Bk1 ch47); Bill tells Guppy to archive Milo's partial backup and mark it In Memorium (Bk1 ch51); Bill adds three more after 82 Eridani (Bk1 ch60). All three references are book 1 and the phrase does not recur. NOTE THE SPELLING: Taylor writes 'In Memorium', not the standard 'In Memoriam', consistently across all three. It is not a typo to fix — validate.py fails the build if anyone corrects it.",
+  "_named": "The named entries live on the Bob records themselves, as fate: memorium. This file holds only what has no record to sit on.",
+  "unnamed": [
+    {
+      "n": 3,
+      "when": "Apr 2185",
+      "where": "82_eridani",
+      "cite": "Bk1 ch60 · Khan, Apr 2185",
+      "of": [
+        "tom",
+        "barney",
+        "fred",
+        "jackson",
+        "hector"
+      ],
+      "note": "Seven vessels were destroyed in the first battle at 82 Eridani — eight Bobs went in and only Khan flew out. Afterwards Khan asks Bill whether they got all the backups, and Bill answers that three did not complete — SCUT bandwidth was not dependable enough, and the transfers died of dropped packets and re-sends. He added those three to the In Memorium list. Which three is never said, and nobody in five books ever goes back to it. So the list carries three entries that are known to exist, known to be exactly three, and can never be filled in. Elmer is the one name ruled out: Khan asks after him and is told he made it, which leaves three failures spread across the other six. Hannibal has since been ruled out too — he turns up seventy-two years later commanding a squad against the Others — so the three are drawn from five. The arithmetic closes from this end: settle two more as restored and the remaining three are named by subtraction, and these rows stop being blank.",
+      "spoil": 3
+    }
+  ],
+  "unnamed_bulk": {
+    "cite": "Bk3 ch2 · Howard, Feb 2217; Bk3 ch63 · Riker, Apr 2257",
+    "note": "The war with the Others killed Bobs in numbers nobody counted. Howard reports losing a lot of them and reaches straight for the consolation that there are backups; Riker watches about half a squad die in one pass and hopes theirs were current. None of them are named, so none of them can be listed here. This register holds the Bobs the books gave names to, which is a much smaller number than the Bobs the books killed.",
+    "spoil": 3
   }
- ],
-
- "unnamed_bulk": {
-  "cite": "Bk3 ch2 · Howard, Feb 2217; Bk3 ch63 · Riker, Apr 2257",
-  "note": "The war with the Others killed Bobs in numbers nobody counted. Howard reports losing a lot of them and reaches straight for the consolation that there are backups; Riker watches about half a squad die in one pass and hopes theirs were current. None of them are named, so none of them can be listed here. This register holds the Bobs the books gave names to, which is a much smaller number than the Bobs the books killed."
- }
 }
