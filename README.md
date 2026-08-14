@@ -131,6 +131,19 @@ it. That is inherent to one self-contained file with no backend, and it is said
 plainly rather than implied. Links carry the setting, so a reader mid-series can
 send somebody a record without spoiling them.
 
+How many positions there are is not written anywhere in the console. It comes
+from `data/books.json`, which is the only place that knows how long the series
+is — book 6 arrives on 10 Sept 2026 and Taylor has said 7 will be the last, so
+that number changes twice more, and each time it should be one line in a data
+file rather than a hunt through three layers for the digit 5.
+
+The sentences that *count* the books render from that. The sentences that make a
+**claim** about them — that nobody ever revisits which three transfers failed,
+that three of the lost are each named exactly once — do not,
+because a finding does not survive a new book by having its number incremented.
+Those are registered individually, and the build refuses until each has been
+re-read against the new book.
+
 Selecting a record pulls its dossier and traces the route back to Bob-1
 hop by hop, **grading each link separately**. A chain can be solid for two hops
 and then run out of sources, and that's visible rather than smoothed over.
@@ -293,7 +306,7 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 12,788 checks across 17 suites against the shipped page,
+- `make test` runs 12,928 checks across 18 suites against the shipped page,
   including a golden-master snapshot of 132 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and

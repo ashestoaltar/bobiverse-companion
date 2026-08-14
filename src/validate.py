@@ -350,7 +350,17 @@ def _check_memorium(bobs: list[dict], by_id: dict) -> tuple[list[str], list[str]
 
 PROSE_FIELDS = ("note", "fateNote", "partialNote", "priorClaim", "conflict")
 
-BOOKS = 5
+BOOKS_FILE = os.path.join(ROOT, "data", "books.json")
+
+
+def _series() -> list[dict]:
+    with open(BOOKS_FILE) as fh:
+        return json.load(fh)["books"]
+
+
+# How long the series is. Derived, not declared — the console reads the same
+# file, so the validator's bounds and the reader's positions cannot disagree.
+BOOKS = sum(1 for b in _series() if b.get("released"))
 PARA_MARK = re.compile(r"^@bk(\d+)\s+")
 
 
@@ -569,6 +579,117 @@ def _check_blog() -> tuple[list[str], list[str]]:
             elif _book_of(para) and _book_of(para) > at:
                 errors.append(f"blog {pid}: paragraph {i + 1} is marked safe at book {at} "
                               f"but cites Bk{_book_of(para)}")
+    return errors, warnings
+
+
+# Claims whose scope is the corpus that was searched, and the number of books
+# that corpus held when each was established. These are not counts — they are
+# findings, and a finding does not survive a new book by having its number
+# incremented. Each entry is (file, a substring that locates the sentence, the
+# book count it was verified against); the day the series grows, every one of
+# them fails with the sentence in hand, to be re-checked against the new book
+# and then re-established, re-bounded or withdrawn.
+#
+# Pattern-matching English cannot do this job. "his fate runs across three
+# books" and "nobody in five books ever goes back to it" are the same shape and
+# opposite things — the first is a span inside the story and stays true forever,
+# the second is an exhaustiveness claim about everything we have read. Only the
+# author knows which was meant, so the author writes it down.
+CORPUS_CLAIMS = [
+    ("memorium.json", "nobody in five books ever goes back to it", 5),
+    ("peoples.json", "the Bobs spend five books arguing about", 5),
+    ("todo.json", "are each named exactly once in five books", 5),
+    ("bestiary.schema.json", "How many times the name appears across the five books", 5),
+    ("genealogy.html", "are each named once in five books", 5),
+]
+
+
+def _check_books() -> tuple[list[str], list[str]]:
+    """The series file, and every sentence that counts it.
+
+    Two different things say "five books" and they need opposite treatment. A
+    *count* — "47 mentions across the five books" — is arithmetic and belongs to
+    the data, so it is rendered from BOOK_MAX and cannot drift. A *claim* —
+    "named exactly once in five books", "nobody in five books ever goes back to
+    it" — is a research finding whose scope is the corpus that was searched, and
+    it does not survive a new book merely by having its number incremented.
+
+    So the counts are parameterised in the template and every literal that
+    survives is, by construction, a claim. This fails on each one the day the
+    series grows, which is the intent: the sentence has to be re-read against
+    the new book and either re-established or withdrawn. An auto-updated
+    exhaustiveness claim is the exact failure this project has already paid for
+    once, when `priorClaim` boilerplate asserted the books were silent about
+    eighteen parentages the appendix states outright.
+    """
+    errors: list[str] = []
+    warnings: list[str] = []
+    series = _series()
+
+    if not series:
+        return ["books.json: no books"], warnings
+    seen = set()
+    for b in series:
+        n = b.get("n")
+        if not isinstance(n, int) or n < 1:
+            errors.append(f"books.json: {n!r} is not a book number")
+            continue
+        if n in seen:
+            errors.append(f"books.json: book {n} listed twice")
+        seen.add(n)
+        if not b.get("title"):
+            errors.append(f"books.json: book {n} has no title")
+        if not isinstance(b.get("released"), bool):
+            errors.append(f"books.json: book {n} must say whether it is released")
+    if sorted(seen) != list(range(1, len(series) + 1)):
+        errors.append(f"books.json: numbering has a gap — {sorted(seen)}")
+    # Released books have to be a prefix. A gap would mean a reading position
+    # nobody can occupy sitting between two they can.
+    flags = [bool(b.get("released")) for b in sorted(series, key=lambda b: b.get("n", 0))]
+    if flags != sorted(flags, reverse=True):
+        errors.append("books.json: an unreleased book sits before a released one")
+
+    # No citation may claim a book that is not out. The data can lag the series
+    # — it will, for as long as it takes to read a new one — but it can never
+    # lead it, and a stray Bk6 would silently become unreachable prose.
+    for path in sorted(glob.glob(os.path.join(ROOT, "data", "*.json"))):
+        with open(path) as fh:
+            raw = fh.read()
+        for m in re.finditer(r"\bBk(\d+)\b", raw):
+            if int(m.group(1)) > BOOKS:
+                errors.append(f"{os.path.basename(path)}: cites Bk{m.group(1)}, "
+                              f"but only {BOOKS} books are released")
+                break
+
+    # Every corpus-bounded claim still says what it says, and still means what
+    # it meant. A missing one is an error too: the sentence was reworded and the
+    # registry was not, which is how this check quietly stops guarding anything.
+    for name, phrase, verified in CORPUS_CLAIMS:
+        for folder in ("data", "templates"):
+            path = os.path.join(ROOT, folder, name)
+            if os.path.exists(path):
+                break
+        else:
+            errors.append(f"books.json: corpus claim registered against {name}, "
+                          f"which does not exist")
+            continue
+        with open(path) as fh:
+            text = fh.read()
+        if phrase not in text:
+            errors.append(
+                f"{name}: the corpus-bounded claim \"{phrase}\" is no longer there. "
+                f"If it was reworded, update CORPUS_CLAIMS; if it was withdrawn, "
+                f"remove the entry.")
+        elif verified < BOOKS:
+            errors.append(
+                f"{name}: \"{phrase}\" was established against {verified} books and "
+                f"{BOOKS} are released. Re-check it against book {BOOKS} — then say "
+                f"so by updating CORPUS_CLAIMS. Do not just change the number: an "
+                f"exhaustiveness claim does not survive a new book by being "
+                f"renumbered.")
+        elif verified > BOOKS:
+            errors.append(f"{name}: \"{phrase}\" claims a corpus of {verified} books "
+                          f"and only {BOOKS} are released")
     return errors, warnings
 
 
@@ -836,6 +957,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     blog_errors, blog_warnings = _check_blog()
     errors += blog_errors
     warnings += blog_warnings
+
+    book_errors, book_warnings = _check_books()
+    errors += book_errors
+    warnings += book_warnings
 
     errors += _check_names(bobs)
     errors += _check_no_passages()

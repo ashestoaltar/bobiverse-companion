@@ -38,6 +38,8 @@ BEST_PLACEHOLDER = "/*__BESTIARY__*/null"
 MEM_PLACEHOLDER = "/*__MEMORIUM__*/null"
 BLOG = os.path.join(ROOT, "data", "blog.json")
 BLOG_PLACEHOLDER = "/*__BLOG__*/null"
+BOOKS = os.path.join(ROOT, "data", "books.json")
+BOOKS_PLACEHOLDER = "/*__BOOKS__*/[]"
 PEOPLE_PLACEHOLDER = "/*__PEOPLES__*/null"
 GUPPY_PLACEHOLDER = "/*__GUPPY__*/null"
 
@@ -183,6 +185,17 @@ def main() -> None:
         print(f"ERROR: placeholder {TODO_PLACEHOLDER} missing from template")
         sys.exit(1)
     html = html.replace(TODO_PLACEHOLDER, json.dumps(todo, ensure_ascii=False), 1)
+
+    # The series. Everything that counts books reads this, so it goes in before
+    # anything that might want to render a count.
+    with open(BOOKS) as fh:
+        series = json.load(fh)
+    series.pop("_comment", None)
+    if BOOKS_PLACEHOLDER not in html:
+        print(f"ERROR: placeholder {BOOKS_PLACEHOLDER} missing from template")
+        sys.exit(1)
+    html = html.replace(BOOKS_PLACEHOLDER,
+                        json.dumps(series["books"], ensure_ascii=False), 1)
 
     with open(SYSTEMS) as fh:
         systems = json.load(fh)

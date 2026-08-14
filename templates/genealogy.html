@@ -636,10 +636,10 @@
 <div class="gate" id="gate" hidden>
   <div class="gate-inner">
     <p class="gate-from">REGISTRY EDITOR — NOT BOBNET</p>
-    <p class="gate-ask">This registry covers all five books, and contains spoilers.
-      How far have you read?</p>
+    <p class="gate-ask">This registry covers all <span id="gate-count">five</span> books,
+      and contains spoilers. How far have you read?</p>
     <div class="gate-choices">
-      <button data-book="5">I&rsquo;VE FINISHED</button>
+      <button id="gate-all">I&rsquo;VE FINISHED</button>
       <button id="gate-more">STILL READING &rarr;</button>
     </div>
     <div class="gate-books" id="gate-books" hidden></div>
@@ -825,10 +825,29 @@ const COLS = [
   {key:'src',    label:'PROVENANCE', get:b => b.src}
 ];
 
+/* The series, from data/books.json — the one place that knows how long it is.
+   A sixth book is a line in that file, not a constant hunt through the console,
+   the validator and four rendered sentences. That mattered enough to build:
+   Taylor has said seven will be the last, so this happens twice more.
+
+   Only released books count. An announced one sits in the data with
+   `released:false` so the file records what is coming without the console
+   offering a reading position nobody can have reached yet. */
+const BOOKS = /*__BOOKS__*/[];
+const RELEASED = BOOKS.filter(b => b.released);
+
 /* How many books there are, and so what "everything" means. state.book is a
    reading position: at BOOK_MAX nothing is held and the console behaves as it
    always did, which is the default because most people arrive having finished. */
-const BOOK_MAX = 5;
+const BOOK_MAX = RELEASED.length;
+
+/* Counts read as words in a sentence and as digits in a field. Both appear, so
+   both come from the same number rather than from somebody remembering to
+   update prose. Beyond ten it falls back to the digits, which will never
+   happen and costs nothing to be right about. */
+const NUMBERS = ['zero','one','two','three','four','five','six','seven','eight','nine','ten'];
+const numWord = n => NUMBERS[n] || String(n);
+const BOOK_WORD = numWord(BOOK_MAX);
 
 const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1,
                selected:null, beast:null, people:null, blog:null, book:BOOK_MAX};
@@ -2046,7 +2065,7 @@ function renderBeastDossier(id){
       ${c.namedById && canLink('register', c.namedById)
           ? fh('NAMED BY', bobLink(c.namedById)) : f('NAMED BY', c.namedBy)}
       ${f('SAPIENCE', c.sapience === 'contested' ? 'contested — the books leave it open' : 'none on record')}
-      ${f('MENTIONS', c.mentions != null ? `${c.mentions} across the five books` : null)}
+      ${f('MENTIONS', c.mentions != null ? `${c.mentions} across the ${BOOK_WORD} books` : null)}
       ${f('FIRST ON RECORD', citeUpTo(c.cite))}
     </dl>
     ${sys ? `<div class="sec"><div class="sec-label">SYSTEM</div>
@@ -2151,7 +2170,7 @@ function renderPeopleDossier(id){
       ${f('STANDING', e.status)}
       ${e.kind === 'people' ? f('CONTACT', CONTACT_NOTE[e.contact] || e.contact) : ''}
       ${owner ? f('SPEAKS FOR', owner.name) : ''}
-      ${f('MENTIONS', e.mentions != null ? `${e.mentions} across the five books` : null)}
+      ${f('MENTIONS', e.mentions != null ? `${e.mentions} across the ${BOOK_WORD} books` : null)}
       ${f('FIRST ON RECORD', citeUpTo(e.cite))}
     </dl>
     ${theirs.length ? `<div class="sec"><div class="sec-label">POLITIES — ${theirs.length}</div>
@@ -2891,9 +2910,12 @@ let openGate = () => {};
     render();
   };
 
-  // The counts are the honest part. A reader who picks book one and finds
-  // twenty-one records should have been told that is the guard working, not
-  // the project being thin.
+  // How long the series is, said once. The sentence, the finished button and
+  // the per-book choices all count the same released books, so a new book
+  // cannot leave the prompt offering a position the console does not have —
+  // which is the failure release day would otherwise produce, silently.
+  document.getElementById('gate-count').textContent = BOOK_WORD;
+  document.getElementById('gate-all').dataset.book = String(BOOK_MAX);
   books.innerHTML = Array.from({length: BOOK_MAX - 1}, (_, i) =>
     `<button data-book="${i + 1}">BOOK ${i + 1}</button>`).join('');
 

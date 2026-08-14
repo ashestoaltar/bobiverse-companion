@@ -239,6 +239,30 @@
       "text": "Two Bobs are wearing names they have not taken yet",
       "note": "Done. `nameFrom` records the chapter a Bob took the name we file him under — Bk3 ch57 for Will, Bk4 ch3 for Morlock — and it is a citation rather than a number, so the same check that verifies every other citation against the corpus verifies this one. Below that book the console calls him by his alias and drops the second name entirely: at book one he is Riker in the register, in the tree, in the trace, and in Homer's SOURCE BOB column. It folds into shown(), so it reached all of those at once. The validator now errors on an alias with no nameFrom, since that combination is exactly the bug this fixed.",
       "done": true
+    },
+    {
+      "cat": "Sources",
+      "text": "Book 6 — the release-day procedure",
+      "note": "The Infinite Extent is out 10 Sept 2026. The console no longer hardcodes how long the series is: data/books.json is the one place, and the entry for book 6 is already there with released:false. Release day is flip that boolean, add the ebook to books/, `make corpus`, `make validate`, `make snapshots`, `make build`. The flag is stored rather than compared against today's date on purpose — a date comparison would change the rendered page overnight and break the golden master with nobody having touched anything.\n\nThe validator will refuse the build until every corpus-bounded claim has been re-checked, which is the next item and is deliberately in the way. Expect the reading position to gain BOOK 6 and the prompt to say six; both derive, and tests/books.test.js fails if either stops deriving. Taylor has said seven will be the last, so this happens once more after that.",
+      "done": false
+    },
+    {
+      "cat": "Sources",
+      "text": "Re-check the five corpus-bounded claims against book 6",
+      "note": "Five sentences on the page are not counts but findings, and their scope is the corpus that was searched: that nobody in five books goes back to which three transfers failed; that the Bobs spend five books arguing over who counts as a person; that Jackson, Milton and Zeke are each named exactly once; that mention counts span the five books; and the register's own note saying the same of the quiet three. A new book does not leave those true by having the number incremented — if book 6 returns to any of it, the claim is simply wrong, and renumbering would launder it into a bigger lie.\n\nSo they are registered in validate.py's CORPUS_CLAIMS with the book count each was established against, and the build fails on every one of them the day the series grows. Re-read, then either re-establish against six, re-bound to what was actually searched, or withdraw. This is the failure this project has already paid for once: priorClaim boilerplate asserted the books were silent about eighteen parentages that book 2's appendix states outright.",
+      "done": false
+    },
+    {
+      "cat": "Genealogy",
+      "text": "Re-sweep the open questions against book 6",
+      "note": "The first new evidence this project has had since it started. Worth doing as one pass rather than piecemeal, and worth not starting any of it before the book is read — several of these are exactly the kind of debt an author pays off late in a series.\n\nIn order of how much a single sentence could settle: the three blank In Memorium rows, still drawn from five; the eight unaccounted, swept once and null; Marcus's parentage, ten POV chapters and no source; Thor, Jeffrey, Milton and Zeke; the Hector collision; and the twelve remaining wiki leads. Also re-run the biographical sweep — 17 birth dates and 3 vessels came out for want of a citation and a sixth book may put some back.\n\nNote that ingesting book 6 invalidates every mention count in the bestiary and peoples registers at the same time, since those are re-derived from the corpus. That is the check working, not a regression.",
+      "done": false
+    },
+    {
+      "cat": "BobNet",
+      "text": "How long the series is, said once",
+      "note": "BOOK_MAX was a literal 5 in the template, BOOKS was a literal 5 in the validator, and four rendered sentences counted the books by hand. data/books.json is now the only place that knows, and the console, the reading-position selector, the spoiler prompt and the validator's bounds all derive from it. Done four weeks before book 6 rather than on the day, because the day it matters is the day you least want to be restructuring a constant across three layers — and every mistake would ship to exactly the people arriving for the new book.\n\nThe distinction that took the thinking: a count is arithmetic and belongs to the data, so it renders from BOOK_MAX and cannot drift, while a claim about what the books do or do not contain is a finding whose scope is the corpus searched. Pattern-matching English cannot tell them apart — 'his fate runs across three books' and 'nobody in five books ever goes back to it' are the same shape and opposite things. So the claims are registered by hand and the counts are rendered. Output byte-identical: 132 snapshot states unchanged.",
+      "done": true
     }
   ]
 }

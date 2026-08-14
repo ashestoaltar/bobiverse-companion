@@ -1,0 +1,41 @@
+{
+  "_comment": "The series itself, and the only place that knows how long it is. BOOK_MAX, the reading-position selector, the spoiler prompt and the validator's bounds all derive from `released` here, so a new book is an edit to this file rather than a constant hunt across three layers. Taylor has said book 7 will be the last; it has no title yet, so it is recorded here in prose rather than as an entry, because an entry with no title is a shape every renderer would have to special-case. `released` is a stored boolean and deliberately not a comparison against today's date: the page is static and its golden master is exact, so a date comparison would make the rendered output change by itself overnight and break the snapshot with nobody having touched anything. Flip it by hand, rebuild, re-record. That is the whole release-day procedure.",
+  "books": [
+    {
+      "n": 1,
+      "title": "We Are Legion (We Are Bob)",
+      "published": "2016-09-20",
+      "released": true
+    },
+    {
+      "n": 2,
+      "title": "For We Are Many",
+      "published": "2017-04-18",
+      "released": true
+    },
+    {
+      "n": 3,
+      "title": "All These Worlds",
+      "published": "2017-08-08",
+      "released": true
+    },
+    {
+      "n": 4,
+      "title": "Heaven's River",
+      "published": "2020-09-24",
+      "released": true
+    },
+    {
+      "n": 5,
+      "title": "Not Till We Are Lost",
+      "published": "2024-08-27",
+      "released": true
+    },
+    {
+      "n": 6,
+      "title": "The Infinite Extent",
+      "published": "2026-09-10",
+      "released": false
+    }
+  ]
+}

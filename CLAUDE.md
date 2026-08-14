@@ -141,6 +141,8 @@ books/           your DRM-free ebooks (gitignored, never committed)
 .cache/          parsed corpus (gitignored, and not cheap to lose — see below)
 data/bobs.json   source of truth
 data/schema.json field documentation and constraints
+data/books.json  the series — titles, and which are out. The only place that
+                 knows how long it is; BOOK_MAX and the validator both derive
 data/todo.json   the research backlog, rendered as a view in the console
 data/systems.json star systems with real astrometry, and the places in them
 data/skyfield.json the naked-eye sky for the chart backdrop (HYG, CC BY-SA 4.0)
@@ -327,6 +329,7 @@ scoped to the eval.)
 | `memorium` | the list, the blanks, and Taylor's spelling |
 | `peoples`, `bestiary` | the people/fauna boundary, both directions |
 | `guppy` | the pixel portrait — ragged grids, and a blink that must not move the silhouette |
+| `books` | how long the series is, derived rather than declared — written for a day that has not happened yet |
 
 **Assertions derive their expectations from `data/*.json` rather than hardcoding
 counts.** The old scratch harness asserted "86 records" for a whole session after
@@ -556,6 +559,31 @@ Starfleet cut their own ancestry out of the databases — alphabetically, above
 the fold. `READ THROUGH BOOK N` withholds the rest, and the whole mechanism runs
 off citations that provenance had already forced onto the data.
 
+### How long the series is
+
+`data/books.json`, and nothing else. `BOOK_MAX` is `RELEASED.length`, the
+validator's bounds are `sum(released)`, and the prompt's sentence, its finished
+button, its per-book choices and the `READ THROUGH` selector all count the same
+list. Before this, the number 5 was written into the template, the validator and
+four rendered sentences, which is exactly the shape that survives right up until
+the day it matters.
+
+It matters twice more: **book 6, *The Infinite Extent*, is out 10 Sept 2026, and
+Taylor has said book 7 will be the last.** The entry for 6 is already in the
+file with `released: false`, so the file records what is coming without offering
+a reading position nobody can have reached.
+
+`released` is a stored boolean and deliberately **not** a comparison against
+today's date. The page is static and its golden master is exact, so a date
+comparison would change the rendered output overnight and fail the snapshot with
+nobody having touched anything. Release day is: flip the boolean, add the ebook,
+`make corpus`, `make validate`, `make snapshots`, `make build`.
+
+The validator will refuse the build until every corpus-bounded claim has been
+re-checked — see below, and note that it is in the way on purpose. `make corpus`
+also invalidates every mention count in the bestiary and peoples registers the
+same afternoon, because those are re-derived. That is the check working.
+
 **Three things gate separately, because they spoil at different rates.**
 
 | what | gated by | absent means |
@@ -717,6 +745,32 @@ within hours of being written, because Elmer's vessel was the seventh and
 Hannibal was ruled out the same afternoon. The In Memorium arithmetic lives in
 `memorium.json` and the register counts; `validate.py` rejects a pooled
 candidate whose note restates it. Same rule as `gen`.
+
+### A claim bounded by the corpus has to say so
+
+Some sentences here are counts and some are findings, and they look identical.
+"47 mentions across the five books" is arithmetic — it belongs to the data, and
+it now renders from `BOOK_MAX` so it cannot drift. "Nobody in five books ever
+goes back to it" is a **finding whose scope is the corpus that was searched**,
+and it does not survive a new book by having its number incremented. If book 6
+goes back to it, the sentence is simply wrong, and renumbering it to six would
+launder a wrong claim into a bigger one — asserting that a book nobody has read
+is also silent.
+
+So the counts are rendered and the findings are registered by hand, in
+`CORPUS_CLAIMS` in `validate.py`: file, a substring that locates the sentence,
+and the number of books it was established against. The build fails on every one
+of them the day the series grows, with the sentence in hand. Re-read it, then
+re-establish, re-bound or withdraw — and say which by updating the entry. A
+reworded sentence that no longer matches its registered substring is also an
+error, because that is how this check would otherwise stop guarding anything
+without telling anyone.
+
+**Do not try to detect these by pattern.** "His fate runs across three books" and
+"nobody in five books ever goes back to it" are the same shape and opposite
+things — the first is a span inside the story and stays true forever. Only the
+person writing the sentence knows which was meant, so the person writing it
+writes it down. There are five on the register today.
 
 ## Field policy
 
