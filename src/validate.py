@@ -449,9 +449,22 @@ def _check_spoil(bobs: list[dict]) -> tuple[list[str], list[str]]:
             if cited and spoil < cited:
                 errors.append(f"{name} {e['id']}: spoil {spoil} is earlier than its own "
                               f"citation in Bk{cited}")
-            inline = _book_of(note)
-            if inline and inline > spoil:
-                errors.append(f"{name} {e['id']}: spoil {spoil} but the note cites Bk{inline}")
+            # Per paragraph, the same as a record's. The console already runs
+            # these notes through proseGated(), so a companion entry could
+            # always carry an @bk marker — this check just could not see one,
+            # and read the whole note against the entry's default. That made
+            # the marker unusable in exactly the register where a note is most
+            # likely to outgrow its own citation, because a species or a polity
+            # accumulates history across books while a fate does not.
+            for i, (at, text) in enumerate(_paragraphs(note, spoil)):
+                if at is None:
+                    errors.append(f"{name} {e['id']}: note paragraph {i + 1} carries an "
+                                  f"unreadable @bk marker")
+                    continue
+                inline = _book_of(text)
+                if inline and inline > at:
+                    errors.append(f"{name} {e['id']}: note paragraph {i + 1} is marked safe "
+                                  f"at book {at} but cites Bk{inline}")
 
     warnings = []
     if undeclared:

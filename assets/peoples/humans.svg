@@ -1,0 +1,35 @@
+<svg viewBox="0 0 160 100" role="img" aria-label="Human, portrait: head and shoulders, forward gaze">
+  <!-- Stroke only, no fill, no colour. Portrait, like every people plate.
+
+       Drawn deliberately generic — no age, no sex, no features anyone could
+       claim. The register identifies a species here, not a person, and the one
+       human likeness this project has any business drawing is Guppy's, which is
+       ours by construction.
+
+       It gets the same treatment as the other four on purpose. Humans are an
+       entry in this register like anybody else: the species the Bobs used to
+       be, and by book 4 something closer to a founding generation nobody asked
+       for. Giving the entry a grander plate than the Deltans' would be the
+       console taking a side in the argument the books are still having. -->
+  <g>
+    <!-- head -->
+    <path d="M80 20 C 92 20, 99 30, 99 42 C 99 56, 91 66, 80 66 C 69 66, 61 56, 61 42 C 61 30, 68 20, 80 20 Z"/>
+    <path d="M64 34 C 68 25, 92 25, 96 34" opacity="0.5"/>
+
+    <!-- eyes, front -->
+    <path d="M71 42 C 73 40, 76 40, 78 42 C 76 44, 73 44, 71 42 Z"/>
+    <path d="M82 42 C 84 40, 87 40, 89 42 C 87 44, 84 44, 82 42 Z"/>
+    <path d="M74 42 L 75 42 M85 42 L 86 42"/>
+    <path d="M69 37 C 72 35, 76 35, 78 37" opacity="0.6"/>
+    <path d="M82 37 C 84 35, 88 35, 91 37" opacity="0.6"/>
+
+    <!-- nose and mouth, minimal -->
+    <path d="M80 45 C 79 51, 77 54, 79 56 C 81 57, 82 56, 83 55" opacity="0.85"/>
+    <path d="M74 61 C 77 59, 83 59, 86 61" opacity="0.8"/>
+
+    <!-- neck and shoulders -->
+    <path d="M72 65 C 72 71, 70 76, 68 79"/>
+    <path d="M88 65 C 88 71, 90 76, 92 79"/>
+    <path d="M44 100 C 50 86, 58 81, 68 79 L 92 79 C 102 81, 110 86, 116 100"/>
+  </g>
+</svg>

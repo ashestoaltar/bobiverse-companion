@@ -1,0 +1,70 @@
+<svg viewBox="0 0 160 100" role="img" aria-label="Other, portrait: domed head ringed with small eyes, vertical feeding slash, broad forelimbs">
+  <!-- Stroke only, no fill, no colour. Portrait, at 16:10, exactly like the
+       other four people plates — and that consistency is a decision.
+
+       The Others are the one species the Bobs fought instead of argued with,
+       and it would be easy to draw them as a monster in the bestiary's grammar:
+       side profile, full body, laid out for measurement. They get a portrait
+       instead. This register grades what the books state, not who the reader
+       is supposed to side with, and demoting a sapient species to a specimen
+       because they are the enemy would be the console making an argument the
+       books spend five volumes refusing to make cheaply.
+
+       Every feature here comes from Bill's presentation to the moot in
+       Bk2 ch57, where he puts a composite scan image up and talks the room
+       through it: about four feet and never upright, a gorilla's posture as the
+       starting point, forelimbs like meaty wings ending in thick suckered
+       digits meant for gripping prey rather than handling tools, a vertical
+       slash opening onto a maw that grinds rather than chews with feeding
+       fingers folding out of it, and a domed head carrying small eyes all the
+       way round for vision in every direction. Nothing is added to that.
+
+       The eyes are the reason the portrait framing works rather than fights:
+       a ring of them means the thing is looking at you from every angle at
+       once, which is what the text finds unnerving about it. -->
+  <g>
+    <!-- forelimbs: broad, wing-like, hanging rather than held -->
+    <path d="M66 48 C 52 50, 38 58, 30 72 C 36 74, 46 72, 54 66"/>
+    <path d="M30 72 C 34 78, 42 82, 50 82" opacity="0.65"/>
+    <path d="M94 48 C 108 50, 122 58, 130 72 C 124 74, 114 72, 106 66"/>
+    <path d="M130 72 C 126 78, 118 82, 110 82" opacity="0.65"/>
+
+    <!-- thick suckered digits at the limb ends: gripping, not manipulating -->
+    <path d="M30 72 C 26 77, 24 83, 27 87"/>
+    <path d="M27 87 C 23 90, 22 95, 25 99"/>
+    <path d="M130 72 C 134 77, 136 83, 133 87"/>
+    <path d="M133 87 C 137 90, 138 95, 135 99"/>
+    <g opacity="0.45">
+      <path d="M28 78 L 29 78 M26 84 L 27 84 M25 92 L 26 92"/>
+      <path d="M132 78 L 133 78 M134 84 L 135 84 M135 92 L 136 92"/>
+    </g>
+
+    <!-- domed head, and the trunk that carries it -->
+    <path d="M62 34 C 62 22, 70 15, 80 15 C 90 15, 98 22, 98 34"/>
+    <path d="M62 34 C 64 40, 72 44, 80 44 C 88 44, 96 40, 98 34"/>
+    <path d="M66 46 C 62 58, 62 70, 66 80"/>
+    <path d="M94 46 C 98 58, 98 70, 94 80"/>
+
+    <!-- eyes: small, many, all the way round the dome -->
+    <g>
+      <path d="M64 32 L 65 32 M65 26 L 66 26 M69 21 L 70 21 M74 17 L 75 17"/>
+      <path d="M80 16 L 81 16 M86 17 L 87 17 M91 21 L 92 21 M95 26 L 96 26"/>
+      <path d="M96 32 L 97 32 M69 38 L 70 38 M91 38 L 92 38 M80 40 L 81 40"/>
+    </g>
+
+    <!-- the front, split in a vertical slash -->
+    <path d="M80 50 L 80 78"/>
+    <path d="M76 52 C 78 60, 78 70, 76 78" opacity="0.8"/>
+    <path d="M84 52 C 82 60, 82 70, 84 78" opacity="0.8"/>
+    <!-- feeding fingers, folded out of it -->
+    <g opacity="0.7">
+      <path d="M78 58 C 74 57, 71 58, 69 60 M82 58 C 86 57, 89 58, 91 60"/>
+      <path d="M78 66 C 75 66, 72 67, 70 69 M82 66 C 85 66, 88 67, 90 69"/>
+    </g>
+
+    <!-- back end, read from the front: split limbs and a tail between them -->
+    <path d="M68 80 C 65 88, 63 94, 61 100"/>
+    <path d="M92 80 C 95 88, 97 94, 99 100"/>
+    <path d="M80 82 C 80 90, 80 95, 80 100" opacity="0.55"/>
+  </g>
+</svg>

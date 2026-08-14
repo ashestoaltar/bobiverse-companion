@@ -1,0 +1,50 @@
+<svg viewBox="0 0 160 100" role="img" aria-label="Quinlan, portrait: broad head, beaked snout, gliding membrane at the forearm">
+  <!-- Stroke only, no fill, no colour. Portrait rather than specimen, for the
+       reason set out on the Deltan plate.
+
+       The books describe them at Bk4 ch8, and the Bobs argue about it in front
+       of the image: otter, flying otter, flying squirrel, giant beaver, and
+       eventually a fat otter about four feet tall with a flap of skin along the
+       forearm that opens and closes, a snout close to a beak but toothed, and a
+       tail that fans. Every one of those is a Bob reaching for a Terran animal
+       and missing, which is the joke and also the honest state of the record —
+       so the drawing keeps the specifics they agreed on and stays out of the
+       ones they didn't.
+
+       They are the most-mentioned people in the books and the ones the series
+       makes its point with: the Bobs called them Snarks until they learned what
+       the Quinlans call themselves, and then stopped. -->
+  <g>
+    <!-- skull: broad, low -->
+    <path d="M80 24 C 92 24, 100 32, 100 43 C 100 52, 93 58, 84 59"/>
+    <path d="M76 59 C 67 58, 60 52, 60 43 C 60 32, 68 24, 80 24 Z"/>
+    <!-- small rounded ears, set low and to the side -->
+    <path d="M62 33 C 58 29, 58 25, 62 25 C 65 26, 66 30, 64 33"/>
+    <path d="M98 33 C 102 29, 102 25, 98 25 C 95 26, 94 30, 96 33"/>
+
+    <!-- snout: nearly a beak, but toothed -->
+    <path d="M84 59 C 88 60, 92 63, 92 67 C 92 71, 86 74, 78 74 C 70 74, 64 71, 64 67 C 64 63, 68 60, 72 59"/>
+    <path d="M66 66 C 72 64, 84 64, 90 66" opacity="0.55"/>
+    <g opacity="0.5">
+      <path d="M72 71 L 72 74 M76 72 L 76 75 M80 72 L 80 75 M84 71 L 84 74"/>
+    </g>
+
+    <!-- eyes, front -->
+    <path d="M69 42 C 71 40, 74 40, 76 42 C 74 44, 71 44, 69 42 Z"/>
+    <path d="M84 42 C 86 40, 89 40, 91 42 C 89 44, 86 44, 84 42 Z"/>
+    <path d="M72 42 L 73 42 M87 42 L 88 42"/>
+
+    <!-- whiskers -->
+    <g opacity="0.4">
+      <path d="M64 64 C 54 62, 46 60, 40 58 M64 68 C 54 68, 46 69, 40 71"/>
+      <path d="M92 64 C 102 62, 110 60, 116 58 M92 68 C 102 68, 110 69, 116 71"/>
+    </g>
+
+    <!-- shoulders, and the membrane along the forearm -->
+    <path d="M70 62 C 68 68, 64 74, 58 78"/>
+    <path d="M90 62 C 92 68, 96 74, 102 78"/>
+    <path d="M34 100 C 40 88, 48 81, 58 78 L 102 78 C 112 81, 120 88, 126 100"/>
+    <path d="M56 80 C 44 84, 34 92, 28 100" opacity="0.85"/>
+    <path d="M28 100 C 36 94, 48 88, 58 86" opacity="0.6"/>
+  </g>
+</svg>

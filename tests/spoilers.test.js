@@ -430,6 +430,48 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
   }
 
   // and it has to hold everywhere the name is printed, not just in shown()
+  // ---- a companion entry's note can span books too ----------------------
+  // The console has always run these notes through proseGated(), so an @bk
+  // marker worked here — but validate.py read the whole note against the
+  // entry's default and rejected one, which made the feature unusable in the
+  // register that needs it most: a species accumulates history across books in
+  // a way a fate does not.
+  //
+  // Tested against an entry built here rather than against whichever real note
+  // happens to carry a marker today. The first version of this asserted over
+  // the live data, and went vacuous the same afternoon when the one marked
+  // paragraph was rewritten — the `each` guard caught it, which is the whole
+  // reason that guard exists, but the lesson is that coverage keyed to the
+  // data's current shape does not survive the data changing.
+  const spanNote = {id: '__span__', spoil: 2,
+                    note: 'Safe from the second book.\n\n@bk4 A later paragraph, Bk4 ch32.'};
+  at(2, () => {
+    const g = run('proseGated')(spanNote.note, spanNote);
+    ok(!g.html.includes('A later paragraph'),
+       'a paragraph marked @bk4 rendered at book 2');
+    ok(g.html.includes('Safe from the second book'),
+       'the unmarked paragraph should still show at the record’s own book');
+    ok(g.held, 'a partly held note should report that something is missing');
+  });
+  at(4, () => {
+    const g = run('proseGated')(spanNote.note, spanNote);
+    ok(g.html.includes('A later paragraph'),
+       'a paragraph marked @bk4 is still held at book 4');
+    ok(!/@bk\d/.test(g.html), 'a paragraph marker reached the page');
+  });
+
+  // And whatever real entries carry one today, end to end through render().
+  for (const e of (get('PEOPLES').entries || []).filter(x => /@bk\d/.test(x.note || ''))) {
+    const mark = +/@bk(\d)/.exec(e.note)[1];
+    const para = e.note.split('\n\n').find(p => /^@bk\d/.test(p));
+    const words = para.replace(/^@bk\d\s+/, '').split(/\s+/).slice(0, 6).join(' ');
+    at(mark - 1, () => {
+      state.view = 'peoples'; state.people = e.id; run('render()');
+      ok(!doc.getElementById('dossier').innerHTML.includes(words),
+         `${e.id}: a paragraph marked @bk${mark} shows at book ${mark - 1}`);
+    });
+  }
+
   const will = need('Will, the record a reading position renames', 
                     BOBS.find(b => b.id === 'riker'));
   if (will) {
