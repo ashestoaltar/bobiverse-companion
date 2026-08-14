@@ -318,7 +318,7 @@ scoped to the eval.)
 | `chart` | projection invariants, the fiction's own distances, astrophysics |
 | `legibility` | label decluttering, ring labels, spectral colour survival, WCAG contrast |
 | `backdrop` | the HYG starfield, unit-vector invariants, NaN sweeps |
-| `snapshot` | golden master — exact HTML of 132 states |
+| `snapshot` | golden master — exact HTML of 139 states |
 | `spoilers` | what the reading position withholds — and a sweep of every register at every position for what leaks |
 | `timeline` | the derived chronology: order, sourcing, and where it stops |
 | `blog` | the feed, and keeping Bill's voice apart from the registry's |
@@ -429,7 +429,7 @@ gestures — drag, wheel, scrubber — go through the queue.
 
 ### The golden master
 
-`tests/__snapshots__/views.json` holds the exact HTML for 132 states — every view,
+`tests/__snapshots__/views.json` holds the exact HTML for 139 states — every view,
 filter, search, sort direction, a sample of dossiers, and the chart at pinned
 cameras. It exists so a refactor can be checked by diff instead of by eye, which
 is what makes restructuring safe to do aggressively.
@@ -829,6 +829,26 @@ absence claims here are correct and stay — the pigoid really never learns. Wha
 is not allowed is asserting absence *as a property of the books* when what was
 actually established is that a search came back empty.
 
+**A description is a passage, not a sentence.** The Others were nearly recorded
+as having no physical description in the books at all. Five corpus sweeps came
+back empty and the register briefly carried that as a finding. It was wrong:
+Bk2 ch57 has Bill putting composite scan images in front of the moot and talking
+the room through the anatomy for a page and a half, which makes it the most
+detailed description of any species in the series.
+
+Every sweep missed it the same way. They all looked for the plural name beside
+anatomy words **within one sentence**, and the passage says "the Other", "the
+creature", "the thing", with the anatomy spread across a page of dialogue. The
+method could not have found it however many times it ran — and running it five
+times read as corroboration rather than as one mistake repeated. **Failures of a
+single method do not accumulate into evidence.** When a sweep comes back empty,
+vary the shape of the search before believing it: the singular, the pronoun, the
+generic noun, the chapter titles, the scene where somebody would plausibly be
+looking at the thing.
+
+The user found it from a page number in about a minute. That is worth
+remembering next time a null result feels solid.
+
 And do not restate a derived number in prose. Five `fateNote`s said "six
 vessels ... exactly half ... all six here" and were wrong on all three counts
 within hours of being written, because Elmer's vessel was the seventh and
@@ -1048,17 +1068,24 @@ where the browser default is bright blue and underlined.
 The same machinery — corpus, extractor, validator, console — carries every
 register. Each needs its own data file, schema and view, and nothing else.
 
-**Built:** the star chart (`systems.json`), the bestiary (`bestiary.json`),
-peoples and polities (`peoples.json`), In Memorium (`memorium.json`, plus `fate`
-on each Bob), the blog (`blog.json`) and the timeline, which owns no file at all.
-**Still to come:** ship designs, the holotank, and the second passes recorded in
-`data/todo.json`.
+**Built:** the star chart (`systems.json`), the system map, the bestiary
+(`bestiary.json`), peoples and polities (`peoples.json`), In Memorium
+(`memorium.json`, plus `fate` on each Bob), the blog (`blog.json`) and the
+timeline. **Still to come:** ship designs, the holotank, and the second passes
+recorded in `data/todo.json`.
 
-Two of those are worth copying rather than the other three. **In Memorium** and
-**the timeline** are axes over data already held — a view plus, at most, a small
-file for what has no record to sit on. Before writing a new dataset, check
-whether the next register is a new kind of thing or a column that already
-exists.
+**Three of those own no data file of their own** — In Memorium, the timeline and
+the map — and that is the pattern to reach for first. Each is an axis over
+records we already hold, plus at most a small file for the entries with nothing
+to sit on. Before writing a new dataset, check whether the next register is a new
+kind of thing or a column that already exists; it has been a column three times
+running, and each of those cost one `REGISTERS` entry and one render function.
+
+The map is also the clearest case of a register paying for itself immediately.
+It was built to show what is at each place and it exposed, on the first render,
+that seven of twenty-two systems have no record pointing at them — including
+places a Bob narrated nine chapters from. A view over existing data can be a
+research instrument, not just a presentation of one.
 
 In Memorium is the one that isn't a new dataset — it is a view over `bobs.json`
 plus a small file for the entries with no record to sit on. Worth copying when
@@ -1077,7 +1104,7 @@ re-parsed. Sol, Epsilon Eridani, Delta Eridani, 82 Eridani, Omicron² Eridani,
 Delta Pavonis, Gamma Pavonis, Eta Cassiopeiae, Poseidon, Gliese 877,
 HIP 84051, Alpha Centauri, Ragnarök/Valhalla.
 
-**Bestiary.** Built — `data/bestiary.json`, nine creatures, its own register.
+**Bestiary.** Built — `data/bestiary.json`, nine creatures, all nine drawn.
 The inherited list that used to sit here was mostly wrong, and every entry was
 checked against the corpus before it went in. Five of its eight items did not
 survive: **landers** (92) is Dr. Landers, a human; **spits** (36) is the Spits,
@@ -1099,8 +1126,9 @@ Mention counts are re-derived from the corpus at validate time, so a number that
 drifts gets caught. A creature whose name appears nowhere is flagged outright —
 that one means we invented it.
 
-**Illustrations.** `assets/bestiary/<id>.svg` is inlined by the build into the
-`art` field. Never hand-edit `art` in the JSON. Stroke-only, no `fill`, no
+**Illustrations.** `assets/<register>/<id>.svg` is inlined by the build into the
+`art` field — the path is generic, so a register gets art the moment somebody
+puts a file in the folder. Never hand-edit `art` in the JSON. Stroke-only, no `fill`, no
 colour of its own: the console styles them with `stroke: currentColor` so one
 file serves the card and the dossier in either palette, and they read as
 phosphor drawings on the display rather than pictures pasted over it. The build
@@ -1109,8 +1137,54 @@ promise of zero external requests has to survive the artwork. Raster art works
 the same way — base64 it into a `data:` URI. Creatures without art get a dashed
 plate bearing their role mark, which reads as "reserved" rather than "broken".
 
+### A specimen and a portrait are different claims
+
+The two registers are drawn in deliberately different grammars, and the
+difference is load-bearing rather than decorative.
+
+| | frame | view | says |
+|---|---|---|---|
+| bestiary | 4:3 | side profile, whole animal | a specimen laid out for measurement |
+| peoples | 16:10 | head and shoulders, eyes front | a portrait, looking back at you |
+
+`validate.py` already refuses to let one name sit in both registers, because the
+series is Bob working out who counts as a person and filing the Deltans under
+beasts would make the console argue the opposite. **A drawing makes the same
+argument.** The same anatomical study that suits a gorilloid turns a Deltan into
+livestock, and it would do it silently, past a check that only reads names.
+
+Two consequences worth keeping:
+
+- **The Others get a portrait like everybody else.** They are the one species
+  the Bobs fought instead of argued with, and drawing them in the bestiary's
+  grammar would be the console taking a side the books spend five volumes
+  refusing to take cheaply. The register grades what the books state, not who
+  the reader is meant to side with.
+- **No polity is drawn, and none should be.** A government is not a thing you
+  draw. FAITH does not even get its acronym expanded, because nobody in the
+  books unpacks it — an invented emblem would be a larger fabrication than an
+  invented meaning. The dashed plate is the honest state.
+
+**Line work, not photographs, and the reason is arithmetic.** All fourteen
+drawings are 29 KB together. The one raster concept in `ideas/` is 325 KB on
+disk and about 434 KB once base64'd into a page that has to open from a
+`file://` double-click — a single photograph would cost more than every plate in
+the console put together. Keep register plates as stroke SVG. If the raster
+budget is ever spent, spend it once, on a single opened attachment, which is
+where `[HOLOTANK]` would earn its label.
+
+**Where a drawing is more speculative than the rest, say so in its own source.**
+Hydra is named exactly once in five books with no description at all, so its
+plate reads the name the Bobs gave it and stops, with the rearmost necks left
+faint because we do not know how many there are — and the file says that. If the
+corpus ever describes it, redraw it rather than defend it. Leviathan is the
+other shape of the same problem: described only by scale, and a plate cannot
+show scale without a reference the survey never recorded beside it, so the
+composition carries it instead — the body runs off both edges and the frame
+cannot hold the animal.
+
 **Peoples and polities.** Built — `data/peoples.json`, five species and nine
-polities, its own register. Provenance works differently here: species and
+polities; all five species drawn, no polity is. Its own register. Provenance works differently here: species and
 governments have no parents, so the tier letters don't transfer. What's graded
 instead is whether the books *state* a thing or leave it open.
 

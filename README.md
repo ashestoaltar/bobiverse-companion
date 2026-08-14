@@ -288,13 +288,16 @@ subtraction — and the validator errors the moment the pool shrinks to the coun
 because at that point the names are known and the rows should stop being dashes.
 
 **9 creatures** in `data/bestiary.json`, each pinned to the world it lives on and
-cited to its first appearance; 2 illustrated so far.
+cited to its first appearance, and all nine drawn.
 
 **5 species and 9 polities** in `data/peoples.json`. A name may be a people or
-fauna, never both, and the build checks the two files against each other.
+fauna, never both, and the build checks the two files against each other. The
+five species are drawn and none of the polities are — a government is not a
+thing you draw, and inventing an emblem for an acronym the books never even
+expand would be a larger fabrication than inventing a meaning for it.
 
-The research backlog is `data/todo.json` — 21 items, 5 cleared — and is a view in
-the console. It has never once got shorter.
+The research backlog is `data/todo.json` — 47 items, 31 cleared — and is a view
+in the console. It has never once got shorter.
 
 ## How it's kept honest
 
