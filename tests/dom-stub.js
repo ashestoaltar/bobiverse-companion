@@ -21,7 +21,8 @@ function element(id = '') {
     },
     setAttribute(k, v) { this._attrs[k] = String(v); },
     getAttribute(k) { return this._attrs[k] ?? null; },
-    focus() {}, remove() {}, addEventListener() {},
+    focus() { if (this._doc) this._doc.activeElement = this; },
+    remove() {}, addEventListener() {},
     scrollIntoView() {}, closest() { return null }, querySelector() { return null },
     querySelectorAll() { return [] },
     appendChild() {}, getBoundingClientRect() { return {width: 0, height: 0, top: 0, left: 0} },
@@ -31,19 +32,26 @@ function element(id = '') {
 function install(sandbox, {width = 1400} = {}) {
   const store = {};
   const tabs = [];
+  const selectors = {};
+
+  // Elements need a way back to the document so focus() can record itself.
+  const own = el => { el._doc = sandbox.document; return el; };
 
   sandbox.document = {
-    getElementById: id => store[id] || (store[id] = element(id)),
+    getElementById: id => store[id] || (store[id] = own(element(id))),
     // The console reads .tab to sync aria-selected. Hand back whatever the
     // register list registered, so a view that never got a tab shows up as a
     // test failure rather than passing silently.
     querySelectorAll: sel => (sel && sel.includes('.tab')) ? tabs : [],
-    querySelector: () => null,
+    querySelector: sel => selectors[sel] || null,
     addEventListener: () => {},
-    createElement: () => element(),
+    createElement: () => own(element()),
     activeElement: element(),
     body: element('body'),
     documentElement: element('html'),
+    // Named nodes the app looks up by selector rather than by id. Registering
+    // one here is what lets a test watch focus land on it.
+    _register: (sel, el) => { selectors[sel] = own(el); return el; },
     _store: store,
     _setTabs: list => { tabs.length = 0; tabs.push(...list); },
   };

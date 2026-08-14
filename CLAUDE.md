@@ -330,6 +330,7 @@ scoped to the eval.)
 | `peoples`, `bestiary` | the people/fauna boundary, both directions |
 | `guppy` | the pixel portrait — ragged grids, and a blink that must not move the silhouette |
 | `books` | how long the series is, derived rather than declared — written for a day that has not happened yet |
+| `focus` | where focus is and where it goes next — the tablist's promises, and getting your place back |
 
 **The suites fail closed.** Deriving expectations from the data is right, and
 it has one blind spot: a case that computes an expected count of zero and
@@ -368,6 +369,61 @@ counts.** The old scratch harness asserted "86 records" for a whole session afte
 the 87th landed; a test that must be hand-updated is a test that will be wrong.
 Literals stay only where the literal *is* the point — the tier letters, Sol's
 absolute magnitude of 4.83, Bill's stated distances.
+
+### Sheets, focus and the cost of a drag
+
+Four things the console did badly for anyone not using a mouse, fixed together
+because they share a cause: each was a desktop behaviour that had never been
+asked what it does at the other end.
+
+**The tree scrolls now.** `.tree` is `white-space:pre` and had no width of its
+own, so a deep branch ran past the right edge and the scroll container above
+never learned there was anything to scroll to — as far as it could tell the
+child was exactly as wide as it was. `width:max-content` is the whole fix, with
+`min-width:100%` to keep the row highlight full-width on a shallow tree. It
+matters most here of anywhere: the horizontal axis *is* the descent, so a
+cut-off branch is a cut-off fact.
+
+**The sheet behaves like a sheet.** It was a panel wearing a sheet's position —
+fixed over a document that kept scrolling underneath it, no scrim, and the only
+way out a 24px target. Those are one omission, not three: it looked modal and
+wasn't. There is now a scrim that only exists at sheet widths, a scroll lock,
+and a 40px close. All three are set in `syncSheet()` rather than at the click,
+because the sheet can open and close without one — a hash arriving with a
+selection, a resize across the breakpoint, a reading position dropping the
+record that was open. One function decides whether the sheet is up, so one
+function dresses it.
+
+Its height and the chart stage's were `64dvh` and `58dvh`, chosen separately.
+`--sheet` is that decision made once.
+
+**Focus goes somewhere in particular.** The tab bar carried `role="tablist"` and
+did not implement one, which is worse than not claiming it — a screen reader
+tells the reader arrow keys will move between tabs and nothing happened. It now
+has `aria-controls`, a roving tabindex (a tablist is *one* tab stop, not ten)
+and the four keys. Closing a dossier returns focus to the row that opened it;
+`render()` rewrites the stage, so what is remembered is the **selector, not the
+node** — the element is gone by the time anyone closes it. An opening sheet
+takes focus, and only on the transition, or it would fight anybody typing in
+the search box with a record still open. A desktop dossier is a column that is
+always there and never takes focus at all: moving it would be a theft.
+
+**A drag costs less.** Measured before touching it, which the backlog note asked
+for and was right to: the sky was **5.27ms of per-frame work** on a desktop, and
+a phone is several times slower than that. The note's premise was wrong in one
+detail — the 5,070-star backdrop is already on a canvas, not in the SVG — but
+the cost was real and in three places. A star's colour, brightness and size are
+properties of the star; rotating cannot change any of them, so computing them
+per frame was 2,668 `ciColour()` calls and 2,668 template strings a frame to
+arrive at the same values. `styleSky()` does it once. Assigning `canvas.width`
+reallocates the backing store even when the value is unchanged, so that is now
+conditional. And the gesture paths coalesce through `paintChartSoon()`, because
+pointer events do not arrive at the refresh rate — a phone reports at 120Hz.
+
+5.27ms became 3.18ms with the allocations and the reallocation gone on top.
+`paintChart()` itself stays synchronous: `render()`, the resize hook and the
+tests all want the chart drawn by the time they return. Only the continuous
+gestures — drag, wheel, scrubber — go through the queue.
 
 ### The golden master
 

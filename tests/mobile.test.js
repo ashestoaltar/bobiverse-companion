@@ -121,6 +121,82 @@ module.exports = ({ok, get, run, ROOT}) => {
   ok(/\.prompt input\{font-size:16px\}/.test(html),
      'the search box will trigger iOS zoom at the mobile body size');
 
+  // ---- the sheet behaves like a sheet -----------------------------------
+  // It was a panel wearing a sheet's position: fixed over a document that
+  // kept scrolling underneath it, no scrim, and the only way out a 24px
+  // target. All three are the same omission — it looked modal and wasn't.
+  const scrim = doc.getElementById('scrim');
+  ok(scrim, 'there is no scrim behind the sheet');
+  const body = doc.body;
+
+  reset();
+  state.view = 'register';
+  specFor('register').set(BOBS[0].id);
+  at(PHONE, () => {
+    run('render()');
+    ok(!doss.hidden, 'the sheet did not open');
+    ok(!scrim.hidden, 'the sheet is open with nothing behind it');
+    ok(body.classList.contains('sheet-open'),
+       'the document still scrolls under an open sheet');
+  });
+  // Closing takes all three down together.
+  at(PHONE, () => {
+    run('clearSelection()');
+    ok(doss.hidden && scrim.hidden, 'the scrim outlived the sheet');
+    ok(!body.classList.contains('sheet-open'), 'the scroll lock outlived the sheet');
+  });
+  // On a desktop the dossier is a column and covers nothing, so neither the
+  // scrim nor the lock may ever apply — locking the scroll there would freeze
+  // a page the dossier is not even on top of.
+  reset();
+  specFor('register').set(BOBS[0].id);
+  run('render()');
+  ok(scrim.hidden, 'the scrim is showing on a desktop');
+  ok(!body.classList.contains('sheet-open'), 'the desktop page has been scroll-locked');
+  reset();
+  run('render()');
+
+  ok((html.match(/clearSelection\(\)/g) || []).length >= 4,
+     'tapping the scrim should dismiss the sheet through clearSelection()');
+  ok(/body\.sheet-open\{overflow:hidden\}/.test(html),
+     'nothing locks the document scroll while the sheet is up');
+  ok(/\.scrim\{\s*display:block; position:fixed; inset:0/.test(html),
+     'the scrim is not laid over the page');
+
+  // A thumb wants about 44px and this is the only way out of a sheet — there
+  // is no Escape key on a phone.
+  const closeSize = /\.dossier-close\{width:(\d+)px; height:(\d+)px/.exec(html);
+  ok(closeSize && +closeSize[1] >= 40 && +closeSize[2] >= 40,
+     `the sheet's close target is ${closeSize ? closeSize[1] : '?'}px, below a thumb`);
+
+  // The sheet's height and the chart's were chosen separately and sat a fifth
+  // of a screen apart. One custom property is the decision made once; two
+  // literals is the drift starting again.
+  ok(/:root\{--sheet:/.test(html), '--sheet is not declared');
+  ok(/\.chart-stage\{flex:none; height:var\(--sheet\)\}/.test(html),
+     'the chart stage no longer reads the shared sheet height');
+  ok(/max-height:var\(--sheet\)/.test(html),
+     'the sheet no longer reads the shared sheet height');
+  ok(!/max-height:min\(64dvh/.test(html), 'the old hand-picked sheet height is back');
+
+  // The tree is the one view whose horizontal axis carries meaning — the
+  // indent is the descent — so a branch running off the right edge with no way
+  // to reach it loses a fact rather than some whitespace. The table learned
+  // this and the tree did not.
+  state.view = 'genealogy';
+  state.selected = null;
+  run('render()');
+  const stageHtml = doc.getElementById('stage').innerHTML;
+  ok(/<div class="scroll-x"><div class="tree">/.test(stageHtml),
+     'the tree is not inside a horizontal scroll container');
+  // A block that does not size to its content overflows silently: the scroll
+  // container sees a child exactly as wide as itself and offers no scroll.
+  ok(/\.tree\{[^}]*width:max-content/.test(html),
+     '.tree does not size to its widest branch, so .scroll-x has nothing to scroll');
+  ok(/\.tree\{[^}]*min-width:100%/.test(html),
+     '.tree should still fill the width when the tree is shallow');
+  reset();
+
   // The sheet is fixed to the bottom edge, which is where the home indicator
   // is. Without this it renders underneath one.
   ok(/inset:auto var\(--gap\) max\(var\(--gap\), env\(safe-area-inset-bottom\)\)/.test(html),

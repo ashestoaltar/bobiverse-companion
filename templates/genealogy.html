@@ -238,7 +238,18 @@
   }
 
   /* --- genealogy tree ------------------------------------------------- */
-  .tree{font-size:14px; line-height:1.66; white-space:pre; padding-bottom:40px}
+  /* width:max-content is the whole fix. .tree is white-space:pre, and a block
+     that does not size to its content overflows its own box silently — the
+     text runs past the right edge and the scroll container above never learns
+     there is anything to scroll to, because as far as it can tell the child is
+     exactly as wide as it is. min-width:100% keeps the row highlight running
+     the full width when the tree is shallower than the viewport. Same fix the
+     register table got, and the tree is where it matters most: the horizontal
+     axis is the descent, so a cut-off branch is a cut-off fact. */
+  .tree{
+    font-size:14px; line-height:1.66; white-space:pre; padding-bottom:40px;
+    width:max-content; min-width:100%;
+  }
   .tree .branch{color:var(--ash)}
   .tree .node{
     background:transparent; border:0; padding:0; font:inherit; cursor:pointer;
@@ -364,6 +375,10 @@
     font:inherit; font-size:12px; width:24px; height:24px; cursor:pointer;
     flex:none;
   }
+  /* The scrim only exists where the dossier is a sheet. On a desktop the
+     dossier is a column beside the stage and covers nothing, so there is
+     nothing to dim and nothing to tap through. */
+  .scrim{display:none}
   .dossier-close:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
   .dossier-body{padding:12px 13px 22px; overflow:auto; scrollbar-width:thin; scrollbar-color:var(--rule) transparent}
   .dossier-body::-webkit-scrollbar{width:9px}
@@ -544,6 +559,7 @@
      whole 390px and the scrolling row collapses to zero, so nothing scrolls
      at all. Height is the real trigger, not width, hence both queries. */
   @media (max-width:860px), (max-height:560px){
+    :root{--sheet:min(58dvh, 420px)}
     html,body{height:auto; overflow:visible; overscroll-behavior-y:none}
     .shell{position:static; inset:auto; display:block; min-height:100dvh}
     .main{display:block}
@@ -568,7 +584,7 @@
        height on the main axis, so setting a height here did nothing and the
        stage collapsed to zero. The chart was not mis-drawn on a phone; it was
        zero pixels tall. */
-    .chart-stage{flex:none; height:min(58dvh, 420px)}
+    .chart-stage{flex:none; height:var(--sheet)}
     /* fingers need a bigger target than a 3px circle */
     .chart-svg .star{stroke-width:12; stroke:transparent; paint-order:stroke}
     /* let the table be as wide as it needs and scroll inside .scroll-x */
@@ -590,12 +606,30 @@
     /* The sheet sits at the bottom edge, which on a modern phone is where the
        home indicator lives. Clear it, but never let that shrink the gap on a
        device that has no inset to report. */
+    /* One number, used twice. The sheet was 64dvh and the chart stage 58dvh,
+       chosen separately and a fifth of a screen apart for no reason either
+       could give. --sheet is that decision made once: a sheet is as tall as
+       the tallest thing it covers, and never more than half a phone away from
+       the top of the page. */
     .dossier{
       position:fixed; z-index:60;
       inset:auto var(--gap) max(var(--gap), env(safe-area-inset-bottom));
-      max-height:min(64dvh, 560px); box-shadow:0 -18px 44px rgba(0,0,0,.8);
+      max-height:var(--sheet); box-shadow:0 -18px 44px rgba(0,0,0,.8);
     }
     .dossier[hidden]{display:none}
+    /* A sheet that looks modal has to behave modally. Without this the
+       document keeps scrolling underneath it, which reads as the page having
+       come loose rather than as a panel being open. */
+    .scrim{
+      display:block; position:fixed; inset:0; z-index:55;
+      background:rgba(4,3,1,.62);
+    }
+    .scrim[hidden]{display:none}
+    body.sheet-open{overflow:hidden}
+    /* 24px is a mouse target. A thumb wants about 44, and this is the only way
+       out of the sheet on a phone — there is no Escape key to fall back on. */
+    .dossier-close{width:40px; height:40px; font-size:15px}
+    .dossier-head{padding:9px 9px 9px 13px}
     .mast-meta{display:none}
     .reg .opt{display:none}
     .statusbar .keys{display:none}
@@ -696,6 +730,9 @@
 
   <div class="main">
     <div class="stage" id="stage"></div>
+    <!-- Behind the sheet on a phone, and nothing at all on a desktop, where
+         the dossier is a column and covers nothing. Tapping it closes. -->
+    <div class="scrim" id="scrim" hidden></div>
     <aside class="dossier" id="dossier" aria-live="polite"></aside>
   </div>
 
@@ -1286,7 +1323,7 @@ function renderGenealogy(rows){
   }
 
   if (!out.length && !tail) return `<p class="empty">NO RECORDS MATCH THAT QUERY.</p>`;
-  return `<div class="tree">${out.join('')}${tail}</div>`;
+  return `<div class="scroll-x"><div class="tree">${out.join('')}${tail}</div></div>`;
 }
 
 /* The In Memorium list.
@@ -1568,6 +1605,26 @@ const SKY = (() => {
   return out;
 })();
 
+/* A star's colour, brightness and size are properties of the star. Rotating
+   the camera cannot change any of them — only where it lands on the canvas.
+   paintSky was recomputing all three for every visible star on every frame of
+   a drag: 2,668 ciColour() calls and 2,668 rgba template strings, thrown away
+   and rebuilt sixty times a second to arrive at the same values. Doing it once
+   here is the difference between 5.3ms of per-frame work and the projection
+   alone. Deferred rather than done at load because it costs nothing until the
+   chart is actually opened. */
+let SKY_STYLED = false;
+function styleSky(){
+  if (SKY_STYLED) return;
+  SKY_STYLED = true;
+  for (const st of SKY){
+    const b = Math.max(0.30, Math.min(1, (7.0 - st.m) / 5.2));
+    const [cr, cg, cb] = ciColour(st.ci);
+    st.fill = `rgba(${cr},${cg},${cb},${b.toFixed(3)})`;
+    st.size = st.m < 1.5 ? 2.6 : st.m < 3 ? 2.0 : st.m < 4.5 ? 1.5 : 1.1;
+  }
+}
+
 /* Colour index (B-V) to RGB, interpolated through the usual stops: hot blue
    stars are negative, the Sun sits near 0.65, red giants run past 1.5. */
 const CI_STOPS = [[-0.40,155,176,255],[0.00,202,215,255],[0.40,248,247,255],
@@ -1614,8 +1671,13 @@ function skyLayer(w, h){
 }
 
 function paintSky(cv, w, h){
+  styleSky();
   const dpr = Math.min(2, (typeof devicePixelRatio === 'number' ? devicePixelRatio : 1) || 1);
-  cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+  // Assigning width or height reallocates the backing store and resets the
+  // context, even when the value is unchanged. On a drag that is a full canvas
+  // reallocation per frame to arrive at the same size it already was.
+  const cw = Math.round(w*dpr), chh = Math.round(h*dpr);
+  if (cv.width !== cw || cv.height !== chh) { cv.width = cw; cv.height = chh; }
   const g = cv.getContext && cv.getContext('2d');
   if (!g) return;
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1626,10 +1688,8 @@ function paintSky(cv, w, h){
     if (r[1] < 0) continue;                       // front hemisphere only
     const x = cx + r[0]*R, y = cy - r[2]*R;
     if (x < -2 || x > w+2 || y < -2 || y > h+2) continue;
-    const b = Math.max(0.30, Math.min(1, (7.0 - st.m) / 5.2));
-    const size = st.m < 1.5 ? 2.6 : st.m < 3 ? 2.0 : st.m < 4.5 ? 1.5 : 1.1;
-    const [cr, cg, cb] = ciColour(st.ci);
-    g.fillStyle = `rgba(${cr},${cg},${cb},${b.toFixed(3)})`;
+    const size = st.size;
+    g.fillStyle = st.fill;
     g.fillRect(x - size/2, y - size/2, size, size);
   }
 }
@@ -1750,6 +1810,23 @@ function paintChart(){
                   .reduce((m, s) => Math.max(m, s.distance_ly), 0);
   const st = document.getElementById('chart-stat');
   if (st) st.textContent = `[${n} systems reached · frontier ${f.toFixed(1)} ly]`;
+}
+
+/* Pointer events do not arrive at the refresh rate. A modern phone reports at
+   120Hz or coalesces several moves into one delivery, and repainting per event
+   does work the display will never show. This collapses any number of camera
+   changes between two frames into one paint.
+   paintChart() itself stays synchronous — render(), the resize hook and the
+   tests all want the chart drawn by the time they return. Only the gesture
+   path, which is the one firing faster than anybody can see, goes through
+   here. */
+let PAINT_QUEUED = false;
+function paintChartSoon(){
+  if (PAINT_QUEUED) return;
+  PAINT_QUEUED = true;
+  const go = () => { PAINT_QUEUED = false; paintChart(); };
+  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(go);
+  else go();
 }
 
 function renderChart(){
@@ -2520,6 +2597,10 @@ function renderTabs(){
   for (const r of REGISTERS) {
     bits.push(
       `<button class="tab" role="tab" id="tab-${r.id}" aria-selected="${r.id === state.view}" ` +
+      // A tablist owns one tab stop, not ten. Without the roving tabindex, Tab
+      // walks every register before reaching the register itself; without
+      // aria-controls, nothing says which region a tab governs.
+      `aria-controls="stage" tabindex="${r.id === state.view ? 0 : -1}" ` +
       `data-view="${r.id}" title="${esc(r.label)}">` +
       `<span class="tab-full">${esc(r.label)}</span>` +
       `<span class="tab-short">${esc(r.short || r.label)}</span></button>`
@@ -2539,9 +2620,49 @@ const SHEET_WIDTH = 860;
    is in state.beast, a system in CHART.sel. Keying this off state.selected
    alone left the bestiary, peoples and every cross-register system jump looking
    dead on a phone — the dossier was built correctly and then hidden anyway. */
+let SHEET_OPEN = false;      // declared above its use; see FACTION_BOOK
 function syncSheet(){
   const el = document.getElementById('dossier');
-  if (el) el.hidden = window.innerWidth <= SHEET_WIDTH && !selOf(state.view).get();
+  if (!el) return;
+  const sheet = window.innerWidth <= SHEET_WIDTH;
+  el.hidden = sheet && !selOf(state.view).get();
+  // The scrim and the scroll lock are the sheet's other two halves. They are
+  // set here rather than at the click, because the sheet can open and close
+  // without one — a hash arriving with a selection, a resize across the
+  // breakpoint, a reading position dropping the record that was open. One
+  // function decides whether the sheet is up, so one function dresses it.
+  const open = sheet && !el.hidden;
+  const scrim = document.getElementById('scrim');
+  if (scrim) scrim.hidden = !open;
+  if (document.body && document.body.classList) {
+    document.body.classList.toggle('sheet-open', open);
+  }
+  /* Only on the transition. syncSheet() runs on every render, and a sheet that
+     re-took focus on each one would fight anybody typing in the search box
+     with a record still open. A desktop dossier is a column that is always
+     there and never takes focus at all — moving it would be a theft, not a
+     handoff. */
+  if (open && !SHEET_OPEN) { const c = document.getElementById('d-close');
+                             if (c && c.focus) c.focus({preventScroll:true}); }
+  SHEET_OPEN = open;
+}
+
+/* Where focus goes when the dossier closes.
+   render() rewrites the stage, so the row that opened the dossier is a
+   different node by the time anyone closes it — what survives a repaint is the
+   selector, not the element. Without this, closing drops focus at the top of
+   the document, which on a keyboard means every dismissal costs you your place
+   in the register. */
+let FOCUS_RETURN = null;
+const rememberOpener = el => {
+  FOCUS_RETURN = el && el.dataset && el.dataset.id
+    ? `[data-id="${el.dataset.id}"]` : null;
+};
+function restoreFocus(){
+  const sel = FOCUS_RETURN;
+  FOCUS_RETURN = null;
+  const el = sel && document.querySelector(sel);
+  if (el && el.focus) el.focus({preventScroll:true});
 }
 
 /* Closing asks the register too, for the same reason. Clearing state.selected
@@ -2549,6 +2670,7 @@ function syncSheet(){
 function clearSelection(){
   selOf(state.view).set(null);
   render();
+  restoreFocus();
 }
 
 function render(){
@@ -2762,7 +2884,7 @@ function applyHash(){
         CHART.pitch = Math.max(-1.5, Math.min(1.5, CHART.pitch + dy * 0.008));
       }
     } else return;
-    paintChart();
+    paintChartSoon();
   });
 
   const release = e => {
@@ -2792,12 +2914,12 @@ function applyHash(){
     if (!svgOf(e)) return;
     e.preventDefault();
     CHART.zoom = clampZoom(CHART.zoom * (e.deltaY < 0 ? 1.12 : 1/1.12));
-    paintChart();
+    paintChartSoon();                 // a trackpad emits these faster than frames
   }, {passive: false});
 
   document.addEventListener('input', e => {
     if (e.target.id !== 'chart-slider') return;
-    CHART.year = +e.target.value; paintChart();
+    CHART.year = +e.target.value; paintChartSoon();   // dragging the scrubber
   });
 
   document.addEventListener('click', e => {
@@ -2840,9 +2962,13 @@ document.addEventListener('click', e => {
   }
 
   if (e.target.closest('#d-close')) { clearSelection(); return; }
+  // Tapping outside a sheet dismisses it. The scrim is the outside — it only
+  // exists at sheet widths, so this cannot fire on a desktop where the
+  // dossier is a column and "outside" means the rest of the application.
+  if (e.target.closest('#scrim')) { clearSelection(); return; }
 
   const hit = e.target.closest('[data-id]');
-  if (hit) select(hit.dataset.id);
+  if (hit) { rememberOpener(hit); select(hit.dataset.id); }
 });
 
 document.getElementById('q').addEventListener('input', e => {
@@ -2857,7 +2983,30 @@ document.addEventListener('keydown', e => {
     else clearSelection();
     return;
   }
+  /* A tablist promises arrow keys. It carried role="tablist" and did not keep
+     that promise, which is worse than not claiming it: a screen reader tells
+     the reader to press Left and Right, and nothing happens. Automatic
+     activation — the view follows focus — because switching register is cheap
+     and this is how the pattern reads to anyone who already knows it. */
+  const onTab = document.activeElement && document.activeElement.dataset &&
+                document.activeElement.dataset.view;
+  if (onTab && /^(ArrowLeft|ArrowRight|Home|End)$/.test(e.key)) {
+    e.preventDefault();
+    const ids = REGISTERS.map(r => r.id);
+    const i = ids.indexOf(onTab);
+    const to = e.key === 'Home' ? 0
+             : e.key === 'End' ? ids.length - 1
+             : e.key === 'ArrowRight' ? (i + 1) % ids.length
+             : (i - 1 + ids.length) % ids.length;
+    state.view = ids[to];
+    render();
+    const el = document.getElementById('tab-' + ids[to]);
+    if (el && el.focus) el.focus({preventScroll:true});
+    return;
+  }
+
   if (e.key === 'Enter' && document.activeElement.dataset && document.activeElement.dataset.id) {
+    rememberOpener(document.activeElement);
     select(document.activeElement.dataset.id); return;
   }
   if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && document.activeElement !== q) {

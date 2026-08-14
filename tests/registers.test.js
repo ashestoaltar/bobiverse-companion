@@ -66,8 +66,13 @@ module.exports = ({ok, get, run}) => {
     state.view = v;
     run('render()');
     const html = doc.getElementById('tabs').innerHTML;
-    const selected = [...html.matchAll(/data-view="([^"]+)" aria-selected="true"|aria-selected="true" data-view="([^"]+)"/g)]
-      .map(m => m[1] || m[2]);
+    // Parse each tab whole rather than matching two attributes side by side.
+    // The old pattern required them to be adjacent and broke the moment a
+    // third attribute was added between them — which says nothing about the
+    // markup and everything about the regex.
+    const selected = [...html.matchAll(/<button[^>]*>/g)].map(m => m[0])
+      .filter(t => /aria-selected="true"/.test(t))
+      .map(t => (/data-view="([^"]+)"/.exec(t) || [])[1]);
     ok(selected.length === 1 && selected[0] === v,
        `view ${v}: tab bar marks ${selected.join(',') || 'nothing'} as selected`);
   }

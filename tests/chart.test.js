@@ -8,7 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = ({ok, get, run, ROOT}) => {
+module.exports = ({ok, get, run, each, need, sandbox, ROOT}) => {
   const PLACED = get('PLACED');
   const UNPLACED = get('UNPLACED');
   const SYS = get('SYS');
@@ -128,4 +128,63 @@ module.exports = ({ok, get, run, ROOT}) => {
   ok(/WHEEL ZOOM/.test(bar), 'a mouse should be told about the wheel');
   ok(!/PINCH|TWO-FINGER/.test(bar), 'a mouse was offered touch gestures');
   ok(get('TOUCH') === false, 'TOUCH should be false when the pointer is fine');
+
+  // ---- what a drag actually costs ------------------------------------------
+  // Measured before it was touched: the sky was 5.27ms of per-frame work on a
+  // desktop, and a phone is several times slower than that — over the frame
+  // budget for a scene whose only change is where the camera is pointing.
+  //
+  // A star's colour, brightness and size are properties of the star. Rotating
+  // cannot change any of them, so recomputing them per frame was work thrown
+  // away 60 times a second to arrive at the same values.
+  run('styleSky()');
+  const SKY = get('SKY');
+  ok(SKY.length > 1000, `the backdrop holds ${SKY.length} stars`);
+  // Over the whole backdrop, but as one assertion rather than ten thousand:
+  // five thousand identical passes tell you nothing the count of failures does
+  // not, and they bury every other check in the suite.
+  const unstyled = SKY.filter(st =>
+    !/^rgba\(\d+,\d+,\d+,[\d.]+\)$/.test(st.fill || '') || !(st.size > 0));
+  ok(unstyled.length === 0,
+     `${unstyled.length} of ${SKY.length} stars have no precomputed fill or size, ` +
+     `e.g. ${JSON.stringify(unstyled[0])}`);
+
+  // Idempotent, and cheap on the second call — otherwise "compute once" is
+  // just "compute again with extra steps".
+  const before = SKY[0].fill;
+  run('styleSky()');
+  ok(SKY[0].fill === before, 'styleSky recomputed what it had already computed');
+
+  // A canvas reallocates its backing store and resets its context whenever
+  // width or height is assigned, even to the value it already holds. On a drag
+  // that was one full reallocation per frame.
+  let resizes = 0;
+  const fake = {
+    _w: 0, _h: 0,
+    get width() { return this._w; }, set width(v) { resizes++; this._w = v; },
+    get height() { return this._h; }, set height(v) { resizes++; this._h = v; },
+    getContext: () => ({setTransform(){}, clearRect(){}, fillRect(){}, set fillStyle(v){}}),
+  };
+  sandbox.__fakeCanvas = fake;
+  run('paintSky(__fakeCanvas, 800, 500)');
+  const first = resizes;
+  ok(first > 0, 'the canvas was never sized at all');
+  run('paintSky(__fakeCanvas, 800, 500)');
+  ok(resizes === first, 'the canvas was resized again at the same dimensions');
+  run('paintSky(__fakeCanvas, 900, 500)');
+  ok(resizes > first, 'the canvas did not resize when the dimensions changed');
+
+  // Pointer events do not arrive at the refresh rate — a phone reports at
+  // 120Hz — so the gesture paths coalesce into one paint per frame. The
+  // discrete controls stay synchronous, and so does paintChart() itself,
+  // because render() and the tests want the chart drawn when they return.
+  const src = require('fs').readFileSync(
+    require('path').join(__dirname, '..', 'dist', 'index.html'), 'utf8');
+  ok(/function paintChartSoon\(\)/.test(src), 'nothing coalesces repaints');
+  ok(/requestAnimationFrame/.test(src), 'repaints are not tied to the display');
+  const moveHandler = /addEventListener\('pointermove'[\s\S]*?\n  \}\);/.exec(src);
+  ok(moveHandler && /paintChartSoon\(\)/.test(moveHandler[0]),
+     'a drag still repaints once per pointer event');
+  ok(moveHandler && !/[^n]\bpaintChart\(\)/.test(moveHandler[0]),
+     'the drag path still calls paintChart directly');
 };
