@@ -153,7 +153,8 @@ assets/<register>/ <id>.svg illustrations, inlined into the page by the build
 data/blog.json   dated posts in two voices; blog.schema.json documents them
 data/memorium.json entries with no record to sit on — the three blank rows
 templates/genealogy.html   the console — register, genealogy, unresolved,
-                 in memorium, chart, bestiary, peoples, timeline, blog, to-do
+                 in memorium, chart, systems, bestiary, peoples, timeline, blog,
+                 to-do
 books/MANIFEST.sha256  hashes + chapter counts of your ebooks; the one thing in
                  books/ that IS committed, because it's facts about the files
 src/parse_ebook.py  MOBI + EPUB -> chapters, refuses DRM
@@ -330,6 +331,7 @@ scoped to the eval.)
 | `peoples`, `bestiary` | the people/fauna boundary, both directions |
 | `guppy` | the pixel portrait — ragged grids, and a blink that must not move the silhouette |
 | `books` | how long the series is, derived rather than declared — written for a day that has not happened yet |
+| `systems` | the map: every place present, ordered by distance, and how firmly each is tied to a record |
 | `focus` | where focus is and where it goes next — the tablist's promises, and getting your place back |
 
 **The suites fail closed.** Deriving expectations from the data is right, and
@@ -986,6 +988,34 @@ Three rules worth keeping:
 
 The visible span tracks the reading position — 2185, 2217, 2257, 2334, 2343 —
 which is the property that makes it worth having at all.
+
+## The system map
+
+`#systems`, and like the timeline it owns no data: `origin`, `lostAt` and
+`visited` on the records, `system` on a creature or a people, and the astrometry
+already in `systems.json`. Copy that shape before writing a new file.
+
+Three things it does that the chart cannot. It is a **list**, so the places can
+be read instead of hunted for among overlapping dots. It answers a **search**,
+which the chart ignores entirely. And it holds **Trantor and Jabberwocky**, the
+two systems with no coordinates — a star map can only name them in a footnote,
+because there is nowhere to draw a megastructure with no parallax.
+
+**The tie mark is why it is worth having.** Filled for a place a record names,
+half for one only narrated from, hollow for one in the file for its astrometry
+alone. It moves with the reading position — seven named by a record at book one,
+fifteen at the end — and it makes the thinness of `visited` visible rather than
+something you would have to go looking for. HIP 14101 carries nine scenes and
+Howard's survey of the Jovian Odin with no record pointing at it; Gliese 54 has
+four scenes and three narrators. Those are the sweep's worklist, and until it is
+run a hollow mark is a **research state, not a fact about the star**.
+
+The dossier is the chart's own, not a second copy — one system, one dossier,
+however you arrived at it. And the timeline's rule for how late a place may date
+itself now lives in `datedHorizon()`, read by both registers: a system carries a
+first-contact year and no citation to gate it with, so it has to be held to the
+latest dated thing already on the page. Two copies of a rule that fiddly drift
+the first time either is edited.
 
 ## Links between registers
 

@@ -55,7 +55,7 @@ record now says so.
 
 ## The console
 
-Ten registers, with live search across names, aliases, designations, systems,
+Eleven registers, with live search across names, aliases, designations, systems,
 notes and citations — and every view has an address, so any of them can be
 linked to, in either direction: a post says what it is about and every record it
 names shows that the post exists.
@@ -72,6 +72,13 @@ names shows that the post exists.
   colour and sized by absolute magnitude, so an F2 dwarf really does outshine an
   M3. The backdrop is the real naked-eye sky — 5,070 stars to magnitude 6 from the
   HYG Database, in their true colours. Nothing on the chart is invented.
+- **Systems** — the map. Every place on record, ordered by distance from Sol,
+  with what is at each: who was built there, who was lost there, what lives
+  there. A mark says how firmly each is tied to the rest of the register —
+  named by a record, only narrated from, or present for its astrometry alone —
+  which turns the gaps in our own coverage into something you can see rather
+  than something you would have to go looking for. It also holds the two
+  systems the chart cannot draw, having no coordinates to draw them at.
 - **Bestiary** — the non-sapient fauna, loudest first by how much of the books
   they actually occupy. Fauna only: the Deltans, Quinlans, Pav and the Others are
   people, and people get their own register. That line is enforced by the build,
@@ -306,7 +313,7 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 13,165 checks across 19 suites against the shipped page,
+- `make test` runs 16,789 checks across 20 suites against the shipped page,
   including a golden-master snapshot of 132 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and

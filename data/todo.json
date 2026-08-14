@@ -69,7 +69,7 @@
     {
       "cat": "Biography",
       "text": "Systems: check origin and visited the same way",
-      "note": "Neither field has been verified against the text. Starfleet's location data was purged in-world (Bk4 ch32), so expect real gaps there rather than research failures."
+      "note": "Neither field has been verified against the text. Starfleet's location data was purged in-world (Bk4 ch32), so expect real gaps there rather than research failures.\n\nThe map quantifies it. Of twenty-two systems, seven have no record pointing at them at all once POV presence is set aside, and the gaps are not obscure ones: HIP 14101 carries nine scenes and Howard's long survey of the Jovian Odin, Trantor seven scenes and Howard again, Gliese 54 four scenes with Bill, Hal and Mario narrating from it. Those are places a Bob demonstrably spent chapters, and no `visited` entry says so. Tau Ceti and Kappa Ceti are the opposite case and probably correct as they stand — nought scenes, no narrator, in the file for their astrometry because the books name them as distances rather than as destinations.\n\nSo the sweep has a worklist now, and the map shows the shape of it while it is undone: a hollow tie mark is a research state rather than a fact about the star."
     },
     {
       "cat": "Sources",
@@ -81,11 +81,6 @@
       "cat": "Sources",
       "text": "Second pass on the moot scenes for later generations",
       "note": "Swept once and declared exhausted, but that was before the parser recovered six chapters. Worth one more pass now the corpus is complete."
-    },
-    {
-      "cat": "Companion registers",
-      "text": "System map",
-      "note": "Largely derivable from origin, visited and lostAt. Sol, Epsilon Eridani, Delta Eridani, 82 Eridani, Omicron² Eridani, Delta and Gamma Pavonis, Eta Cassiopeiae, Poseidon, Gliese 877, HIP 84051, Alpha Centauri, Ragnarök/Valhalla."
     },
     {
       "cat": "Companion registers",
@@ -274,6 +269,12 @@
       "cat": "Companion registers",
       "text": "Species portraits, and the Others described after all",
       "note": "Five plates for the peoples register — humans, Deltans, Quinlans, Pav, the Others — at 16:10 instead of the bestiary's 4:3, head and shoulders with the eyes front instead of a side profile. The difference is deliberate and load-bearing: validate.py already refuses to let one name sit in both registers, because the series is Bob working out who counts as a person and filing the Deltans under beasts would make the console argue the opposite. A drawing makes that argument too. A side profile is a specimen laid out for measurement; a portrait looks back.\n\nGrounded in the text rather than invented. Deltans: bat ears, short snout, fur, long thin limbs (Bk2 ch65). Quinlans: the Bobs arguing in front of the image at Bk4 ch8 — otter, flying squirrel, giant beaver — settling on a four-foot otter with a skin flap along the forearm, a snout close to a beak but toothed, and a fanning tail. Pav: giant meerkats, six feet upright, quadrupedal over distance, furry (Bk2 ch63-64).\n\nThe Others were nearly a null result and should not have been. Five corpus sweeps came back empty and the register briefly carried a note saying no physical description was on record. It was wrong: Bk2 ch57 has Bill presenting composite scan images to the moot and talking the room through the anatomy for a page and a half, which makes it the most detailed description of any species in the books. The sweeps missed it because every pattern looked for the plural name beside anatomy words in the same sentence, and the passage uses 'the Other', 'the creature', 'the thing', with the anatomy spread across dialogue. A description is a passage, not a sentence. Five failures of one bad method read as corroboration rather than as one mistake repeated — which is the exact trap the no-source-found rule exists to catch, sprung by the person who wrote it down.\n\nThe nine polities stay dashed. A government is not a thing you draw, and FAITH does not even get its acronym expanded because nobody in the books unpacks it; an invented emblem would be a larger fabrication than an invented meaning.",
+      "done": true
+    },
+    {
+      "cat": "Companion registers",
+      "text": "System map",
+      "note": "Built, as a peer register at #systems. It owns no data — origin, lostAt and visited on the records, `system` on a creature or a people, and the astrometry already in systems.json — which is the In Memorium shape again rather than a new file.\n\nIt does three things the chart cannot. It is a list, so places can be read rather than hunted for among overlapping dots. It answers a search, which the chart ignores entirely. And it holds Trantor and Jabberwocky, the two systems with no coordinates, which a star map can only mention in a footnote because there is nowhere to draw a megastructure with no parallax.\n\nThe tie mark is the honest part and the reason the register is worth having: filled for a place a record names, half for one only narrated from, hollow for one in the file for its astrometry alone. It moves with the reading position — seven named by a record at book one, fifteen at the end — and it turns the thinness of `visited` into something visible instead of something you would have to go looking for.\n\nThe dossier is the chart's, not a second copy. The timeline's rule for how late a place may date itself was factored into datedHorizon() so both registers read the same one; two copies of a rule that fiddly drift the first time either is edited.",
       "done": true
     }
   ]

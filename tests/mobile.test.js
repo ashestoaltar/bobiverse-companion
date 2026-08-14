@@ -42,6 +42,7 @@ module.exports = ({ok, get, run, ROOT}) => {
   // nothing selected, which is the state that always passes.
   const SAMPLE = {
     chart:    Object.keys(SYS)[0],
+    systems:  Object.keys(SYS)[0],
     bestiary: (((BESTIARY && BESTIARY.creatures) || [])[0] || {}).id,
     peoples:  (((PEOPLES && PEOPLES.entries) || [])[0] || {}).id,
     blog:     (((get('BLOG') || {}).posts || [])[0] || {}).id,

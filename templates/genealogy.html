@@ -162,6 +162,11 @@
   .stage{min-height:0; overflow:auto; scrollbar-width:thin; scrollbar-color:var(--rule) transparent}
   .stage::-webkit-scrollbar{width:9px;height:9px}
   .stage::-webkit-scrollbar-thumb{background:var(--rule)}
+  /* the system map's tie mark: how firmly a place is attached to the rest of
+     the register. A hollow mark is a research state, not a property of the star. */
+  .tie.record{color:var(--amber)}
+  .tie.pov{color:var(--amber-dim)}
+  .tie.none{color:var(--ash)}
   .scroll-x{overflow-x:auto; -webkit-overflow-scrolling:touch}
   .scroll-x::-webkit-scrollbar{height:9px}
   .scroll-x::-webkit-scrollbar-thumb{background:var(--rule)}
@@ -891,7 +896,8 @@ const numWord = n => NUMBERS[n] || String(n);
 const BOOK_WORD = numWord(BOOK_MAX);
 
 const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1,
-               selected:null, beast:null, people:null, blog:null, book:BOOK_MAX};
+               selected:null, beast:null, people:null, blog:null, system:null,
+               book:BOOK_MAX};
 
 /* ---- registers --------------------------------------------------------
    Every view is an entry here. The tab bar, the dispatch in render(), the
@@ -949,6 +955,27 @@ const REGISTERS = [
    paint: paintChart,
    onResize: paintChart,
    dossier: () => (CHART.sel && SYS[CHART.sel]) ? renderSystemDossier(SYS[CHART.sel]) : null},
+  {id:'systems',    label:'SYSTEMS',    short:'SYS',   render: renderSystemMap,
+   rows: mapRows,
+   status: rows => {
+     const tie = systemTies();
+     const named = rows.filter(s => tie.get(s.id) === 'record').length;
+     const far = rows.reduce((m, s) => Math.max(m, s.xyz_ly ? s.distance_ly : 0), 0);
+     statusLine(`${rows.length} systems`,
+                `${named} named by a record`,
+                `frontier ${far.toFixed(1)} ly`);
+   },
+   dossier: () => (state.system && SYS[state.system])
+     ? renderSystemDossier(SYS[state.system]) : null,
+   onClick: e => {
+     // The arrow to the chart is an ordinary link and has to stay one.
+     if (e.target.closest('a')) return false;
+     const hit = e.target.closest('[data-sys]');
+     if (!hit) return false;
+     state.system = state.system === hit.dataset.sys ? null : hit.dataset.sys;
+     render();
+     return true;
+   }},
   {id:'bestiary',   label:'BESTIARY',   short:'BEST',  render: renderBestiary,
    rows: beasts,
    status: rows => {
@@ -1914,6 +1941,113 @@ function renderSystemDossier(sys){
     </div>`;
 }
 
+/* ---- the system map ----------------------------------------------------
+   The chart draws where the systems are; the map says what is at them. It owns
+   no data — origin, lostAt and visited on the records, `system` on a creature
+   or a people, and the astrometry already in systems.json. That is the
+   In Memorium shape again: an axis over what we hold rather than a new file.
+
+   Two things it does that the chart cannot. It is a list, so the places can be
+   read rather than hunted for among overlapping dots, and it answers a search.
+   And it holds the two systems with no coordinates — Trantor and Jabberwocky —
+   which the chart can only name in a footnote because there is nowhere on a
+   star map to draw a megastructure with no parallax.
+
+   The third thing is the honest one. Nine of the twenty-two systems have no
+   record pointing at them at all: they are in the file for their astrometry and
+   their scene counts, and `visited` has never been swept against the text. The
+   tie mark says which is which, so a thin link reads as a research state rather
+   than as a fact about the system. */
+const TIE_MARK = {record: '●', pov: '◐', none: '○'};
+const TIE_NOTE = {
+  record: 'a record names it — built there, lost there, or visited',
+  pov: 'narrated from, but no record names it',
+  none: 'no record and no narrator on file — here for its astrometry',
+};
+
+/* POV names are gated too. A system listing a narrator the reader has not met
+   would answer, from the map, a question the register is holding back. */
+function visiblePovs(sys){
+  return (sys.povs || []).filter(n =>
+    BOBS.some(b => !heldRecord(b) && (b.name === n || shown(b).name === n)));
+}
+
+function systemTies(){
+  const rank = {none: 0, pov: 1, record: 2};
+  const tie = new Map();
+  for (const s of (SYSTEMS ? SYSTEMS.systems : [])) tie.set(s.id, 'none');
+  const set = (id, kind) => {
+    if (id && tie.has(id) && rank[kind] > rank[tie.get(id)]) tie.set(id, kind);
+  };
+  for (const b of BOBS) {
+    if (heldRecord(b)) continue;
+    set(b.origin, 'record');
+    set(shown(b).lostAt, 'record');          // masked: where is fate information
+    (b.visited || []).forEach(id => set(id, 'record'));
+  }
+  for (const c of ((BESTIARY && BESTIARY.creatures) || []))
+    if (!heldEntry(c)) set(c.system, 'record');
+  for (const e of ((PEOPLES && PEOPLES.entries) || []))
+    if (!heldEntry(e)) set(e.system, 'record');
+  for (const s of (SYSTEMS ? SYSTEMS.systems : []))
+    if (visiblePovs(s).length) set(s.id, 'pov');
+  return tie;
+}
+
+/* Ordered by distance from Sol, which is the one ordering a map of places has
+   a reason to prefer. The two without coordinates sort last rather than being
+   dropped — an unmeasured distance is not an infinite one, and the column says
+   so with a dash. */
+function mapRows(){
+  const q = state.q.trim().toLowerCase();
+  const hit = s => !q || [s.name, s.id, s.spectral, s.role,
+                          ...(s.places || []).map(p => p.name), ...visiblePovs(s)]
+    .filter(Boolean).join(' ').toLowerCase().includes(q);
+  return (SYSTEMS ? SYSTEMS.systems : []).filter(hit).slice().sort((a, b) =>
+    (a.xyz_ly ? a.distance_ly : Infinity) - (b.xyz_ly ? b.distance_ly : Infinity) ||
+    a.name.localeCompare(b.name));
+}
+
+function renderSystemMap(rows){
+  if (!rows.length) return `<p class="empty">NO SYSTEM MATCHES THAT QUERY.</p>`;
+  const tie = systemTies();
+  const horizon = datedHorizon();
+  const beasts_ = (BESTIARY && BESTIARY.creatures) || [];
+  const folk = (PEOPLES && PEOPLES.entries) || [];
+
+  const body = rows.map(s => {
+    const built = BOBS.filter(b => !heldRecord(b) && b.origin === s.id).length;
+    const lost  = BOBS.filter(b => !heldRecord(b) && shown(b).lostAt === s.id).length;
+    const life  = beasts_.filter(c => c.system === s.id && !heldEntry(c)).length +
+                  folk.filter(e => e.system === s.id && !heldEntry(e)).length;
+    const at = s.first_year ? dateIn(String(s.first_year)) : null;
+    const year = at && at.at <= horizon ? s.first_year : '—';
+    const k = tie.get(s.id) || 'none';
+    const n = v => v ? String(v) : '<span class="dim">—</span>';
+    return `<tr tabindex="0" data-sys="${esc(s.id)}" aria-selected="${state.system === s.id}">` +
+      `<td><span class="tie ${k}" title="${esc(TIE_NOTE[k])}">${TIE_MARK[k]}</span></td>` +
+      `<td class="nm">${esc(s.name)}</td>` +
+      `<td class="dim">${s.xyz_ly ? s.distance_ly.toFixed(1) : '<span class="dim">—</span>'}</td>` +
+      `<td class="dim">${esc(s.spectral || '—')}</td>` +
+      `<td class="dim">${year}</td>` +
+      `<td>${n(built)}</td><td>${n(lost)}</td><td>${n(life)}</td>` +
+      `<td class="dim">${n(s.scenes)}</td>` +
+      `<td>${s.xyz_ly ? linkTo('chart', s.id, '→') : ''}</td></tr>`;
+  }).join('');
+
+  return `<div class="scroll-x"><table class="reg"><thead><tr>` +
+    `<th title="How the system is tied to the rest of the register">TIE</th>` +
+    `<th>SYSTEM</th><th>DISTANCE</th><th>SPECTRAL</th><th>FIRST</th>` +
+    `<th>BUILT</th><th>LOST</th><th>LIFE</th><th>SCENES</th><th></th>` +
+    `</tr></thead><tbody>${body}</tbody></table></div>` +
+    `<div class="hint" style="padding-top:9px">` +
+    `${TIE_MARK.record} ${esc(TIE_NOTE.record)} · ` +
+    `${TIE_MARK.pov} ${esc(TIE_NOTE.pov)} · ` +
+    `${TIE_MARK.none} ${esc(TIE_NOTE.none)}. ` +
+    `Ordered by distance from Sol. FIRST is first contact on record, held to ` +
+    `the last dated thing the reading position reaches.</div>`;
+}
+
 function renderDossier(){
   const el = document.getElementById('dossier');
   // A register may claim the pane — the chart shows the selected system.
@@ -2331,6 +2465,36 @@ function guppyBlink(el){
    the field policy swept seventeen build dates out for coming from sources this
    project dropped, so most Bobs have no birthday here. A sparse timeline that
    is true beats a full one that is furnished. */
+/* How late the record runs at this reading position — the latest thing on the
+   page that carries a date of its own. A system has a first-contact year and no
+   citation to gate it with, so anything dated off the systems file has to be
+   held to this or a place a visible Bob merely passed through dates itself past
+   the last thing the reader has read.
+
+   Factored out because the timeline and the map both need it, and two copies of
+   a rule this fiddly drift the first time either is edited. Same four sources
+   the timeline draws its own dated events from, deliberately: if a kind of
+   event stops counting here it should stop appearing there too. */
+function datedHorizon(){
+  if (!gating()) return Infinity;
+  let n = 0;
+  const bump = d => { if (d) n = Math.max(n, d.at); };
+  for (const b of BOBS) {
+    if (heldRecord(b)) continue;
+    bump(dateIn(b.born));
+    if (b.fate && b.fate !== 'active' && !heldFate(b)) bump(dateIn(b.fateCite));
+  }
+  for (const p of ((BLOG && BLOG.posts) || [])) {
+    if (heldPost(p) || p.voice !== 'bobnet') continue;
+    bump(dateIn(p.date.replace(/^(\d{4})-(\d{2}).*/, (_, y, m) => `${MONTHS[+m - 1]} ${y}`)));
+  }
+  for (const u of ((MEMORIUM && MEMORIUM.unnamed) || [])) {
+    if (heldEntry(u)) continue;
+    bump(dateIn(u.when));
+  }
+  return n;
+}
+
 function events(){
   const out = [];
   const add = (date, kind, mark, html) => { if (date) out.push({...date, kind, mark, html}); };
@@ -2380,9 +2544,7 @@ function events(){
      merely passed through could otherwise date itself past the last thing the
      reader has read — book two knew Gliese 877 in 2187 and was being told about
      somewhere in 2247. The bound is the latest dated thing already on the page. */
-  const horizon = gating()
-    ? out.reduce((n, e) => Math.max(n, e.at), 0)
-    : Infinity;
+  const horizon = datedHorizon();
   for (const sys of (SYSTEMS && SYSTEMS.systems) || []) {
     if (!sys.first_year || !known.has(sys.id)) continue;
     const at = dateIn(String(sys.first_year));
@@ -2716,6 +2878,8 @@ const postById   = id => ((BLOG?.posts     || []).find(p => p.id === id));
    held — a star is not a spoiler. */
 const SEL = {
   chart:    {get: () => CHART.sel,       set: v => CHART.sel = v,       ok: v => !!SYS[v],
+             held: () => false},
+  systems:  {get: () => state.system,    set: v => state.system = v,    ok: v => !!SYS[v],
              held: () => false},
   bestiary: {get: () => state.beast,     set: v => state.beast = v,     ok: v => (BESTIARY?.creatures || []).some(c => c.id === v),
              held: v => heldEntry(beastById(v) || {})},
