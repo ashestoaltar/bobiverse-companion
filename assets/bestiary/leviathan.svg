@@ -1,0 +1,37 @@
+<svg viewBox="0 0 160 120" role="img" aria-label="Leviathan, body crossing the plate and running past both edges">
+  <!-- Poseidon's largest recorded animal. Stroke only, no fill, no colour.
+
+       The only fact the books give is scale: Bob's reading put a full-grown one
+       at roughly airliner size, and the one he actually saw was bigger. A plate
+       cannot show scale without a reference, and every reference available —
+       a hull, a manny, a bar — would be something the survey never recorded
+       next to it.
+
+       So the composition carries it instead. The body enters past the left edge
+       and leaves past the right; the frame cannot hold the animal. That is the
+       one claim being made, it is the one the text supports, and it needs no
+       invented detail to make it. -->
+  <g>
+    <!-- dorsal and ventral lines, both running off the plate -->
+    <path d="M-8 46 C 20 36, 60 32, 100 40 C 130 46, 152 56, 168 68"/>
+    <path d="M-8 62 C 20 60, 58 60, 96 66 C 126 71, 150 78, 168 90"/>
+
+    <!-- head end: a mouth line and an eye, and nothing further invented -->
+    <path d="M-6 56 C 8 55, 22 54, 34 55" opacity="0.75"/>
+    <path d="M20 50 L 22 50"/>
+
+    <!-- pectoral fin, the one limb a body this shape has to have -->
+    <path d="M56 62 C 58 74, 66 84, 78 88"/>
+    <path d="M78 88 C 70 82, 62 72, 60 63" opacity="0.7"/>
+
+    <!-- dorsal ridge -->
+    <g opacity="0.5">
+      <path d="M60 34 L 62 29 M78 34 L 80 29 M96 39 L 98 34 M114 45 L 117 40"/>
+    </g>
+    <!-- flank, sparse: texture, not anatomy -->
+    <g opacity="0.28">
+      <path d="M46 46 C 48 52, 48 58, 46 62 M72 44 C 74 51, 74 58, 72 64"/>
+      <path d="M104 50 C 106 57, 106 64, 104 70 M132 60 C 134 67, 134 74, 132 80"/>
+    </g>
+  </g>
+</svg>

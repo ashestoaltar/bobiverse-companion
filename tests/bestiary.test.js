@@ -105,10 +105,29 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
     ok(!/fill="(?!none)[^"]+"/i.test(c.art), `${c.id}: art hardcodes a fill; it should be stroked`);
   }
 
-  // a creature with art renders it; one without gets the reserved plate
+  // A creature with art renders it; one without gets the reserved plate.
+  //
+  // This used to assert that some creature on the page had no art, which held
+  // right up until every creature had some — and then the check for the empty
+  // path started failing because the path had stopped being exercised, not
+  // because it had broken. Coverage that depends on a gap in the data
+  // evaporates the moment the data improves. So the empty plate is rendered
+  // directly from a creature that does not exist, the way registers.test.js
+  // adds a register at runtime. The path stays covered whether or not anything
+  // real is still undrawn — and something will be: peoples has fourteen
+  // entries and no art at all.
   state.view = 'bestiary';
   run('render()');
-  ok(stage().includes('beast-art empty'), 'creatures without art should get a placeholder plate');
+  const reserved = run('beastPlate({id:"__none__", role:"predator"}, false)');
+  ok(/beast-art empty/.test(reserved),
+     'a creature with no art should get the reserved plate');
+  ok(/aria-hidden="true"/.test(reserved),
+     'the reserved plate is decoration and should be hidden from a screen reader');
+  ok(!/<svg/.test(reserved), 'the reserved plate should not draw anything');
+
+  const drawn2 = run('beastPlate(BESTIARY.creatures.find(c => c.art), false)');
+  ok(/<svg/.test(drawn2) && !/empty/.test(drawn2),
+     'a creature with art should render it rather than the reserved plate');
   ok(drawn.length >= 1, 'no creature carries artwork — the inline-SVG path is untested');
   ok(/<div class="beast-art"><svg/.test(stage()), 'illustrated creature did not render its art');
 

@@ -1,0 +1,48 @@
+<svg viewBox="0 0 160 120" role="img" aria-label="Raptor, theropod pack hunter in profile">
+  <!-- Vulcan's perimeter animal. Stroke only, no fill, no colour of its own.
+
+       Theropod-shaped is the whole description the books give, and the shape is
+       a balance problem: the spine runs horizontal, the tail is a stiff
+       counterweight rather than a droop, and the whole mass pivots over one
+       pair of legs. Draw it standing on a curve and it turns into a lizard. The
+       raised second toe is the one detail worth spending a stroke on — it is
+       what the colonists' obvious name is referring to. -->
+  <g>
+    <!-- far leg, behind the body -->
+    <path d="M92 62 C 87 69, 85 77, 86 84 C 87 90, 90 94, 92 98 C 90 102, 85 105, 79 106" opacity="0.45"/>
+    <!-- far arm -->
+    <path d="M64 66 C 63 71, 61 75, 57 78" opacity="0.4"/>
+
+    <!-- head: a shallow wedge, jaw longer than the skull is deep -->
+    <path d="M16 50 C 22 45, 31 42, 41 43 C 46 43, 49 46, 48 51 C 46 56, 36 58, 25 57 C 20 56, 16 53, 16 50 Z"/>
+    <path d="M18 53 C 26 55, 36 55, 45 53" opacity="0.55"/>
+    <path d="M36 48 L 38 48"/>
+    <g opacity="0.5">
+      <path d="M20 53 L 21 55 M25 55 L 26 57 M30 55 L 31 57"/>
+    </g>
+
+    <!-- neck, back and the deep ribcage -->
+    <path d="M47 47 C 55 48, 61 52, 67 58"/>
+    <path d="M67 58 C 80 51, 95 51, 107 58"/>
+    <path d="M48 54 C 54 58, 60 62, 66 67"/>
+    <path d="M66 67 C 78 74, 92 75, 103 69"/>
+    <path d="M107 58 C 111 62, 109 67, 103 69"/>
+
+    <!-- tail: held out, not hanging -->
+    <path d="M107 60 C 122 57, 139 48, 155 35"/>
+    <path d="M104 67 C 118 66, 134 58, 150 44" opacity="0.7"/>
+    <path d="M155 35 C 153 38, 152 41, 150 44" opacity="0.7"/>
+
+    <!-- near leg, and the toe the name is about -->
+    <path d="M100 63 C 95 70, 92 78, 93 85 C 94 91, 98 95, 100 99"/>
+    <path d="M100 99 C 98 103, 92 106, 85 107"/>
+    <path d="M85 107 L 78 109"/>
+    <path d="M85 107 L 82 111"/>
+    <path d="M95 96 C 91 99, 89 103, 91 107" opacity="0.8"/>
+
+    <!-- near arm, small and folded -->
+    <path d="M70 66 C 69 72, 66 77, 61 80"/>
+    <path d="M61 80 L 56 81"/>
+    <path d="M61 80 L 58 84"/>
+  </g>
+</svg>

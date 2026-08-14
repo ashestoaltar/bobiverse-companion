@@ -1,0 +1,33 @@
+<svg viewBox="0 0 160 120" role="img" aria-label="Hydra, many-necked marine predator">
+  <!-- Poseidon's other large marine predator. Stroke only, no fill, no colour.
+
+       Read this plate as the most speculative of the set, and deliberately so:
+       the books name it exactly once, alongside the kraken, when somebody is
+       weighing whether open water is worth it. Marcus decided it wasn't. There
+       is no description to work from at all — so the drawing reads the name the
+       Bobs gave it and stops there. Multiple necks off one submerged body, no
+       invented anatomy beyond that, and the rearmost necks left faint because
+       we do not know how many there are. If the corpus ever describes it, this
+       plate should be redrawn rather than defended. -->
+  <g>
+    <!-- necks we are least sure of, set back -->
+    <path d="M72 70 C 70 54, 66 40, 70 28" opacity="0.4"/>
+    <path d="M88 70 C 90 54, 94 40, 92 30" opacity="0.4"/>
+
+    <!-- body: a submerged mass, no more specific than that -->
+    <path d="M48 82 C 60 70, 90 68, 108 78 C 116 83, 116 92, 106 96 C 88 102, 60 100, 48 92 C 42 88, 42 86, 48 82 Z"/>
+    <path d="M46 88 C 36 86, 28 90, 24 96" opacity="0.75"/>
+    <path d="M108 90 C 122 88, 134 94, 142 102" opacity="0.75"/>
+
+    <!-- three necks forward -->
+    <path d="M64 72 C 60 56, 56 42, 62 30"/>
+    <path d="M62 30 C 56 26, 54 20, 58 17 C 62 15, 68 18, 68 24 C 68 28, 66 30, 62 30 Z"/>
+    <path d="M80 68 C 80 52, 78 36, 84 24"/>
+    <path d="M84 24 C 79 20, 78 14, 82 11 C 87 9, 92 13, 92 18 C 92 22, 89 24, 84 24 Z"/>
+    <path d="M96 72 C 100 58, 104 44, 100 32"/>
+    <path d="M100 32 C 105 27, 106 21, 102 18 C 97 16, 92 20, 93 25 C 94 29, 96 31, 100 32 Z"/>
+
+    <!-- eyes, one per forward head -->
+    <path d="M60 21 L 62 21 M84 15 L 86 15 M99 22 L 101 22"/>
+  </g>
+</svg>
