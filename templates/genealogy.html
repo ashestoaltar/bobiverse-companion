@@ -277,7 +277,11 @@
   .star.on .star-label{fill:var(--amber-hi)}
   .star.sel .star-label{fill:var(--phos)}
   .star.future circle{fill:var(--rule)}
-  .star.future .star-label{fill:var(--rule)}
+  /* --ash, not --rule: these are still words. --rule is 2.41:1 and draws
+     dividers; at that ratio a label is decoration rather than text. --ash
+     clears AA at 4.60:1 and stays visibly dimmer than the --amber-dim of a
+     system already reached, so the distinction the colour is making survives. */
+  .star.future .star-label{fill:var(--ash)}
   .sol-mark{stroke:var(--phos); stroke-width:1.2; fill:none}
   .sol-ring{fill:none; stroke:var(--phos); stroke-width:1; opacity:.55}
   .chart-empty{fill:var(--ash); font-size:12px}
@@ -504,7 +508,7 @@
     display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
     font-size:11.5px; letter-spacing:.12em; color:var(--ash);
   }
-  .statusbar .keys{color:var(--rule)}
+  .statusbar .keys{color:var(--ash)}   /* was --rule, 2.41:1 — see above */
   .cursor{color:var(--phos)}
 
   /* --- boot ----------------------------------------------------------- */

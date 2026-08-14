@@ -331,6 +331,38 @@ scoped to the eval.)
 | `guppy` | the pixel portrait — ragged grids, and a blink that must not move the silhouette |
 | `books` | how long the series is, derived rather than declared — written for a day that has not happened yet |
 
+**The suites fail closed.** Deriving expectations from the data is right, and
+it has one blind spot: a case that computes an expected count of zero and
+observes zero passes without proving anything. A loop over an empty list runs
+no assertions and reports success in exactly the same tone as a loop over
+eighty-seven. Two layers stop that:
+
+- `each(label, items, fn)` and `need(label, value)` in the harness. A
+  collection has to have something in it before it is worth iterating, and a
+  lookup that finds nothing fails instead of skipping. Both return what they
+  were given, so they drop into existing code without restructuring it. Prefer
+  them to a bare `for` or `if (found) {`.
+- **A check floor per suite**, in `tests/__snapshots__/checks.json`, recorded
+  like the golden master. `each` only guards the sites that use it; the floor
+  catches the class. A suite that runs materially fewer assertions than when
+  the count was last recorded on purpose fails. It is a floor and not an
+  equality because counts grow with the data — growth is silent, only a drop is
+  a failure, and 2% of slack absorbs a record being retired.
+
+The audit that added this found `legibility` asserting almost nothing. Its
+contrast check read `varOf('bg') || varOf('ink')` and neither variable has ever
+existed — the background is `--void` — so it hit `continue` on every pass and
+the check the suite is named for had never run. Its spectral-colour check
+matched `class="star-body"`, which the chart has never emitted. The suite went
+from 8 checks to 147 and immediately found two real failures: `.statusbar .keys`
+and `.star.future .star-label` were both painting text in `--rule` at 2.41:1,
+well below AA. Both are now `--ash`.
+
+That check is now written the other way round — it walks every CSS rule that
+paints text and measures whatever colour it finds, against that rule's own
+background or the one it inherits. A fixed list of variables only ever covers
+the ones somebody thought of.
+
 **Assertions derive their expectations from `data/*.json` rather than hardcoding
 counts.** The old scratch harness asserted "86 records" for a whole session after
 the 87th landed; a test that must be hand-updated is a test that will be wrong.

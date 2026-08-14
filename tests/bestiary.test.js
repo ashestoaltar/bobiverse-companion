@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = ({ok, get, run, ROOT}) => {
+module.exports = ({ok, get, run, each, need, ROOT}) => {
   const BESTIARY = get('BESTIARY');
   const SYS = get('SYS');
   const state = get('state');
@@ -109,10 +109,11 @@ module.exports = ({ok, get, run, ROOT}) => {
   state.view = 'bestiary';
   run('render()');
   ok(stage().includes('beast-art empty'), 'creatures without art should get a placeholder plate');
-  if (drawn.length) ok(/<div class="beast-art"><svg/.test(stage()), 'illustrated creature did not render its art');
+  ok(drawn.length >= 1, 'no creature carries artwork — the inline-SVG path is untested');
+  ok(/<div class="beast-art"><svg/.test(stage()), 'illustrated creature did not render its art');
 
   // ---- the system link hands off to the chart ----
-  const withSystem = beasts.find(c => c.system);
+  const withSystem = need('a creature with a home system', beasts.find(c => c.system));
   if (withSystem) {
     state.view = 'bestiary';
     state.beast = withSystem.id;

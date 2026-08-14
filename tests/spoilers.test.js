@@ -10,7 +10,7 @@
 // holding". It walks every book, every register, and every element render()
 // writes to, and looks for leaks by id and by prose.
 
-module.exports = ({ok, get, run, ROOT}) => {
+module.exports = ({ok, get, run, each, need, ROOT}) => {
   const state = get('state');
   const doc = get('document');
   const BOBS = get('BOBS');
@@ -249,7 +249,10 @@ module.exports = ({ok, get, run, ROOT}) => {
 
   // A section that is partly here says so. Serving four paragraphs of five in
   // silence would be the register quietly editing itself.
-  const homer = BOBS.find(b => b.id === 'homer');
+  const homer = need('Homer, whose fate note is why paragraph markers exist',
+                     BOBS.find(b => b.id === 'homer'));
+  ok(homer && homer.spoil < BOOK_MAX,
+     'Homer no longer has prose that is partly held — the partial-section case is untested');
   if (homer && homer.spoil < BOOK_MAX) {
     const doss = dossierAt(homer.spoil, 'homer');
     ok(/FURTHER PARAGRAPHS? WITHHELD/.test(doss),
@@ -427,7 +430,8 @@ module.exports = ({ok, get, run, ROOT}) => {
   }
 
   // and it has to hold everywhere the name is printed, not just in shown()
-  const will = BOBS.find(b => b.id === 'riker');
+  const will = need('Will, the record a reading position renames', 
+                    BOBS.find(b => b.id === 'riker'));
   if (will) {
     at(1, () => {
       for (const reg of REGISTERS) {

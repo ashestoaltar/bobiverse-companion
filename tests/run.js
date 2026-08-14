@@ -69,6 +69,36 @@ const ok = (cond, message) => {
   checks++;
   if (!cond) failures.push(`${suite}: ${message}`);
 };
+
+/* Deriving expectations from the data instead of hardcoding them is right, and
+   it has one blind spot: a case that computes an expected count of zero and
+   observes zero passes without proving anything happened. A loop over an empty
+   list runs no assertions and reports success in the same cheerful tone as a
+   loop over eighty-seven. A bug that empties a register sails straight through.
+
+   That is not hypothetical here. This project lost most of a day to a harness
+   reporting 2,585 checks passed while the ebooks sat deleted on disk — the
+   cache still held the parse, so everything downstream had something to agree
+   with. This is that shape drawn smaller.
+
+   `each` and `need` are the fix at the point of use: a collection has to have
+   something in it before it is worth iterating, and a lookup that finds nothing
+   is a failure rather than a quiet skip. Both return what they were given, so
+   they drop into existing code without restructuring it. */
+const each = (label, items, fn, min = 1) => {
+  const list = Array.from(items || []);
+  ok(list.length >= min,
+     `${label}: expected at least ${min}, got ${list.length} — ` +
+     `an empty list here asserts nothing at all`);
+  list.forEach(fn);
+  return list;
+};
+
+const need = (label, value) => {
+  ok(value !== undefined && value !== null && value !== false,
+     `${label}: nothing to test against — the case below would be skipped silently`);
+  return value;
+};
 // Reach into the VM for a value the app declared at top level.
 const get = name => {
   try { return vm.runInContext(name, sandbox); }
@@ -119,7 +149,7 @@ function firstDiff(a, b) {
 }
 
 // ---- run the suites ----------------------------------------------------
-const ctx = {ok, get, run, snapshot, sandbox, ROOT, HERE};
+const ctx = {ok, get, run, snapshot, each, need, sandbox, ROOT, HERE};
 
 const suites = fs.readdirSync(HERE)
   .filter(f => f.endsWith('.test.js'))
@@ -131,17 +161,59 @@ if (!suites.length) {
   process.exit(2);
 }
 
+const counted = {};
+
 for (const file of suites) {
   suite = file.replace(/\.test\.js$/, '');
   const before = failures.length;
+  const beforeChecks = checks;
   console.log(`\n${suite}`);
   try {
     require(path.join(HERE, file))(ctx);
   } catch (e) {
     failures.push(`${suite}: threw — ${e.stack}`);
   }
+  counted[suite] = checks - beforeChecks;
   const added = failures.length - before;
   if (added) console.log(`  ${added} failed`);
+}
+
+/* A floor under every suite, recorded like the golden master.
+   `each` and `need` only guard the sites that use them, and a hand-written loop
+   added tomorrow will not. This catches the class instead of the instances: if
+   a suite runs materially fewer assertions than it did when the count was last
+   recorded on purpose, something stopped being checked, and the run says so
+   instead of reporting a smaller number in the same cheerful tone.
+
+   It is a floor, not an equality, because counts grow with the data — 87
+   records became 88 and every per-record assertion follows. Growth is silent.
+   Only a drop is a failure, which is the direction that hides bugs. The
+   tolerance absorbs a record being retired without a false alarm; anything
+   past it wants a human to agree that fewer checks is correct, and to say so
+   with --update-snapshots. */
+const FLOOR_SLACK = 0.02;
+const floorFile = path.join(snapshotDir, 'checks.json');
+const recorded = fs.existsSync(floorFile)
+  ? JSON.parse(fs.readFileSync(floorFile, 'utf8')) : {};
+
+if (UPDATE || !fs.existsSync(floorFile)) {
+  fs.mkdirSync(snapshotDir, {recursive: true});
+  fs.writeFileSync(floorFile, JSON.stringify({...recorded, ...counted}, null, 2) + '\n');
+  console.log(`\n  ${fs.existsSync(floorFile) ? 'updated' : 'wrote'} check floors`);
+} else {
+  for (const [name, n] of Object.entries(counted)) {
+    checks++;
+    const was = recorded[name];
+    if (was === undefined) {
+      failures.push(`${name}: no check floor recorded — run with --update-snapshots ` +
+                    `to accept ${n} as the baseline`);
+    } else if (n < Math.floor(was * (1 - FLOOR_SLACK))) {
+      failures.push(`${name}: ran ${n} checks, down from ${was}. Something stopped ` +
+                    `being asserted — usually a derived list that came back empty, ` +
+                    `which passes without proving anything. If fewer is right, ` +
+                    `re-record with --update-snapshots.`);
+    }
+  }
 }
 
 // ---- report ------------------------------------------------------------

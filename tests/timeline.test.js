@@ -5,7 +5,7 @@
 // content: is it in order, does it only claim what it can source, and does it
 // stop where the reader has stopped.
 
-module.exports = ({ok, get, run}) => {
+module.exports = ({ok, get, run, each, need}) => {
   const state = get('state');
   const BOBS = get('BOBS');
   const SYSTEMS = get('SYSTEMS');
@@ -60,10 +60,10 @@ module.exports = ({ok, get, run}) => {
      'Bob-1 is described as built — he was woken, 117 years after dying');
 
   // ---- the registry's own voice is not an event in the story -------------
-  for (const p of BLOG.posts.filter(x => x.voice === 'editor')) {
+  each('posts in the registry voice', BLOG.posts.filter(x => x.voice === 'editor'), p => {
     ok(!all.some(e => e.html.includes(p.title)),
        `an editor post is in the chronology: ${p.title}`);
-  }
+  });
   ok(BLOG.posts.some(p => p.voice === 'bobnet' && all.some(e => e.html.includes(p.title))),
      "none of Bill's posts made it onto the timeline");
 
