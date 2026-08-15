@@ -52,7 +52,7 @@ module.exports = ({ok, get, run, ROOT}) => {
   };
   trip('#genealogy/bill', () => ok(state.view === 'genealogy' && state.selected === 'bill'), 'genealogy');
   trip('#chart/82_eridani', () => ok(state.view === 'chart' && get('CHART').sel === '82_eridani'), 'chart');
-  trip('#bestiary/dragon', () => ok(state.view === 'bestiary' && state.beast === 'dragon'), 'bestiary');
+  trip('#bestiary/gorilloid', () => ok(state.view === 'bestiary' && state.beast === 'gorilloid'), 'bestiary');
   trip('#peoples/deltans', () => ok(state.view === 'peoples' && state.people === 'deltans'), 'peoples');
   trip('#memorium/arthur', () => ok(state.view === 'memorium' && state.selected === 'arthur'), 'memorium');
   trip('#unresolved?f=c,lead', () => ok(state.filters.has('c') && state.filters.has('lead')), 'filters');

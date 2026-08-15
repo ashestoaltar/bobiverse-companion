@@ -34,9 +34,10 @@
             "type": "string",
             "enum": [
               "people",
-              "polity"
+              "polity",
+              "faction"
             ],
-            "description": "A people is a sapient species. A polity is anything that governs, organises or speaks for one — a state, a council, a movement, an enclave, a resistance. They share a register because in this series they are the same argument seen from two angles: who counts as a person, and who gets to decide."
+            "description": "A people is a sapient species. A polity is anything that governs, organises or speaks for one — a state, a council, a movement, an enclave, a resistance. A faction is the third thing the Bobs invented: Starfleet, the Skippies, the Gamers, the Borg. They are not polities and calling them one to get them in the door would cost this register the distinction that makes it worth having — a polity holds ground and speaks for a population, and a faction holds nothing and speaks for one man who kept copying himself. They are here rather than only on bobs.json because they cut across lineage and cannot be drawn as a subtree. All three share a register because in this series they are the same argument seen from three angles: who counts as a person, who gets to decide, and who you throw in with."
           },
           "of": {
             "type": "string",
@@ -103,6 +104,10 @@
             "minimum": 1,
             "maximum": 5,
             "description": "The latest book this entry's own note draws on. Used only when a reader has set a reading position: the entry itself is gated by `cite`, but the note is free prose and no citation bounds it. Absent means undeclared, and undeclared prose is withheld — a blank panel rather than a spoiled ending. Must be at least the book of `cite`."
+          },
+          "factionTag": {
+            "type": "string",
+            "description": "Faction kinds only: the value that appears in `faction` on a record in bobs.json, so the register can list a faction's members and a record can link back to it. Spelled out rather than derived from the id, because a mapping you have to guess at is a mapping that silently stops matching."
           }
         }
       }

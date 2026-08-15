@@ -1002,7 +1002,8 @@ const REGISTERS = [
      statusLine(rows.length === all.length ? `${all.length} peoples and polities`
                                            : `${rows.length} of ${all.length}`,
                 `${all.filter(e => e.kind === 'people').length} species`,
-                `${all.filter(e => e.kind === 'polity').length} polities`);
+                `${all.filter(e => e.kind === 'polity').length} polities`,
+                `${all.filter(e => e.kind === 'faction').length} Bob factions`);
    },
    dossier: () => state.people ? renderPeopleDossier(state.people) : null,
    onClick: e => {
@@ -2249,7 +2250,7 @@ function renderDossier(){
         ${fateShown ? f('FATE', `${fateOf(v).label} — ${fateOf(v).full}`) : ''}
         ${fateShown ? f('ON RECORD', v.fateCite) : ''}
         ${fateShown ? fh('LOST AT', sysLink(v.lostAt)) : ''}
-        ${f('FACTION', v.faction)}
+        ${fh('FACTION', factionLink(v.faction))}
         ${f('NAMESAKE', b.ref && b.ref !== '—' ? b.ref : '')}
         ${f('CITATION', v.cite)}
       </dl>
@@ -2417,16 +2418,36 @@ function peoples(){
   const rows = !q ? all.slice() : all.filter(e =>
     [e.name, e.expansion, e.kind, e.of, e.place, sysName(e.system), e.note, e.cite]
       .some(v => v && String(v).toLowerCase().includes(q)));
-  // Species first, then polities; loudest first inside each. A polity only
-  // makes sense once you know whose it is.
+  // Species, then polities, then factions; loudest first inside each. A polity
+  // only makes sense once you know whose it is, and a faction only once you
+  // know there is nobody it is of.
+  const rank = {people: 0, polity: 1, faction: 2};
   return rows.sort((a, b) =>
-    (a.kind === b.kind ? 0 : a.kind === 'people' ? -1 : 1) ||
+    (rank[a.kind] || 0) - (rank[b.kind] || 0) ||
     (b.mentions || 0) - (a.mentions || 0) || a.name.localeCompare(b.name));
+}
+
+const KIND_WORD = {people: 'sapient species', polity: 'polity', faction: 'Bob faction'};
+
+/* A faction tag on a record and a faction entry in the peoples register are the
+   same thing said twice — affiliation is a fact about a Bob, and a faction is
+   also a thing in the world with a history. `factionTag` ties them, and
+   validate.py holds both ends against one list so neither can drift alone. */
+function factionEntry(tag){
+  return tag ? ((PEOPLES && PEOPLES.entries) || [])
+    .find(e => e.kind === 'faction' && e.factionTag === tag && !heldEntry(e)) : null;
+}
+function factionLink(tag){
+  const e = factionEntry(tag);
+  return !tag ? '' : e
+    ? `<a href="${addr('peoples', e.id)}" data-people="${esc(e.id)}">${esc(tag)}</a>`
+    : esc(tag);
 }
 
 function peopleWhere(e){
   const sys = sysName(e.system);
   if (e.place && sys) return `${e.place}, ${sys}`;
+  if (e.kind === 'faction') return 'holds no ground';
   return e.place || sys || 'no fixed world on record';
 }
 
@@ -2447,15 +2468,17 @@ function renderPeoples(rows){
       </span>
     </button>`).join('');
 
-  const species = group('people'), polities = group('polity');
+  const species = group('people'), polities = group('polity'), factions = group('faction');
   return `<div class="reg-lead"><span class="redacted">[</span>${
       rows.length === all.length ? `${all.length} on file` : `${rows.length} of ${all.length}`
     }<span class="redacted">]</span><br><br>
-    Everyone the Bobs had to decide how to treat, and every body that claimed to
-    speak for them. Where an acronym is expanded here, a character expanded it on
-    the page — FAITH has no expansion because the books never give one.</div>
+    Everyone the Bobs had to decide how to treat, every body that claimed to
+    speak for them, and the four things the Bobs sorted themselves into. Where an
+    acronym is expanded here, a character expanded it on the page — FAITH has no
+    expansion because the books never give one.</div>
     ${species ? `<div class="sec"><div class="sec-label">SPECIES</div><div class="entries">${species}</div></div>` : ''}
-    ${polities ? `<div class="sec"><div class="sec-label">POLITIES</div><div class="entries">${polities}</div></div>` : ''}`;
+    ${polities ? `<div class="sec"><div class="sec-label">POLITIES</div><div class="entries">${polities}</div></div>` : ''}
+    ${factions ? `<div class="sec"><div class="sec-label">BOB FACTIONS — NO GROUND, NO POPULATION</div><div class="entries">${factions}</div></div>` : ''}`;
 }
 
 function renderPeopleDossier(id){
@@ -2469,7 +2492,7 @@ function renderPeopleDossier(id){
   return `
     <div class="dossier-head">
       <div>
-        <div class="serial">[${e.kind === 'people' ? 'SAPIENT SPECIES' : 'POLITY'}]</div>
+        <div class="serial">[${(KIND_WORD[e.kind] || e.kind).toUpperCase()}]</div>
         <h2>${esc(e.name)}</h2>
         ${e.expansion ? `<div class="sub">${esc(e.expansion)}</div>` : ''}
       </div>
@@ -2478,7 +2501,7 @@ function renderPeopleDossier(id){
     <div class="dossier-body">
     ${e.art ? `<div class="beast-art big">${e.art}</div>` : ''}
     <dl class="fields">
-      ${f('KIND', e.kind === 'people' ? 'sapient species' : 'polity')}
+      ${f('KIND', KIND_WORD[e.kind] || e.kind)}
       ${f('WORLD', peopleWhere(e))}
       ${f('STANDING', e.status)}
       ${e.kind === 'people' ? f('CONTACT', CONTACT_NOTE[e.contact] || e.contact) : ''}
@@ -2486,6 +2509,12 @@ function renderPeopleDossier(id){
       ${f('MENTIONS', e.mentions != null ? `${e.mentions} across the ${BOOK_WORD} books` : null)}
       ${f('FIRST ON RECORD', citeUpTo(e.cite))}
     </dl>
+    ${(() => {
+      if (e.kind !== 'faction') return '';
+      const mine = BOBS.filter(b => !heldRecord(b) && shown(b).faction === e.factionTag);
+      return mine.length ? `<div class="sec"><div class="sec-label">JOINERS ON RECORD — ${mine.length}</div>
+        <div class="kids">${mine.map(b => linkTo('register', b.id, shown(b).name)).join('')}</div></div>` : '';
+    })()}
     ${theirs.length ? `<div class="sec"><div class="sec-label">POLITIES — ${theirs.length}</div>
       <div class="kids">${theirs.map(t =>
         `<a href="${addr('peoples', t.id)}" data-people="${esc(t.id)}">${esc(t.name)}</a>`).join('')}</div></div>` : ''}
@@ -3405,7 +3434,8 @@ function bootLines(){
     [`[Chart: ${systems.length} systems \u00b7 ${stars.toLocaleString()} background stars]`, 130],
     [`[Bestiary: ${beasts.length} creatures \u00b7 Peoples: ` +
      `${folk.filter(e => e.kind === 'people').length} species, ` +
-     `${folk.filter(e => e.kind === 'polity').length} polities]`, 180],
+     `${folk.filter(e => e.kind === 'polity').length} polities, ` +
+     `${folk.filter(e => e.kind === 'faction').length} factions]`, 180],
     // A real hold on the last line — the sequence should land, not stop.
     ['[STATUS: Ready]', 700],
   ];

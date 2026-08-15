@@ -39,7 +39,15 @@ module.exports = ({ok, get, run, ROOT}) => {
   // ---- shape ----
   const byId = Object.fromEntries(entries.map(e => [e.id, e]));
   for (const e of entries) {
-    ok(['people', 'polity'].includes(e.kind), `${e.id}: bad kind ${e.kind}`);
+    ok(['people', 'polity', 'faction'].includes(e.kind), `${e.id}: bad kind ${e.kind}`);
+    // A faction is the register's third kind and is defined by what it lacks:
+    // no ground and nobody it speaks for. If either ever appears on one, it was
+    // a polity all along and the distinction has quietly stopped meaning
+    // anything.
+    if (e.kind === 'faction') {
+      ok(!e.system && !e.place, `${e.id}: a faction holds no ground`);
+      ok(!e.of, `${e.id}: a faction speaks for itself`);
+    }
     ok(e.cite && /^Bk\d+ ch\d+ · /.test(e.cite), `${e.id}: cite missing or malformed: ${e.cite}`);
     ok(e.note && e.note.length > 40, `${e.id}: note too thin`);
     if (e.of) {
@@ -91,13 +99,15 @@ module.exports = ({ok, get, run, ROOT}) => {
     ok(stage().includes(`>${e.name}<`), `${e.id}: name missing from its row`);
   }
   ok(!/NaN|undefined/.test(stage()), 'peoples stage contains NaN or undefined');
-  ok(/SPECIES/.test(stage()) && /POLITIES/.test(stage()), 'both sections should be labelled');
+  ok(/SPECIES/.test(stage()) && /POLITIES/.test(stage()) && /BOB FACTIONS/.test(stage()),
+     'all three sections should be labelled');
 
-  // species come before polities
-  const order = [...stage().matchAll(/data-entry="([^"]+)"/g)].map(m => m[1]);
-  const firstPolity = order.findIndex(id => byId[id].kind === 'polity');
-  const lastPeople = order.map(id => byId[id].kind).lastIndexOf('people');
-  ok(firstPolity === -1 || lastPeople < firstPolity, 'species should all precede polities');
+  // species, then polities, then factions — the register's own argument in
+  // reading order: who counts as a person, who decides, who you throw in with
+  const RANK = {people: 0, polity: 1, faction: 2};
+  const order = [...stage().matchAll(/data-entry="([^"]+)"/g)].map(m => RANK[byId[m[1]].kind]);
+  ok(order.every((r, i) => i === 0 || order[i - 1] <= r),
+     `the three kinds are interleaved: ${order.join('')}`);
 
   // ---- search ----
   state.q = 'quinlan';
@@ -121,6 +131,31 @@ module.exports = ({ok, get, run, ROOT}) => {
     if (e.expansion) ok(d.includes(e.expansion), `${e.id}: dossier omits the expansion`);
   }
 
+  // ---- factions tie to the records, in both directions -------------------
+  // The point of putting the four in this register is that a faction is a thing
+  // in the world and not just a tag. If the tie breaks, the entry is decoration.
+  const BOBS = get('BOBS');
+  for (const e of entries.filter(x => x.kind === 'faction')) {
+    ok(e.factionTag, `${e.id}: a faction needs a factionTag`);
+    const mine = BOBS.filter(b => b.faction === e.factionTag);
+    ok(mine.length > 0, `${e.id}: factionTag ${e.factionTag} matches no record`);
+    state.people = e.id;
+    run('render()');
+    const d = doc.getElementById('dossier').innerHTML;
+    for (const b of mine) ok(d.includes(`#register/${b.id}`), `${e.id}: joiners omit ${b.id}`);
+  }
+  // and the record points back
+  const tagged = BOBS.find(b => b.faction);
+  if (tagged) {
+    state.view = 'register'; state.selected = tagged.id;
+    run('render()');
+    const rd = doc.getElementById('dossier').innerHTML;
+    const target = entries.find(e => e.factionTag === tagged.faction);
+    ok(target && rd.includes(`#peoples/${target.id}`),
+       `${tagged.id}'s faction should link to its register entry`);
+    state.view = 'peoples'; state.selected = null;
+  }
+
   // a people lists the polities that speak for it
   state.people = 'quinlans';
   run('render()');
@@ -136,5 +171,6 @@ module.exports = ({ok, get, run, ROOT}) => {
   run('render()');
 
   console.log(`  ${entries.filter(e => e.kind === 'people').length} species, ` +
-              `${entries.filter(e => e.kind === 'polity').length} polities`);
+              `${entries.filter(e => e.kind === 'polity').length} polities, ` +
+              `${entries.filter(e => e.kind === 'faction').length} Bob factions`);
 };

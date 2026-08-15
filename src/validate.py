@@ -40,6 +40,11 @@ FATES = {
 FATE_NEEDS_CITE = {"restored", "presumed", "memorium"}
 FATE_NEEDS_NOTE = {"presumed", "memorium"}
 REQUIRED = ("id", "name", "src")
+# The four mutual-interest groups. They live in two files on purpose: a tag on
+# the record, because affiliation is a fact about a Bob, and an entry in the
+# peoples register, because a faction is a thing in the world with a history.
+# The two are tied by `factionTag` and this set, so neither can drift alone.
+FACTIONS = {"Starfleet", "Skippies", "Gamers", "Borg"}
 
 ROOT_ID = "bob1"
 
@@ -793,12 +798,25 @@ def _check_peoples() -> tuple[list[str], list[str]]:
             errors.append(f"peoples {eid}: duplicate id")
         seen.add(eid)
 
-        if e.get("kind") not in ("people", "polity"):
-            errors.append(f"peoples {eid}: kind {e.get('kind')!r} is not people or polity")
+        if e.get("kind") not in ("people", "polity", "faction"):
+            errors.append(f"peoples {eid}: kind {e.get('kind')!r} is not people, "
+                          f"polity or faction")
         if not e.get("cite"):
             errors.append(f"peoples {eid}: needs a cite")
         if e.get("contact") and e.get("kind") != "people":
             errors.append(f"peoples {eid}: contact is about a species, not a polity")
+        # A faction holds no ground and speaks for no population — that is the
+        # whole reason it is not a polity, so it may not claim a world either.
+        if e.get("kind") == "faction" and (e.get("system") or e.get("place")):
+            errors.append(f"peoples {eid}: a faction has no territory; "
+                          f"drop system/place or make it a polity")
+        if e.get("kind") == "faction" and e.get("of"):
+            errors.append(f"peoples {eid}: a faction speaks for itself, not for a people")
+        if e.get("kind") == "faction" and e.get("factionTag") not in FACTIONS:
+            errors.append(f"peoples {eid}: factionTag {e.get('factionTag')!r} is not "
+                          f"one of the tags records carry ({', '.join(sorted(FACTIONS))})")
+        if e.get("factionTag") and e.get("kind") != "faction":
+            errors.append(f"peoples {eid}: factionTag belongs to a faction")
 
         # a polity has to belong to somebody we know, when it belongs to anyone
         owner = e.get("of")
@@ -858,6 +876,8 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
         ids.add(bob.get("id"))
         if bob.get("src") not in TIERS:
             errors.append(f"{where}: unknown tier {bob.get('src')!r}")
+        if bob.get("faction") and bob["faction"] not in FACTIONS:
+            errors.append(f"{where}: unknown faction {bob['faction']!r}")
         fate = bob.get("fate")
         if fate not in FATES:
             errors.append(f"{where}: unknown fate {fate!r}")

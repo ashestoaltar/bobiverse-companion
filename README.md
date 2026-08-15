@@ -85,7 +85,11 @@ names shows that the post exists.
 - **Bestiary** — the non-sapient fauna, loudest first by how much of the books
   they actually occupy. Fauna only: the Deltans, Quinlans, Pav and the Others are
   people, and people get their own register. That line is enforced by the build,
-  because the series is largely Bob working out where to draw it.
+  because the series is largely Bob working out where to draw it — and it earned
+  its keep when the dragons of Jabberwocky, filed here as the most-discussed
+  animal in the series, turned out to be the intelligent species the books say
+  they are. Adding them to the other register failed the build, which is what
+  the check is for.
 - **In Memorium** — the Bobs who didn't come back. The books put the line at
   the backup rather than the hull: a Bob whose transfer completed is restored
   into a new vessel and carries on, so a destroyed ship is not a death. Four
@@ -97,12 +101,16 @@ names shows that the post exists.
   Every chapter after each of those losses has since been searched for the name,
   which is how one of them left that column; none of the rest came back, and the
   page says the search was run rather than leaving the gap looking unexamined.
-- **Peoples** — the sapient species and the polities that claim to speak for
-  them, with `contact` recording how each stands with the Bobs: uplifted, walked
-  among without being told, aware and unimpressed, or at war. Acronyms are only
-  expanded where the books expand them — on the page by a character, or in book
-  2's List of Terms, which is where FAITH finally gets unpacked after five books
-  of nobody in the story ever saying it out loud.
+- **Peoples** — the sapient species, the polities that claim to speak for them,
+  and the four things the Bobs sorted themselves into. `contact` records how each
+  species stands with the Bobs: uplifted, walked among without being told, aware
+  and unimpressed, or at war. The Bob factions are a third kind rather than
+  polities, and the build enforces the difference — a polity holds ground and
+  speaks for a population, and Starfleet holds nothing and speaks for one man who
+  kept copying himself. Acronyms are only expanded where the books expand them —
+  on the page by a character, or in book 2's List of Terms, which is where FAITH
+  finally gets unpacked after five books of nobody in the story ever saying it
+  out loud.
 - **Timeline** — the one axis nothing else reads. It owns no data: every event
   is a date already held somewhere else — a build date, a fate citation, first
   contact with a system, a post, the transfers that failed at 82 Eridani — put
@@ -296,15 +304,16 @@ subtraction — and the validator errors the moment the pool shrinks to the coun
 because at that point the names are known and the rows should stop being dashes.
 
 **9 creatures** in `data/bestiary.json`, each pinned to the world it lives on and
-cited to its first appearance, and all nine drawn.
+cited to its first appearance, eight of them drawn.
 
-**5 species and 9 polities** in `data/peoples.json`. A name may be a people or
-fauna, never both, and the build checks the two files against each other. The
-five species are drawn and none of the polities are — a government is not a
-thing you draw, and inventing an emblem for an acronym the books never even
-expand would be a larger fabrication than inventing a meaning for it.
+**7 species, 19 polities and 4 Bob factions** in `data/peoples.json`. A name may
+be a people or fauna, never both, and the build checks the two files against each
+other — which is how the dragons left the bestiary. Five species are drawn and no
+polity is: a government is not a thing you draw, and inventing an emblem for an
+acronym the books never even expand would be a larger fabrication than inventing
+a meaning for it. The dragons and the Roanokians are owed portraits.
 
-The research backlog is `data/todo.json` — 47 items, 34 cleared — and is a view
+The research backlog is `data/todo.json` — 47 items, 35 cleared — and is a view
 in the console. It has never once got shorter.
 
 ## How it's kept honest
@@ -324,7 +333,7 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 15,438 checks across 20 suites against the shipped page,
+- `make test` runs 15,645 checks across 20 suites against the shipped page,
   including a golden-master snapshot of 139 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and

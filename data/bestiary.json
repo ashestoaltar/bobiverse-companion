@@ -90,21 +90,8 @@
       "sapience": "none",
       "mentions": 6,
       "cite": "Bk3 ch35 · Marcus, October 2215",
-      "note": "Poseidon's largest recorded animal — Bob's reading put a full-grown one at roughly airliner scale, and the one he actually saw was bigger than that. Krakens, hydrae and leviathans together were still not the biggest things in that ocean; the survey kept turning up new ones, usually the hard way.",
-      "spoil": 3
-    },
-    {
-      "id": "dragon",
-      "name": "Dragon",
-      "namedBy": "Mario",
-      "namedById": "mario",
-      "system": "jabberwocky",
-      "role": "predator",
-      "sapience": "none",
-      "mentions": 191,
-      "cite": "Bk4 ch6 · Bob, May 2333",
-      "note": "The most-discussed animal in the whole series, and the one the Bobs ended up flying as. Built to swoop a lake and take fish on the wing — long legs, the wingspan for it, and enough of a flight envelope that Garfield had to work out the reflexes before anyone could pilot one. Mario named them.",
-      "spoil": 4
+      "note": "Poseidon's largest recorded animal — Bob's reading put a full-grown one at roughly airliner scale, and the one he actually saw was bigger than that. Krakens, hydrae and leviathans together were still not the biggest things in that ocean; the survey kept turning up new ones, usually the hard way. The name got reused: Howard first called Jabberwocky's living hydrogen islands leviathans too, before floater stuck. Two different animals, two systems, one word — the third such collision in this project after Hector and Surly.",
+      "spoil": 5
     },
     {
       "id": "trout",
@@ -116,8 +103,22 @@
       "sapience": "none",
       "mentions": 13,
       "cite": "Bk5 ch29 · Howard, October 2342",
-      "note": "The dragons' preferred prey fish, and a name Howard assigned on sight of a single image without troubling anyone for a second opinion. Bridget, who had never seen a trout, declined to argue.",
+      "note": "The dragons' preferred prey fish, and a name Howard assigned on sight of a single image without troubling anyone for a second opinion. Bridget, who had never seen a trout, declined to argue. Trout are what the dragons fish for, and the dragons turned out to be people.",
       "spoil": 5
+    },
+    {
+      "id": "floater",
+      "name": "Floater",
+      "namedBy": "Howard",
+      "namedById": "howard",
+      "system": "jabberwocky",
+      "role": "megafauna",
+      "sapience": "none",
+      "mentionPattern": "\\bfloaters?\\b",
+      "cite": "Bk5 ch23 · Howard, September 2342",
+      "note": "Jabberwocky's living hydrogen balloons, big enough to carry whole ecosystems and whole dragon towns on their backs — commensal, in Howard's reading. He called them leviathans first, which collides with Poseidon's marine giant, then floaters, which Bridget asked him not to make stick. He made it stick. They breed slowly, as very large long-lived animals with no natural enemies tend to, which is why burning one is the atrocity of the Alexandrian war rather than a tactic: Alexander's army surrounds a floater and kills whatever tries to leave.",
+      "spoil": 5,
+      "mentions": 133
     }
   ]
 }

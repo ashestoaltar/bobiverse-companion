@@ -59,7 +59,8 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
   }
   ok(!/NaN|undefined/.test(stage()), 'bestiary stage contains NaN or undefined');
 
-  // sorted loudest-first, so the dragons lead
+  // sorted loudest-first — the gorilloids lead now that the dragons turned out
+  // to be people and left for the other register
   const order = [...stage().matchAll(/data-beast="([^"]+)"/g)].map(m => m[1]);
   const byMentions = beasts.slice().sort((a, b) =>
     (b.mentions || 0) - (a.mentions || 0) || a.name.localeCompare(b.name)).map(c => c.id);

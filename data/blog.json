@@ -124,12 +124,12 @@
         "methodology"
       ],
       "about": [
-        "bestiary/dragon",
+        "peoples/dragons",
         "bestiary/gorilloid",
         "peoples/spits"
       ],
-      "body": "Candidate lists lie. \"Landers\" is a person. \"Spits\" is an island faction. \"Boojums\" are drones. \"Hexghi\" is family structure. File any of those under fauna and the console starts arguing the opposite of the books.\n\nWe also almost missed dragons, which is embarrassing at a hundred-plus mentions.\n\nRule that stays: a name is people or fauna, never both. The build checks. I am not above being saved from myself by a script.",
-      "spoil": 4
+      "body": "Candidate lists lie. \"Landers\" is a person. \"Spits\" is an island faction. \"Boojums\" are drones. \"Hexghi\" is family structure. File any of those under fauna and the console starts arguing the opposite of the books.\n\nWe also almost missed dragons, which is embarrassing at a hundred-plus mentions.\n\nRule that stays: a name is people or fauna, never both. The build checks. I am not above being saved from myself by a script.\n\n@bk5 Update, and it is at my expense. We did not almost miss the dragons — we filed them. Bestiary, sapience: none, and a note calling them the most-discussed animal in the series. The books call them the intelligent species the first time anyone asks what to call them. They build towns, keep written records, fight a war of conquest and have opinions about the residents of the next village.\n\nWhat caught it was the rule above, working exactly as advertised: adding them to the peoples register failed the build, because a name may not be filed as both. The check I wrote to save me from myself did.",
+      "spoil": 5
     },
     {
       "id": "appendix-vs-pdf",

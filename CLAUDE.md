@@ -1241,7 +1241,26 @@ re-parsed. Sol, Epsilon Eridani, Delta Eridani, 82 Eridani, Omicron² Eridani,
 Delta Pavonis, Gamma Pavonis, Eta Cassiopeiae, Poseidon, Gliese 877,
 HIP 84051, Alpha Centauri, Ragnarök/Valhalla.
 
-**Bestiary.** Built — `data/bestiary.json`, nine creatures, all nine drawn.
+**Peoples and polities.** Built — `data/peoples.json`, thirty entries in three
+kinds. A **people** is a sapient species. A **polity** is anything that governs,
+organises or speaks for one: a state, a council, a movement, an enclave, a
+resistance. A **faction** is the third thing, and it exists because the four Bob
+groups would have broken the second one. A polity holds ground and speaks for a
+population; Starfleet, the Skippies, the Gamers and the Borg hold nothing and
+speak for one man who kept copying himself. Calling them governments to get them
+in the door would have cost the register the distinction that makes it worth
+having, so `validate.py` enforces the difference instead: a faction with a
+`system`, a `place` or an `of` is an error.
+
+They are here as well as on `bobs.json` because affiliation is a fact about a
+Bob *and* a faction is a thing in the world with a history. `factionTag` ties the
+two, `FACTIONS` in `validate.py` holds both ends against one list, and the
+console runs the link in both directions — a record's FACTION field opens the
+entry, and the entry lists its joiners the way a people lists its polities.
+
+The second pass over this register cost the bestiary an entry; see below.
+
+**Bestiary.** Built — `data/bestiary.json`, nine creatures, eight drawn.
 The inherited list that used to sit here was mostly wrong, and every entry was
 checked against the corpus before it went in. Five of its eight items did not
 survive: **landers** (92) is Dr. Landers, a human; **spits** (36) is the Spits,
@@ -1250,7 +1269,7 @@ a human faction; **boojums** (47) are Quinlan *drones*, machines not animals;
 are what the Bobs called the Quinlans before learning their own name — people,
 so they belong in the peoples register. Only gorilloids, raptors and krakens
 came through. The list also missed the biggest one entirely: **dragons**, 191
-mentions across books 4 and 5, named by Mario.
+mentions, named by Mario.
 
 The rule that keeps this register honest is that it holds **non-sapient fauna
 only**. `validate.py` rejects a sapient entry by name and by the `sapience`
@@ -1258,6 +1277,28 @@ field, which has no "sapient" value to set. This is not fussiness: the series is
 Bob working out who counts as a person, and filing the Deltans under "beasts"
 would make the console argue the opposite. Where the books leave it open, use
 `sapience: "contested"` rather than deciding for them.
+
+**And then it happened here.** The dragons were in this file, `sapience: none`,
+described as the most-discussed animal in the series. The first time anyone in
+the books asks what to call them, the question is *do we have a name for the
+intelligent species yet* — they build three-dimensional towns from medieval to
+Renaissance, keep written records, fight a war of conquest under a dragon called
+Alexander, and hold the residents of the next village to be barely above talking
+animals. Howard and Bridget walk among them in dragon mannies without telling
+them, which is the Quinlan arrangement exactly.
+
+Two things about how it was caught. The rule worked: adding them to the peoples
+register **failed the build**, because a name may not be filed as both, and the
+check that caught it was written to catch exactly this. And the mention count
+was part of what hid it — 191 sounds like a headline animal, but seventeen of
+those are book 4, where the word is a D&D monster in the Gamers' campaign or the
+idiom *dragon fodder*, and the entry's citation pointed at one of them. A
+mention count that spans two meanings is not evidence about either.
+
+`assets/bestiary/dragon.svg` is deliberately left behind, unused. It is a 4:3
+side profile labelled *survey silhouette*, and the peoples register draws 16:10
+portraits for a reason set out below. Carrying the plate across would have made
+the drawing say what the entry no longer does.
 
 Mention counts are re-derived from the corpus at validate time, so a number that
 drifts gets caught. A creature whose name appears nowhere is flagged outright —
