@@ -1154,10 +1154,31 @@
       "id": "tony",
       "name": "Tony",
       "src": "c",
+      "cite": "Bk2 ch74 · Bill, May 2217",
       "fate": "active",
       "ref": "—",
-      "spoil": 3,
-      "note": "Mentioned once, attending the moot after the loss at Delta Pavonis."
+      "spoil": 2,
+      "note": "Mentioned once, attending the moot after the loss at Delta Pavonis. Answers Howard's remark that it doesn't help to remember the Others have done this before, with the observation that this is the first one they watched happen."
+    },
+    {
+      "id": "wally",
+      "name": "Wally",
+      "src": "c",
+      "cite": "Bk2 ch39 · Bill, Aug 2188",
+      "fate": "active",
+      "ref": "—",
+      "spoil": 2,
+      "note": "Interrupted the war-planning moot, over some heckling, to ask whether the room had in fact voted to go to war and, if it had, how far it meant to take it. Bill judged the question a fair one and put it to the floor, which is how the moot came to be arguing about whether they were prepared to exterminate a species rather than about how. Nothing else on record: no parent, no vessel, no system."
+    },
+    {
+      "id": "ben",
+      "name": "Ben",
+      "src": "c",
+      "cite": "Bk2 ch66 · Bill, Jan 2208",
+      "fate": "active",
+      "ref": "—",
+      "spoil": 2,
+      "note": "Named from the crowd at the moot Bill called when the Others' convoy turned for Delta Pavonis, pointing out that moving a planet clear of them would freeze everyone living on it. Bill places him in the new batch of dreadnaughts, which puts his build in the run-up to that war rather than after it, but names neither a hull nor a system."
     }
   ]
 }

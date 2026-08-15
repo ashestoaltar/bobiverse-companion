@@ -154,8 +154,9 @@ re-read against the new book.
 Selecting a record pulls its dossier and traces the route back to Bob-1
 hop by hop, **grading each link separately**. A chain can be solid for two hops
 and then run out of sources, and that's visible rather than smoothed over.
-52 of the 87 traces reach Bob-1; 35 terminate — an honest number rather than a
-flattering one. It was 34 until the back matter got parsed.
+52 of the 89 traces reach Bob-1; 37 terminate — an honest number rather than a
+flattering one. It was 34 until the back matter got parsed, and 35 until a
+second pass over the moot scenes turned up two more Bobs with no ancestor.
 
 Two details follow the books rather than taste. Bobs all wear the same face, so
 the registry identifies them the way Guppy does — by serial number, with the
@@ -261,9 +262,9 @@ gitignored and should remain so.
 
 ## Status
 
-**87 replicants** — 70 with citations, 50 with a parent stated in the books, 2
+**89 replicants** — 73 with citations, 50 with a parent stated in the books, 2
 with their lineage deliberately expunged, and 12 carrying an unverified lead from
-a dropped source. 52 traces reach Bob-1; 35 terminate. Biography is held to the
+a dropped source. 52 traces reach Bob-1; 37 terminate. Biography is held to the
 same standard as lineage: `desig`, `born` and `vessel` only where the books print
 them, and generation counted down the tree except for the three the text states
 out loud.
@@ -298,7 +299,7 @@ five species are drawn and none of the polities are — a government is not a
 thing you draw, and inventing an emblem for an acronym the books never even
 expand would be a larger fabrication than inventing a meaning for it.
 
-The research backlog is `data/todo.json` — 47 items, 32 cleared — and is a view
+The research backlog is `data/todo.json` — 47 items, 33 cleared — and is a view
 in the console. It has never once got shorter.
 
 ## How it's kept honest
@@ -318,7 +319,7 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 16,804 checks across 20 suites against the shipped page,
+- `make test` runs 16,897 checks across 20 suites against the shipped page,
   including a golden-master snapshot of 139 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and

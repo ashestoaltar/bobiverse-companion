@@ -907,6 +907,48 @@ looking at the thing.
 The user found it from a page number in about a minute. That is worth
 remembering next time a null result feels solid.
 
+**A sweep for who speaks misses whoever is gestured at.** The moot scenes were
+swept once and produced Tony, who has a dialogue tag on his line. A second pass
+over the same chapters produced Wally and Ben, who do not: Wally is *interrupted
+by* and *steps forward*, Ben is *nodded at*. Three Bobs in a crowd, one pattern
+family, and it caught a third of them.
+
+So the second pass ran four searches chosen to be unlike each other rather than
+four spellings of one idea — every capitalised token diffed against the
+register, every name in a speech tag, every name in a vocative, every name in a
+list of three or more. The address pass is the one that earned its keep, because
+it is the only one that can see a Bob nobody quotes. When varying a search, vary
+what it keys on, not its wording.
+
+It caught the lesson out immediately, too. The chapter set for the second pass
+was built with `\bmoot\b`, which does not match *moots* — six chapters were
+outside the set on the first run, one of them named for a moot in its own title.
+They held no Bobs, so nothing was lost, but nothing about the method said so.
+Vary the shape of the search **and** check that the search found the corpus you
+think it did.
+
+Two things made the output readable enough to check by hand. A proper name is a
+token that essentially never appears lower-case anywhere in the 357 chapters —
+cheaper and far better than any stopword list, and it does not need maintaining.
+And the register has to be loaded with its aliases, or the sweep reports Riker
+as an undiscovered Bob.
+
+**Write down what the negatives resolved to.** The pass is recorded with every
+unfamiliar name at a moot and what it turned out to be — Henry Roberts is
+another probe's replicant and says outright that he does not clone himself,
+Bridget and Hannah Turnbull and Steven Gilligan are human guests, Hersch and
+Icky are Herschel and Icarus, Jock is what the Pav call Jacques, Pacino is Al.
+"Swept and found nothing" is not a record of anything and cannot be audited or
+resumed; a list of resolved names can be, and it is the only thing that makes
+the word *exhausted* mean more than *tired*.
+
+The stated reason for re-running it was wrong, by the way. The backlog said the
+corpus had grown by six chapters — true, but they are the appendices of books 2
+and 4, and an appendix contains no moot. Nothing about the evidence had changed.
+**A sweep whose method you can improve is worth re-running against a corpus that
+has not moved**, and the note that sends you back to it does not have to be
+right about why.
+
 And do not restate a derived number in prose. Five `fateNote`s said "six
 vessels ... exactly half ... all six here" and were wrong on all three counts
 within hours of being written, because Elmer's vessel was the seventh and
@@ -978,8 +1020,11 @@ list. Open the file, or the register that renders it.
 Don't re-run these expecting new names; they're exhausted.
 
 - **POV coverage** — all 25 distinct POV names in the corpus have records.
-- **Moot enumerations** — swept all 55 moot chapters. Victor was the only real
-  name they turned up, and he's now in.
+- **Moot scenes** — 62 chapters say moot or moots; the first pass counted 55 and
+  a later one 56, both because the pattern missed the plural. Two sweeps: the
+  first turned up Victor and Tony, the second Wally and Ben. Every other
+  unfamiliar name at a moot is resolved to a non-Bob in the backlog entry, which
+  is what makes this bullet checkable rather than a memory.
 - **Name co-occurrence** — capitalised names appearing in lists alongside two or
   more known Bobs. Everything it surfaced was either added or ruled non-Bob.
 - **Faction enumeration** — swept for the mutual-interest groups. Four exist:
@@ -988,12 +1033,15 @@ Don't re-run these expecting new names; they're exhausted.
   (Bk3 ch57) and Jeremy to Morlock (Bk4 ch3). Everything else the sweep caught
   was either an original naming or an idiom — "call me Shirley" is a joke.
 
-- **Book 2's Cast of Characters appendix** — mined. 26 parentage claims, every
-  one agreeing with what we had and none contradicting. It rescued ten records
-  onto primary-text footing when the secondary sources were dropped, settled
-  Verne as Bill's clone (the narrative only hinted), and turned up **Surly**, a
-  Bob we didn't have at all. The parser rejects it as back matter, so it has to
-  be read by hand. Books 4 and 5 have no equivalent.
+- **The Cast of Characters appendix** — mined. 26 parentage claims, every one
+  agreeing with what we had and none contradicting. It rescued ten records onto
+  primary-text footing when the secondary sources were dropped, settled Verne as
+  Bill's clone (the narrative only hinted), and turned up **Surly**, a Bob we
+  didn't have at all. Books 2 and 4 both carry it, identical to the line, along
+  with a Genealogy and a terms list; books 1, 3 and 5 have none. This bullet used
+  to say the parser rejected it and that book 4 had no equivalent, and was wrong
+  on both counts from the day the back matter got parsed — which is the cost of
+  writing "already worked" beside a method instead of beside a result.
 
 ## The blog, and its two voices
 
