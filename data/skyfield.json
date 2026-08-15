@@ -3,6 +3,8 @@
  "source": "HYG Database v4.4, https://codeberg.org/astronexus/hyg",
  "licence": "CC BY-SA 4.0 — attribution required, and ShareAlike propagates to anything embedding this.",
  "magnitude_limit": 6.0,
+ "_display_limit": "How faint a star the console will draw, which is not the same question as how faint a star was extracted. The chart fades a star by (7.0 - magnitude) / 5.2 and clamps that at 0.30, so every star fainter than magnitude 5.44 comes out at exactly the same alpha and exactly the same 1.1px square: the ramp has run out of room to tell them apart. The 2,065 stars past that point are not carrying magnitude any more, they are carrying uniform speckle across the systems the chart exists to show — and 40KB of it. The extract stays at 6.0 because that is what was taken from HYG and the number should not drift; the build cuts to this before shipping. Raise it back and the faint stars return, unchanged and still indistinguishable.",
+ "display_limit": 5.5,
  "frame": "Unit direction vectors in equatorial (ICRS) Cartesian, the same frame as systems.json.",
  "packing": "Flat int list, 5 per star: x*1000, y*1000, z*1000, mag*10, colour_index*100.",
  "count": 5070,

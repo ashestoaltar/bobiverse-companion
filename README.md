@@ -70,8 +70,8 @@ names shows that the post exists.
   rotate, wheel to zoom, and a year scrubber from 2133 to 2345 that lights each
   system as the Bobs first reach it. Stars are drawn in their true spectral
   colour and sized by absolute magnitude, so an F2 dwarf really does outshine an
-  M3. The backdrop is the real naked-eye sky — 5,070 stars to magnitude 6 from the
-  HYG Database, in their true colours. Nothing on the chart is invented.
+  M3. The backdrop is the real naked-eye sky — 3,005 stars to magnitude 5.5 from
+  the HYG Database, in their true colours. Nothing on the chart is invented.
 - **Systems** — the map. Every place on record, ordered by distance from Sol,
   with what is at each: who was built there, who was lost there, what lives
   there. A mark says how firmly each is tied to the rest of the register —
@@ -272,7 +272,9 @@ out loud.
 stars — Taylor used Hipparcos catalogue numbers, which is why a Bob can read his
 own origin off his serial — so the astrometry is real too, from SIMBAD, with
 distances and Cartesian positions computed from parallax rather than copied. The
-backdrop is 5,070 naked-eye stars from the HYG Database.
+backdrop is 3,005 naked-eye stars from the HYG Database — 5,070 were extracted,
+and the ones the chart's own brightness ramp could no longer tell apart are cut
+at build time rather than shipped as identical grey specks.
 
 **4 Bobs on the In Memorium list**, plus three that are counted and unnamed;
 8 more whose vessels were destroyed and whose fate the books never settle, and 5
@@ -296,7 +298,7 @@ five species are drawn and none of the polities are — a government is not a
 thing you draw, and inventing an emblem for an acronym the books never even
 expand would be a larger fabrication than inventing a meaning for it.
 
-The research backlog is `data/todo.json` — 47 items, 31 cleared — and is a view
+The research backlog is `data/todo.json` — 47 items, 32 cleared — and is a view
 in the console. It has never once got shorter.
 
 ## How it's kept honest

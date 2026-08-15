@@ -1619,10 +1619,14 @@ function ringPath(radius, w, h){
 
 
 /* ---- atmosphere -------------------------------------------------------
-   The backdrop is now the real sky rather than an invented one: 5,070 stars
-   to naked-eye magnitude 6, from the HYG Database. It goes on a canvas behind
-   the SVG — five thousand nodes per frame is not something SVG should be
-   asked to do, and a backdrop needs no hit-testing.                        */
+   The backdrop is the real sky rather than an invented one, from the HYG
+   Database. It goes on a canvas behind the SVG — three thousand nodes per
+   frame is not something SVG should be asked to do, and a backdrop needs no
+   hit-testing.
+
+   How faint it goes is set in skyfield.json and arrives as SKYFIELD.limit;
+   nothing here should name a magnitude, because the number that matters is
+   where styleSky's alpha ramp bottoms out and the two have to agree.       */
 const SKY = (() => {
   if (!SKYFIELD || !SKYFIELD.stars) return [];
   const v = SKYFIELD.stars.split(',');
@@ -1640,15 +1644,22 @@ const SKY = (() => {
    here is the difference between 5.3ms of per-frame work and the projection
    alone. Deferred rather than done at load because it costs nothing until the
    chart is actually opened. */
+/* How faint a magnitude renders, as two functions rather than two expressions
+   buried in the loop, because the build's decision about where to cut the
+   catalogue is an argument about exactly these curves: it drops the stars this
+   pair can no longer tell apart. Anyone retuning the ramp has to be able to ask
+   it what it does, and the tests have to be able to ask the same. */
+const skyAlpha = m => Math.max(0.30, Math.min(1, (7.0 - m) / 5.2));
+const skySize  = m => m < 1.5 ? 2.6 : m < 3 ? 2.0 : m < 4.5 ? 1.5 : 1.1;
+
 let SKY_STYLED = false;
 function styleSky(){
   if (SKY_STYLED) return;
   SKY_STYLED = true;
   for (const st of SKY){
-    const b = Math.max(0.30, Math.min(1, (7.0 - st.m) / 5.2));
     const [cr, cg, cb] = ciColour(st.ci);
-    st.fill = `rgba(${cr},${cg},${cb},${b.toFixed(3)})`;
-    st.size = st.m < 1.5 ? 2.6 : st.m < 3 ? 2.0 : st.m < 4.5 ? 1.5 : 1.1;
+    st.fill = `rgba(${cr},${cg},${cb},${skyAlpha(st.m).toFixed(3)})`;
+    st.size = skySize(st.m);
   }
 }
 
@@ -1728,11 +1739,28 @@ function spikes(x, y, r, col){
   return `<path class="spike" d="M${x-a},${y} H${(+x)+ +a} M${x},${y-a} V${(+y)+ +a}" stroke="${col}"/>`;
 }
 
+/* The glow, and the open question of whether taming it went too far.
+
+   It had been 4.2x the star's radius at 85% centre opacity, which turned every
+   star into a white blob and threw away the spectral colour. Cutting it to 2.6x
+   and 40% fixed that, and the reasoning got the two knobs mixed together. They
+   do different things. The radius decides whether neighbouring stars merge —
+   that is what made the blobs, and it stays at 2.6x. The opacity decides
+   nothing about the core at all, because the core is drawn opaque on top of the
+   glow: everything inside offset 1/2.6, or 38.5%, is behind it and never seen.
+
+   Which makes the first two stops nearly decorative and the shape from 38.5%
+   outward the whole of it. There it was reaching the star's own edge at about
+   0.11 alpha — dimmer than the faintest star in the background field, which
+   sits at the 0.30 floor. A system the chart exists to show had a halo fainter
+   than the speckle behind it. So the stops move to where they can be seen: the
+   first visible value clears that floor, and the falloff past it is unchanged
+   in shape, so nothing spreads and nothing merges. */
 function chartDefs(){
   return '<defs>' + Object.entries(SPECTRAL_COLOUR).map(([k, c]) =>
     `<radialGradient id="glow-${k}">` +
-      `<stop offset="0%" stop-color="${c}" stop-opacity=".40"/>` +
-      `<stop offset="30%" stop-color="${c}" stop-opacity=".13"/>` +
+      `<stop offset="0%" stop-color="${c}" stop-opacity=".55"/>` +
+      `<stop offset="40%" stop-color="${c}" stop-opacity=".34"/>` +
       `<stop offset="100%" stop-color="${c}" stop-opacity="0"/>` +
     '</radialGradient>').join('') + '</defs>';
 }
@@ -1774,19 +1802,68 @@ function chartSvg(w, h){
       if (box.x1 < q.x2 && box.x2 > q.x1 && box.y1 < q.y2 && box.y2 > q.y1) return null;
     return box;
   };
-  /* Try the four sides before giving up on a name — dropping a 34-scene system
-     because its neighbour got there first is worse than moving the text. */
-  const claim = (px, py, r, txt) => {
+  /* Try every side before giving up on a name — dropping a 34-scene system
+     because its neighbour got there first is worse than moving the text.
+
+     The four orthogonal positions were not enough. Measured at the default
+     camera, p Eridani and Zeta Tucanae lost their names at 1000x700, and five
+     systems lost them at 800x520, because the inner cluster is dense in exactly
+     the four directions the labels were allowed to occupy. The diagonals are
+     free space in a cluster that is roughly radial: a name pushed out at 45°
+     clears the neighbours that sit beside and above a star without needing a
+     leader line, which would add a second thing to declutter. Orthogonals stay
+     first in the list — a label straight out to the right is easier to
+     associate with its dot than one set off at an angle — so the diagonals are
+     only ever reached by a name that would otherwise not be drawn at all.
+
+     Then the whole ring is tried again further out. Six systems sit inside
+     sixty pixels of each other south of Sol, each wanting a box around eighty
+     pixels wide; at one fixed distance there is no arrangement that fits them,
+     however many directions are offered. Pushing out is the only way to find
+     room — but a name far enough from its dot stops labelling it and starts
+     labelling whatever it drifted next to, which is a worse failure than a
+     missing name. A missing name is honestly missing and the dot is still
+     there to click; a misattributed one is the chart stating something false.
+
+     So distance is not capped by a number picked for the look of it. A name is
+     allowed as far out as it likes provided it stays nearer to its own dot
+     than to anybody else's — the Voronoi rule, and the same rule a reader uses
+     when deciding which star a name belongs to. That guard is what makes the
+     third ring safe: the placements it would have got wrong are refused
+     individually rather than the whole distance being ruled out. */
+  /* Where a label attaches: the point of its box nearest its own star, which is
+     the end the eye follows back. The test is on that point and not on the box,
+     because the two measure different things and only one of them is the
+     question. A ninety-pixel name in a tight cluster will always sweep past
+     somebody else on its way out; that is unavoidable and readable. What is not
+     readable is a name that starts nearer to another star than to its own. */
+  const owns = (box, mine) => {
+    const ax = Math.min(Math.max(mine.p.x, box.x1), box.x2);
+    const ay = Math.min(Math.max(mine.p.y, box.y1), box.y2);
+    const near = Math.hypot(ax - mine.p.x, ay - mine.p.y);
+    for (const d of drawn)
+      if (d !== mine && Math.hypot(ax - d.p.x, ay - d.p.y) <= near) return false;
+    return true;
+  };
+  const claim = (mine, r) => {
+    const px = mine.p.x, py = mine.p.y, txt = mine.sys.name;
     const wpx = txt.length * 6.4 + 10;
-    const spots = [
-      {x: px + r + 7,       y: py + 4,        anchor: 'start'},
-      {x: px - r - 7 - wpx, y: py + 4,        anchor: 'start'},
-      {x: px - wpx/2,       y: py - r - 7,    anchor: 'start'},
-      {x: px - wpx/2,       y: py + r + 15,   anchor: 'start'},
-    ];
+    const spots = [];
+    for (const reach of [1, 1.9, 2.8]){
+      const gap = (r + 7) * reach, d = gap * 0.71;   // 45° at the same clearance
+      spots.push(
+        {x: px + gap,         y: py + 4,        anchor: 'start'},
+        {x: px - gap - wpx,   y: py + 4,        anchor: 'start'},
+        {x: px - wpx/2,       y: py - gap,      anchor: 'start'},
+        {x: px - wpx/2,       y: py + gap + 8,  anchor: 'start'},
+        {x: px + d,           y: py - d + 4,    anchor: 'start'},
+        {x: px + d,           y: py + d + 8,    anchor: 'start'},
+        {x: px - d - wpx,     y: py - d + 4,    anchor: 'start'},
+        {x: px - d - wpx,     y: py + d + 8,    anchor: 'start'});
+    }
     for (const sp of spots){
       const box = free(sp.x, sp.y, wpx);
-      if (box) { placed.push(box); return sp; }
+      if (box && owns(box, mine)) { placed.push(box); return sp; }
     }
     return null;
   };
@@ -1796,7 +1873,7 @@ function chartSvg(w, h){
     ((a.sys.abs_mag ?? 99) - (b.sys.abs_mag ?? 99)));
   const labelAt = new Map();
   for (const d of priority){
-    const spot = claim(d.p.x, d.p.y, starRadius(d.sys), d.sys.name);
+    const spot = claim(d, starRadius(d.sys));
     if (spot) labelAt.set(d.sys.id, spot);
   }
 
@@ -1873,7 +1950,7 @@ function renderChart(){
         <svg class="chart-svg" id="chart" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
       ${rows}
-      <div class="hint" style="padding-top:6px">System positions, colours and sizes: SIMBAD astrometry, spectral class and absolute magnitude. Backdrop: ${SKYFIELD ? SKYFIELD.count.toLocaleString() : 0} naked-eye stars to magnitude 6 from the HYG Database v4.4 (CC BY-SA 4.0), coloured by their real B&minus;V index. Nothing on this chart is invented.</div>
+      <div class="hint" style="padding-top:6px">System positions, colours and sizes: SIMBAD astrometry, spectral class and absolute magnitude. Backdrop: ${SKYFIELD ? SKYFIELD.count.toLocaleString() : 0} naked-eye stars to magnitude ${SKYFIELD ? SKYFIELD.limit : 0} from the HYG Database v4.4 (CC BY-SA 4.0), coloured by their real B&minus;V index. Nothing on this chart is invented.</div>
     </div>`;
 }
 

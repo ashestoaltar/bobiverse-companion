@@ -115,6 +115,79 @@ module.exports = ({ok, get, run, each, need, sandbox, ROOT}) => {
     ok(defs.includes(`glow-${cls}`), `no gradient defined for spectral class ${cls}`);
   }
 
+  // The glow is drawn under an opaque core, so everything inside offset 38.5%
+  // is invisible and only the stops beyond it do any work. It has to clear the
+  // backdrop's own floor out there, or a system reads fainter than the speckle
+  // behind it — which is what it was doing at 0.11.
+  const stops = [...defs.matchAll(/offset="(\d+)%" stop-color="[^"]*" stop-opacity="([\d.]+)"/g)]
+                  .map(m => [+m[1] / 100, +m[2]]);
+  ok(stops.length >= 3, `the glow gradient has only ${stops.length} stops`);
+  const alphaAt = t => {
+    for (let i = 1; i < stops.length; i++) {
+      if (t <= stops[i][0]) {
+        const [a, b] = [stops[i - 1], stops[i]];
+        return a[1] + (b[1] - a[1]) * (t - a[0]) / (b[0] - a[0]);
+      }
+    }
+    return stops[stops.length - 1][1];
+  };
+  const CORE = 1 / 2.6;                       // where the opaque disc ends
+  ok(alphaAt(CORE) > run('skyAlpha(6)'),
+     `the glow reaches the star's edge at ${alphaAt(CORE).toFixed(3)}, ` +
+     `dimmer than a backdrop star at ${run('skyAlpha(6)')}`);
+  ok(alphaAt(CORE) > alphaAt(0.7) && alphaAt(0.7) > alphaAt(0.95),
+     'the glow does not fall off outward');
+  ok(alphaAt(1) === 0, 'the glow does not reach zero at its own edge');
+
+  // ---- labels: how many survive decluttering, and do they point at the right
+  // star. Both were changed together, and only one of them is about looks.
+  //
+  // Coverage across a spread of cameras and viewports rather than one, because
+  // a placement rule tuned to a single screenshot is a placement rule tuned to
+  // a single screenshot. Over these 24 views: 73.1% before the diagonals and
+  // the second and third rings, 86.3% after, worst case 9 of 20 up to 14. The
+  // floor sits under both so retuning has room, and a regression to the old
+  // behaviour still fails.
+  const VIEWS = [[1400, 900], [1000, 700], [800, 520], [600, 420]];
+  const CAMERAS = [[-0.62, 0.5], [0, 0], [2.36, 1.1], [-2.36, -0.3], [0.79, -0.9], [3.14, 0.5]];
+  const unesc = s => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<')
+                      .replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+  let labelled = 0, views = 0, misowned = 0, orphan = 0, dupe = 0;
+  for (const [w, h] of VIEWS) {
+    for (const [yaw, pitch] of CAMERAS) {
+      Object.assign(CHART, {yaw, pitch, zoom: 1, panx: 0, pany: 0, year: 2345, sel: null});
+      const svg = run(`chartSvg(${w},${h})`);
+      const labels = [...svg.matchAll(/class="star-label" x="([-\d.]+)" y="([-\d.]+)">([^<]*)</g)]
+                       .map(m => ({x: +m[1], y: +m[2], name: unesc(m[3])}));
+      const dots = PLACED.map(s => ({
+        name: s.name, p: run(`project(${JSON.stringify(s.xyz_ly)},${w},${h})`)}));
+      views++; labelled += labels.length;
+      if (new Set(labels.map(l => l.name)).size !== labels.length) dupe++;
+      for (const l of labels) {
+        const mine = dots.find(d => d.name === l.name);
+        if (!mine) { orphan++; continue; }
+        // The box the app placed, and the corner of it nearest its own star —
+        // the end a reader follows back to find out what the name belongs to.
+        const box = {x1: l.x, y1: l.y - 9.8, x2: l.x + l.name.length * 6.4 + 10, y2: l.y + 4.6};
+        const ax = Math.min(Math.max(mine.p.x, box.x1), box.x2);
+        const ay = Math.min(Math.max(mine.p.y, box.y1), box.y2);
+        const near = Math.hypot(ax - mine.p.x, ay - mine.p.y);
+        for (const d of dots)
+          if (d !== mine && Math.hypot(ax - d.p.x, ay - d.p.y) <= near) { misowned++; break; }
+      }
+    }
+  }
+  ok(orphan === 0, `${orphan} labels name something that is not a placed system`);
+  ok(dupe === 0, `${dupe} views drew the same name twice`);
+  ok(misowned === 0,
+     `${misowned} labels start nearer to another system's dot than to their own`);
+  const coverage = labelled / (views * PLACED.length);
+  ok(coverage > 0.80,
+     `only ${(coverage * 100).toFixed(1)}% of names survive decluttering across ${views} views`);
+  console.log(`  labels: ${(coverage * 100).toFixed(1)}% placed across ${views} views, ` +
+              `none misattributed`);
+  Object.assign(CHART, {yaw: -0.62, pitch: 0.5, zoom: 1, panx: 0, pany: 0, sel: null});
+
   console.log(`  ${PLACED.length} placed, ${UNPLACED.length} unplaced, ${withSpec.length} with spectra`);
 
   // ---- the help text must only name gestures this device can make ----------

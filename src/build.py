@@ -67,6 +67,36 @@ def _check_pixels(art: dict) -> None:
                 sys.exit(1)
 
 
+def cut_sky(sky: dict) -> tuple[str, float]:
+    """Drop the backdrop stars the console cannot render as distinct from each other.
+
+    The extract is the record of what was taken from HYG and does not move; the
+    display limit is a rendering decision, and the reasoning for the number is
+    in the data file beside it. Cutting here rather than in the page keeps the
+    bytes out of the shipped file — the whole point is that they were being
+    downloaded to be drawn as identical grey specks.
+
+    Returns the repacked star list and the limit actually applied, so the page
+    can state its own faintest magnitude instead of carrying a hardcoded 6.
+    """
+    limit = sky.get("display_limit", sky["magnitude_limit"])
+    if limit > sky["magnitude_limit"]:
+        print(f"ERROR: skyfield display_limit {limit} is fainter than the "
+              f"extract's own magnitude_limit {sky['magnitude_limit']} — "
+              f"the stars to fill it were never taken from HYG")
+        sys.exit(1)
+    v = sky["stars"].split(",")
+    if len(v) != sky["count"] * 5:
+        print(f"ERROR: skyfield says {sky['count']} stars but holds "
+              f"{len(v) / 5:.1f} — the packed list and the count disagree")
+        sys.exit(1)
+    cut = round(limit * 10)
+    kept = [x for i in range(sky["count"])
+            if int(v[i * 5 + 3]) <= cut
+            for x in v[i * 5:i * 5 + 5]]
+    return ",".join(kept), limit
+
+
 def inject_register(html: str, path: str, key: str, register: str,
                     placeholder: str) -> tuple[str, dict, int]:
     """Load a companion register, attach any artwork, and splice it in.
@@ -210,9 +240,11 @@ def main() -> None:
     if SKY_PLACEHOLDER not in html:
         print(f"ERROR: placeholder {SKY_PLACEHOLDER} missing from template")
         sys.exit(1)
+    stars, sky_limit = cut_sky(sky)
+    sky_count = (stars.count(",") + 1) // 5 if stars else 0
     html = html.replace(SKY_PLACEHOLDER, json.dumps(
-        {"count": sky["count"], "stars": sky["stars"], "source": sky["source"],
-         "licence": sky["licence"]}, ensure_ascii=False), 1)
+        {"count": sky_count, "stars": stars, "limit": sky_limit,
+         "source": sky["source"], "licence": sky["licence"]}, ensure_ascii=False), 1)
     html, bestiary, drawn = inject_register(
         html, BESTIARY, "creatures", "bestiary", BEST_PLACEHOLDER)
     html, peoples, drawn_p = inject_register(
@@ -256,7 +288,8 @@ def main() -> None:
 
     print(f"built {os.path.relpath(OUT, ROOT)} — {len(bobs)} records, "
           f"{len(todo['items'])} to-do items, "
-          f"{len(systems['systems'])} systems, {sky['count']} backdrop stars, "
+          f"{len(systems['systems'])} systems, {sky_count} backdrop stars "
+          f"to mag {sky_limit} (of {sky['count']} extracted), "
           f"{len(bestiary['creatures'])} creatures ({drawn} illustrated), "
           f"{len(peoples['entries'])} peoples and polities ({drawn_p} illustrated), "
           f"{len(blog['posts'])} posts, "

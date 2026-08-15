@@ -413,7 +413,7 @@ always there and never takes focus at all: moving it would be a theft.
 **A drag costs less.** Measured before touching it, which the backlog note asked
 for and was right to: the sky was **5.27ms of per-frame work** on a desktop, and
 a phone is several times slower than that. The note's premise was wrong in one
-detail — the 5,070-star backdrop is already on a canvas, not in the SVG — but
+detail — the backdrop is already on a canvas, not in the SVG — but
 the cost was real and in three places. A star's colour, brightness and size are
 properties of the star; rotating cannot change any of them, so computing them
 per frame was 2,668 `ciColour()` calls and 2,668 template strings a frame to
@@ -580,6 +580,62 @@ so `make validate` re-runs that comparison and warns if it drifts.
 `origin`, `lostAt` and `visited` on a Bob are **ids into this file**, and the
 validator rejects one that doesn't resolve. Scope is books 1–4: the book 5
 wormhole network is a topology, not a distance graph, and needs its own model.
+
+### The chart draws only what it can tell apart
+
+Two judgement calls sat in the backlog for a week marked "one-line changes",
+both phrased as questions about taste. Neither turned out to be about taste.
+
+**The backdrop.** The question was whether magnitude 6 is too busy. The answer
+is in `styleSky()`: a star's alpha is `(7.0 - m) / 5.2` clamped at **0.30**, so
+everything fainter than magnitude **5.44** comes out at the same alpha and the
+same 1.1px square. The 2,065 stars past that point were not carrying magnitude
+any more — they were uniform speckle over the systems the chart exists to show,
+and 37KB of it. `data/skyfield.json` now holds both numbers: `magnitude_limit`
+6.0 is the record of what was taken from HYG and does not move, `display_limit`
+5.5 is what the build ships. The page reads its own limit from the data rather
+than stating a magnitude in prose, and `backdrop.test.js` asserts that a star at
+the extract limit would render identically to one at the cut — **so the cut's
+justification is falsifiable.** Retune the ramp and the test fails, which is
+correct: the argument for throwing those stars away would no longer hold.
+
+The general form: **a limit on what you keep is a claim about what you can tell
+apart.** Write down the claim, not just the number.
+
+**The glow.** It had been cut from 4.2x/85% to 2.6x/40% in one step, which mixed
+two knobs that do different jobs. Radius decides whether neighbours merge — that
+was the blob problem, and it stays at 2.6x. Opacity decides nothing about the
+core, because **the core is drawn opaque on top of the glow**: everything inside
+offset 1/2.6 = 38.5% is behind it and never seen. So the first two stops were
+nearly decorative, and out where the gradient is actually visible it reached the
+star's own edge at 0.11 alpha — **dimmer than the faintest star in the backdrop,
+which sits at the 0.30 floor.** A system the chart exists to show had a halo
+fainter than the speckle behind it. The stops move to where they can be seen.
+
+### A missing label is honest; a misplaced one is not
+
+Names were dropping off the chart because the placer offered each one four
+positions — right, left, above, below — and the inner cluster is dense in
+exactly those four directions. Diagonals and two further rings raised coverage
+from **73% to 86%** across 24 camera-and-viewport combinations (measured, not
+eyeballed: a placement rule tuned to one screenshot is tuned to one screenshot).
+
+But reach without a guard is worse than the problem. A name far enough from its
+dot stops labelling it and starts labelling whatever it drifted next to, and
+that is a chart stating something false — where a dropped name is merely absent
+and the dot is still there to click. So distance is not capped by a number
+picked for the look of it. A label may go as far out as it likes provided **it
+stays nearer to its own dot than to anybody else's.**
+
+Getting that rule right took three attempts, and the failures are the useful
+part. Measuring from the box **centre** collapsed coverage to 76%: a 90px-wide
+name reads as sitting 45px from the star it is bolted to, so the cluster handed
+almost every label to whichever star stood at the far end of it. Measuring to
+the **nearest point of the box** was no better — a long name in a tight cluster
+always sweeps past somebody on its way out, which is unavoidable and perfectly
+readable. What works is the **anchor**: the corner of the box nearest its own
+star, the end the eye follows back. Same principle, three formulations, and only
+one of them measures the thing a reader actually judges by.
 
 ## Fate
 
