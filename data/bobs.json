@@ -616,9 +616,11 @@
       "name": "Hungry",
       "parent": "mario",
       "src": "t",
-      "cite": "Bk2 · Cast of Characters",
+      "cite": "Bk2 ch13 · Mario, May 2180",
       "fate": "active",
-      "ref": "Not actually a dwarf. Bob was improvising."
+      "ref": "Not a dwarf. Mario's cohort ran out of real ones.",
+      "spoil": 2,
+      "note": "One of the four Mario built for company at Gliese 54 when he decided he did not want to face the Others alone. The four named themselves after the dwarfs and it was pointed out at some length that there is no Hungry among the seven; he was unmoved. Mario also proposed renaming him Surly, on the evidence of his refusing the drinks theme and taking a coffee, and got an obscene gesture for it — but Mario keeps using it anyway, and one narrative aside a few pages later calls him Surly and corrects itself. See Surly's record: a Bob of that name is operating at 82 Eridani fifteen years later, and the appendix makes him Bill's, not Mario's."
     },
     {
       "id": "hal",
@@ -992,9 +994,10 @@
         "82_eridani"
       ],
       "fate": "active",
-      "ref": "—",
+      "ref": "The name Mario tried to pin on Hungry, in another line and fifteen years earlier.",
       "spoil": 2,
-      "note": "Bill's clone, and one of the Bobs sent back to 82 Eridani on the second attempt at Medeiros. The narrative never introduces him — he exists here only because book 2's Cast of Characters lists him, which is what a back-matter appendix is for and why parsing them mattered."
+      "note": "Bill's clone, and one of the Bobs sent back to 82 Eridani on the second attempt at Medeiros. The narrative never introduces him and never describes him; it only gives him orders. In Bk2 ch50 Loki has him and Verne run the radio jammers, then loose the hunter-seekers, and that is the whole of him on the page. His parentage is here because book 2's Cast of Characters states it, which is what a back-matter appendix is for and why parsing them mattered.",
+      "conflict": "Name collision, and a stranger one than Hector's. Surly is coined in Bk2 ch13 as Mario's jibe at Hungry — who refuses it — and Mario goes on using it anyway. The Bob who actually answers to it is at 82 Eridani in Bk2 ch50, taking orders from Loki alongside Verne, and the Cast of Characters gives him to Bill and gives Hungry to Mario in two separate entries with two separate assignments. So the register keeps them apart, on the strongest source there is, while recording that the books hand the name out twice and never remark on it. The alternative reading — that Hungry took the nickname after all and joined the second expedition — needs the appendix to be wrong about a parent, which it has not been anywhere else in twenty-six claims."
     },
     {
       "id": "hank",
