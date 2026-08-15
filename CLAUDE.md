@@ -583,6 +583,33 @@ so `make validate` re-runs that comparison and warns if it drifts.
 validator rejects one that doesn't resolve. Scope is books 1–4: the book 5
 wormhole network is a topology, not a distance graph, and needs its own model.
 
+### A chapter header names the scene, not the narrator
+
+The `origin`/`visited` sweep started from the obvious rule — a Bob who narrates
+a chapter set at a star was at that star — and the rule is wrong. Bill narrates
+chapters headed Gliese 54, 82 Eridani, Delta Pavonis, Gamma Pavonis and Sol,
+and in each one the prose says where he actually is: controlling drones *from
+here in Epsilon Eridani*, visiting Claude's VR, hosting the meeting in the moot
+VR, popping into Mack's VR. Applied mechanically, the rule would have put five
+systems on the record of the one Bob who famously never leaves home.
+
+So **`visited` means the Bob's matrix was there.** A moot, a video call, a VR
+visit or a manny driven over SCUT is not presence — the same rule that stops a
+moot from placing every Bob at Epsilon Eridani. Where the books show a manny and
+never say where the matrix is, the record says nothing; Riker knocking on a door
+on Romulus is left alone for exactly that reason.
+
+`scenes` and `povs` in `systems.json` are the other half of the pair and are
+*header*-derived on purpose: they index where the story happens and who tells
+it. The dossier used to label that "NARRATED FROM HERE", which is a claim about
+presence the data cannot support, so it now says what it is. Chapters headed en
+route to somewhere count for nowhere.
+
+Two errors fell out of checking the derivation rather than the values: Linus's
+Epsilon Indi chapter was filed under Epsilon Eridani, and two of Icarus's
+book-5 chapters were counted at Alpha Centauri because a wormhole destination is
+called Centaurvania. Neither would have been caught by reading the file.
+
 ### The chart draws only what it can tell apart
 
 Two judgement calls sat in the backlog for a week marked "one-line changes",
@@ -1129,13 +1156,16 @@ two systems with no coordinates — a star map can only name them in a footnote,
 because there is nowhere to draw a megastructure with no parallax.
 
 **The tie mark is why it is worth having.** Filled for a place a record names,
-half for one only narrated from, hollow for one in the file for its astrometry
-alone. It moves with the reading position — seven named by a record at book one,
-fifteen at the end — and it makes the thinness of `visited` visible rather than
-something you would have to go looking for. HIP 14101 carries nine scenes and
-Howard's survey of the Jovian Odin with no record pointing at it; Gliese 54 has
-four scenes and three narrators. Those are the sweep's worklist, and until it is
-run a hollow mark is a **research state, not a fact about the star**.
+half for one a chapter is merely set in, hollow for one in the file for its
+astrometry alone. It moves with the reading position — eleven named by a record
+at book one, twenty at the end. It made the thinness of `visited` visible
+without anyone having to go looking for it, which is what put the sweep on the
+backlog; nine of the twenty-two were hollow before it ran and two are now. Those
+two are Tau Ceti and Kappa Ceti, which have no scenes and no narrator and are in
+the file because the books name them as **distances rather than as
+destinations**. That is the mark working, not a gap: a hollow mark is a
+**research state, not a fact about the star**, and sometimes the research
+finishes and the mark stays hollow.
 
 The dossier is the chart's own, not a second copy — one system, one dossier,
 however you arrived at it. And the timeline's rule for how late a place may date

@@ -75,10 +75,13 @@ names shows that the post exists.
 - **Systems** — the map. Every place on record, ordered by distance from Sol,
   with what is at each: who was built there, who was lost there, what lives
   there. A mark says how firmly each is tied to the rest of the register —
-  named by a record, only narrated from, or present for its astrometry alone —
-  which turns the gaps in our own coverage into something you can see rather
-  than something you would have to go looking for. It also holds the two
-  systems the chart cannot draw, having no coordinates to draw them at.
+  named by a record, merely a place chapters are set, or present for its
+  astrometry alone — which turns the gaps in our own coverage into something you
+  can see rather than something you would have to go looking for. Nine of the
+  twenty-two were unnamed by any record until that mark prompted the sweep that
+  fixed it; two still are, and they are the two the books name as distances
+  rather than as destinations. It also holds the two systems the chart cannot
+  draw, having no coordinates to draw them at.
 - **Bestiary** — the non-sapient fauna, loudest first by how much of the books
   they actually occupy. Fauna only: the Deltans, Quinlans, Pav and the Others are
   people, and people get their own register. That line is enforced by the build,
@@ -154,9 +157,11 @@ re-read against the new book.
 Selecting a record pulls its dossier and traces the route back to Bob-1
 hop by hop, **grading each link separately**. A chain can be solid for two hops
 and then run out of sources, and that's visible rather than smoothed over.
-52 of the 89 traces reach Bob-1; 37 terminate — an honest number rather than a
-flattering one. It was 34 until the back matter got parsed, and 35 until a
-second pass over the moot scenes turned up two more Bobs with no ancestor.
+53 of the 89 traces reach Bob-1; 36 terminate — an honest number rather than a
+flattering one. It was 34 until the back matter got parsed, 35 until a second
+pass over the moot scenes turned up two more Bobs with no ancestor, and 37 until
+the systems sweep found Isaac's parentage stated in a line about who was senior
+to whom.
 
 Two details follow the books rather than taste. Bobs all wear the same face, so
 the registry identifies them the way Guppy does — by serial number, with the
@@ -262,9 +267,9 @@ gitignored and should remain so.
 
 ## Status
 
-**89 replicants** — 73 with citations, 50 with a parent stated in the books, 2
+**89 replicants** — 83 with citations, 51 with a parent stated in the books, 2
 with their lineage deliberately expunged, and 12 carrying an unverified lead from
-a dropped source. 52 traces reach Bob-1; 37 terminate. Biography is held to the
+a dropped source. 53 traces reach Bob-1; 36 terminate. Biography is held to the
 same standard as lineage: `desig`, `born` and `vessel` only where the books print
 them, and generation counted down the tree except for the three the text states
 out loud.
@@ -299,7 +304,7 @@ five species are drawn and none of the polities are — a government is not a
 thing you draw, and inventing an emblem for an acronym the books never even
 expand would be a larger fabrication than inventing a meaning for it.
 
-The research backlog is `data/todo.json` — 47 items, 33 cleared — and is a view
+The research backlog is `data/todo.json` — 47 items, 34 cleared — and is a view
 in the console. It has never once got shorter.
 
 ## How it's kept honest
@@ -319,7 +324,7 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 16,908 checks across 20 suites against the shipped page,
+- `make test` runs 15,438 checks across 20 suites against the shipped page,
   including a golden-master snapshot of 139 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and

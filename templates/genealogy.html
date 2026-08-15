@@ -2013,7 +2013,17 @@ function renderSystemDossier(sys){
       ${born.length ? `<div class="sec"><div class="sec-label">BUILT HERE — ${born.length}</div><div class="kids">${link(born)}</div></div>` : ''}
       ${lost.length ? `<div class="sec"><div class="sec-label">LOST HERE — ${lost.length}</div><div class="kids">${link(lost)}</div></div>` : ''}
       ${feedSection('chart', sys.id)}
-      ${sys.povs.length ? `<div class="sec"><div class="sec-label">NARRATED FROM HERE</div><p class="note">${esc(sys.povs.join(', '))}</p></div>` : ''}
+      ${(() => {
+        /* Chapters set here, and who tells them — which is not who stood here.
+           Bill narrates chapters headed Gliese 54 and Sol from Epsilon Eridani,
+           so the label says what the field is. Gated through visiblePovs or the
+           dossier would name a narrator the reader has not met; it printed the
+           raw list until the origin/visited sweep went looking at it. */
+        const told = visiblePovs(sys);
+        return told.length
+          ? `<div class="sec"><div class="sec-label">CHAPTERS SET HERE — TOLD BY</div><p class="note">${esc(told.join(', '))}</p></div>`
+          : '';
+      })()}
       ${sys.role ? `<div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>${prose(sys.role)}</div>` : ''}
     </div>`;
 }
@@ -2030,23 +2040,34 @@ function renderSystemDossier(sys){
    which the chart can only name in a footnote because there is nowhere on a
    star map to draw a megastructure with no parallax.
 
-   The third thing is the honest one. Nine of the twenty-two systems have no
-   record pointing at them at all: they are in the file for their astrometry and
-   their scene counts, and `visited` has never been swept against the text. The
-   tie mark says which is which, so a thin link reads as a research state rather
-   than as a fact about the system. */
+   The third thing is the honest one. The tie mark grades how well each system
+   is attested, so a thin link reads as a research state rather than as a fact
+   about the system. It is what put the origin/visited sweep on the backlog and
+   what showed the sweep had worked: nine of the twenty-two had no record
+   pointing at them before it and two do now, both of them systems the books
+   name as distances rather than as destinations. It still moves with the
+   reading position — eleven named by a record at book one, twenty at the end. */
 const TIE_MARK = {record: '●', pov: '◐', none: '○'};
 const TIE_NOTE = {
   record: 'a record names it — built there, lost there, or visited',
-  pov: 'narrated from, but no record names it',
+  pov: 'a chapter is set here and a Bob tells it, but no record names it',
   none: 'no record and no narrator on file — here for its astrometry',
 };
 
 /* POV names are gated too. A system listing a narrator the reader has not met
    would answer, from the map, a question the register is holding back. */
+/* Returns the name the reader is allowed to see, not the one systems.json
+   stores. The file records narrators under their final names, so a reader on
+   book one asking what happens at Omicron² Eridani was being told about Will
+   two books before he stops being Riker — the same spoiler the register spends
+   a `nameFrom` field avoiding on the record itself. */
 function visiblePovs(sys){
-  return (sys.povs || []).filter(n =>
-    BOBS.some(b => !heldRecord(b) && (b.name === n || shown(b).name === n)));
+  const out = [];
+  for (const n of (sys.povs || [])) {
+    const b = BOBS.find(x => !heldRecord(x) && (x.name === n || shown(x).name === n));
+    if (b) out.push(shown(b).name);
+  }
+  return out;
 }
 
 function systemTies(){

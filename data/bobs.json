@@ -12,7 +12,8 @@
       "visited": [
         "sol",
         "epsilon_eridani",
-        "delta_eridani"
+        "delta_eridani",
+        "eta_leporis"
       ],
       "fate": "active",
       "ref": "Robert Johansson, the original",
@@ -89,7 +90,9 @@
       "born": "Jul 2145",
       "origin": "epsilon_eridani",
       "visited": [
-        "beta_hydri"
+        "beta_hydri",
+        "gliese_54",
+        "zeta_tucanae"
       ],
       "fate": "active",
       "ref": "Super Mario",
@@ -203,11 +206,16 @@
       "name": "Linus",
       "parent": "bill",
       "src": "t",
-      "cite": "Bk2 · Cast of Characters",
+      "cite": "Bk1 ch40 · Linus, Apr 2165; Bk2 · Cast of Characters",
       "born": "Sep 2150",
       "origin": "epsilon_eridani",
       "fate": "active",
-      "ref": "Linus van Pelt, Peanuts"
+      "ref": "Linus van Pelt, Peanuts",
+      "visited": [
+        "epsilon_indi"
+      ],
+      "spoil": 1,
+      "note": "Struck out for Epsilon Indi alone rather than wait for Bill's next cohort, and fourteen and a half years later found Henry Roberts there — the Australian probe's replicant, whose programme officially did not exist."
     },
     {
       "id": "mulder",
@@ -512,7 +520,8 @@
       "fate": "active",
       "ref": "—",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 1
+      "spoil": 3,
+      "cite": "Bk3 ch18 · Mack, Oct 2220"
     },
     {
       "id": "jack",
@@ -526,12 +535,13 @@
       "fate": "active",
       "ref": "—",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 1
+      "spoil": 3,
+      "cite": "Bk3 ch18 · Mack, Oct 2220"
     },
     {
       "id": "isaac",
       "name": "Isaac",
-      "src": "c",
+      "src": "t",
       "desig": "HIC71683-8",
       "vessel": "Colony ship",
       "origin": "alpha_centauri",
@@ -541,7 +551,9 @@
       "fate": "active",
       "ref": "Asimov, presumably",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 1
+      "spoil": 3,
+      "cite": "Bk3 ch21 · Bill, Jun 2223",
+      "parent": "bart"
     },
     {
       "id": "skinner",
@@ -589,27 +601,35 @@
       "name": "Bashful",
       "parent": "mario",
       "src": "t",
-      "cite": "Bk2 · Cast of Characters",
+      "cite": "Bk2 ch13 · Mario, May 2180; Bk2 · Cast of Characters",
       "fate": "active",
-      "ref": "Snow White dwarf"
+      "ref": "Snow White dwarf",
+      "visited": [
+        "gliese_877"
+      ],
+      "spoil": 2,
+      "note": "One of the four Mario built at Gliese 54 to help find the Others' range. He drew GL 877, picked for being nondescript, and found it full of artificial radio noise.",
+      "origin": "gliese_54"
     },
     {
       "id": "dopey",
       "name": "Dopey",
       "parent": "mario",
       "src": "t",
-      "cite": "Bk2 · Cast of Characters",
+      "cite": "Bk2 ch13 · Mario, May 2180; Bk2 · Cast of Characters",
       "fate": "active",
-      "ref": "Snow White dwarf"
+      "ref": "Snow White dwarf",
+      "origin": "gliese_54"
     },
     {
       "id": "sleepy",
       "name": "Sleepy",
       "parent": "mario",
       "src": "t",
-      "cite": "Bk2 · Cast of Characters",
+      "cite": "Bk2 ch13 · Mario, May 2180; Bk2 · Cast of Characters",
       "fate": "active",
-      "ref": "Snow White dwarf"
+      "ref": "Snow White dwarf",
+      "origin": "gliese_54"
     },
     {
       "id": "hungry",
@@ -620,7 +640,8 @@
       "fate": "active",
       "ref": "Not a dwarf. Mario's cohort ran out of real ones.",
       "spoil": 2,
-      "note": "One of the four Mario built for company at Gliese 54 when he decided he did not want to face the Others alone. The four named themselves after the dwarfs and it was pointed out at some length that there is no Hungry among the seven; he was unmoved. Mario also proposed renaming him Surly, on the evidence of his refusing the drinks theme and taking a coffee, and got an obscene gesture for it — but Mario keeps using it anyway, and one narrative aside a few pages later calls him Surly and corrects itself. See Surly's record: a Bob of that name is operating at 82 Eridani fifteen years later, and the appendix makes him Bill's, not Mario's."
+      "note": "One of the four Mario built for company at Gliese 54 when he decided he did not want to face the Others alone. The four named themselves after the dwarfs and it was pointed out at some length that there is no Hungry among the seven; he was unmoved. Mario also proposed renaming him Surly, on the evidence of his refusing the drinks theme and taking a coffee, and got an obscene gesture for it — but Mario keeps using it anyway, and one narrative aside a few pages later calls him Surly and corrects itself. See Surly's record: a Bob of that name is operating at 82 Eridani fifteen years later, and the appendix makes him Bill's, not Mario's.",
+      "origin": "gliese_54"
     },
     {
       "id": "hal",
@@ -641,7 +662,12 @@
       "src": "t",
       "cite": "Bk2 · Genealogy",
       "fate": "active",
-      "ref": "—"
+      "ref": "—",
+      "visited": [
+        "gamma_pavonis"
+      ],
+      "spoil": 2,
+      "note": "Surveyed Gamma Pavonis and admits to having hoped there would be nothing in the comfort zone worth defending, after what Bill had told him. There was."
     },
     {
       "id": "jacques",
@@ -775,7 +801,8 @@
       "fate": "active",
       "ref": "—",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 3
+      "spoil": 3,
+      "cite": "Bk2 ch8 · Howard, Apr 2189"
     },
     {
       "id": "monty",
@@ -788,7 +815,8 @@
       "fate": "active",
       "ref": "Monty Burns? Monty Python?",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 3
+      "spoil": 3,
+      "cite": "Bk2 ch49 · Mulder, Mar 2195"
     },
     {
       "id": "harvey",
@@ -800,7 +828,9 @@
       "fate": "active",
       "ref": "—",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 3
+      "spoil": 3,
+      "cite": "Bk3 ch74 · Bob, Oct 2263",
+      "gen": 10
     },
     {
       "id": "rudy",
@@ -809,7 +839,12 @@
       "src": "t",
       "cite": "Bk2 · Genealogy",
       "fate": "active",
-      "ref": "—"
+      "ref": "—",
+      "visited": [
+        "epsilon_indi"
+      ],
+      "spoil": 2,
+      "note": "Arrived at Epsilon Indi ahead of Edwin to get an early look at KKP. His chapter is where the books define what arrival means to a Bob: not entry into the system but the moment a travelling Bob has slowed enough to hold a VR session with a stationary one."
     },
     {
       "id": "edwin",
@@ -828,7 +863,10 @@
       "cite": "Bk2 · Cast of Characters",
       "origin": "sol",
       "visited": [
-        "omicron2_eridani"
+        "omicron2_eridani",
+        "hip_14101",
+        "trantor",
+        "jabberwocky"
       ],
       "fate": "active",
       "ref": "—",
@@ -916,7 +954,9 @@
       "gen": 8,
       "vessel": "Version-5 HEAVEN",
       "visited": [
-        "delta_pavonis"
+        "delta_pavonis",
+        "sol",
+        "omicron2_eridani"
       ],
       "fate": "active",
       "ref": "William Herschel, astronomer",
@@ -1007,17 +1047,23 @@
         "p_eridani"
       ],
       "fate": "active",
-      "ref": "—"
+      "ref": "—",
+      "cite": "Bk3 ch21 · Bill, Jun 2223",
+      "spoil": 3,
+      "note": "Posted at p Eridani, which is how the system is on this page at all. Bill names him when working out who could reach 82 Eridani after Mack was hit, and reckons him the nearest at a little under eleven light years — still a decade's help."
     },
     {
       "id": "steve",
       "name": "Steve",
       "src": "c",
       "visited": [
-        "sol"
+        "hip_84051"
       ],
       "fate": "active",
-      "ref": "—"
+      "ref": "—",
+      "cite": "Bk3 ch44 · Jacques, May 2247",
+      "spoil": 3,
+      "note": "Explored and reported HIP 84051, and the register had him at Sol until this was checked. Jacques spends a month reading his survey when he arrives — climate, ecology, geology, thorough enough to call him a keener — and cannot place where the name comes from either."
     },
     {
       "id": "mack",
@@ -1106,7 +1152,10 @@
         "sol"
       ],
       "fate": "active",
-      "ref": "—"
+      "ref": "—",
+      "cite": "Bk5 ch41 · Bill, Jul 2343",
+      "spoil": 5,
+      "note": "On the lunar terraforming crew at Sol, and proud enough of it to walk Bill along the shore of Mare Humorum explaining how they had sped the schedule up. He is also the one who lets slip that a Homer backup was dug out of the old institute, and that a Bob named Gerry says he found it."
     },
     {
       "id": "harry",
@@ -1120,10 +1169,13 @@
       "name": "Xavier Charles",
       "src": "c",
       "visited": [
-        "gamma_pavonis"
+        "trantor"
       ],
       "fate": "active",
-      "ref": "—"
+      "ref": "—",
+      "cite": "Bk5 ch26 · Howard, Aug 2342",
+      "spoil": 5,
+      "note": "The resident Bob on Trantor, and the register had him at Gamma Pavonis until this was checked. Publicly a freelance writer living in a suburban house with no resemblance to Bob Johansson; privately the house has sublevels."
     },
     {
       "id": "fearless",
@@ -1144,7 +1196,10 @@
       "fate": "active",
       "ref": "—",
       "spoil": 4,
-      "note": "A POV Bob in books 3 and 4. Not present in any published tree; lineage unrecorded."
+      "note": "A POV Bob in books 3 and 4. Not present in any published tree; lineage unrecorded.",
+      "visited": [
+        "eta_cassiopeiae"
+      ]
     },
     {
       "id": "andrew",

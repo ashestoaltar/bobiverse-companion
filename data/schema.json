@@ -72,14 +72,14 @@
           },
           "origin": {
             "type": "string",
-            "description": "id of the system where this Bob was built, keyed into data/systems.json. The validator rejects an id that isn't there."
+            "description": "id of the system where this Bob was built, keyed into data/systems.json. The validator rejects an id that isn't there, and checks it against a HIC designation where there is one, because the Hipparcos number in a serial names the system it was built in. Otherwise it rests on the parent being demonstrably there at the time — Mario builds his first four at Gliese 54 in one sentence of Bk2 ch13, which is worth four origins."
           },
           "visited": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "System ids, keyed into data/systems.json. Was a comma-separated string; became a list when the systems file gave the ids somewhere to point."
+            "description": "System ids, keyed into data/systems.json. Was a comma-separated string; became a list when the systems file gave the ids somewhere to point. Means the Bob's matrix was there — his hull, in that system. A VR session, a moot, a video call or a manny driven over SCUT from somewhere else is not a visit, or every Bob would have visited Epsilon Eridani. The distinction is not academic: Bill narrates chapters headed Gliese 54, 82 Eridani, Delta Pavonis, Gamma Pavonis and Sol, and says in each of them that he is watching from home or sitting in somebody else's VR. A chapter header names the scene, not the narrator. Where the books show a manny and never say where the matrix is, this field says nothing."
           },
           "fate": {
             "type": "string",

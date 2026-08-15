@@ -2,10 +2,10 @@
   "backdrop": 50,
   "bestiary": 171,
   "blog": 153,
-  "books": 143,
+  "books": 157,
   "boot": 69,
   "chart": 117,
-  "core": 470,
+  "core": 472,
   "guppy": 1331,
   "legibility": 150,
   "memorium": 323,
@@ -14,9 +14,9 @@
   "registers": 128,
   "shell": 18,
   "snapshot": 291,
-  "spoilers": 9501,
-  "timeline": 354,
+  "spoilers": 8367,
+  "timeline": 416,
   "url": 73,
   "focus": 44,
-  "systems": 3227
+  "systems": 2813
 }

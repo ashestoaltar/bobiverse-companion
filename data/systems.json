@@ -1,5 +1,5 @@
 {
- "_comment": "Star systems of the Bobiverse. Taylor used real catalogue stars, and the HIC numbers in the Bobs' designations are real Hipparcos IDs — Bob reads his own origin off his serial in Bk1 ch15, and HIP 16537 really is Epsilon Eridani. Astrometry, spectral types and V magnitudes are from SIMBAD (ICRS J2000); distance and xyz are computed from parallax here, never transcribed. Books 1-4 only: the book 5 wormhole network is not a distance graph and needs its own model. abs_mag is computed from V and parallax (M = V - 5log10(d_pc) + 5), so the chart can size stars by real luminosity rather than by guess.",
+ "_comment": "Star systems of the Bobiverse. Taylor used real catalogue stars, and the HIC numbers in the Bobs' designations are real Hipparcos IDs — Bob reads his own origin off his serial in Bk1 ch15, and HIP 16537 really is Epsilon Eridani. Astrometry, spectral types and V magnitudes are from SIMBAD (ICRS J2000); distance and xyz are computed from parallax here, never transcribed. Books 1-4 only: the book 5 wormhole network is not a distance graph and needs its own model. abs_mag is computed from V and parallax (M = V - 5log10(d_pc) + 5), so the chart can size stars by real luminosity rather than by guess. `scenes` and `povs` are derived from the chapter headers: how many chapters are set in this system and which Bobs narrate them. That is not the same as who was physically here, and the difference is not marginal — Bill narrates chapters headed Gliese 54, 82 Eridani, Delta Pavonis, Gamma Pavonis and Sol while saying in the text that he is watching from Epsilon Eridani, or visiting somebody's VR, or hosting a moot. A header is a subject line. Presence belongs to `visited` on a record, which is swept against the prose; this field is the index of where the story happens. Chapters headed en route to somewhere count for nowhere.",
  "frame": "Equatorial (ICRS) Cartesian, light-years, Sol at the origin. +x toward RA 0h Dec 0, +z toward the north celestial pole.",
  "source": "SIMBAD, simbad.u-strasbg.fr",
  "systems": [
@@ -29,10 +29,10 @@
    "last_year": 2343,
    "povs": [
     "Bill",
-    "Bob",
+    "Bob-1",
     "Herschel",
     "Homer",
-    "Riker"
+    "Will"
    ],
    "spectral": "G2V",
    "vmag": null,
@@ -54,12 +54,11 @@
    ],
    "places": [],
    "role": "Calvin and Goku beat Medeiros here; later Bart, then Oliver.",
-   "scenes": 4,
+   "scenes": 2,
    "first_year": 2163,
-   "last_year": 2329,
+   "last_year": 2205,
    "povs": [
     "Calvin",
-    "Icarus",
     "Oliver"
    ],
    "spectral": "G2V",
@@ -100,14 +99,13 @@
     }
    ],
    "role": "Bill's Skunk Works and the hub of BobNet for two centuries.",
-   "scenes": 39,
+   "scenes": 37,
    "first_year": 2144,
    "last_year": 2345,
    "povs": [
     "Bill",
-    "Bob",
-    "Howard",
-    "Linus"
+    "Bob-1",
+    "Howard"
    ],
    "spectral": "K2V",
    "vmag": 3.73,
@@ -129,10 +127,11 @@
    ],
    "places": [],
    "role": "",
-   "scenes": 1,
-   "first_year": 2190,
+   "scenes": 2,
+   "first_year": 2165,
    "last_year": 2190,
    "povs": [
+    "Linus",
     "Rudy"
    ],
    "spectral": "K5V",
@@ -196,14 +195,13 @@
     }
    ],
    "role": "Milo's double planet, and where humanity actually lands.",
-   "scenes": 34,
+   "scenes": 32,
    "first_year": 2152,
    "last_year": 2345,
    "povs": [
     "Herschel",
     "Howard",
     "Milo",
-    "Riker",
     "Will"
    ],
    "spectral": "K0V",
@@ -283,12 +281,11 @@
     }
    ],
    "role": "Medeiros. Milo lost here; two expeditions to take it back.",
-   "scenes": 9,
+   "scenes": 8,
    "first_year": 2165,
    "last_year": 2336,
    "povs": [
     "Bill",
-    "Bob",
     "Khan",
     "Loki",
     "Mack",
@@ -405,12 +402,11 @@
    ],
    "places": [],
    "role": "",
-   "scenes": 4,
+   "scenes": 3,
    "first_year": 2180,
    "last_year": 2204,
    "povs": [
     "Bill",
-    "Hal",
     "Mario"
    ],
    "spectral": "M2.5V",
@@ -498,11 +494,11 @@
     }
    ],
    "role": "First contact. Bob-1 finds the Deltans and stays.",
-   "scenes": 36,
+   "scenes": 37,
    "first_year": 2165,
    "last_year": 2233,
    "povs": [
-    "Bob"
+    "Bob-1"
    ],
    "spectral": "K0+IV",
    "vmag": 3.54,
@@ -661,7 +657,7 @@
    "first_year": 2331,
    "last_year": 2342,
    "povs": [
-    "Bob",
+    "Bob-1",
     "Will"
    ],
    "spectral": "F2V",
