@@ -145,7 +145,9 @@ data/books.json  the series — titles, and which are out. The only place that
                  knows how long it is; BOOK_MAX and the validator both derive
 data/todo.json   the research backlog, rendered as a view in the console
 data/systems.json star systems with real astrometry, and the places in them
-data/skyfield.json the naked-eye sky for the chart backdrop (HYG, CC BY-SA 4.0)
+data/skyfield.json the naked-eye sky for the chart backdrop (HYG, CC BY-SA 4.0).
+                 magnitude_limit is what was extracted and never moves;
+                 display_limit is what the build ships — see the chart notes
 data/bestiary.json non-sapient fauna; data/bestiary.schema.json documents it
 data/peoples.json  sapient species and their polities; peoples.schema.json too
 data/guppy.json   Guppy's pixel portrait — palette plus one grid per frame
@@ -315,9 +317,9 @@ scoped to the eval.)
 | suite | covers |
 |---|---|
 | `core` | data integrity, ancestry traces, every view × filter × search, dossiers, sorting |
-| `chart` | projection invariants, the fiction's own distances, astrophysics |
+| `chart` | projection invariants, the fiction's own distances, astrophysics, label coverage and attribution |
 | `legibility` | label decluttering, ring labels, spectral colour survival, WCAG contrast |
-| `backdrop` | the HYG starfield, unit-vector invariants, NaN sweeps |
+| `backdrop` | the HYG starfield, the display cut's own justification, unit-vector invariants, NaN sweeps |
 | `snapshot` | golden master — exact HTML of 139 states |
 | `spoilers` | what the reading position withholds — and a sweep of every register at every position for what leaks |
 | `timeline` | the derived chronology: order, sourcing, and where it stops |
@@ -966,9 +968,10 @@ that drifted out of date twice in one sitting. One home only.
 ## Open questions
 
 Moved to `data/todo.json`, so there's a single copy and the console can show it.
-Standing items at the time of writing: Marcus's parentage, the Hector collision,
-the 30 dropped-source leads, and a biographical sweep to rebuild what the field
-policy above swept out.
+**Don't restate them here.** This paragraph used to list them, and it went stale
+the moment the printed genealogy settled eighteen of the thirty dropped-source
+leads — it was still saying thirty. A summary of a list is a second copy of the
+list. Open the file, or the register that renders it.
 
 ## Sources already worked
 

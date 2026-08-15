@@ -318,8 +318,8 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 16,789 checks across 20 suites against the shipped page,
-  including a golden-master snapshot of 132 rendered states.
+- `make test` runs 16,804 checks across 20 suites against the shipped page,
+  including a golden-master snapshot of 139 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and
   refuse a pool of candidates small enough that the names would be knowable.
