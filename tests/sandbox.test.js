@@ -66,6 +66,30 @@ module.exports = ({ok, get, run, each, ROOT}) => {
                      /sandbox/i.test(b.alias || '')),
      'Sandbox Bob has a record in the genealogy, and must not');
 
+  // ---- he has to be watchable ---------------------------------------------
+  // The first cut of the timings ran the whole routine in under two seconds and
+  // put him on the ground in seven hundred milliseconds, which meant you had to
+  // already know he was there to see either. These are the floors that stop
+  // that happening again by increments.
+  const SEQ = get('SANDBOX_SEQ');
+  const total = k => SEQ[k].reduce((n, [, ms]) => n + ms, 0);
+  ok(total('dead') >= 1200,
+     `he hits the ground in ${total('dead')}ms, which is faster than a reader looks up`);
+  ok(total('clean') >= 2400,
+     `the whole routine is ${total('clean')}ms — not long enough to be a performance`);
+  each('every held frame', [...SEQ.clean, ...SEQ.dead], ([frame, ms]) => {
+    ok(FRAMES.includes(frame), `${frame} is not a frame he has`);
+    ok(ms >= 200, `${frame} is on screen for ${ms}ms, which reads as a flicker`);
+  }, 9);
+  // The throat-grab is the beat of the whole thing, not a transition into the
+  // aftermath, so it gets held longer than the frame before it.
+  const throat = SEQ.dead.find(([f]) => f === 'throat');
+  ok(throat && throat[1] >= 500, `the throat-grab is only held for ${throat && throat[1]}ms`);
+  ok(SEQ.dead[SEQ.dead.length - 1][0] === 'throat',
+     'the dying sequence should end on the throat-grab and leave him fallen');
+  ok(SEQ.clean[SEQ.clean.length - 1][0] === 'puff',
+     'the clean routine should end in a puff of smoke');
+
   // ---- he runs on an address, and only on an address ----------------------
   go('#register/bill');
   ok(box().hidden, 'a clean address should leave nothing behind');

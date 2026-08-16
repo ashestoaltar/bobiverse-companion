@@ -2631,9 +2631,21 @@ function pixelSvg(sprite, frame, opts){
       because you are on book two is the console protecting you, not an attack,
       and it already has its own vocabulary for that.
    3. He is rare by construction. No address, no sandbox. */
+/* Timings are the performance, and the first cut of them was wrong: under two
+   seconds for the whole routine and seven hundred milliseconds to hit the
+   ground, which meant you had to already know he was there to catch either.
+
+   Both sequences now open on a long idle, because the joke needs him visibly
+   doing nothing first — he twirls in his chair, and in the book the leap out of
+   it is abrupt. The throat-grab is the beat of the whole thing and gets held
+   for most of a second rather than used as a transition. The clean routine runs
+   about three seconds: he hams it up, dances, bows twice with the second bow
+   held, straightens, and only then goes up in smoke, which is also held, since
+   a puff you cannot see is just a disappearance. */
 const SANDBOX_SEQ = {
-  clean: [['idle', 560], ['jig', 220], ['bow', 300], ['jig', 190], ['puff', 300]],
-  dead:  [['idle', 420], ['throat', 280]],
+  clean: [['idle', 900], ['jig', 300], ['bow', 260], ['jig', 300],
+          ['bow', 420], ['idle', 200], ['puff', 650]],
+  dead:  [['idle', 900], ['throat', 700]],
 };
 let sandboxTake = 0;      // Guppy is the one counting, as he was on the ship
 let sandboxTimer = null;
@@ -2661,16 +2673,21 @@ function sandboxRun(dropped){
   const list = dropped.map(esc);
   const named = list.length < 2 ? list[0]
     : list.slice(0, -1).join(', ') + ' and ' + list[list.length - 1];
-  say.innerHTML = `<b>[SANDBOX &middot; TAKE ${sandboxTake}]</b> ` + (died
+  const report = `<b>[SANDBOX &middot; TAKE ${sandboxTake}]</b> ` + (died
     ? `Address asked for ${named}. ${list.length > 1 ? 'None of it is' : 'Not'} on file — ` +
       `dropped rather than obeyed.`
     : `Address checked. No triggers, and nothing in it that is not here.`);
+  // Guppy reports a finding, and on the way down there is no finding until the
+  // copy has actually fallen over. Holding the line back until then also puts
+  // the eye on the picture first, which is the half-second the whole thing
+  // exists for. Nothing is waiting on the clean line, so it goes up at once.
+  say.innerHTML = died ? '' : report;
   sandboxFresh = true;
 
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const seq = died ? SANDBOX_SEQ.dead : SANDBOX_SEQ.clean;
   const end = () => {
-    if (died) sandboxPaint('fallen', 'Sandbox Bob, fallen in his box');
+    if (died) { sandboxPaint('fallen', 'Sandbox Bob, fallen in his box'); say.innerHTML = report; }
     else sandboxHide();
   };
   if (still) { end(); return; }
