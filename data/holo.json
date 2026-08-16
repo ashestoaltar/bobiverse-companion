@@ -136,6 +136,15 @@
       "cite": "Bk2 ch50 · Loki, Nov 2195",
       "spoil": 2,
       "note": "Not a new silhouette: the combat line painted into near invisibility. Carbon-black exterior, almost zero albedo, radar-quiet military profiles, heavier shielding, radio silence — vulnerable mainly on SUDDAR. Loki's chapter is where the exterior recipe is stated while the strike force preps. Cool factor is paint and quiet systems, not a redesign."
+    },
+    {
+      "id": "specimen-gorilloid",
+      "about": "bestiary/gorilloid",
+      "kind": "specimen",
+      "title": "Gorilloid — survey capture",
+      "cite": "Bk1 ch35 · Bob, July 2165",
+      "spoil": 1,
+      "note": "Delta's apex predator, and the animal Bob measured against the Deltans the way a gorilla sits against a human — size and strength cousins, not the same thing. They take people for food in small packs, drag bodies off, and fight over the kill; no weapons, no plan. He watched until he was sure there was only animal intelligence behind the eyes, which is what let him arm the Deltans without calling it a war between peoples.\n\nThe stroke plate on the bestiary card is the console's native survey silhouette. This capture is the registry's photoreal reconstruction for the holotank — dual mode on purpose, not a replacement for the card."
     }
   ]
 }

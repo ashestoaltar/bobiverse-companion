@@ -123,6 +123,14 @@ Why address-keying wins:
 | `vessel-heaven-4` | `register/loki` | Bk2 ch50 | Heaven design, carbon-black |
 
 Honesty pass applied: freighter-ugly DNA, red/green/**blue** running lights, no hull labels; v4 = same silhouette painted stealth, not a redesign. Ship **names** (Heaven-2, Heaven-6, …) ≠ design **generations**.  
+
+**Specimen (1) — dual-mode fauna, 2026-08-16:**
+
+| id | about | cite | title |
+|---|---|---|---|
+| `specimen-gorilloid` | `bestiary/gorilloid` | Bk1 ch35 | Gorilloid — survey capture |
+
+Stroke SVG stays on the bestiary **card**; photoreal opens only in the **holotank**. Pattern for further fauna.  
 Source JPGs under `ideas/`; ship is WebP under `assets/holo/`.
 
 ### Charter for VR stills (books)
@@ -266,7 +274,7 @@ Attach `about` to vessel records or system/Bob as data allows — same address p
 |---|---|
 | `vr-*.jpg` (11 rooms) | **Shipped** as matching `assets/holo/vr-*.webp` (ids shortened) |
 | `ship-heaven-1.jpg` … `4.jpg` | Keepers after honesty pass; **shipped** as `vessel-heaven-1`…`4` WebP |
-| `beast-gorilloid-.jpg` | Photoreal candidate for **specimen** dual-mode (stroke card stays on bestiary) |
+| `beast-gorilloid-survey.jpg` | Photoreal **specimen** dual-mode (shipped as `specimen-gorilloid`); stroke card stays |
 | `bob-original-1.jpg` | Portrait candidate — interpretive ~31; books give age/height/skin, not a face recipe |
 | `bridget-replicant-1.jpg` | ~28, red hair, dimples · Bk3 ch41; face lock for Howard tropical plate |
 | `archimedes-1.jpg` | Young Deltan, stone-only tools |
@@ -293,8 +301,9 @@ Heaven flaps/labels; too-different / too-subtle / too-dark ship takes; Riker Ent
 ### A. Immediate content
 
 1. ~~**Heaven vessels → holotank**~~ **done** (v1–v4 plates live).  
-2. **One dual-mode specimen** (e.g. gorilloid photoreal in tank; stroke card remains).  
+2. ~~**One dual-mode specimen**~~ **done** (gorilloid); extend pattern to more fauna/peoples as wanted.  
 3. Optional: Linus “aged VR” second plate; Heaven-5 only if text supports a readable delta.  
+4. **VESSELS register** (planned) — better home for fleet than Bob hang-ons.  
 
 ### B. Architecture when spatial scope grows
 
