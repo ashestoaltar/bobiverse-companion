@@ -29,7 +29,12 @@
     {
       "cat": "BobNet",
       "text": "Galaxy scale view — later",
-      "note": "Everything the Bobs reach fits inside 48.8 ly; the galaxy is ~100,000 ly across, so at that scale the whole story is smaller than a pixel. That's the point of it rather than an obstacle — but any Milky Way rendering is an artist's impression, so it belongs in the decoration bucket, clearly marked. Defer until the local chart is finished."
+      "note": "Owner wants this eventually. Everything the Bobs reach on sublight fits inside ~48.8 ly; the galaxy is ~100,000 ly across, so at that scale the local story is smaller than a pixel — that is the point of the framing, not an obstacle. Architecture locked in ideas/README.md §5: local chart = geometry (keep); wormholes = topology graph (separate model, do not invent ly distances); galaxy = context mode (artist's impression, local bead, unlocated termini OK). With book 5+ wormholes, galaxy earns its keep as where the mesh sits, not as a second fake survey map. Prefer building the network view first if remote nodes exist; galaxy alone is not a substitute. Holotank may hold schematic stills; it is not the system of record for either map."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Wormhole network — topology view, not a bigger chart",
+      "note": "Book 5 expands reach via wormholes; systems.json already says that mesh is not a distance graph and needs its own model. Do not stretch the Cartesian chart to fit gates. Plan: cited nodes/edges (e.g. data/network.json), spoiler-gated, schematic layout, cross-link to Chart only when a terminus has real coordinates; unlocated terminus is valid. SCUT/BobNet (comms) stays a third network. Full rule set and order of work in ideas/README.md §5. Not started."
     },
     {
       "cat": "BobNet",
@@ -286,7 +291,7 @@
     {
       "cat": "BobNet",
       "text": "Holotank, the rest of the captures",
-      "note": "The mechanism is built and takes any register's address, so what is left is content. Four ship renders are waiting on a check against Bk1 ch12, which is unusually specific and describes a converted interplanetary freighter with the body split for a SURGE drive ring, viewport shielding in place, an elliptical cross-section, lots of airlocks and cargo doors, and running lights in red, green and blue — and says outright that it is not a pretty ship, with neither Enterprise lines nor shuttle aerodynamics. The current renders are handsomer than the text allows and are missing the blue.\n\nThen the bestiary and peoples captures, which are where the card-and-attachment split gets its first real test: the stroke plate stays on the card as the console's native mode, and the photographic one lives in the tank. Both cited, or neither ships.\n\nOne more VR is owed rather than optional. Bk2 ch32 has Henry Roberts telling Linus his VR had some issues, if you were paying attention — thirty years without updates. Linus is the one Bob whose room the books describe twice, once as he built it and once as it aged, and the second plate is the better story."
+      "note": "Mechanism done; content remains.\n\n**Vessels (done 2026-08-16):** Heaven design generations 1–4 ship as holotank plates `vessel-heaven-1`…`4` (kind vessel). Honesty pass vs Bk1 ch12: freighter-ugly, red/green/blue running lights, elliptical freighter DNA, no labels. Progressive family kept; v4 is combat silhouette in carbon-black (Bk2 ch50), not a new hull. Attached: bob1 (gen1), bill (gen2), calvin (combat class / Heaven-9 era), loki (carbon-black recipe). Source keepers in ideas/; pre-honesty JPGs in rejected designs/. WebP in assets/holo/.\n\nStill open: bestiary/peoples dual-mode (stroke card + photoreal tank specimen/portrait); Linus aged-VR second plate (Bk2 ch32 Henry Roberts); Heaven-5 only if exterior text supports it."
     }
   ]
 }

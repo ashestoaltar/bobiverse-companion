@@ -685,13 +685,19 @@
     .tank-inner{max-height:none}
   }
 
-  /* the row in a dossier that says there is a file to open */
-  .attach{display:flex; align-items:center; gap:8px; margin-top:10px}
+  /* Holotank openers. Amber is every other control; these must read as a
+     different class of thing or nobody notices a file is attached. Phosphor
+     green is already the boot/machine colour — same family, not a third skin. */
+  .attach{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:12px}
   .attach button{
-    background:transparent; border:1px solid var(--rule); font:inherit; font-size:11.5px;
-    letter-spacing:.1em; color:var(--amber-dim); padding:5px 9px; cursor:pointer;
+    background:transparent; border:1px solid var(--phos); font:inherit; font-size:12px;
+    letter-spacing:.1em; color:var(--phos); padding:6px 11px; cursor:pointer;
+    text-shadow:0 0 10px rgba(124,232,164,.35);
   }
-  .attach button:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
+  .attach button:hover{
+    color:var(--void); background:var(--phos); border-color:var(--phos);
+    text-shadow:none;
+  }
   .attach .none{font-size:11.5px; letter-spacing:.1em; color:var(--ash)}
 
   /* --- the sandbox ----------------------------------------------------
@@ -1019,7 +1025,9 @@ const NUMBERS = ['zero','one','two','three','four','five','six','seven','eight',
 const numWord = n => NUMBERS[n] || String(n);
 const BOOK_WORD = numWord(BOOK_MAX);
 
-const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1,
+/* Blog first: it is the public BobNet surface (Bill needling people who do not
+   read it). The register and genealogy stay a tab away; they are not the lobby. */
+const state = {view:'blog', q:'', filters:new Set(), sort:'name', dir:1,
                selected:null, beast:null, people:null, blog:null, system:null,
                book:BOOK_MAX};
 
@@ -1052,6 +1060,22 @@ const state = {view:'register', q:'', filters:new Set(), sort:'name', dir:1,
    Function declarations hoist, so naming renderChart here before it appears
    further down is fine. */
 const REGISTERS = [
+  {id:'blog',       label:'BLOG',       short:'BLOG',  tabGapAfter:true, render: renderBlog,
+   rows: posts,
+   status: rows => {
+     const all = ((BLOG && BLOG.posts) || []).filter(p => !heldPost(p));
+     statusLine(rows.length === all.length ? `${all.length} posts` : `${rows.length} of ${all.length} posts`,
+                `${all.filter(p => p.voice === 'bobnet').length} from Bill`,
+                `${all.filter(p => p.voice === 'editor').length} from the registry`);
+   },
+   dossier: () => state.blog ? renderPost(state.blog) : null,
+   onClick: e => {
+     const hit = e.target.closest('[data-post]');
+     if (!hit) return false;
+     state.blog = state.blog === hit.dataset.post ? null : hit.dataset.post;
+     render();
+     return true;
+   }},
   {id:'register',   label:'REGISTER',   short:'REG',   filters:true, render: renderRegister},
   {id:'genealogy',  label:'GENEALOGY',  short:'GEN',   filters:true, render: renderGenealogy},
   {id:'unresolved', label:'UNRESOLVED', short:'UNRES', filters:true, render: renderUnresolved},
@@ -1147,22 +1171,6 @@ const REGISTERS = [
      const yrs = new Set(rows.map(e => e.y));
      const span = rows.length ? `${rows[0].y}\u2013${rows[rows.length - 1].y}` : '\u2014';
      statusLine(`${rows.length} dated events`, `${yrs.size} years on record`, span);
-   }},
-  {id:'blog',       label:'BLOG',       short:'BLOG',  render: renderBlog,
-   rows: posts,
-   status: rows => {
-     const all = ((BLOG && BLOG.posts) || []).filter(p => !heldPost(p));
-     statusLine(rows.length === all.length ? `${all.length} posts` : `${rows.length} of ${all.length} posts`,
-                `${all.filter(p => p.voice === 'bobnet').length} from Bill`,
-                `${all.filter(p => p.voice === 'editor').length} from the registry`);
-   },
-   dossier: () => state.blog ? renderPost(state.blog) : null,
-   onClick: e => {
-     const hit = e.target.closest('[data-post]');
-     if (!hit) return false;
-     state.blog = state.blog === hit.dataset.post ? null : hit.dataset.post;
-     render();
-     return true;
    }},
   {id:'todo',       label:'TO-DO',      short:'TODO',  render: renderTodo},
 ];

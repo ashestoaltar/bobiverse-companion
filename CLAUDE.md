@@ -5,6 +5,11 @@ presented as a BobNet console. The point of the project is **provenance**:
 every lineage claim carries a confidence tier, and disagreements between
 sources are surfaced rather than smoothed over.
 
+**Agent handoff:** for current product intent, holotank/spatial architecture
+(local chart · wormhole topology · galaxy context), art rules, keepers, and
+ordered next work, read **`ideas/README.md` first**. Living backlog:
+`data/todo.json`. This file stays the ground rules and data layout.
+
 ## Ground rules
 
 This is a personal project done for fun. The aim is to get it *right*, not to

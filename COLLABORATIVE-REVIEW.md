@@ -6,6 +6,8 @@
 
 This is a collaborative note: what looks strong, what is worth chewing on next, and a few mild watch-outs. Treat every idea as optional. Where this conflicts with the books, the books win; where it conflicts with your taste, your taste wins.
 
+> **Agent handoff (start here):** **[`ideas/README.md`](ideas/README.md)** is the durable source of truth for product intent after long chats — current ship state, holotank (shipped architecture), spatial model (**local chart = geometry · wormholes = topology · galaxy = context**), layout/IA, art rules (Ackbar, ships, keepers/rejects), ship recipe, and ordered next work. This collaborative review file is historical multi-pass notes; many ideas below are **already implemented**. When this file and `ideas/README.md` disagree on *intent*, **`ideas/README.md` wins**.
+
 ---
 
 ## Snapshot of what was reviewed
@@ -602,8 +604,9 @@ Still Bob-centric by default: REGISTER first, parentage filters on Bob views, re
 | Section | What it is |
 |---|---|
 | Opening + first review | Overall project strengths, ideas 1–15, watch-outs |
+| **→ `ideas/README.md`** | **Image handoff: holotank framing, keepers, rejects, Ackbar three, ships, next steps** |
 | Holotank / media / Imagine / infrastructure | Canon vocabulary, chrome vs payload, extensibility |
-| Concept art experiment | `ideas/archimedes-1.jpg` |
+| Concept art experiment | `ideas/archimedes-1.jpg` (superseded by fuller map in `ideas/README.md`) |
 | Second pass project review | Post-appendices, In Memorium, publish path |
 | Deep HTML / mobile review | Console template opportunities, especially phone |
 | Canon audit — BobNet | What the books establish; scorecard vs console |

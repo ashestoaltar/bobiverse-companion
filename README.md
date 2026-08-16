@@ -4,6 +4,9 @@ A registry of the replicants in Dennis E. Taylor's Bobiverse, presented as a
 BobNet console. Every lineage claim carries its own provenance, and the ones
 that can't be sourced say so instead of quietly closing the gap.
 
+**Ongoing agent handoff** (holotank, art keepers, wormhole/galaxy architecture,
+next work): [`ideas/README.md`](ideas/README.md).
+
 ## The idea
 
 Most fan genealogies present a single flat tree and leave you guessing where
