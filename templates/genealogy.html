@@ -659,6 +659,31 @@
   a:hover{color:var(--void); background:var(--amber); border-bottom-color:var(--amber)}
   .kids a, .note a{border-bottom-color:var(--rule)}
 
+  /* --- the sandbox ----------------------------------------------------
+     Only ever on screen because an address arrived from outside the page and
+     was run past him first. Never on an ordinary load, and never on a link
+     clicked inside the console — those the console wrote itself. */
+  .sandbox{
+    display:flex; align-items:center; gap:12px;
+    border:1px solid var(--rule); border-left:2px solid var(--ash);
+    background:var(--panel); padding:7px 10px; flex:none;
+  }
+  .sandbox[hidden]{display:none}
+  .sandbox.dead{border-left-color:var(--alert)}
+  /* The sprite stays amber whichever way it went. Being face down in the sand
+     is the signal; coding it red as well would be the console shouting, and
+     the alert colour is spent on the border where it costs nothing to read. */
+  .sandbox .pix{display:block; width:144px; height:auto; image-rendering:pixelated;
+                color:var(--amber-dim); flex:none}
+  .sandbox-say{font-size:11.5px; letter-spacing:.06em; color:var(--ash); line-height:1.5}
+  .sandbox-say b{color:var(--amber-dim); font-weight:normal}
+  .sandbox-dismiss{
+    margin-left:auto; align-self:flex-start; background:transparent; border:0;
+    font:inherit; font-size:12px; color:var(--ash); cursor:pointer; padding:2px 4px;
+  }
+  .sandbox-dismiss:hover{color:var(--amber-hi)}
+  @media (max-width:640px){ .sandbox .pix{width:88px} }
+
   :focus-visible{outline:1px solid var(--amber-hi); outline-offset:2px}
 </style>
 </head>
@@ -731,6 +756,17 @@
       <!-- emptied and hidden on the views that have no parentage to filter -->
       <div class="chips" id="chips"></div>
     </div>
+
+    <!-- Sandbox Bob. Hidden unless an address arrived from outside and he was
+         run against it. Inside the toolbar rather than beside it: the shell is
+         a four-row grid and a fifth child takes the row that makes the stage
+         scroll. He never says anything either; the line beside him is Guppy's,
+         in brackets, the same way Guppy supplies the take number in Bk1 ch13. -->
+    <div class="sandbox" id="sandbox" hidden>
+      <div class="sandbox-art" id="sandbox-art"></div>
+      <div class="sandbox-say" id="sandbox-say" role="status" aria-live="polite"></div>
+      <button class="sandbox-dismiss" id="sandbox-dismiss" aria-label="Dismiss">✕</button>
+    </div>
   </div>
 
   <div class="main">
@@ -788,6 +824,7 @@ const PEOPLES = /*__PEOPLES__*/null;
    eyes, gills. The flat expression is the point. He has been the voice of this
    console from the start; every bracketed line is his. */
 const GUPPY = /*__GUPPY__*/null;
+const SANDBOX_ART = /*__SANDBOX__*/null;
 
 /* The In Memorium list. Bill keeps it and Guppy archives to it — Riker
    forwards an entry about Arthur (Bk1 ch47), Bill has Guppy mark Milo's
@@ -2157,7 +2194,7 @@ function renderDossier(){
   const b = state.selected && byId[state.selected];
   if (!b) {
     el.innerHTML = `<div class="idle">
-      <div class="guppy" id="guppy-idle">${pixelSvg('idle')}</div>
+      <div class="guppy" id="guppy-idle">${pixelSvg(GUPPY, 'idle')}</div>
       <b>[NO RECORD SELECTED]</b>
       Pick a replicant to pull its metadata and trace its descent back to Bob-1.<br><br>
       Bobs all wear the same face, so the registry identifies them the way Guppy does —
@@ -2538,10 +2575,10 @@ function renderPeopleDossier(id){
    works wherever it lands — phosphor green on the boot screen, amber in the
    dossier — with no second copy to keep in sync. */
 
-function pixelSvg(frame, opts){
-  if (!GUPPY || !GUPPY.frames[frame]) return '';
-  const rows = GUPPY.frames[frame];
-  const {width: w, height: h, palette} = GUPPY;
+function pixelSvg(sprite, frame, opts){
+  if (!sprite || !sprite.frames[frame]) return '';
+  const rows = sprite.frames[frame];
+  const {width: w, height: h, palette} = sprite;
   const parts = [];
   for (let y = 0; y < h; y++) {
     const row = rows[y];
@@ -2557,9 +2594,94 @@ function pixelSvg(frame, opts){
       x += run;
     }
   }
-  const label = (opts && opts.label) || 'Guppy';
+  const label = (opts && opts.label) || 'Guppy';   // callers that draw anyone else say so
   return `<svg class="pix" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" ` +
          `role="img" aria-label="${esc(label)}">${parts.join('')}</svg>`;
+}
+
+/* ---- Sandbox Bob -------------------------------------------------------
+   Bk1 ch13: Bob needs to find the kill order buried in his own code, so he
+   runs an isolated copy and feeds it the recorded transmissions. What appears
+   on the table is an actual sandbox with a miniature Bob in a miniature chair,
+   and his own comment on that is that he is not very mature. The copy twirls
+   in his chair, then leaps up, grabs his throat, falls over and goes out in a
+   scatter of pixilation. Second take, with the trigger filtered: he hams it
+   up, stands, does a little jig, bows extravagantly and vanishes in a puff of
+   smoke. Riker keeps the practice — Bk1 ch49, Bk2 ch18 — and in Bk2 ch28 it is
+   how they catch VEHEMENT-infected Homer, because sandbox Bob grabs his throat
+   the moment Charles connects.
+
+   The console's version of an untrusted transmission is an address it did not
+   write itself: the one on the way in at load, or one somebody edited, pasted
+   or reached with the back button. Every link clicked inside the console is
+   the console's own writing and is not run past him — the hashchange listener
+   already tells the two apart, and it has to, or he would fire on every click
+   and become a mascot.
+
+   Three rules hold him to what the books make him.
+
+   1. HE NEVER SPEAKS. Guppy talks in brackets; Sandbox Bob mimes. Keeping the
+      two channels apart is the whole reason he is not just a second Guppy, and
+      the line beside him is Guppy's — including the take number, which is
+      Guppy's line in the book too: Bob cannot finish the number and the fish
+      finishes it for him.
+   2. He only reacts to what the address CLAIMED and could not deliver — an
+      unknown register, a selection that resolves to nothing, a filter that
+      does not exist. He is not the reading position. A record held back
+      because you are on book two is the console protecting you, not an attack,
+      and it already has its own vocabulary for that.
+   3. He is rare by construction. No address, no sandbox. */
+const SANDBOX_SEQ = {
+  clean: [['idle', 560], ['jig', 220], ['bow', 300], ['jig', 190], ['puff', 300]],
+  dead:  [['idle', 420], ['throat', 280]],
+};
+let sandboxTake = 0;      // Guppy is the one counting, as he was on the ship
+let sandboxTimer = null;
+let sandboxFresh = false; // survives exactly one render: the one that follows the arrival
+
+function sandboxPaint(frame, label){
+  const art = document.getElementById('sandbox-art');
+  if (art) art.innerHTML = pixelSvg(SANDBOX_ART, frame, {label: label});
+}
+
+function sandboxHide(){
+  if (sandboxTimer) { clearTimeout(sandboxTimer); sandboxTimer = null; }
+  const box = document.getElementById('sandbox');
+  if (box) { box.hidden = true; box.classList.remove('dead'); }
+}
+
+function sandboxRun(dropped){
+  const box = document.getElementById('sandbox'), say = document.getElementById('sandbox-say');
+  if (!box || !say || !SANDBOX_ART) return;
+  if (sandboxTimer) { clearTimeout(sandboxTimer); sandboxTimer = null; }
+  sandboxTake += 1;
+  const died = dropped.length > 0;
+  box.hidden = false;
+  box.classList.toggle('dead', died);
+  const list = dropped.map(esc);
+  const named = list.length < 2 ? list[0]
+    : list.slice(0, -1).join(', ') + ' and ' + list[list.length - 1];
+  say.innerHTML = `<b>[SANDBOX &middot; TAKE ${sandboxTake}]</b> ` + (died
+    ? `Address asked for ${named}. ${list.length > 1 ? 'None of it is' : 'Not'} on file — ` +
+      `dropped rather than obeyed.`
+    : `Address checked. No triggers, and nothing in it that is not here.`);
+  sandboxFresh = true;
+
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const seq = died ? SANDBOX_SEQ.dead : SANDBOX_SEQ.clean;
+  const end = () => {
+    if (died) sandboxPaint('fallen', 'Sandbox Bob, fallen in his box');
+    else sandboxHide();
+  };
+  if (still) { end(); return; }
+  let i = 0;
+  const step = () => {
+    if (i >= seq.length) { sandboxTimer = null; end(); return; }
+    const [frame, ms] = seq[i++];
+    sandboxPaint(frame, 'Sandbox Bob');
+    sandboxTimer = setTimeout(step, ms);
+  };
+  step();
 }
 
 /* He blinks, rarely, and that is the entire performance. The books keep
@@ -2570,10 +2692,10 @@ function guppyBlink(el){
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const again = () => setTimeout(() => {
     if (!el.isConnected) return;
-    el.innerHTML = pixelSvg('blink');
+    el.innerHTML = pixelSvg(GUPPY, 'blink');
     setTimeout(() => {
       if (!el.isConnected) return;
-      el.innerHTML = pixelSvg('idle');
+      el.innerHTML = pixelSvg(GUPPY, 'idle');
       again();
     }, 140);
   }, 3200 + Math.random() * 5200);
@@ -2976,6 +3098,10 @@ function render(){
   (reg.status || renderStatus)(rows);
   if (reg.paint) reg.paint();
   syncHash();
+  // The sandbox report survives the render that follows its own arrival and no
+  // more. Anything the reader does next is them moving on, and a strip about
+  // how they got here should not follow them around.
+  if (sandboxFresh) sandboxFresh = false; else sandboxHide();
 }
 
 function select(id){
@@ -3064,7 +3190,12 @@ function applyHash(){
   const [path, query] = raw.split('?');
   const [rawView, rawSel] = path.split('/');
   const view = VIEW_ALIAS[rawView] || rawView;
-  if (!REGISTERS.some(r => r.id === view)) return false;
+  // What the address claimed and could not deliver. Not the reading position:
+  // a record held back because of where you are in the series is the console
+  // doing its job, and running that past the sandbox would say it was an
+  // attack. See sandboxRun.
+  const dropped = [];
+  if (!REGISTERS.some(r => r.id === view)) { sandboxRun([`a register called ${rawView}`]); return false; }
   state.view = view;
 
   // Anything that doesn't resolve is dropped rather than obeyed. A stale link
@@ -3073,14 +3204,17 @@ function applyHash(){
   const spec = selOf(view);
   const want = rawSel ? decodeURIComponent(rawSel) : '';
   spec.set(want && spec.ok(want) ? want : null);
+  if (want && !spec.ok(want)) dropped.push(`${view}/${want}`);
 
   state.q = '';
   state.filters.clear();
   for (const part of (query || '').split('&')) {
     const [k, v] = part.split('=');
     if (k === 'q' && v) state.q = decodeURIComponent(v.replace(/\+/g, ' '));
-    if (k === 'f' && v) decodeURIComponent(v).split(',')
-      .filter(id => FILTERS.some(f => f.id === id)).forEach(id => state.filters.add(id));
+    if (k === 'f' && v) for (const id of decodeURIComponent(v).split(',')) {
+      if (FILTERS.some(f => f.id === id)) state.filters.add(id);
+      else if (id) dropped.push(`a filter called ${id}`);
+    }
     if (k === 'b' && v) {
       const n = +decodeURIComponent(v);
       if (n >= 1 && n <= BOOK_MAX) state.book = n;
@@ -3105,6 +3239,7 @@ function applyHash(){
   // or a selection we dropped then gets replaced in the bar rather than pushed,
   // so the back button doesn't walk the reader through spellings of one place.
   lastPath = hashFor().split('?')[0];
+  sandboxRun(dropped);
   return true;
 }
 
@@ -3496,7 +3631,7 @@ function bootLines(){
   if (hint && TOUCH) hint.textContent = 'TAP TO SKIP';
 
   const face = document.getElementById('boot-face');
-  if (face) { face.innerHTML = pixelSvg('idle'); guppyBlink(face); }
+  if (face) { face.innerHTML = pixelSvg(GUPPY, 'idle'); guppyBlink(face); }
 
   paint(null);
   timer = setTimeout(step, 260 * SPEED);   // a beat of dark before anything types
@@ -3569,6 +3704,11 @@ function bootLines(){
     share.hidden = !gating();
   };
   syncReading();
+})();
+
+(function sandboxDismiss(){
+  const btn = document.getElementById('sandbox-dismiss');
+  if (btn) btn.addEventListener('click', sandboxHide);
 })();
 
 window.addEventListener('hashchange', () => {

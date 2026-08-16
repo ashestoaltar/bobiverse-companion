@@ -42,9 +42,11 @@ BOOKS = os.path.join(ROOT, "data", "books.json")
 BOOKS_PLACEHOLDER = "/*__BOOKS__*/[]"
 PEOPLE_PLACEHOLDER = "/*__PEOPLES__*/null"
 GUPPY_PLACEHOLDER = "/*__GUPPY__*/null"
+SANDBOX = os.path.join(ROOT, "data", "sandbox.json")
+SANDBOX_PLACEHOLDER = "/*__SANDBOX__*/null"
 
 
-def _check_pixels(art: dict) -> None:
+def _check_pixels(art: dict, who: str = "guppy") -> None:
     """A ragged pixel grid renders as a mess rather than an error, so check here.
 
     Every row must be the declared width, every frame the declared height, and
@@ -54,15 +56,15 @@ def _check_pixels(art: dict) -> None:
     w, h, palette = art["width"], art["height"], art["palette"]
     for name, rows in art["frames"].items():
         if len(rows) != h:
-            print(f"ERROR: guppy frame {name!r} has {len(rows)} rows, expected {h}")
+            print(f"ERROR: {who} frame {name!r} has {len(rows)} rows, expected {h}")
             sys.exit(1)
         for i, row in enumerate(rows):
             if len(row) != w:
-                print(f"ERROR: guppy frame {name!r} row {i} is {len(row)} wide, expected {w}")
+                print(f"ERROR: {who} frame {name!r} row {i} is {len(row)} wide, expected {w}")
                 sys.exit(1)
             unknown = {c for c in row if c != "." and c not in palette}
             if unknown:
-                print(f"ERROR: guppy frame {name!r} row {i} uses {sorted(unknown)}, "
+                print(f"ERROR: {who} frame {name!r} row {i} uses {sorted(unknown)}, "
                       f"which are not in the palette")
                 sys.exit(1)
 
@@ -282,6 +284,16 @@ def main() -> None:
         sys.exit(1)
     html = html.replace(GUPPY_PLACEHOLDER, json.dumps(guppy, ensure_ascii=False), 1)
 
+    with open(SANDBOX) as fh:
+        sandbox = json.load(fh)
+    for key in [k for k in sandbox if k.startswith("_")]:
+        sandbox.pop(key)
+    _check_pixels(sandbox, "sandbox")
+    if SANDBOX_PLACEHOLDER not in html:
+        print(f"ERROR: placeholder {SANDBOX_PLACEHOLDER} missing from template")
+        sys.exit(1)
+    html = html.replace(SANDBOX_PLACEHOLDER, json.dumps(sandbox, ensure_ascii=False), 1)
+
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as fh:
         fh.write(html)
@@ -294,6 +306,8 @@ def main() -> None:
           f"{len(peoples['entries'])} peoples and polities ({drawn_p} illustrated), "
           f"{len(blog['posts'])} posts, "
           f"guppy {guppy['width']}x{guppy['height']} in {len(guppy['frames'])} frames, "
+          f"sandbox {sandbox['width']}x{sandbox['height']} in "
+          f"{len(sandbox['frames'])} frames, "
           f"{len(html):,} bytes")
 
 

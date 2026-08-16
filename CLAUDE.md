@@ -300,6 +300,54 @@ the declared height, and every character a palette key. The blink frame is
 additionally checked not to move the silhouette — a shifting outline reads as a
 flinch rather than a blink.
 
+## Sandbox Bob
+
+`data/sandbox.json`, six frames on the same machinery as Guppy, and the second
+character the console has. Bk1 ch13: Bob needs the kill order out of his own
+code, so he runs an isolated copy and feeds it the recorded transmissions,
+because something disposable should take the hit. What appears on the table is
+an actual sandbox with a miniature Bob in a miniature chair, and Bob's own
+comment on that is that he is not very mature. Bad payload: the copy twirls in
+his chair, leaps up, grabs his throat, falls over, pixilates out. Clean: he hams
+it up, stands, dances a jig, bows extravagantly and goes in a puff of smoke.
+Riker keeps the habit — Bk1 ch49, Bk1 ch58, Bk2 ch18 — and in Bk2 ch28 it is how
+they catch VEHEMENT-infected Homer.
+
+**The console's untrusted transmission is an address it did not write itself.**
+The one on the way in at load, or one somebody pasted, edited or reached with
+the back button. Every link clicked inside the console is the console's own
+writing, and the hashchange listener already tells the two apart — it has to,
+or he fires on every click and becomes a mascot.
+
+Three rules, and they are the whole design:
+
+- **He never speaks.** Guppy talks in brackets; Sandbox Bob mimes. That is what
+  keeps him from being a second Guppy, and the line beside him is Guppy's —
+  including the take number, which is Guppy's line in the book too: Bob cannot
+  finish the number and the fish finishes it for him. `tests/sandbox.test.js`
+  fails the build if a `<text>` element ever appears in his sprite.
+- **He is not the reading position.** He reacts to what an address claimed and
+  could not deliver: an unknown register, a selection that resolves to nothing,
+  a filter that does not exist. A record held back because you are on book two
+  is the console protecting you, not an attack, and it has its own vocabulary
+  already. There is a test for this, because it is the rule most likely to get
+  helpfully broken.
+- **He is rare by construction.** No address, no sandbox. The report survives
+  exactly one render — the one that follows its own arrival — and then anything
+  the reader does next clears it.
+
+**And he has no record in `data/bobs.json`, deliberately.** He is the same
+matrix, running, doing bits, and Guppy had counted twenty-four of him before the
+scene we meet him in. The register does not hold him because *the books never
+treat him as one*, and this register says what the books establish rather than
+handing out personhood on its own authority — the same restraint as
+`sapience: "contested"`. What that restraint costs is the subject of the blog
+post that ships with him, and it is worth reading before anyone kindly adds him
+to the tree. A test asserts he is not there.
+
+`pixelSvg()` takes the sprite as its first argument for this reason; it used to
+close over `GUPPY`.
+
 ## Testing
 
 ```

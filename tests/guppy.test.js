@@ -48,7 +48,7 @@ module.exports = ({ok, get, run, ROOT}) => {
   }
 
   // ---- rendering ----
-  const svg = run("pixelSvg('idle')");
+  const svg = run("pixelSvg(GUPPY, 'idle')");
   ok(svg.startsWith('<svg'), 'pixelSvg did not return an svg');
   ok(svg.includes(`viewBox="0 0 ${w} ${h}"`), 'viewBox does not match the grid');
   ok(svg.includes('shape-rendering="crispEdges"'), 'pixel art must not be smoothed');
@@ -69,7 +69,7 @@ module.exports = ({ok, get, run, ROOT}) => {
   const area = [...svg.matchAll(/width="(\d+)" height="1"/g)].reduce((n, m) => n + (+m[1]), 0);
   ok(area === drawn, `rendered ${area} cells, grid has ${drawn}`);
 
-  ok(run("pixelSvg('nope')") === '', 'an unknown frame should render nothing, not throw');
+  ok(run("pixelSvg(GUPPY, 'nope')") === '', 'an unknown frame should render nothing, not throw');
 
   // ---- where he appears ----
   state.view = 'register';

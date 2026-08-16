@@ -176,6 +176,16 @@ the registry identifies them the way Guppy does — by serial number, with the
 name secondary. And square brackets mean machine output, so the metadata block
 is bracketed while the editorial notes are explicitly not.
 
+**Sandbox Bob** checks the door. Bob's habit from book 1 is to run an isolated
+copy of himself and feed it anything that arrived from outside, on the principle
+that something disposable should take the hit; Riker keeps it up, and it is how
+they catch an infected Homer. The console's version of a transmission from
+outside is an address it did not write itself — pasted, edited, or reached with
+the back button. If it asks for a register, a record or a filter that isn't
+here, you'll find him face down in his sandbox and Guppy will say what was
+dropped. He never speaks, he only ever fires on an address, and he has no record
+in the genealogy. Why he doesn't is a post on the blog.
+
 **Guppy** runs the terminal. He comes up with the link on the boot screen and
 waits in the dossier when nothing is selected — a pixel portrait drawn from the
 books' description rather than the Star Wars character they compare him to,
@@ -333,7 +343,7 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 15,649 checks across 20 suites against the shipped page,
+- `make test` runs 15,727 checks across 21 suites against the shipped page,
   including a golden-master snapshot of 139 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and
