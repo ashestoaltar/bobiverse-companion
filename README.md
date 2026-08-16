@@ -123,6 +123,21 @@ names shows that the post exists.
 - **To-do** — the research backlog, reported the way Guppy reports Bob's:
   a bracketed count divided into categories. It has never once got shorter.
 
+The **holotank** is the one place the console stops being a terminal. Bob's VR
+gets better across five books until he is walking around in android bodies, so a
+registry that could only ever draw phosphor would be arguing with its source —
+and a holotank is canon, being exactly a thing you put an image in and look at.
+The shell stays drab; an opened file is allowed to be rich. Eleven rooms so far,
+each one a place the books describe and a Bob chose: Bart's log cabin, Linus's
+floating cities in Saturn's atmosphere, Garfield's bean bag, Mario's treehouse,
+Homer twice because the books date the day he gave up the cartoon avatar.
+
+Every plate carries the chapter it was drawn from, and the build refuses one
+that doesn't. A record with nothing attached says **no file on record**; a plate
+your reading position is holding back says **withheld**, because those are
+different sentences. And the panel says the picture is the registry's
+reconstruction rather than an illustration from the books, which it is.
+
 ## Reading position
 
 A companion to an unfinished series is a hazard to whoever is still reading it.
@@ -325,7 +340,7 @@ polity is: a government is not a thing you draw, and inventing an emblem for an
 acronym the books never even expand would be a larger fabrication than inventing
 a meaning for it. The dragons and the Roanokians are owed portraits.
 
-The research backlog is `data/todo.json` — 47 items, 35 cleared — and is a view
+The research backlog is `data/todo.json` — 48 items, 37 cleared — and is a view
 in the console. It has never once got shorter.
 
 ## How it's kept honest
@@ -345,7 +360,7 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 15,770 checks across 21 suites against the shipped page,
+- `make test` runs 15,921 checks across 22 suites against the shipped page,
   including a golden-master snapshot of 139 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and

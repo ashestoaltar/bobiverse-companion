@@ -331,6 +331,71 @@ the declared height, and every character a palette key. The blink frame is
 additionally checked not to move the silhouette — a shifting outline reads as a
 flinch rather than a blink.
 
+## The holotank
+
+`data/holo.json` plus `assets/holo/<id>.webp`, inlined by the build as data
+URIs. The console is a file manager and stays one; a file you open is allowed
+to be rich.
+
+**Why that is not a contradiction.** The phosphor shell is a presentation
+choice, not a claim that the Bobiverse looks like a 1980s terminal. Bob starts
+with crude VR, builds a library detailed enough to miss when he loses it, and
+ends up inhabiting android bodies because Real hits harder than Virt. A
+registry that could only ever draw stroke plates would be arguing with its own
+source. The holotank is canon — 34 mentions, first at Bk1 ch21 — and is exactly
+this: a thing you put an image in and look at.
+
+So: **drab chrome, rich payload.** Tabs, brackets, Guppy, serials and the
+bestiary's stroke plates stay as they are. The tank is where a capture lives.
+The bestiary card keeps its specimen sketch *and* can carry a photographic
+survey plate; those are two modes, not two competing truths.
+
+**The one permanent rule is the citation.** No plate without one — not a
+citation to the general idea, the chapter that describes the thing in the
+picture. `validate.py` refuses a plate that has no cite, no note, no `kind`, a
+`spoil` earlier than the book it is drawn from, an address that resolves to
+nothing, or a missing file; and it warns about an image with no plate, which
+would otherwise sit in the folder shipping nothing. A Bob whose parentage
+nobody recorded does not get a beautiful room to make up for it.
+
+**Three states, and they are three different sentences.**
+
+| what the reader sees | what it means |
+|---|---|
+| `[ATTACHMENT: vr-bart]` | there is a file and you may open it |
+| `▨ FILE WITHHELD — past book 2` | there is a file, cited later than you have read |
+| `[NO FILE ON RECORD]` | there is nothing |
+
+Collapsing the middle one into the last would be the register lying in the one
+place it cannot afford to, and would also tell a reader on book one that
+nothing is coming.
+
+**Keyed by address, not by a field on a record.** `about: "register/bart"`, the
+same shape as a blog post's, resolved through the same `ADDRESSABLE` map. Any
+register gets attachments without every schema growing an art field, and
+`bobs.json` stays a genealogy rather than a picture library.
+
+`kind` is provenance rather than decoration, and the panel prints it: a VR
+capture is somebody's room *as they configured it*, which is character
+evidence; a vessel is an external view; a specimen is a survey image. The panel
+also says the picture is **the registry's reconstruction from a cited
+description**, never an illustration from the books — the same seam every
+annotation here is signed across.
+
+**Weight is the real cost and it was measured, not guessed.** 520px on the long
+edge, WebP q72, about 40KB a plate once base64 has taken its third. Eleven
+plates is 409KB, which took the page from 442KB to 881KB. That is roughly a
+doubling for eleven pictures, so the set gets chosen rather than dumped in.
+Encoding happens offline and the optimised file is committed, so the toolchain
+stays stdlib-only — `build.py` only base64s what it finds.
+
+**Two things caught me writing the first eleven.** The 12-gram guard rejected
+the Saturn and log-cabin notes because I had transcribed the descriptions
+almost exactly; they are paraphrased now, which is the rule working on the
+person who wrote it down. And a plate held by the reading position originally
+rendered as "no file on record", which is the collapse described above — found
+by asking what the row says at book one rather than by reading the code.
+
 ## Sandbox Bob
 
 `data/sandbox.json`, six frames on the same machinery as Guppy, and the second

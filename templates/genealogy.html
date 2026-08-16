@@ -659,6 +659,41 @@
   a:hover{color:var(--void); background:var(--amber); border-bottom-color:var(--amber)}
   .kids a, .note a{border-bottom-color:var(--rule)}
 
+  /* --- the holotank ----------------------------------------------------
+     An overlay, not a panel, because opening a file should feel like leaving
+     the file manager for a moment. The chrome around it stays exactly as drab
+     as the rest of the console: brackets, ash labels, one rule line. The
+     picture is the only rich thing on screen, which is the whole argument. */
+  .tank{position:fixed; inset:0; z-index:40; background:rgba(6,4,2,.9);
+        display:flex; align-items:center; justify-content:center; padding:var(--gap)}
+  .tank[hidden]{display:none}
+  .tank-inner{background:var(--panel); border:1px solid var(--rule);
+              max-width:1000px; width:100%; max-height:100%; overflow:auto;
+              display:flex; flex-direction:column}
+  .tank-head{display:flex; align-items:flex-start; gap:10px; padding:12px 14px;
+             border-bottom:1px solid var(--rule)}
+  .tank-head h2{margin:2px 0 0; font-size:19px; font-weight:600; color:var(--amber-hi);
+                letter-spacing:.02em}
+  .tank-body{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+             gap:var(--gap); padding:14px}
+  .tank-plate{margin:0}
+  .tank-plate img{display:block; width:100%; height:auto; border:1px solid var(--rule)}
+  .tank-side{min-width:0; font-size:13px}
+  .tank-side .sec{margin-top:12px}
+  @media (max-width:760px){
+    .tank-body{grid-template-columns:minmax(0,1fr)}
+    .tank-inner{max-height:none}
+  }
+
+  /* the row in a dossier that says there is a file to open */
+  .attach{display:flex; align-items:center; gap:8px; margin-top:10px}
+  .attach button{
+    background:transparent; border:1px solid var(--rule); font:inherit; font-size:11.5px;
+    letter-spacing:.1em; color:var(--amber-dim); padding:5px 9px; cursor:pointer;
+  }
+  .attach button:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
+  .attach .none{font-size:11.5px; letter-spacing:.1em; color:var(--ash)}
+
   /* --- the sandbox ----------------------------------------------------
      Only ever on screen because an address arrived from outside the page and
      was run past him first. Never on an ordinary load, and never on a link
@@ -713,6 +748,34 @@
     <div class="gate-books" id="gate-books" hidden></div>
     <p class="gate-cost" id="gate-cost"></p>
     <div class="gate-skip"><button id="gate-skip">skip &mdash; show me everything</button></div>
+  </div>
+</div>
+
+<!-- The holotank. The console is a file manager and stays one; this is where
+     an opened file is allowed to be rich. Canon, and canon-shaped: the Bobs put
+     schematics, system views and video calls in a holotank from Bk1 ch21 on,
+     and their VR gets better throughout the books until they are walking around
+     in android bodies. A registry that could only ever draw phosphor would be
+     arguing with its own source. What it may never do is show a handsome
+     picture where the books have nothing — every plate carries a citation, and
+     validate.py refuses one that does not. -->
+<div class="tank" id="tank" hidden>
+  <div class="tank-inner" role="dialog" aria-modal="true" aria-labelledby="tank-title">
+    <div class="tank-head">
+      <div>
+        <div class="serial" id="tank-kind">[HOLOTANK]</div>
+        <h2 id="tank-title"></h2>
+      </div>
+      <button class="dossier-close" id="tank-close" aria-label="Close the holotank">✕</button>
+    </div>
+    <div class="tank-body">
+      <figure class="tank-plate"><img id="tank-img" alt=""></figure>
+      <div class="tank-side">
+        <dl class="fields" id="tank-fields"></dl>
+        <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
+          <div id="tank-note"></div></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -825,6 +888,7 @@ const PEOPLES = /*__PEOPLES__*/null;
    console from the start; every bracketed line is his. */
 const GUPPY = /*__GUPPY__*/null;
 const SANDBOX_ART = /*__SANDBOX__*/null;
+const HOLO = /*__HOLO__*/null;
 
 /* The In Memorium list. Bill keeps it and Guppy archives to it — Riker
    forwards an entry about Arthur (Bk1 ch47), Bill has Guppy mark Milo's
@@ -2073,6 +2137,7 @@ function renderSystemDossier(sys){
       })()}
       ${born.length ? `<div class="sec"><div class="sec-label">BUILT HERE — ${born.length}</div><div class="kids">${link(born)}</div></div>` : ''}
       ${lost.length ? `<div class="sec"><div class="sec-label">LOST HERE — ${lost.length}</div><div class="kids">${link(lost)}</div></div>` : ''}
+      ${attachRow('chart', sys.id)}
       ${feedSection('chart', sys.id)}
       ${(() => {
         /* Chapters set here, and who tells them — which is not who stood here.
@@ -2316,6 +2381,7 @@ function renderDossier(){
       </dl>
       </div>
       ${cat ? `<p class="catnote">${cat}</p>` : ''}
+      ${attachRow('register', b.id)}
 
       ${flags ? `<div class="sec"><div class="sec-label">FLAGS</div>${flags}</div>` : ''}
 
@@ -2448,6 +2514,7 @@ function renderBeastDossier(id){
     <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
       ${(() => { const g = proseGated(c.note, c);
           return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}</div>
+      ${attachRow('bestiary', c.id)}
       ${feedSection('bestiary', c.id)}
     ${c.art ? '' : `<div class="sec"><div class="sec-label">ILLUSTRATION</div>
       <p class="note dim">None on file. Drop an SVG at assets/bestiary/${esc(c.id)}.svg and rebuild.</p></div>`}
@@ -2584,6 +2651,7 @@ function renderPeopleDossier(id){
     <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
       ${(() => { const g = proseGated(e.note, e);
           return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}</div>
+      ${attachRow('peoples', e.id)}
       ${feedSection('peoples', e.id)}
     </div>`;
 }
@@ -2620,6 +2688,85 @@ function pixelSvg(sprite, frame, opts){
   const label = (opts && opts.label) || 'Guppy';   // callers that draw anyone else say so
   return `<svg class="pix" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" ` +
          `role="img" aria-label="${esc(label)}">${parts.join('')}</svg>`;
+}
+
+/* ---- the holotank ------------------------------------------------------
+   Plates are keyed by console address rather than by a field on each record,
+   the way a blog post's `about` is. Any register can therefore have
+   attachments without every schema growing an art field, and bobs.json stays a
+   genealogy instead of turning into a picture library.
+
+   Gating is the same as everything else and matters more here, because a
+   picture cannot be half-read: a plate is held until its own citation is
+   reachable, and its note is gated paragraph by paragraph on top of that. Bob's
+   library plate is safe from book one; the paragraph about the chair being
+   inherited is not.
+
+   `kind` is provenance, not decoration. A VR still is somebody's room as they
+   configured it, which is character evidence; a vessel is an external view; a
+   specimen is a survey image. The panel says which, and says the picture is
+   the registry's reconstruction from a cited description rather than anything
+   printed in the books — the same seam every annotation here is signed across. */
+const KIND_WORD_HOLO = {
+  vr:       'VR CAPTURE — SUBJECT’S OWN ENVIRONMENT',
+  vessel:   'HULL — EXTERNAL VIEW',
+  specimen: 'SURVEY CAPTURE',
+  portrait: 'PORTRAIT',
+};
+
+function platesFor(view, id){
+  if (!HOLO || !id) return [];
+  const addr = `${view}/${id}`;
+  return HOLO.plates.filter(p => p.about === addr && !heldPlate(p));
+}
+/* Held on its own citation, exactly like a record. A plate that shows a room a
+   Bob has not built yet is a spoiler with a picture on it. */
+function heldPlate(p){
+  return gating() && past(bookOf(p.cite), state.book);
+}
+
+function openTank(id){
+  const p = HOLO && HOLO.plates.find(x => x.id === id);
+  if (!p || heldPlate(p)) return;
+  const el = document.getElementById('tank');
+  document.getElementById('tank-kind').textContent =
+    `[${KIND_WORD_HOLO[p.kind] || p.kind.toUpperCase()}]`;
+  document.getElementById('tank-title').textContent = p.title;
+  const img = document.getElementById('tank-img');
+  img.src = p.src;
+  img.alt = `${p.title} — the registry's reconstruction from ${p.cite}`;
+  const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
+  document.getElementById('tank-fields').innerHTML =
+    f('BUILT FROM', citeUpTo(p.cite)) +
+    f('ATTACHED TO', p.about) +
+    f('SOURCE', 'registry reconstruction — not an illustration from the books');
+  const g = proseGated(p.note, p);
+  document.getElementById('tank-note').innerHTML =
+    g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION');
+  el.hidden = false;
+  document.getElementById('tank-close').focus();
+}
+
+function closeTank(){
+  const el = document.getElementById('tank');
+  if (el) { el.hidden = true; document.getElementById('tank-img').src = ''; }
+}
+
+/* The row in a dossier that says whether there is anything to open. It says so
+   either way: an empty plate reads "no file on record", because the reason this
+   feature is allowed to exist at all is that it never covers for a gap. */
+function attachRow(view, id){
+  const mine = platesFor(view, id);
+  if (mine.length) return `<div class="attach">${mine.map(p =>
+    `<button data-plate="${esc(p.id)}">[ATTACHMENT: ${esc(p.id)}]</button>`).join('')}</div>`;
+  // Two different nothings, and conflating them would be the register lying in
+  // the one place it cannot afford to. A file the reading position is holding
+  // back exists; saying "no file on record" about it would be false, and would
+  // also quietly tell a reader on book one that there is nothing to come.
+  const all = (HOLO && id) ? HOLO.plates.filter(p => p.about === `${view}/${id}`) : [];
+  return `<div class="attach"><span class="none">${
+    all.length ? '<span class="redacted">▨ FILE WITHHELD</span> — past book ' + state.book
+               : '[NO FILE ON RECORD]'}</span></div>`;
 }
 
 /* ---- Sandbox Bob -------------------------------------------------------
@@ -3746,6 +3893,21 @@ function bootLines(){
     share.hidden = !gating();
   };
   syncReading();
+})();
+
+(function tank(){
+  // Delegated, because the button is re-rendered with every dossier.
+  document.addEventListener('click', e => {
+    const open = e.target.closest && e.target.closest('[data-plate]');
+    if (open) { openTank(open.dataset.plate); return; }
+    if (e.target.closest && e.target.closest('#tank-close')) { closeTank(); return; }
+    // The backdrop closes it. The panel itself does not.
+    if (e.target.id === 'tank') closeTank();
+  });
+  document.addEventListener('keydown', e => {
+    const el = document.getElementById('tank');
+    if (e.key === 'Escape' && el && !el.hidden) { e.stopPropagation(); closeTank(); }
+  }, true);
 })();
 
 (function sandboxDismiss(){

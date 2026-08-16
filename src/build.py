@@ -7,6 +7,7 @@ a failing dataset never reaches dist/.
 
 from __future__ import annotations
 
+import base64
 import json
 import os
 import re
@@ -44,6 +45,8 @@ PEOPLE_PLACEHOLDER = "/*__PEOPLES__*/null"
 GUPPY_PLACEHOLDER = "/*__GUPPY__*/null"
 SANDBOX = os.path.join(ROOT, "data", "sandbox.json")
 SANDBOX_PLACEHOLDER = "/*__SANDBOX__*/null"
+HOLO = os.path.join(ROOT, "data", "holo.json")
+HOLO_PLACEHOLDER = "/*__HOLO__*/null"
 
 
 def _check_pixels(art: dict, who: str = "guppy") -> None:
@@ -67,6 +70,40 @@ def _check_pixels(art: dict, who: str = "guppy") -> None:
                 print(f"ERROR: {who} frame {name!r} row {i} uses {sorted(unknown)}, "
                       f"which are not in the palette")
                 sys.exit(1)
+
+
+def inject_holo(html: str) -> tuple[str, dict, int]:
+    """The holotank's plates, inlined as data URIs.
+
+    Same promise as every other asset: zero external requests, and the page has
+    to keep working when it is double-clicked out of a folder. That means the
+    bytes travel inside the file, so this is the one place where a decision
+    about image size becomes a decision about page weight — 520px on the long
+    edge, WebP, which is about 40KB a plate once base64 has had its third.
+
+    The encoding happens offline and the optimised file is what gets committed.
+    Nothing here needs an image library, which keeps the toolchain stdlib-only.
+    """
+    with open(HOLO) as fh:
+        holo = json.load(fh)
+    for key in [k for k in holo if k.startswith("_")]:
+        holo.pop(key)
+    total = 0
+    for plate in holo["plates"]:
+        path = os.path.join(ROOT, "assets", "holo", plate["id"] + ".webp")
+        if not os.path.exists(path):
+            print(f"ERROR: holotank plate {plate['id']!r} has no file at "
+                  f"{os.path.relpath(path, ROOT)}")
+            sys.exit(1)
+        with open(path, "rb") as fh:
+            raw = fh.read()
+        total += len(raw)
+        plate["src"] = "data:image/webp;base64," + base64.b64encode(raw).decode()
+    if HOLO_PLACEHOLDER not in html:
+        print(f"ERROR: placeholder {HOLO_PLACEHOLDER} missing from template")
+        sys.exit(1)
+    return (html.replace(HOLO_PLACEHOLDER, json.dumps(holo, ensure_ascii=False), 1),
+            holo, total)
 
 
 def cut_sky(sky: dict) -> tuple[str, float]:
@@ -294,6 +331,8 @@ def main() -> None:
         sys.exit(1)
     html = html.replace(SANDBOX_PLACEHOLDER, json.dumps(sandbox, ensure_ascii=False), 1)
 
+    html, holo, holo_bytes = inject_holo(html)
+
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as fh:
         fh.write(html)
@@ -308,6 +347,7 @@ def main() -> None:
           f"guppy {guppy['width']}x{guppy['height']} in {len(guppy['frames'])} frames, "
           f"sandbox {sandbox['width']}x{sandbox['height']} in "
           f"{len(sandbox['frames'])} frames, "
+          f"{len(holo['plates'])} holotank plates ({holo_bytes / 1024:,.0f} KB), "
           f"{len(html):,} bytes")
 
 

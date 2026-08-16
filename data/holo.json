@@ -1,0 +1,105 @@
+{
+  "_comment": "The holotank's contents. A plate is a file the registry can open, not part of the console's chrome — the shell stays a terminal and the thing you open is allowed to be rich. That split is the whole design: Bob does not spend five books in a monochrome status screen, he builds a VR that gets better and better and ends up walking around in android bodies, so a console that can only draw phosphor would be arguing with the books. The holotank is canon (34 mentions, first in Bk1 ch21) and is exactly this: a thing you put an image in and look at it.\n\nKeyed by console address rather than by a field on each record, the way blog posts are. That way any register can have attachments without every schema growing an art field, and bobs.json stays a genealogy rather than a picture library.\n\nThe one permanent rule: NO PLATE WITHOUT A CITATION. Handsome media must never paper over missing knowledge, and a Bob whose parent nobody recorded does not get a beautiful room to make up for it. Empty stays empty, and says so.",
+  "_kind_note": "What sort of capture this is, because the provenance differs and the panel says so. 'vr' is somebody's virt as they configured it — a room a Bob chose, which is character evidence. 'vessel' is an external view of a hull. 'specimen' is a survey image. 'portrait' is a face. All of them are the registry's reconstruction from a cited description, never an illustration from the books, and the panel labels them that way for the same reason every annotation here is signed.",
+  "plates": [
+    {
+      "id": "vr-bob1",
+      "about": "register/bob1",
+      "kind": "vr",
+      "title": "Original Bob's library",
+      "cite": "Bk1 ch17 · Bob, Jul 2145",
+      "spoil": 2,
+      "note": "The room he goes back to. Bk1 ch17 names it only by its absence — he wakes from a backup expecting his rich, detailed library and finds a blue room with no window and a hard, indeterminate floor, which is how the reader learns he has been restored into a new hull. Bk2 ch1 puts him in it: antique chairs, Jeeves refreshing the coffee, Marvin materialising a La-Z-Boy he does not own. By book 3 it has become the default other Bobs settle on when they cannot be bothered to build their own."
+    },
+    {
+      "id": "vr-bill",
+      "about": "register/bill",
+      "kind": "vr",
+      "title": "Bill's chair under the tree",
+      "cite": "Bk1 ch17 · Bob, Jul 2145",
+      "spoil": 4,
+      "note": "Hands behind his head, stretching, in an Adirondack chair in the shade of a large tree, in the first video array where four copies of the same face each appear in a different room.\n\n@bk2 The chair is the point rather than the garden. He materialises one inside Jacques's VR in Bk2 ch63 and Jacques notes it is a little anachronistic in there, but whatever.\n\n@bk4 And it is inherited. Will has them seventy years later on a deck above a lake with Asgard hanging three times the size of the Moon, and by Bk4 ch66 he and Garfield are reclining in a pair of them with drinks balanced on their stomachs."
+    },
+    {
+      "id": "vr-riker",
+      "about": "register/riker",
+      "kind": "vr",
+      "title": "Riker's bridge",
+      "cite": "Bk1 ch17 · Bob, Jul 2145",
+      "spoil": 1,
+      "note": "A red uniform and the bridge of a spaceship, in the same video array as Bill's chair. Bob's whole comment on it is that he was thankful Riker had skipped the beard — which he grows anyway, and which is gone again by book 4 along with the name.\n\nThe books say a red uniform and a bridge and stop there, so this plate does too. The specific ship it is not is somebody else's design and none of the registry's business."
+    },
+    {
+      "id": "vr-homer-cartoon",
+      "about": "register/homer",
+      "kind": "vr",
+      "title": "Homer's cartoon avatar",
+      "cite": "Bk1 ch20 · Bill, Dec 2145",
+      "spoil": 1,
+      "note": "His first face. Bill's hope in Bk1 ch20 is that Homer gives up the cartoon avatar and the incessant catchphrase before Riker decides to accidentally kill him, which is how the register knows it existed. Drawn as a cartoon of the face all of them wear rather than as any particular show's, because the books say cartoon avatar and no more than that."
+    },
+    {
+      "id": "vr-homer",
+      "about": "register/homer",
+      "kind": "vr",
+      "title": "Homer's space station",
+      "cite": "Bk1 ch49 · Riker, May 2166",
+      "spoil": 1,
+      "note": "The same Bob twenty years on, in the VR Riker pops into to be told a space station is the answer to their problems. Bk1 ch29 records the change in passing — the head-exploding special effect, not used since he gave up the cartoon avatar. Two plates on one record because the books date the switch, which makes it a fact about him rather than a choice about art."
+    },
+    {
+      "id": "vr-bart",
+      "about": "register/bart",
+      "kind": "vr",
+      "title": "Bart's cabin",
+      "cite": "Bk1 ch45 · Bill, Jan 2165",
+      "spoil": 1,
+      "note": "A log cabin, deliberately rough: cast iron stove, an open fire, and furniture somebody made by hand rather than materialised. Bill pops in uninvited, admits that is rude, says he took to the place at once — and spends the visit enjoying the surprised look on his own face."
+    },
+    {
+      "id": "vr-garfield",
+      "about": "register/garfield",
+      "kind": "vr",
+      "title": "Garfield's bean bag",
+      "cite": "Bk1 ch25 · Bill, Sep 2151",
+      "spoil": 1,
+      "note": "Not a room, a chair. Garfield's contribution to the first live SCUT link is to appear in Bill's VR unannounced, sitting in his bean bag, purely so he can say he one-upped the old man."
+    },
+    {
+      "id": "vr-mario",
+      "about": "register/mario",
+      "kind": "vr",
+      "title": "Mario's treehouse",
+      "cite": "Bk2 ch13 · Mario, May 2180",
+      "spoil": 2,
+      "note": "Where he briefs the four Bobs he built for company at Gliese 54 — around a desk in the treehouse, tropical drinks with little umbrellas all round, except for the one who refused the theme and had a coffee. That is the scene the name Surly comes out of."
+    },
+    {
+      "id": "vr-linus",
+      "about": "register/linus",
+      "kind": "vr",
+      "title": "Linus's Saturn",
+      "cite": "Bk1 ch40 · Linus, Apr 2165",
+      "spoil": 2,
+      "note": "Saturn, and he lives in it: cities under domes, floating in the atmosphere, with the ring system overhead and weather systems towering past them. Where the cloud deck breaks you can see hundreds of kilometres down. He built it in transit, having nothing else to do for fourteen years.\n\n@bk2 It does not age well. Thirty-odd years later he arrives at Epsilon Eridani having had no VR updates the whole way, and Henry Roberts — a replicant from another programme entirely — tells him politely that his VR had some issues, if you were paying attention."
+    },
+    {
+      "id": "vr-locutus",
+      "about": "register/locutus",
+      "kind": "vr",
+      "title": "Locutus's getup",
+      "cite": "Bk4 ch9 · Bob, Aug 2333",
+      "spoil": 4,
+      "note": "Generally Borg-like, Bob says, but with a lot more armour than he remembered — and when he asks whether the theme is right, Locutus flexes the shoulder pads and says steampunk influence, they are kind of evolving. The plate follows the joke rather than the reference: brass, copper and rivets are what the books describe, and the thing he is not dressed as belongs to somebody else."
+    },
+    {
+      "id": "vr-howard",
+      "about": "register/howard",
+      "kind": "vr",
+      "title": "Howard's tropical paradise",
+      "cite": "Bk3 ch41 · Howard, Oct 2220",
+      "spoil": 3,
+      "note": "He starts the visit in what he calls his normal indoor VR — the default Bob library slash living room — and changes it on request, because Bridget had never experienced an ocean shore in real life on Earth. Warm breeze, gulls, Jeeves standing by with two drinks with little umbrellas. She looks around, sighs, and pats the couch."
+    }
+  ]
+}

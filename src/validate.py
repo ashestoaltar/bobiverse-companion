@@ -536,6 +536,78 @@ ADDRESSABLE = {
 }
 
 
+HOLO = os.path.join(ROOT, "data", "holo.json")
+HOLO_KINDS = {"vr", "vessel", "specimen", "portrait"}
+
+
+def _check_holo() -> tuple[list[str], list[str]]:
+    """The holotank, and the one rule that makes it safe to have at all.
+
+    The console is allowed to open a rich picture because the books are not set
+    in a green-screen terminal — Bob builds a VR that keeps improving and ends
+    up inhabiting android bodies, so a registry that could only ever draw
+    phosphor would be arguing with its own source. What a rich picture must
+    never do is stand in for knowledge nobody has.
+
+    So: **no plate without a citation.** Not a nicer citation than the record's,
+    not a citation to the general idea — the chapter that describes the thing in
+    the picture. A Bob whose parentage nobody recorded does not get a beautiful
+    room to make up for it, and the failure this guards against is the pleasant
+    one, where the page grows handsomer than it is informed.
+    """
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not os.path.exists(HOLO):
+        return errors, warnings
+    with open(HOLO) as fh:
+        plates = json.load(fh)["plates"]
+
+    seen: set[str] = set()
+    art_dir = os.path.join(ROOT, "assets", "holo")
+    for plate in plates:
+        pid = plate.get("id") or "?"
+        if pid in seen:
+            errors.append(f"holo {pid}: duplicate id")
+        seen.add(pid)
+        if not plate.get("cite"):
+            errors.append(f"holo {pid}: no citation — a plate without one is the page "
+                          f"knowing less than it looks like it knows")
+        elif not re.match(r"^Bk\d+ (ch\d+|·) ", plate["cite"]):
+            errors.append(f"holo {pid}: cite {plate['cite']!r} is not in the usual form")
+        if plate.get("kind") not in HOLO_KINDS:
+            errors.append(f"holo {pid}: kind {plate.get('kind')!r} is not one of "
+                          f"{sorted(HOLO_KINDS)}")
+        if not plate.get("note"):
+            errors.append(f"holo {pid}: needs a note saying what the citation actually says")
+        spoil = plate.get("spoil")
+        if not isinstance(spoil, int) or not 1 <= spoil <= BOOKS:
+            errors.append(f"holo {pid}: spoil {spoil!r} must be a book number")
+        elif plate.get("cite"):
+            m = re.match(r"^Bk(\d+)", plate["cite"])
+            if m and spoil < int(m.group(1)):
+                errors.append(f"holo {pid}: spoil {spoil} is earlier than book {m.group(1)}, "
+                              f"where it is cited")
+        # the address it hangs on, resolved the same way a blog post's is
+        a = plate.get("about") or ""
+        view, _, ident = a.partition("/")
+        if view not in ADDRESSABLE:
+            errors.append(f"holo {pid}: about {a!r} names no register")
+        else:
+            pool = ADDRESSABLE[view]()
+            if pool is not None and ident not in pool:
+                errors.append(f"holo {pid}: about {a!r} points at nothing")
+        if not os.path.exists(os.path.join(art_dir, pid + ".webp")):
+            errors.append(f"holo {pid}: no image at assets/holo/{pid}.webp")
+
+    # An image with no plate ships nothing and costs nothing, which is exactly
+    # why it would sit there unnoticed.
+    if os.path.isdir(art_dir):
+        for name in sorted(os.listdir(art_dir)):
+            if name.endswith(".webp") and name[:-5] not in seen:
+                warnings.append(f"assets/holo/{name} has no plate and will not ship")
+    return errors, warnings
+
+
 def _check_blog() -> tuple[list[str], list[str]]:
     """The feed, and the one rule that keeps it honest.
 
@@ -990,6 +1062,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     blog_errors, blog_warnings = _check_blog()
     errors += blog_errors
     warnings += blog_warnings
+
+    holo_errors, holo_warnings = _check_holo()
+    errors += holo_errors
+    warnings += holo_warnings
 
     book_errors, book_warnings = _check_books()
     errors += book_errors
