@@ -438,7 +438,8 @@ def _check_spoil(bobs: list[dict]) -> tuple[list[str], list[str]]:
     # the companion registers gate their prose the same way and get the same
     # two checks — a note cannot be safe before its entry, and cannot name a
     # book past the one it claims to reach
-    for path, key in ((BESTIARY, "creatures"), (PEOPLES, "entries")):
+    for path, key in ((BESTIARY, "creatures"), (PEOPLES, "entries"),
+                      (VESSELS, "vessels")):
         if not os.path.exists(path):
             continue
         with open(path) as fh:
@@ -499,7 +500,10 @@ def _check_names(bobs: list[dict]) -> list[str]:
 
 
 BLOG = os.path.join(ROOT, "data", "blog.json")
+VESSELS = os.path.join(ROOT, "data", "vessels.json")
 VOICES = {"bobnet", "editor"}
+VESSEL_KINDS = {"design", "hull", "class", "weapon"}
+VESSEL_LINES = {"heaven", "colony", "exodus", "medeiros", "others", "other"}
 
 
 def _ids(path: str, key: str, field: str = "id") -> set | None:
@@ -529,11 +533,67 @@ ADDRESSABLE = {
     "unresolved": _bob_ids,
     "memorium":   _bob_ids,
     "chart":      _system_ids,
+    "systems":    _system_ids,
     "bestiary":   lambda: _ids(BESTIARY, "creatures"),
     "peoples":    lambda: _ids(PEOPLES, "entries"),
+    "vessels":    lambda: _ids(VESSELS, "vessels"),
     "blog":       lambda: _ids(BLOG, "posts"),
     "todo":       lambda: None,
 }
+
+
+def _check_vessels() -> tuple[list[str], list[str]]:
+    """Craft register: designs, hulls, classes — and the match strings that
+    let a Bob dossier link into it without inventing a second vessel field."""
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not os.path.exists(VESSELS):
+        return errors, warnings
+    with open(VESSELS) as fh:
+        vessels = json.load(fh)["vessels"]
+    bob_ids = _bob_ids() or set()
+    by_id = {v.get("id"): v for v in vessels}
+    ids: set[str] = set()
+    matches: dict[str, str] = {}
+    for v in vessels:
+        vid = v.get("id") or "?"
+        if vid in ids:
+            errors.append(f"vessels {vid}: duplicate id")
+        ids.add(vid)
+        if v.get("kind") not in VESSEL_KINDS:
+            errors.append(f"vessels {vid}: kind {v.get('kind')!r} not in {sorted(VESSEL_KINDS)}")
+        if v.get("line") not in VESSEL_LINES:
+            errors.append(f"vessels {vid}: line {v.get('line')!r} not in {sorted(VESSEL_LINES)}")
+        if not v.get("cite"):
+            errors.append(f"vessels {vid}: needs a citation")
+        if not v.get("note") or len(v.get("note") or "") < 40:
+            errors.append(f"vessels {vid}: note too thin")
+        spoil = v.get("spoil")
+        if not isinstance(spoil, int) or spoil < 1:
+            errors.append(f"vessels {vid}: spoil must be a book number")
+        design = v.get("design")
+        if design and design not in by_id:
+            errors.append(f"vessels {vid}: design {design!r} is not a vessel id")
+        elif design and by_id[design].get("kind") != "design":
+            errors.append(f"vessels {vid}: design {design!r} is not kind design")
+        for bid in v.get("crew") or []:
+            if bid not in bob_ids:
+                errors.append(f"vessels {vid}: crew {bid!r} is not a Bob on file")
+        m = v.get("match")
+        if m:
+            if m in matches:
+                errors.append(f"vessels {vid}: match {m!r} already used by {matches[m]}")
+            matches[m] = vid
+    # Every free-text vessel label on a Bob should resolve, or we are advertising
+    # a link the console cannot make. Soft warning until the catalogue is full.
+    if os.path.exists(DATA):
+        with open(DATA) as fh:
+            bobs = json.load(fh)["bobs"]
+        for b in bobs:
+            lab = b.get("vessel")
+            if lab and lab not in matches:
+                warnings.append(f"bob {b['id']}: vessel {lab!r} has no vessels.match entry")
+    return errors, warnings
 
 
 HOLO = os.path.join(ROOT, "data", "holo.json")
@@ -1062,6 +1122,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     blog_errors, blog_warnings = _check_blog()
     errors += blog_errors
     warnings += blog_warnings
+
+    ves_errors, ves_warnings = _check_vessels()
+    errors += ves_errors
+    warnings += ves_warnings
 
     holo_errors, holo_warnings = _check_holo()
     errors += holo_errors

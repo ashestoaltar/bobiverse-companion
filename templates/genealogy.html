@@ -334,6 +334,18 @@
   .beast-art.empty span{font-size:20px; color:var(--ash); opacity:.75}
   .beast-art.big.empty span{font-size:30px}
 
+  /* --- vessels (same card grid as the bestiary; craft not fauna) --- */
+  .vessels{display:grid; gap:12px; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr))}
+  .vessel-card{display:flex; flex-direction:column; gap:9px; text-align:left; padding:11px;
+         background:transparent; border:1px solid var(--rule); color:inherit;
+         font:inherit; cursor:pointer}
+  .vessel-card:hover, .vessel-card[aria-pressed="true"]{
+    border-color:var(--amber); background:var(--panel-hi)}
+  .vessel-card b{display:block; color:var(--amber-hi); font-weight:400; letter-spacing:.04em}
+  .vessel-card .dim{font-size:11.5px; letter-spacing:.05em; text-transform:uppercase}
+  .vessel-mark{display:grid; place-items:center; aspect-ratio:16/7; color:var(--amber-dim);
+               border:1px dashed var(--rule); font-size:12px; letter-spacing:.14em}
+
   /* --- peoples and polities --- */
   .entries{display:grid; gap:8px; grid-template-columns:repeat(auto-fill, minmax(258px, 1fr))}
   .entry{display:flex; gap:10px; align-items:flex-start; text-align:left; padding:9px 11px;
@@ -887,6 +899,10 @@ const BESTIARY = /*__BESTIARY__*/null;
    number — the build refuses to let a name appear in both. */
 const PEOPLES = /*__PEOPLES__*/null;
 
+/* Hulls, design generations, colony and Exodus craft — and room for Medeiros,
+   Others warware and worse. Design generation is not a hull name. */
+const VESSELS = /*__VESSELS__*/null;
+
 /* Guppy. The books put him on screen as the ship's AI and describe him as
    looking like Admiral Ackbar — a character we can't reproduce, so this is
    built from the description instead: amphibious, broad cranium, wide-set
@@ -1028,7 +1044,7 @@ const BOOK_WORD = numWord(BOOK_MAX);
 /* Blog first: it is the public BobNet surface (Bill needling people who do not
    read it). The register and genealogy stay a tab away; they are not the lobby. */
 const state = {view:'blog', q:'', filters:new Set(), sort:'name', dir:1,
-               selected:null, beast:null, people:null, blog:null, system:null,
+               selected:null, beast:null, people:null, vessel:null, blog:null, system:null,
                book:BOOK_MAX};
 
 /* ---- registers --------------------------------------------------------
@@ -1121,6 +1137,23 @@ const REGISTERS = [
      const hit = e.target.closest('[data-sys]');
      if (!hit) return false;
      state.system = state.system === hit.dataset.sys ? null : hit.dataset.sys;
+     render();
+     return true;
+   }},
+  {id:'vessels',    label:'VESSELS',    short:'SHIP',  render: renderVessels,
+   rows: vesselRows,
+   status: rows => {
+     const all = (VESSELS && VESSELS.vessels) || [];
+     statusLine(rows.length === all.length ? `${all.length} vessels`
+                                           : `${rows.length} of ${all.length} vessels`,
+                `${all.filter(v => v.kind === 'design').length} design gens`,
+                `${all.filter(v => v.kind === 'hull').length} named hulls`);
+   },
+   dossier: () => state.vessel ? renderVesselDossier(state.vessel) : null,
+   onClick: e => {
+     const hit = e.target.closest('[data-vessel]');
+     if (!hit) return false;
+     state.vessel = state.vessel === hit.dataset.vessel ? null : hit.dataset.vessel;
      render();
      return true;
    }},
@@ -2378,7 +2411,7 @@ function renderDossier(){
         ${(() => { const g = generation(b); return g ? f('GENERATION', g.stated ? `${g.n} — stated in the books` : `${g.n} — counted down the tree`) : ''; })()}
         ${f('BUILT', b.born)}
         ${fh('ORIGIN', sysLink(b.origin))}
-        ${f('VESSEL', b.vessel)}
+        ${fh('VESSEL', vesselFieldLink(b.vessel))}
         ${fh('VISITED', sysLinks(b.visited))}
         ${fateShown ? f('FATE', `${fateOf(v).label} — ${fateOf(v).full}`) : ''}
         ${fateShown ? f('ON RECORD', v.fateCite) : ''}
@@ -2526,6 +2559,107 @@ function renderBeastDossier(id){
       ${feedSection('bestiary', c.id)}
     ${c.art ? '' : `<div class="sec"><div class="sec-label">ILLUSTRATION</div>
       <p class="note dim">None on file. Drop an SVG at assets/bestiary/${esc(c.id)}.svg and rebuild.</p></div>`}
+    </div>`;
+}
+
+/* ---- vessels ----------------------------------------------------------
+   Hulls, design generations, colony and Exodus craft. Holotank plates hang
+   here (vessels/<id>), not only on Bob dossiers. A Bob's free-text vessel
+   field links in when it matches an entry's `match` string. */
+
+const VESSEL_KIND_MARK = {design: '◇', hull: '▣', class: '▤', weapon: '⬡'};
+const VESSEL_LINE_ORDER = {heaven: 0, colony: 1, exodus: 2, medeiros: 3, others: 4, other: 5};
+
+function vesselById(id){
+  return ((VESSELS && VESSELS.vessels) || []).find(v => v.id === id);
+}
+function vesselByMatch(label){
+  if (!label) return null;
+  return ((VESSELS && VESSELS.vessels) || []).find(v => v.match === label) || null;
+}
+function vesselFieldLink(label){
+  if (!label) return '';
+  const v = vesselByMatch(label);
+  if (v && canLink('vessels', v.id))
+    return `<a href="${addr('vessels', v.id)}">${esc(label)}</a>`;
+  return esc(label);
+}
+
+function vesselRows(){
+  const all = ((VESSELS && VESSELS.vessels) || []).filter(v => !heldEntry(v));
+  const q = state.q.trim().toLowerCase();
+  const rows = !q ? all.slice() : all.filter(v =>
+    [v.name, v.kind, v.line, v.match, v.note, v.cite, String(v.generation || '')]
+      .concat((v.crew || []).map(id => (byId[id] && shown(byId[id]).name) || id))
+      .some(x => x && String(x).toLowerCase().includes(q)));
+  return rows.sort((a, b) =>
+    (VESSEL_LINE_ORDER[a.line] ?? 9) - (VESSEL_LINE_ORDER[b.line] ?? 9) ||
+    (a.generation || 99) - (b.generation || 99) ||
+    (a.kind === 'design' ? 0 : 1) - (b.kind === 'design' ? 0 : 1) ||
+    a.name.localeCompare(b.name));
+}
+
+function renderVessels(rows){
+  if (!VESSELS) return `<p class="empty">[VESSELS UNAVAILABLE]</p>`;
+  const total = (VESSELS.vessels || []).length;
+  if (!rows.length) {
+    return `<p class="empty">[NO MATCH IN ${total} VESSELS]</p>`;
+  }
+  const cards = rows.map(v => `
+    <button class="vessel-card" data-vessel="${esc(v.id)}" aria-pressed="${state.vessel === v.id}">
+      <div class="vessel-mark" aria-hidden="true">${VESSEL_KIND_MARK[v.kind] || '·'} ${esc((v.kind || '').toUpperCase())}</div>
+      <div>
+        <b>${esc(v.name)}</b>
+        <span class="dim">${esc(v.line)}${v.generation ? ` · gen ${v.generation}` : ''}</span>
+      </div>
+    </button>`).join('');
+  return `<div class="reg-lead"><span class="redacted">[</span>${
+    rows.length === total ? `${total} vessels on file` : `${rows.length} of ${total} vessels`
+  }<span class="redacted">]</span><br><br>
+    Design generations and named hulls are different things: Heaven-2 is a ship;
+    generation 2 is a design step. Medeiros, Others capital craft and worse still
+    to catalogue — the register is open on purpose.</div>
+    <div class="vessels">${cards}</div>`;
+}
+
+function renderVesselDossier(id){
+  const v = vesselById(id);
+  if (!v) return null;
+  const f = (label, val) => val != null && val !== '' ? `<div class="f"><dt>${label}</dt><dd>${esc(String(val))}</dd></div>` : '';
+  const fh = (label, html) => html ? `<div class="f"><dt>${label}</dt><dd>${html}</dd></div>` : '';
+  const design = v.design && vesselById(v.design);
+  const crew = (v.crew || []).filter(id => byId[id] && !heldRecord(byId[id]));
+  const crewHtml = crew.length
+    ? crew.map(id => canLink('register', id)
+        ? `<a href="${addr('register', id)}">${esc(shown(byId[id]).name)}</a>`
+        : esc(shown(byId[id]).name)).join('<span class="dim"> · </span>')
+    : '';
+  return `
+    <div class="dossier-head">
+      <div>
+        <div class="serial">[${esc((v.kind || 'VESSEL').toUpperCase())}]</div>
+        <h2>${esc(v.name)}</h2>
+        <div class="sub">${esc(v.line.toUpperCase())}${v.generation ? ` · DESIGN GEN ${v.generation}` : ''}</div>
+      </div>
+      <button class="dossier-close" id="d-close" aria-label="Close">✕</button>
+    </div>
+    <div class="dossier-body">
+    <dl class="fields">
+      ${f('KIND', v.kind)}
+      ${f('LINE', v.line)}
+      ${f('GENERATION', v.generation != null ? String(v.generation) : '')}
+      ${design && canLink('vessels', design.id)
+          ? fh('DESIGN', `<a href="${addr('vessels', design.id)}">${esc(design.name)}</a>`)
+          : f('DESIGN', design ? design.name : '')}
+      ${f('REGISTRY LABEL', v.match)}
+      ${fh('CREW / ASSOCIATED', crewHtml)}
+      ${f('FIRST ON RECORD', citeUpTo(v.cite))}
+    </dl>
+    ${attachRow('vessels', v.id)}
+    <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
+      ${(() => { const g = proseGated(v.note, v);
+          return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}</div>
+    ${feedSection('vessels', v.id)}
     </div>`;
 }
 
@@ -3321,6 +3455,7 @@ function select(id){
 const beastById  = id => ((BESTIARY?.creatures || []).find(c => c.id === id));
 const peopleById = id => ((PEOPLES?.entries  || []).find(e => e.id === id));
 const postById   = id => ((BLOG?.posts     || []).find(p => p.id === id));
+// vesselById is declared with the vessels register above
 
 /* `held` sits here with `ok` for the same reason `ok` does: it is a question
    only this register can answer, and answering it anywhere else would mean a
@@ -3335,6 +3470,8 @@ const SEL = {
              held: v => heldEntry(beastById(v) || {})},
   peoples:  {get: () => state.people,    set: v => state.people = v,    ok: v => (PEOPLES?.entries || []).some(e => e.id === v),
              held: v => heldEntry(peopleById(v) || {})},
+  vessels:  {get: () => state.vessel,    set: v => state.vessel = v,    ok: v => !!(VESSELS?.vessels || []).some(x => x.id === v),
+             held: v => heldEntry(vesselById(v) || {})},
   blog:     {get: () => state.blog,      set: v => state.blog = v,      ok: v => (BLOG?.posts || []).some(p => p.id === v),
              held: v => heldPost(postById(v) || {})},
 };
@@ -3746,6 +3883,7 @@ function bootLines(){
   const systems = (SYSTEMS && SYSTEMS.systems) || [];
   const beasts  = (BESTIARY && BESTIARY.creatures) || [];
   const folk    = (PEOPLES && PEOPLES.entries) || [];
+  const craft   = (VESSELS && VESSELS.vessels) || [];
   const stars   = SKYFIELD ? SKYFIELD.count : 0;
 
   const reached = systems.filter(x => x.first_year)
@@ -3764,7 +3902,7 @@ function bootLines(){
      `${BOBS.filter(b => b.src === 'c').length} with no source on file, ` +
      `${BOBS.filter(b => b.src === 'x').length} expunged]`, 150],
     [`[Chart: ${systems.length} systems \u00b7 ${stars.toLocaleString()} background stars]`, 130],
-    [`[Bestiary: ${beasts.length} creatures \u00b7 Peoples: ` +
+    [`[Bestiary: ${beasts.length} creatures \u00b7 Vessels: ${craft.length} \u00b7 Peoples: ` +
      `${folk.filter(e => e.kind === 'people').length} species, ` +
      `${folk.filter(e => e.kind === 'polity').length} polities, ` +
      `${folk.filter(e => e.kind === 'faction').length} factions]`, 180],

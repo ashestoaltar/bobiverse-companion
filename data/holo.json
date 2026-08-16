@@ -103,7 +103,7 @@
     },
     {
       "id": "vessel-heaven-1",
-      "about": "register/bob1",
+      "about": "vessels/heaven_g1",
       "kind": "vessel",
       "title": "Heaven design, generation 1",
       "cite": "Bk1 ch12 · Bob, Aug 2133",
@@ -112,25 +112,25 @@
     },
     {
       "id": "vessel-heaven-2",
-      "about": "register/bill",
+      "about": "vessels/heaven_g2",
       "kind": "vessel",
       "title": "Heaven design, generation 2",
       "cite": "Bk1 ch17 · Bob, Jul 2145",
       "spoil": 1,
-      "note": "Version-2 HEAVEN: larger frame, bigger SURGE and reactor, more replicant and storage volume, a rail-gun, and buster stowage and launch. One of the new hulls is a trade-up for the original. Ship names like Heaven-2 or Heaven-3 are individual hulls, not this generation number — the plate is the design step the books describe, hung here on Bill as a representative early driver of the improved line."
+      "note": "Version-2 HEAVEN: larger frame, bigger SURGE and reactor, more replicant and storage volume, a rail-gun, and buster stowage and launch. One of the new hulls is a trade-up for the original. Ship names like Heaven-2 or Heaven-3 are individual hulls, not this generation number — the plate is the design step the books describe, filed under the design generation rather than a single hull name."
     },
     {
       "id": "vessel-heaven-3",
-      "about": "register/calvin",
+      "about": "vessels/heaven_g3",
       "kind": "vessel",
       "title": "Heaven design, combat class",
       "cite": "Bk1 ch22 · Bill, Sep 2150",
       "spoil": 1,
-      "note": "Combat-class HEAVEN, the generation that ships Heaven-9 and Heaven-10 among others: roughly ten g, oversized SURGE and main reactor, a second small well-shielded reactor for dark coasting, doubled busters, rail-guns driven off the big drive, and SUDDAR jamming. Still freighter DNA made mean rather than a clean navy destroyer. Attached to Calvin because the chapter that specs the class is also the one that sends him and Goku out in those hulls."
+      "note": "Combat-class HEAVEN, the generation that ships Heaven-9 and Heaven-10 among others: roughly ten g, oversized SURGE and main reactor, a second small well-shielded reactor for dark coasting, doubled busters, rail-guns driven off the big drive, and SUDDAR jamming. Still freighter DNA made mean rather than a clean navy destroyer. Hung on the combat-class design entry; Calvin and Goku fly the hulls that chapter specs."
     },
     {
       "id": "vessel-heaven-4",
-      "about": "register/loki",
+      "about": "vessels/heaven_g4",
       "kind": "vessel",
       "title": "Heaven design, carbon-black",
       "cite": "Bk2 ch50 · Loki, Nov 2195",

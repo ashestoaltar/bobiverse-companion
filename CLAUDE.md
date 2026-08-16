@@ -155,13 +155,15 @@ data/skyfield.json the naked-eye sky for the chart backdrop (HYG, CC BY-SA 4.0).
                  display_limit is what the build ships — see the chart notes
 data/bestiary.json non-sapient fauna; data/bestiary.schema.json documents it
 data/peoples.json  sapient species and their polities; peoples.schema.json too
+data/vessels.json  craft — design gens, hulls, classes; vessels.schema.json too
 data/guppy.json   Guppy's pixel portrait — palette plus one grid per frame
 assets/<register>/ <id>.svg illustrations, inlined into the page by the build
 data/blog.json   dated posts in two voices; blog.schema.json documents them
 data/memorium.json entries with no record to sit on — the three blank rows
 templates/genealogy.html   the console — register, genealogy, unresolved,
-                 in memorium, chart, systems, bestiary, peoples, timeline, blog,
-                 to-do
+                 in memorium, chart, systems, vessels, bestiary, peoples,
+                 timeline, blog, to-do
+data/vessels.json  hulls and design generations; holotank plates hang here
 books/MANIFEST.sha256  hashes + chapter counts of your ebooks; the one thing in
                  books/ that IS committed, because it's facts about the files
 src/parse_ebook.py  MOBI + EPUB -> chapters, refuses DRM

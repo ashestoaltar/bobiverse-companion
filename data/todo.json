@@ -291,7 +291,13 @@
     {
       "cat": "BobNet",
       "text": "Holotank, the rest of the captures",
-      "note": "Mechanism done; content remains.\n\n**Vessels (done):** Heaven design gens 1–4 as vessel-heaven-1…4.\n\n**Dual-mode fauna (started):** gorilloid has stroke card + holotank specimen (specimen-gorilloid, about bestiary/gorilloid, Bk1 ch35). Pattern for further fauna/peoples: card stays native SVG; photoreal only in the tank; both cited.\n\nStill open: more specimens/portraits; Linus aged-VR (Bk2 ch32); Heaven-5 if exterior text supports; dedicated VESSELS register (planned — better home than Bob hang-ons)."
+      "note": "Mechanism done; content remains.\n\n**Vessels register (done):** data/vessels.json, tab VESSELS, holotank plates on vessels/heaven_g1…g4. Bob vessel field links via match. Design gens ≠ hull names.\n\n**Dual-mode fauna (started):** specimen-gorilloid on bestiary/gorilloid.\n\nStill open: more specimens; Linus aged-VR; Heaven-5 plate; Medeiros / Others / death asteroids in the vessels catalogue; network topology + galaxy context later."
+    },
+    {
+      "cat": "Companion registers",
+      "text": "Vessels register",
+      "note": "Done. Peer register for design generations, named hulls, colony and Exodus craft. Holotank plates hang on vessels/<id>; Bob free-text vessel labels resolve through match. Room left for Medeiros, Others capital craft and death asteroids — do not force them onto the Cartesian chart.",
+      "done": true
     }
   ]
 }

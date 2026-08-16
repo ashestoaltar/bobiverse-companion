@@ -117,10 +117,10 @@ Why address-keying wins:
 
 | id | about | cite | title |
 |---|---|---|---|
-| `vessel-heaven-1` | `register/bob1` | Bk1 ch12 | Heaven design, generation 1 |
-| `vessel-heaven-2` | `register/bill` | Bk1 ch17 | Heaven design, generation 2 |
-| `vessel-heaven-3` | `register/calvin` | Bk1 ch22 | Heaven design, combat class |
-| `vessel-heaven-4` | `register/loki` | Bk2 ch50 | Heaven design, carbon-black |
+| `vessel-heaven-1` | `vessels/heaven_g1` | Bk1 ch12 | Heaven design, generation 1 |
+| `vessel-heaven-2` | `vessels/heaven_g2` | Bk1 ch17 | Heaven design, generation 2 |
+| `vessel-heaven-3` | `vessels/heaven_g3` | Bk1 ch22 | Heaven design, combat class |
+| `vessel-heaven-4` | `vessels/heaven_g4` | Bk2 ch50 | Heaven design, carbon-black |
 
 Honesty pass applied: freighter-ugly DNA, red/green/**blue** running lights, no hull labels; v4 = same silhouette painted stealth, not a redesign. Ship **names** (Heaven-2, Heaven-6, …) ≠ design **generations**.  
 
@@ -303,7 +303,7 @@ Heaven flaps/labels; too-different / too-subtle / too-dark ship takes; Riker Ent
 1. ~~**Heaven vessels → holotank**~~ **done** (v1–v4 plates live).  
 2. ~~**One dual-mode specimen**~~ **done** (gorilloid); extend pattern to more fauna/peoples as wanted.  
 3. Optional: Linus “aged VR” second plate; Heaven-5 only if text supports a readable delta.  
-4. **VESSELS register** (planned) — better home for fleet than Bob hang-ons.  
+4. ~~**VESSELS register**~~ **done** (design gens + named hulls; plates on `vessels/*`; Bob vessel field links in). Still to grow: Medeiros, Others warware, death asteroids.  
 
 ### B. Architecture when spatial scope grows
 

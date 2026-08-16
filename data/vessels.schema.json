@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Bobiverse vessels — hulls, design generations, and other craft",
+  "type": "object",
+  "required": ["vessels"],
+  "properties": {
+    "_comment": { "type": "string" },
+    "vessels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "kind", "line", "cite", "note", "spoil"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$",
+            "description": "Stable key. Holotank plates hang on vessels/<id>."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name as the registry shows it."
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["design", "hull", "class", "weapon"],
+            "description": "design = a generation of plans; hull = a named ship; class = a type without a single hull id; weapon = death rocks and the like when the books treat them as craft."
+          },
+          "line": {
+            "type": "string",
+            "enum": ["heaven", "colony", "exodus", "medeiros", "others", "other"],
+            "description": "Fleet family for sorting and filters later."
+          },
+          "generation": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Heaven design generation when kind is design (or a hull is known to that gen). Not the same as the hull name Heaven-N."
+          },
+          "design": {
+            "type": "string",
+            "description": "id of a design entry this hull or class is built from, when known."
+          },
+          "match": {
+            "type": "string",
+            "description": "Exact string as stored on bobs.json vessel field, so a Bob dossier can link here. One vessel per match string."
+          },
+          "crew": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Bob ids associated with this vessel (flew it, built it, briefed from it)."
+          },
+          "cite": {
+            "type": "string",
+            "description": "Chapter or appendix that establishes this entry."
+          },
+          "note": {
+            "type": "string",
+            "description": "Our prose. Never book text."
+          },
+          "spoil": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Latest book the entry's own note draws on, same rule as other companion registers."
+          }
+        }
+      }
+    }
+  }
+}

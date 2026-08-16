@@ -53,6 +53,7 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
     register: new Set(BOBS.map(b => b.id)),
     bestiary: new Set(((get('BESTIARY') || {}).creatures || []).map(c => c.id)),
     peoples: new Set(((get('PEOPLES') || {}).entries || []).map(e => e.id)),
+    vessels: new Set(((get('VESSELS') || {}).vessels || []).map(v => v.id)),
     chart: new Set(Object.keys(get('SYS') || {})),
   };
   each('plate addresses', HOLO.plates, p => {
