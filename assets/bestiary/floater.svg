@@ -1,0 +1,87 @@
+<svg viewBox="0 0 160 120" role="img" aria-label="Floater, near side-on: a deep creased gasbag carrying a shallow forested depression of water at its top, with a keel-sail beneath and feeding vines trailing from the underside">
+  <!-- Jabberwocky's living hydrogen island. Stroke only, no fill, no colour.
+
+       Four earlier passes are worth recording, because each failed differently
+       and the corrections are most of the drawing. Flat side-on, the central
+       depression cuts a notch in the outline and the animal comes out a
+       valentine. Tilted far enough to look into the depression, rim and body
+       stack into a pot with a lid. Tilted a little, with a long near-rim line,
+       the lake and the rim read as an eye over a mouth. Flattened into a
+       discus, it reads as a saucer.
+
+       Depth and gores fix the last one. It is a gasbag: taut, rounded, creased
+       along its length, and two faint verticals say hydrogen more cheaply
+       than any amount of outline. They stop short of the silhouette at both
+       ends, because a crease that touches the edge stops being a crease.
+
+       Everything drawn is stated in Bk5 ch40: the top shaped like the top half
+       of a bagel, forest in a ring around a depression that holds water, a sail
+       beneath like a giant keel, and long vines that drift in the wind, drag
+       along the ground and retract into the bulk.
+
+       What the plate deliberately does NOT draw is the villages. Dragon towns
+       sit on this ring in the books, and they are the first thing you would
+       reach for to give it scale — but the dragons are people and have their
+       own register now, and putting their houses on a specimen plate would let
+       the drawing say what the entry no longer does. The animal is drawn; its
+       tenants are not. -->
+  <g>
+    <!-- the gasbag: one mass, deeper than it is flat, heavier to the left -->
+    <path d="M26 58 C 27 45, 44 35, 66 34 C 76 33, 90 33, 100 35 C 122 38, 135 48, 134 60
+             C 133 76, 120 92, 100 99 C 88 103, 72 103, 60 99 C 40 92, 25 74, 26 58 Z"/>
+    <!-- gores: the creases of something held out by pressure, stopping short of
+         the outline at both ends -->
+    <g opacity="0.28">
+      <path d="M55 44 C 48 58, 49 74, 57 90"/>
+      <path d="M104 45 C 111 58, 110 74, 102 90"/>
+    </g>
+
+    <!-- the depression, seen at a shallow angle: rim, then the water in it -->
+    <path d="M52 46 C 52 40, 64 37, 80 37 C 96 37, 108 40, 108 46 C 108 51, 96 54, 80 54
+             C 64 54, 52 51, 52 46 Z" opacity="0.9"/>
+    <path d="M63 47 C 63 43, 71 41, 80 41 C 89 41, 97 43, 97 47 C 97 51, 89 53, 80 53
+             C 71 53, 63 51, 63 47 Z" opacity="0.45"/>
+    <g opacity="0.35">
+      <path d="M69 46 C 72 48, 77 48, 80 46 M84 50 C 87 51, 91 51, 94 49"/>
+    </g>
+
+    <!-- forest standing around the depression, on the far rim where it shows
+         against the sky. Irregular in height and spacing: a stand of trees and
+         not a comb. -->
+    <g opacity="0.7">
+      <path d="M46 41 L 45 36 M53 37 L 53 33 M60 34 L 60 29 M69 32 L 69 28"/>
+      <path d="M78 31 L 78 26 M87 32 L 87 28 M95 33 L 95 28 M103 36 L 104 31"/>
+      <path d="M110 40 L 111 36"/>
+    </g>
+    <!-- and a shorter stand on the near rim, seen from behind -->
+    <g opacity="0.4">
+      <path d="M60 56 L 60 52 M70 58 L 70 54 M91 58 L 91 54 M100 56 L 100 52"/>
+    </g>
+    <!-- one parasitic stand, and the hummocked blister the surface throws up
+         around it — the only way the books say the two can be told apart -->
+    <path d="M80 61 L 80 55" opacity="0.7"/>
+    <path d="M75 63 C 77 58, 84 58, 86 63" opacity="0.4"/>
+
+    <!-- the sail: one blade on the centreline, broad at the root and raked
+         back. Not a wing — the books are explicit that a floater is not a
+         powered flier and cannot get out of the way of a storm or an eruption,
+         which is most of what kills them. -->
+    <path d="M70 101 C 69 109, 73 116, 84 119 C 89 112, 92 106, 91 101"/>
+    <g opacity="0.25">
+      <path d="M79 104 C 81 109, 83 114, 84 117"/>
+    </g>
+
+    <!-- feeding vines, retracted to different lengths; two are down far enough
+         to be dragging -->
+    <g opacity="0.5">
+      <path d="M32 82 C 28 91, 34 98, 29 108"/>
+      <path d="M50 98 C 53 106, 47 112, 51 120"/>
+      <path d="M108 99 C 105 106, 111 112, 107 120"/>
+      <path d="M128 82 C 132 90, 126 97, 131 107"/>
+    </g>
+    <g opacity="0.24">
+      <path d="M60 103 C 58 107, 61 111, 59 115"/>
+      <path d="M100 103 C 102 107, 99 111, 101 115"/>
+    </g>
+  </g>
+</svg>

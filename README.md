@@ -304,7 +304,7 @@ subtraction — and the validator errors the moment the pool shrinks to the coun
 because at that point the names are known and the rows should stop being dashes.
 
 **9 creatures** in `data/bestiary.json`, each pinned to the world it lives on and
-cited to its first appearance, eight of them drawn.
+cited to its first appearance, and all nine drawn.
 
 **7 species, 19 polities and 4 Bob factions** in `data/peoples.json`. A name may
 be a people or fauna, never both, and the build checks the two files against each
@@ -333,7 +333,7 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 15,645 checks across 20 suites against the shipped page,
+- `make test` runs 15,649 checks across 20 suites against the shipped page,
   including a golden-master snapshot of 139 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and

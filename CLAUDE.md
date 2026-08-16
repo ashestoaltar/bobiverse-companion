@@ -1260,7 +1260,7 @@ entry, and the entry lists its joiners the way a people lists its polities.
 
 The second pass over this register cost the bestiary an entry; see below.
 
-**Bestiary.** Built — `data/bestiary.json`, nine creatures, eight drawn.
+**Bestiary.** Built — `data/bestiary.json`, nine creatures, all nine drawn.
 The inherited list that used to sit here was mostly wrong, and every entry was
 checked against the corpus before it went in. Five of its eight items did not
 survive: **landers** (92) is Dr. Landers, a human; **spits** (36) is the Spits,
