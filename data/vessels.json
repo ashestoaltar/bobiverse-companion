@@ -1,5 +1,5 @@
 {
-  "_comment": "Craft of the Bobiverse: Heaven design generations, named hulls, colony and Exodus ships, and room for Medeiros, Others warware and worse. Design generation is not the same thing as a hull name — Heaven-2 is Riker's ship; generation 2 is a design step. Holotank plates hang on vessels/<id>. Bob records keep a free-text vessel field; when it matches `match` here, the dossier links into this register.",
+  "_comment": "Craft of the Bobiverse: Heaven design generations, named hulls, colony and Exodus ships, Medeiros/Brazilian probe line, Others death asteroids and cargo fleet. Design generation is not the same thing as a hull name. Holotank plates hang on vessels/<id>. Bob records keep a free-text vessel field; when it matches `match` here, the dossier links into this register.",
   "vessels": [
     {
       "id": "heaven_g1",
@@ -7,7 +7,9 @@
       "kind": "design",
       "line": "heaven",
       "generation": 1,
-      "crew": ["bob1"],
+      "crew": [
+        "bob1"
+      ],
       "cite": "Bk1 ch12 · Bob, Aug 2133",
       "spoil": 1,
       "note": "The first HEAVEN is a converted interplanetary freighter: body split for a midships SURGE ring, reactor in place of the fusion stack, viewports shut. Elliptical cross-section, airlocks and cargo doors everywhere, running lights red and green plus blue for three-axis travel. The chapter says it is not a pretty ship — no flagship lines, no shuttle aerodynamics. This is the design step, not every hull later named Heaven-something."
@@ -18,7 +20,11 @@
       "kind": "design",
       "line": "heaven",
       "generation": 2,
-      "crew": ["bob1", "bill", "riker"],
+      "crew": [
+        "bob1",
+        "bill",
+        "riker"
+      ],
       "cite": "Bk1 ch17 · Bob, Jul 2145",
       "spoil": 1,
       "note": "Version-2 HEAVEN: larger frame, bigger SURGE and reactor, more replicant and storage volume, a rail-gun, and buster stowage and launch. One of the new hulls is a trade-up for the original. Hull names like Heaven-2 or Heaven-3 are individual ships, not this generation number."
@@ -29,7 +35,10 @@
       "kind": "design",
       "line": "heaven",
       "generation": 3,
-      "crew": ["calvin", "goku"],
+      "crew": [
+        "calvin",
+        "goku"
+      ],
       "cite": "Bk1 ch22 · Bill, Sep 2150",
       "spoil": 1,
       "note": "Combat-class HEAVEN (Heaven-9 and Heaven-10 among them): roughly ten g, oversized SURGE and main reactor, a second small well-shielded reactor for dark coasting, doubled busters, rail-guns on the big drive, and SUDDAR jamming. Freighter DNA made mean rather than a clean navy destroyer."
@@ -40,7 +49,9 @@
       "kind": "design",
       "line": "heaven",
       "generation": 4,
-      "crew": ["loki"],
+      "crew": [
+        "loki"
+      ],
       "cite": "Bk2 ch50 · Loki, Nov 2195",
       "spoil": 2,
       "note": "Not a new silhouette: the combat line painted into near invisibility. Carbon-black exterior, almost zero albedo, radar-quiet military profiles, heavier shielding, radio silence — vulnerable mainly on SUDDAR. Cool factor is paint and quiet systems, not a redesign."
@@ -53,7 +64,9 @@
       "generation": 1,
       "design": "heaven_g1",
       "match": "HEAVEN-1B",
-      "crew": ["bob1"],
+      "crew": [
+        "bob1"
+      ],
       "cite": "Bk1 ch12 · Bob, Aug 2133",
       "spoil": 1,
       "note": "The original's own hull after the first conversion — the ship that is him in the early chapters. Design generation 1; the plate for that design lives on the design entry."
@@ -66,7 +79,9 @@
       "generation": 2,
       "design": "heaven_g2",
       "match": "Heaven-2",
-      "crew": ["riker"],
+      "crew": [
+        "riker"
+      ],
       "cite": "Bk1 ch17 · Bob, Jul 2145",
       "spoil": 1,
       "note": "Riker's hull. The name is a hull serial, not 'design generation 2' — the generation number and the ship name are different systems in the books and here."
@@ -79,7 +94,9 @@
       "generation": 2,
       "design": "heaven_g2",
       "match": "Heaven-3",
-      "crew": ["bill"],
+      "crew": [
+        "bill"
+      ],
       "cite": "Bk1 ch17 · Bob, Jul 2145",
       "spoil": 1,
       "note": "Bill's early hull at Epsilon Eridani. Same design era as the version-2 line."
@@ -90,7 +107,9 @@
       "kind": "hull",
       "line": "heaven",
       "match": "Heaven-6",
-      "crew": ["homer"],
+      "crew": [
+        "homer"
+      ],
       "cite": "Bk1 ch20 · Bill, Dec 2145",
       "spoil": 1,
       "note": "Homer's hull. On the register as the ship he is associated with in the first volume and after; fate of the vessel and fate of the Bob are graded separately."
@@ -103,7 +122,9 @@
       "generation": 3,
       "design": "heaven_g3",
       "match": "Heaven-9",
-      "crew": ["calvin"],
+      "crew": [
+        "calvin"
+      ],
       "cite": "Bk1 ch22 · Bill, Sep 2150",
       "spoil": 1,
       "note": "Combat-class hull assigned to Calvin for the Alpha Centauri run. Specced with Heaven-10 in the same design pass."
@@ -116,7 +137,9 @@
       "generation": 3,
       "design": "heaven_g3",
       "match": "Heaven-10",
-      "crew": ["goku"],
+      "crew": [
+        "goku"
+      ],
       "cite": "Bk1 ch22 · Bill, Sep 2150",
       "spoil": 1,
       "note": "Combat-class hull assigned to Goku. Pair to Heaven-9 in Bill's beefed-up ship specs."
@@ -128,7 +151,10 @@
       "line": "heaven",
       "generation": 5,
       "match": "Version-5 HEAVEN",
-      "crew": ["neil", "herschel"],
+      "crew": [
+        "neil",
+        "herschel"
+      ],
       "cite": "Bk3 ch22 · Herschel",
       "spoil": 3,
       "note": "The version-5 HEAVEN class as the later books label it — Neil and Herschel among those flying it. Exterior text for generation 5 is thinner than for 1–4; this entry holds the class name until more design detail is worth its own plate."
@@ -139,7 +165,11 @@
       "kind": "class",
       "line": "colony",
       "match": "Colony ship",
-      "crew": ["owen", "jack", "isaac"],
+      "crew": [
+        "owen",
+        "jack",
+        "isaac"
+      ],
       "cite": "Bk3 ch18 · Mack, Oct 2220",
       "spoil": 3,
       "note": "The colony transports that carried settlers and their Bobs. Three records on file name this class rather than a unique hull number: Owen, Jack and Isaac. Not a Heaven; a different job."
@@ -150,7 +180,9 @@
       "kind": "hull",
       "line": "exodus",
       "match": "Exodus-1",
-      "crew": ["bert"],
+      "crew": [
+        "bert"
+      ],
       "cite": "Bk2 · Genealogy",
       "spoil": 2,
       "note": "Bert's Exodus hull as listed in the printed genealogy. Exodus ships are the large human-transport line, not HEAVEN war hulls."
@@ -161,7 +193,9 @@
       "kind": "hull",
       "line": "exodus",
       "match": "Exodus-2",
-      "crew": ["ernie"],
+      "crew": [
+        "ernie"
+      ],
       "cite": "Bk2 · Genealogy",
       "spoil": 2,
       "note": "Ernie's Exodus hull in the printed genealogy."
@@ -172,7 +206,9 @@
       "kind": "hull",
       "line": "exodus",
       "match": "Exodus-3",
-      "crew": ["sam"],
+      "crew": [
+        "sam"
+      ],
       "cite": "Bk2 ch8 · Howard, Apr 2189",
       "spoil": 2,
       "note": "Sam bringing Exodus-3 in — colony transport work at the Vulcan/Romulus end of the story."
@@ -183,10 +219,57 @@
       "kind": "hull",
       "line": "exodus",
       "match": "Exodus-7",
-      "crew": ["dexter"],
+      "crew": [
+        "dexter"
+      ],
       "cite": "Bk2 · Cast of Characters",
       "spoil": 2,
       "note": "Dexter's Exodus hull as the Cast of Characters lists him. Same line as the other Exodus transports."
+    },
+    {
+      "id": "serra_do_mar",
+      "name": "Serra do Mar",
+      "kind": "hull",
+      "line": "medeiros",
+      "cite": "Bk1 ch15 · Bob, Sep 2144",
+      "spoil": 1,
+      "note": "Brazilian Empire ship that answers Bob at Epsilon Eridani: Major Ernesto Medeiros on the audio link. The first named enemy hull in the series, and the template the later Brazilian probes are compared to. Not a Heaven — FAITH's rival programme, same interstellar race."
+    },
+    {
+      "id": "medeiros_probe",
+      "name": "Medeiros probe (Brazilian)",
+      "kind": "class",
+      "line": "medeiros",
+      "cite": "Bk1 ch21 · Riker, Apr 2157",
+      "spoil": 1,
+      "note": "Brazilian probes similar to the Serra do Mar, almost certainly run by Medeiros clones. Riker meets them in Sol with decoy work and busters; the same family of craft keeps turning up wherever a Brazilian seed got through. Class entry rather than one hull — the books treat them as a threat type."
+    },
+    {
+      "id": "death_asteroid",
+      "name": "Death asteroid",
+      "kind": "weapon",
+      "line": "others",
+      "cite": "Bk2 ch55 · Bill, Nov 2195",
+      "spoil": 2,
+      "note": "The Others' world-killing platforms. Bill's first good look at a convoy counts ten of them among attendants and cargo hulks; later engagements scale that count up. They rotate to bring transmitter grids to bear and are what strip a biosphere before the scavenger fleet moves in. Weapon-class craft rather than a ship you board — filed here because the books name them as hardware in the fleet, not as weather."
+    },
+    {
+      "id": "others_cargo",
+      "name": "Others cargo vessel",
+      "kind": "class",
+      "line": "others",
+      "cite": "Bk2 ch55 · Bill, Nov 2195",
+      "spoil": 2,
+      "note": "Huge cylindrical hulks in the Others' convoy — on the order of ten kilometres long and a kilometre across, more planetoid than ship. Cargo carriers for ants and fighters; Herschel later drifts between two of them outside Delta Pavonis. Not death asteroids: different job, same empire."
+    },
+    {
+      "id": "others_attendant",
+      "name": "Others attendant",
+      "kind": "class",
+      "line": "others",
+      "cite": "Bk2 ch66 · Bill, Jan 2208",
+      "spoil": 2,
+      "note": "Small AMI-controlled craft that travel with the Others' capital units — Bill puts them as roughly equivalent to busters, present by the hundred. Escorts and defenders rather than planet-killers; the swarm around the death asteroids and cargo ships."
     }
   ]
 }

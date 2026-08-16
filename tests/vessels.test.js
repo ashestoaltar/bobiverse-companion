@@ -62,6 +62,17 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
   // designs sort before hulls of the same generation/line in a stable way
   ok(/data-vessel="heaven_g1"/.test(stage()), 'heaven_g1 should render');
 
+  // holotank still on the card when a plate is attached
+  const plated = craft.find(v => HOLO.plates.some(p => p.about === `vessels/${v.id}`));
+  ok(plated, 'expected at least one vessel with a holotank plate');
+  ok(/vessel-art/.test(stage()) && /data-holo-id="vessel-heaven-1"/.test(stage()),
+     'vessel cards with plates should reserve a holotank still canvas');
+  ok(!/data:image\/webp/.test(stage()),
+     'stage HTML must not inline plate bytes (spoiler-scan false positives)');
+  ok(craft.some(v => v.line === 'medeiros'), 'Medeiros line should be catalogued');
+  ok(craft.some(v => v.id === 'death_asteroid'), 'death asteroids should be catalogued');
+  ok(craft.some(v => v.id === 'serra_do_mar'), 'Serra do Mar should be on file');
+
   state.q = 'exodus';
   run('render()');
   const found = [...stage().matchAll(/data-vessel="([^"]+)"/g)].map(m => m[1]);

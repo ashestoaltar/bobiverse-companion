@@ -26,7 +26,7 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
 
   const reset = (book = BOOK_MAX) => {
     Object.assign(state, {view: 'register', q: '', sort: 'name', dir: 1,
-                          selected: null, beast: null, people: null, book});
+                          selected: null, beast: null, people: null, vessel: null, book});
     state.filters = new Set();
     get('CHART').sel = null;
   };
