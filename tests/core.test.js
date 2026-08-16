@@ -111,6 +111,43 @@ module.exports = ({ok, get, run, ROOT}) => {
   }
   state.filters = new Set();
 
+  // ---- the bar carries the ones that change the shape of the table ---------
+  // The row was thirteen chips and eight of them barely moved it. A filter that
+  // keeps almost everything is a control that does nothing, and this is the
+  // check that stops one drifting back onto the toolbar.
+  const doc = get('document');
+  const chipsIn = () => [...doc.getElementById('chips').innerHTML
+    .matchAll(/data-filter="([^"]+)"/g)].map(m => m[1]);
+  state.view = 'register'; state.book = get('BOOK_MAX');
+  run('renderChips()');
+  const onBar = chipsIn();
+  ok(onBar.length >= 3 && onBar.length <= 6,
+     `${onBar.length} chips on the bar — the point of the cut was that thirteen was furniture`);
+  for (const id of onBar) {
+    const f = FILTERS.find(x => x.id === id);
+    state.filters = new Set([id]);
+    const kept = run('visible()').length;
+    ok(kept <= BOBS.length * 0.8,
+       `${f.label} keeps ${kept} of ${BOBS.length} — that is not a cut, it is a control that does nothing`);
+  }
+  state.filters = new Set();
+
+  // A filter that has no chip still has to work, because its address is public
+  // and a link somebody already has keeps working here. And when one arrives
+  // active it gets its chip back, or there is no way to switch it off.
+  const hidden = FILTERS.filter(f => f.bar === false && !f.since);
+  ok(hidden.length > 0, 'expected some filters to be off the bar');
+  for (const f of hidden) {
+    ok(!onBar.includes(f.id), `${f.id} is marked off the bar and is on it`);
+    state.filters = new Set([f.id]);
+    ok(run('visible()').length > 0, `${f.id} stopped filtering when its chip came off`);
+    run('renderChips()');
+    ok(chipsIn().includes(f.id),
+       `${f.id} arrived active with no chip to clear it with`);
+  }
+  state.filters = new Set();
+  run('renderChips()');
+
   // ---- search matches on name and on the fields the dossier shows ----
   state.q = 'bob';
   ok(run('visible()').length > 0, 'searching "bob" found nothing');

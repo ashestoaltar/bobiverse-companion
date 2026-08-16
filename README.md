@@ -195,7 +195,9 @@ occasionally. That is the whole performance, which is the joke.
 Every view has an address. `#chart/82_eridani`, `#memorium/homer`,
 `#register/riker?f=lead` — the register, the selected record, the search and the
 filter chips all live in the URL, so a dossier can be linked to and a link
-survives being sent. It's a hash rather than a query string because this page is
+survives being sent. Five chips are on the toolbar and another eight work only
+as addresses — they came off the bar because they barely filtered anything, and
+they still resolve because a link somebody already has has to keep working. It's a hash rather than a query string because this page is
 meant to open by double-clicking it, and that has to keep being true. Arriving on
 a link skips the boot sequence; six seconds of machine noise between you and the
 thing you were sent is rude.
@@ -343,7 +345,7 @@ Everything above is checked rather than asserted:
   twelve consecutive words in `data/*.json` and the documentation is checked
   against the parsed corpus, so paraphrase-and-cite is enforced rather than
   remembered. It found one on its first run.
-- `make test` runs 15,727 checks across 21 suites against the shipped page,
+- `make test` runs 15,770 checks across 21 suites against the shipped page,
   including a golden-master snapshot of 139 rendered states.
 - Where a count comes from the books rather than from us — the three unnamed
   In Memorium entries — the tests check the page against the cited number, and

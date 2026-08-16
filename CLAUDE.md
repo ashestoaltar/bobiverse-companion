@@ -245,6 +245,37 @@ stolen backup more than a century later. He was the only Bob in the register
 carrying a faction he could not possibly have joined, and the STARFLEET chip
 listed him. Descent belongs in prose.
 
+## Filters, and what belongs on the bar
+
+`bar: false` on a `FILTERS` entry keeps it working as an address and takes its
+chip off the toolbar. The two had been one decision and they are not the same
+thing.
+
+The row was thirteen chips and **eight of them did not filter**. Against 89
+records: CITED keeps 83, which is a control that does nothing, and the status
+line already prints the number. EXPUNGED isolates two, PARTIAL and BORG one
+each — a one-record toggle is a link to that record wearing a chip's clothes.
+IN MEMORIUM is a whole register with its own tab. And the four faction chips
+stopped being the only route to that idea the day factions got first-class
+entries in the peoples register, each listing its joiners as links: eleven
+records across four chips, against one entry that gives you the names and the
+history behind them.
+
+Five are left, and they are one idea — how well the tree is sourced and how sure
+the fate is: **TEXT · NO SOURCE · HAS LEAD · PRESUMED · DISPUTED**. DISPUTED
+earns six records because those six are where the sources disagree, three of
+them being where this register was wrong about itself.
+
+**Nothing was deleted.** `#unresolved?f=c,lead` is a documented address and the
+rule here is that a link somebody already has keeps working, so every id still
+filters. A hidden filter that arrives active gets its chip back, or there is no
+way to switch it off. `tests/core.test.js` holds both ends: no chip on the bar
+may keep more than 80% of the records, and every off-bar filter must still work
+and must reappear when active.
+
+The test for the first of those is the one worth keeping. A chip creeps back on
+by looking reasonable one at a time, which is how thirteen happened.
+
 ## Addresses
 
 Every view is linkable: `#<view>/<selection>?q=<search>&f=<filters>`. Hash, not

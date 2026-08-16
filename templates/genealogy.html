@@ -877,24 +877,47 @@ const fateOf = b => FATE[b.fate] || FATE.active;
    the reader met in book one gives away that the Bobiverse eventually splits. */
 const FACTION_BOOK = 4;
 
+/* `bar: false` keeps a filter working as an address and takes its chip off the
+   toolbar. The two are not the same thing and were being decided together.
+
+   The row was thirteen chips, and eight of them did not filter. Counted against
+   89 records: CITED keeps 83 of them, which is not a cut, it is a control that
+   does nothing — and the status line already prints the number. EXPUNGED
+   isolates two, PARTIAL and BORG one each; a one-record toggle is a link to
+   that record wearing a chip's clothes. IN MEMORIUM is a whole register with
+   its own tab. And the four faction chips stopped being the only way to that
+   idea the day factions got first-class entries in the peoples register, each
+   listing its joiners as links — eleven records across four chips, against one
+   entry that gives you the names and the history behind them.
+
+   What is left on the bar is the five that change the shape of the table, and
+   they are all one idea: how well the tree is sourced and how sure the fate is.
+   DISPUTED earns its slot on six records because those six are where the
+   sources disagree, three of them being where this register was wrong about
+   itself.
+
+   Nothing was deleted. `#unresolved?f=c,lead` is a documented address and the
+   rule here is that a link somebody already has keeps working, so every id
+   still filters; and a hidden filter that arrives active gets its chip back, or
+   there would be no way to switch it off. */
 const FILTERS = [
   {id:'t',         label:'TEXT',      test:b => b.src === 't'},
-  {id:'p',         label:'PARTIAL',   test:b => b.src === 'p'},
   {id:'c',         label:'NO SOURCE', test:b => b.src === 'c'},
   {id:'lead',      label:'HAS LEAD',  test:b => !!b.priorClaim},
-  {id:'x',         label:'EXPUNGED',  test:b => b.src === 'x'},
-  {id:'memorium',  label:'IN MEMORIUM', test:b => b.fate === 'memorium'},
   {id:'presumed',  label:'PRESUMED',  test:b => b.fate === 'presumed'},
-  {id:'cited',     label:'CITED',     test:b => !!b.cite},
   {id:'conflict',  label:'DISPUTED',  test:b => !!b.conflict},
-  // `since` is the book that has to have been read before a chip means
-  // anything. The row of faction filters is itself the spoiler here: it tells a
-  // reader on book one that the Bobiverse eventually splits, and names the
-  // pieces, before anything is clicked.
-  {id:'starfleet', label:'STARFLEET', since:FACTION_BOOK, test:b => b.faction === 'Starfleet'},
-  {id:'skippies',  label:'SKIPPIES',  since:FACTION_BOOK, test:b => b.faction === 'Skippies'},
-  {id:'gamers',    label:'GAMERS',    since:FACTION_BOOK, test:b => b.faction === 'Gamers'},
-  {id:'borg',      label:'BORG',      since:FACTION_BOOK, test:b => b.faction === 'Borg'}
+  {id:'p',         label:'PARTIAL',   bar:false, test:b => b.src === 'p'},
+  {id:'x',         label:'EXPUNGED',  bar:false, test:b => b.src === 'x'},
+  {id:'memorium',  label:'IN MEMORIUM', bar:false, test:b => b.fate === 'memorium'},
+  {id:'cited',     label:'CITED',     bar:false, test:b => !!b.cite},
+  // `since` is the book that has to have been read before a filter means
+  // anything. These were the clearest case for coming off the bar: a row of
+  // faction chips tells a reader on book one that the Bobiverse eventually
+  // splits, and names the pieces, before anything is clicked.
+  {id:'starfleet', label:'STARFLEET', bar:false, since:FACTION_BOOK, test:b => b.faction === 'Starfleet'},
+  {id:'skippies',  label:'SKIPPIES',  bar:false, since:FACTION_BOOK, test:b => b.faction === 'Skippies'},
+  {id:'gamers',    label:'GAMERS',    bar:false, since:FACTION_BOOK, test:b => b.faction === 'Gamers'},
+  {id:'borg',      label:'BORG',      bar:false, since:FACTION_BOOK, test:b => b.faction === 'Borg'}
 ];
 
 const COLS = [
@@ -2987,7 +3010,9 @@ function renderChips(){
   const reg = currentRegister();
   if (!reg.filters) { host.innerHTML = ''; host.hidden = true; return; }
   host.hidden = false;
-  host.innerHTML = FILTERS.filter(f => !(gating() && past(f.since || 1, state.book))).map(f =>
+  host.innerHTML = FILTERS
+    .filter(f => f.bar !== false || state.filters.has(f.id))
+    .filter(f => !(gating() && past(f.since || 1, state.book))).map(f =>
     `<button class="chip" data-filter="${f.id}" aria-pressed="${state.filters.has(f.id)}">${f.label}</button>`).join('');
 }
 
