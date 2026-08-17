@@ -304,6 +304,7 @@ Heaven flaps/labels; too-different / too-subtle / too-dark ship takes; Riker Ent
 2. ~~**One dual-mode specimen**~~ **done** (gorilloid); extend pattern to more fauna/peoples as wanted.  
 3. Optional: Linus “aged VR” second plate; Heaven-5 only if text supports a readable delta.  
 4. ~~**VESSELS register**~~ **done** (design gens + named hulls; plates on `vessels/*`; Bob vessel field links in). Still to grow: Medeiros, Others warware, death asteroids.  
+5. **Holotank 3D spike:** `ideas/experiments/holotank-3d/` — **orbit test passed** (Heaven gen 1 GLB). Not in production yet; size ~tens of MB must be crushed before inline ship.  
 
 ### B. Architecture when spatial scope grows
 

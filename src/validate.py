@@ -658,6 +658,15 @@ def _check_holo() -> tuple[list[str], list[str]]:
                 errors.append(f"holo {pid}: about {a!r} points at nothing")
         if not os.path.exists(os.path.join(art_dir, pid + ".webp")):
             errors.append(f"holo {pid}: no image at assets/holo/{pid}.webp")
+        mid = plate.get("model")
+        if mid is not None:
+            if not isinstance(mid, str) or not re.match(r"^[a-z0-9_-]+$", mid):
+                errors.append(f"holo {pid}: model {mid!r} must be a simple id")
+            else:
+                mpath = os.path.join(ROOT, "assets", "holo-models", mid + ".glb")
+                if not os.path.exists(mpath):
+                    errors.append(f"holo {pid}: model {mid!r} missing at "
+                                  f"assets/holo-models/{mid}.glb")
 
     # An image with no plate ships nothing and costs nothing, which is exactly
     # why it would sit there unnoticed.
@@ -665,6 +674,12 @@ def _check_holo() -> tuple[list[str], list[str]]:
         for name in sorted(os.listdir(art_dir)):
             if name.endswith(".webp") and name[:-5] not in seen:
                 warnings.append(f"assets/holo/{name} has no plate and will not ship")
+    model_dir = os.path.join(ROOT, "assets", "holo-models")
+    if os.path.isdir(model_dir):
+        used_models = {p.get("model") for p in plates if p.get("model")}
+        for name in sorted(os.listdir(model_dir)):
+            if name.endswith(".glb") and name[:-4] not in used_models:
+                warnings.append(f"assets/holo-models/{name} has no plate and will not ship")
     return errors, warnings
 
 

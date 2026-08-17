@@ -108,7 +108,8 @@
       "title": "Heaven design, generation 1",
       "cite": "Bk1 ch12 · Bob, Aug 2133",
       "spoil": 1,
-      "note": "The first hull is a converted interplanetary freighter: body split for a midships SURGE ring, fusion stack swapped for reactor and cooling, viewports shut. Elliptical cross-section, crowded with airlocks and cargo doors, running lights red and green plus blue for travel in three axes. The chapter says outright that it is not a pretty ship — neither flagship lines nor shuttle aerodynamics. Design generation 1 is not the same thing as every hull later named Heaven-something."
+      "note": "The first hull is a converted interplanetary freighter: body split for a midships SURGE ring, fusion stack swapped for reactor and cooling, viewports shut. Elliptical cross-section, crowded with airlocks and cargo doors, running lights red and green plus blue for travel in three axes. The chapter says outright that it is not a pretty ship — neither flagship lines nor shuttle aerodynamics. Design generation 1 is not the same thing as every hull later named Heaven-something.",
+      "model": "vessel-heaven-1"
     },
     {
       "id": "vessel-heaven-2",

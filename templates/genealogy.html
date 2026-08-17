@@ -695,8 +695,23 @@
                 letter-spacing:.02em}
   .tank-body{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
              gap:var(--gap); padding:14px}
-  .tank-plate{margin:0}
+  .tank-plate{margin:0; position:relative}
   .tank-plate img{display:block; width:100%; height:auto; border:1px solid var(--rule)}
+  .tank-plate canvas.tank-3d{
+    display:block; width:100%; height:min(52vh, 420px); border:1px solid var(--rule);
+    background:#060402; touch-action:none;
+  }
+  .tank-plate canvas.tank-3d[hidden], .tank-plate img[hidden]{display:none}
+  .tank-view-bar{display:flex; gap:8px; margin:0 0 8px; flex-wrap:wrap}
+  .tank-view-bar button{
+    background:transparent; border:1px solid var(--rule); font:inherit; font-size:11px;
+    letter-spacing:.1em; color:var(--amber-dim); padding:4px 9px; cursor:pointer;
+  }
+  .tank-view-bar button[aria-pressed="true"]{
+    color:var(--phos); border-color:var(--phos);
+  }
+  .tank-view-bar button:hover{color:var(--amber-hi); border-color:var(--amber-dim)}
+  .tank-hint{font-size:11px; letter-spacing:.06em; color:var(--ash); margin:6px 0 0}
   .tank-side{min-width:0; font-size:13px}
   .tank-side .sec{margin-top:12px}
   @media (max-width:760px){
@@ -794,7 +809,17 @@
       <button class="dossier-close" id="tank-close" aria-label="Close the holotank">✕</button>
     </div>
     <div class="tank-body">
-      <figure class="tank-plate"><img id="tank-img" alt=""></figure>
+      <div>
+        <div class="tank-view-bar" id="tank-view-bar" hidden>
+          <button type="button" id="tank-mode-3d" aria-pressed="true">3D ORBIT</button>
+          <button type="button" id="tank-mode-2d" aria-pressed="false">STILL</button>
+        </div>
+        <figure class="tank-plate">
+          <canvas id="tank-3d" class="tank-3d" hidden></canvas>
+          <img id="tank-img" alt="">
+        </figure>
+        <p class="tank-hint" id="tank-hint" hidden>Drag to orbit · scroll to zoom · right-drag to pan</p>
+      </div>
       <div class="tank-side">
         <dl class="fields" id="tank-fields"></dl>
         <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
@@ -871,6 +896,8 @@
   </footer>
 </div>
 
+<!-- Bundled Three.js when any plate has a 3D model; empty otherwise. -->
+<script>/*__HOLO3D_JS__*/</script>
 <script>
 /* =========================================================================
    DATA — one row per replicant, each carrying its own provenance.
@@ -2918,31 +2945,189 @@ function heldPlate(p){
   return gating() && past(bookOf(p.cite), state.book);
 }
 
+/* ---- holotank 3D (optional model on a plate) ---------------------------
+   When a plate carries modelSrc (inlined GLB) and HOLO3D is present (bundled
+   Three.js), the tank can orbit the mesh. Still image remains always available.
+   Reduced motion / missing WebGL / missing bundle → still only. */
+let TANK3D = null; // { renderer, scene, camera, controls, root, raf }
+
+function tankHas3D(p){
+  return !!(p && p.modelSrc && typeof HOLO3D !== 'undefined' && HOLO3D
+            && HOLO3D.THREE && HOLO3D.OrbitControls && HOLO3D.GLTFLoader
+            && !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+
+function disposeTank3D(){
+  if (!TANK3D) return;
+  cancelAnimationFrame(TANK3D.raf);
+  if (TANK3D.controls) TANK3D.controls.dispose();
+  if (TANK3D.root) {
+    TANK3D.scene.remove(TANK3D.root);
+    TANK3D.root.traverse(o => {
+      if (o.geometry) o.geometry.dispose();
+      if (o.material) {
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach(m => m.dispose && m.dispose());
+      }
+    });
+  }
+  if (TANK3D.renderer) {
+    TANK3D.renderer.dispose();
+    const gl = TANK3D.renderer.getContext && TANK3D.renderer.getContext();
+    const lose = gl && gl.getExtension && gl.getExtension('WEBGL_lose_context');
+    if (lose) lose.loseContext();
+  }
+  TANK3D = null;
+}
+
+function setTankMode(mode){
+  const img = document.getElementById('tank-img');
+  const canvas = document.getElementById('tank-3d');
+  const hint = document.getElementById('tank-hint');
+  const b3 = document.getElementById('tank-mode-3d');
+  const b2 = document.getElementById('tank-mode-2d');
+  const three = mode === '3d' && TANK3D;
+  if (img) img.hidden = !!three;
+  if (canvas) canvas.hidden = !three;
+  if (hint) hint.hidden = !three;
+  if (b3) b3.setAttribute('aria-pressed', three ? 'true' : 'false');
+  if (b2) b2.setAttribute('aria-pressed', three ? 'false' : 'true');
+  if (three && TANK3D) {
+    const w = canvas.clientWidth || 480;
+    const h = canvas.clientHeight || 320;
+    TANK3D.renderer.setSize(w, h, false);
+    TANK3D.camera.aspect = w / Math.max(h, 1);
+    TANK3D.camera.updateProjectionMatrix();
+  }
+}
+
+function startTank3D(modelSrc){
+  disposeTank3D();
+  const canvas = document.getElementById('tank-3d');
+  if (!canvas || typeof HOLO3D === 'undefined' || !HOLO3D) return false;
+  const { THREE, OrbitControls, GLTFLoader } = HOLO3D;
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+  } catch (e) {
+    return false;
+  }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setClearColor(0x060402, 1);
+  if (renderer.outputColorSpace !== undefined)
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 200);
+  camera.position.set(2.2, 1.1, 2.8);
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+
+  scene.add(new THREE.AmbientLight(0xffe3b8, 0.55));
+  const key = new THREE.DirectionalLight(0xffb454, 1.05);
+  key.position.set(4, 6, 3);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0x7ce8a4, 0.35);
+  fill.position.set(-3, 1, -2);
+  scene.add(fill);
+  const grid = new THREE.GridHelper(6, 12, 0x5e4b2b, 0x3a2e1a);
+  grid.position.y = -0.75;
+  scene.add(grid);
+
+  const state = { renderer, scene, camera, controls, root: null, raf: 0 };
+  TANK3D = state;
+
+  function tick(){
+    if (!TANK3D) return;
+    controls.update();
+    renderer.render(scene, camera);
+    TANK3D.raf = requestAnimationFrame(tick);
+  }
+  tick();
+
+  const loader = new GLTFLoader();
+  loader.load(modelSrc, gltf => {
+    if (TANK3D !== state) return;
+    const root = gltf.scene;
+    // Amber holotank material — models ship stripped of photo textures
+    root.traverse(o => {
+      if (o.isMesh) {
+        o.material = new THREE.MeshStandardMaterial({
+          color: 0xc29358, metalness: 0.35, roughness: 0.45,
+          emissive: 0x1b1309, emissiveIntensity: 0.15,
+        });
+      }
+    });
+    scene.add(root);
+    const box = new THREE.Box3().setFromObject(root);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    root.position.sub(center);
+    const maxDim = Math.max(size.x, size.y, size.z, 0.001);
+    root.scale.setScalar(1.6 / maxDim);
+    const box2 = new THREE.Box3().setFromObject(root);
+    root.position.y -= box2.min.y + 0.02;
+    controls.target.set(0, 0.35, 0);
+    camera.position.set(2.2, 1.1, 2.8);
+    controls.update();
+    state.root = root;
+    setTankMode('3d');
+  }, undefined, () => {
+    setTankMode('2d');
+  });
+  return true;
+}
+
 function openTank(id){
   const p = HOLO && HOLO.plates.find(x => x.id === id);
   if (!p || heldPlate(p)) return;
+  disposeTank3D();
   const el = document.getElementById('tank');
   document.getElementById('tank-kind').textContent =
     `[${KIND_WORD_HOLO[p.kind] || p.kind.toUpperCase()}]`;
   document.getElementById('tank-title').textContent = p.title;
   const img = document.getElementById('tank-img');
+  img.hidden = false;
   img.src = p.src;
   img.alt = `${p.title} — the registry's reconstruction from ${p.cite}`;
+  const bar = document.getElementById('tank-view-bar');
+  const can3d = tankHas3D(p);
+  if (bar) bar.hidden = !can3d;
+  document.getElementById('tank-hint').hidden = true;
+  document.getElementById('tank-3d').hidden = true;
   const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
   document.getElementById('tank-fields').innerHTML =
     f('BUILT FROM', citeUpTo(p.cite)) +
     f('ATTACHED TO', p.about) +
-    f('SOURCE', 'registry reconstruction — not an illustration from the books');
+    f('SOURCE', 'registry reconstruction — not an illustration from the books') +
+    (can3d ? f('VIEW', '3D orbit available — drag the holotank') : '');
   const g = proseGated(p.note, p);
   document.getElementById('tank-note').innerHTML =
     g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION');
   el.hidden = false;
   document.getElementById('tank-close').focus();
+  if (can3d) {
+    const ok = startTank3D(p.modelSrc);
+    if (!ok) {
+      if (bar) bar.hidden = true;
+      setTankMode('2d');
+    }
+  } else {
+    setTankMode('2d');
+  }
 }
 
 function closeTank(){
+  disposeTank3D();
   const el = document.getElementById('tank');
   if (el) { el.hidden = true; document.getElementById('tank-img').src = ''; }
+  const img = document.getElementById('tank-img');
+  if (img) img.hidden = false;
+  const c = document.getElementById('tank-3d');
+  if (c) c.hidden = true;
+  const bar = document.getElementById('tank-view-bar');
+  if (bar) bar.hidden = true;
 }
 
 /* The row in a dossier that says whether there is anything to open. It says so
@@ -4098,6 +4283,8 @@ function bootLines(){
     const open = e.target.closest && e.target.closest('[data-plate]');
     if (open) { openTank(open.dataset.plate); return; }
     if (e.target.closest && e.target.closest('#tank-close')) { closeTank(); return; }
+    if (e.target.id === 'tank-mode-3d') { setTankMode('3d'); return; }
+    if (e.target.id === 'tank-mode-2d') { setTankMode('2d'); return; }
     // The backdrop closes it. The panel itself does not.
     if (e.target.id === 'tank') closeTank();
   });

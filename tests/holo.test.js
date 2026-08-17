@@ -101,6 +101,19 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
      'the tank does not say whose picture this is');
   ok(!/NaN|undefined/.test(doc.getElementById('tank-body') ? '' : fields), 'tank rendered a hole');
 
+  // 3D models: plate may carry modelSrc (inlined GLB). Stub DOM may lack WebGL;
+  // we only assert the payload is on the plate and the viewer global exists.
+  const modeled = HOLO.plates.filter(p => p.modelSrc);
+  ok(modeled.length > 0, 'expected at least one plate with a 3D model');
+  each('3D plates', modeled, p => {
+    ok(/^data:model\/gltf-binary;base64,/.test(p.modelSrc),
+       `${p.id}: modelSrc is not an inlined GLB`);
+    ok(p.modelSrc.length > 1000, `${p.id}: model payload suspiciously small`);
+  }, 1);
+  const lib = get('HOLO3D');
+  ok(lib && lib.THREE && lib.OrbitControls && lib.GLTFLoader,
+     'HOLO3D viewer bundle should ship when models are present');
+
   run('closeTank()');
   ok(tank.hidden, 'the tank did not close');
   ok(doc.getElementById('tank-img').src === '', 'closing should drop the image');

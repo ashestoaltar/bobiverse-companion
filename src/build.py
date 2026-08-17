@@ -49,6 +49,9 @@ SANDBOX = os.path.join(ROOT, "data", "sandbox.json")
 SANDBOX_PLACEHOLDER = "/*__SANDBOX__*/null"
 HOLO = os.path.join(ROOT, "data", "holo.json")
 HOLO_PLACEHOLDER = "/*__HOLO__*/null"
+HOLO_MODELS = os.path.join(ROOT, "assets", "holo-models")
+HOLO3D_JS = os.path.join(ROOT, "assets", "holo3d", "holo3d.js")
+HOLO3D_PLACEHOLDER = "/*__HOLO3D_JS__*/"
 
 
 def _check_pixels(art: dict, who: str = "guppy") -> None:
@@ -83,6 +86,10 @@ def inject_holo(html: str) -> tuple[str, dict, int]:
     about image size becomes a decision about page weight — 520px on the long
     edge, WebP, which is about 40KB a plate once base64 has had its third.
 
+    Optional `model` on a plate names assets/holo-models/<model>.glb — inlined
+    the same way for offline 3D holotank orbit. The Three.js viewer is injected
+    separately from assets/holo3d/holo3d.js (bundled offline).
+
     The encoding happens offline and the optimised file is what gets committed.
     Nothing here needs an image library, which keeps the toolchain stdlib-only.
     """
@@ -91,6 +98,7 @@ def inject_holo(html: str) -> tuple[str, dict, int]:
     for key in [k for k in holo if k.startswith("_")]:
         holo.pop(key)
     total = 0
+    models_used = False
     for plate in holo["plates"]:
         path = os.path.join(ROOT, "assets", "holo", plate["id"] + ".webp")
         if not os.path.exists(path):
@@ -101,11 +109,41 @@ def inject_holo(html: str) -> tuple[str, dict, int]:
             raw = fh.read()
         total += len(raw)
         plate["src"] = "data:image/webp;base64," + base64.b64encode(raw).decode()
+        mid = plate.get("model")
+        if mid:
+            mpath = os.path.join(HOLO_MODELS, mid + ".glb")
+            if not os.path.exists(mpath):
+                print(f"ERROR: holotank plate {plate['id']!r} model {mid!r} "
+                      f"missing at {os.path.relpath(mpath, ROOT)}")
+                sys.exit(1)
+            with open(mpath, "rb") as fh:
+                mraw = fh.read()
+            total += len(mraw)
+            plate["modelSrc"] = ("data:model/gltf-binary;base64,"
+                                 + base64.b64encode(mraw).decode())
+            models_used = True
     if HOLO_PLACEHOLDER not in html:
         print(f"ERROR: placeholder {HOLO_PLACEHOLDER} missing from template")
         sys.exit(1)
-    return (html.replace(HOLO_PLACEHOLDER, json.dumps(holo, ensure_ascii=False), 1),
-            holo, total)
+    html = html.replace(HOLO_PLACEHOLDER, json.dumps(holo, ensure_ascii=False), 1)
+
+    # 3D viewer: only ship the bundle if a plate actually uses a model
+    if models_used:
+        if not os.path.exists(HOLO3D_JS):
+            print(f"ERROR: 3D holotank needs {os.path.relpath(HOLO3D_JS, ROOT)} "
+                  f"(build with esbuild from ideas/experiments/holotank-3d)")
+            sys.exit(1)
+        with open(HOLO3D_JS) as fh:
+            holo3d = fh.read()
+        if HOLO3D_PLACEHOLDER not in html:
+            print(f"ERROR: placeholder {HOLO3D_PLACEHOLDER} missing from template")
+            sys.exit(1)
+        html = html.replace(HOLO3D_PLACEHOLDER, holo3d, 1)
+        total += len(holo3d.encode())
+    else:
+        html = html.replace(HOLO3D_PLACEHOLDER, "", 1)
+
+    return html, holo, total
 
 
 def cut_sky(sky: dict) -> tuple[str, float]:
@@ -353,6 +391,7 @@ def main() -> None:
           f"sandbox {sandbox['width']}x{sandbox['height']} in "
           f"{len(sandbox['frames'])} frames, "
           f"{len(holo['plates'])} holotank plates ({holo_bytes / 1024:,.0f} KB), "
+          f"{sum(1 for p in holo['plates'] if p.get('modelSrc'))} with 3D models, "
           f"{len(html):,} bytes")
 
 

@@ -1,0 +1,14 @@
+{
+  "name": "holotank-3d-spike",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local orbit viewer for AI-generated vessel GLBs — not production BobNet",
+  "scripts": {
+    "serve": "python3 -m http.server 8765 --bind 127.0.0.1",
+    "clean-glb": "./scripts/clean-glb.sh",
+    "postinstall": "node -e \"console.log('three ready — npm run serve, then http://127.0.0.1:8765/')\""
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  }
+}
