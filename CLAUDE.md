@@ -5,10 +5,16 @@ presented as a BobNet console. The point of the project is **provenance**:
 every lineage claim carries a confidence tier, and disagreements between
 sources are surfaced rather than smoothed over.
 
-**Agent handoff:** for current product intent, holotank/spatial architecture
-(local chart · wormhole topology · galaxy context), art rules, keepers, and
-ordered next work, read **`ideas/README.md` first**. Living backlog:
-`data/todo.json`. This file stays the ground rules and data layout.
+**Agent handoff:** read **`ideas/README.md` first** — product intent, holotank
+2D+3D, vessels, spatial models (chart · wormholes · galaxy), art/Ackbar rules,
+experiment tools, open checklist. Owner preference: one primary agent (Grok)
+owns code, data, tests, and media; suggest improvements freely; “locked”
+choices are not sacred if quality demands change. Living backlog:
+`data/todo.json`. This file stays ground rules and data layout.
+
+**3D holotank assets:** `assets/holo-models/*.glb`, viewer bundle
+`assets/holo3d/holo3d.js`, plate field `model` in `data/holo.json`. Spike tools
+under `ideas/experiments/holotank-3d/`.
 
 ## Ground rules
 

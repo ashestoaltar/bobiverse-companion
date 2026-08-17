@@ -1,14 +1,23 @@
 # Agent handoff — BobNet Registry
 
-**Read this first after compacting a long chat, or when picking up the project cold.**  
-Durable product decisions, architecture, art rules, file map, and ordered next work.  
-Companion to [`../CLAUDE.md`](../CLAUDE.md) (ground rules + data layout) and [`../data/todo.json`](../data/todo.json) (item-level backlog).  
-Historical multi-pass notes: [`../COLLABORATIVE-REVIEW.md`](../COLLABORATIVE-REVIEW.md) — many ideas there are **already shipped**; this file wins on current intent.
+**Read this first** after compacting a long chat, or when picking up the project cold.  
+This file wins on **current product intent** when it conflicts with older review notes.
 
-**Last full review:** 2026-08-16. Validate OK (Hector name-collision warning only). Test suite green (~15.9k checks / 22 suites).  
-**Vessel plates landed:** same day — 15 holotank plates, ship ~950 KB.
+| Related | Role |
+|---|---|
+| [`../CLAUDE.md`](../CLAUDE.md) | Ground rules, data layout, workflow |
+| [`../data/todo.json`](../data/todo.json) | Item-level backlog (done vs open) |
+| [`../COLLABORATIVE-REVIEW.md`](../COLLABORATIVE-REVIEW.md) | Historical multi-pass notes — many ideas **already shipped** |
+| [`experiments/holotank-3d/README.md`](experiments/holotank-3d/README.md) | Local 3D spike tools (Blender clean, orbit test page) |
 
-**Owner intent:** One agent (Grok / xAI) can own code, data, tests, **and** Imagine art. No need to bounce between LLMs for plates. Books stay local; never commit book text.
+**Last handoff write-up:** 2026-08-16 (end of day).  
+**Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and zero-network promises.
+
+**Owner intent (explicit):**  
+- One agent can own the whole stack — no need to bounce LLMs for art or implementation.  
+- Suggestions and improvements are welcome without being asked.  
+- “Locked” decisions from earlier tools/sessions are **not sacred** if a better path appears.  
+- Books stay local; never commit book text.
 
 ---
 
@@ -16,344 +25,272 @@ Historical multi-pass notes: [`../COLLABORATIVE-REVIEW.md`](../COLLABORATIVE-REV
 
 | Layer | Reality |
 |---|---|
-| **In-console name** | **BobNet — Registry** (`<title>`, banner **REGISTRY**, “PUBLIC FEATURES + ARCHIVES”) |
-| **Thesis** | **Provenance** — books-only parentage, graded tiers, honest gaps, conflicts recorded |
-| **Shell** | Amber phosphor; Guppy; bracketed machine speech; SCUT-style boot; single `dist/index.html` |
-| **Payload** | Holotank attachments, chart canvas, stroke SVG cards — rich only when you open a file |
-| **Not** | Official BobNet skin, a wiki, or a tree-only fan site |
+| **In-console name** | **BobNet — Registry** |
+| **Thesis** | **Provenance** — books-only parentage, graded tiers, honest gaps, conflicts |
+| **Shell** | Amber phosphor; Guppy; brackets; SCUT boot; single `dist/index.html` |
+| **Payload** | Holotank (2D stills + optional 3D orbit), chart, stroke cards |
+| **Not** | Official BobNet house skin, a wiki, or tree-only fan site |
 
-**Blog is the front door** (default view + first tab): public BobNet surface.  
-**Genealogy is load-bearing for the mission, not the lobby.** Register/genealogy are a tab away. Holotank openers use **phosphor green** so they read as a different class of control than amber chrome.  
-Repo path/docs still say “genealogy” in places; chrome already says registry.  
-**Planned:** dedicated **VESSELS** register (Heavens, Medeiros, colony, Others, etc.); Bob dossier hang-ons for hull art are temporary.
+**Blog is the front door** (default view + first tab).  
+**Genealogy is load-bearing for the mission, not the lobby.**  
+Holotank openers: **phosphor green** (not amber) so attachments are visible. Label stays `[ATTACHMENT: id]` for now (not renamed to HOLOTANK — tank chrome already says holotank; soft rename later if needed).
 
-**Canon one-liner:** BobNet = SCUT social/technical mesh; look-and-feel is always local; this console is **Bill-shaped working surface** (genealogy + In Memorium are his specialty archives; blogs are public BobNet features).
+**Canon one-liner:** BobNet = SCUT mesh; presentation is always local; this is a **Bill-shaped working surface**.
 
 ---
 
-## 2. Current ship (do not re-plan)
+## 2. Current ship (do not re-plan from scratch)
 
-### Registers (11)
+### Registers (12)
 
-| Group | Tabs | Role |
-|---|---|---|
-| **Replicants** | Register · Genealogy · Unresolved · In Memorium | Directory, tree, gaps, deaths |
-| **World** | Chart · Systems · Bestiary · Peoples | Real sky, places, fauna, sapients/polities/factions |
-| **Log** | Timeline · Blog · To-do | Derived chronology, Bill + editor posts, backlog |
+| Group | Tabs |
+|---|---|
+| **Feed** | **Blog** (first, default) |
+| **Replicants** | Register · Genealogy · Unresolved · In Memorium |
+| **World** | Chart · Systems · **Vessels** · Bestiary · Peoples |
+| **Log** | Timeline · To-do |
 
-Tab bar already uses visual gaps between groups. Soft group **labels** are optional polish only.
+### Approximate census
 
-### Data snapshot (order of magnitude)
+- **89** Bobs · **22** systems · **21** vessels · **9** fauna · **30** peoples/polities/factions  
+- **9** blog posts · **63** timeline events  
+- **18** holotank plates (VR + vessel stills + gorilloid specimen)  
+- **1** plate with **3D model** (`vessel-heaven-1` → `assets/holo-models/vessel-heaven-1.glb`)  
+- Shipped page ~**2.2 MB** (stills + Three bundle + one decimated GLB)  
+- Books 1–5 released; **Bk6 *The Infinite Extent*** 2026-09-10 (`released: false`)
 
-- **89** Bobs — O1 T51 P1 C34 X2 · ~53 traces to Bob-1 · 12 `priorClaim` · 6 conflicts  
-- **22** systems · max distance ~**48.8 ly** · real SIMBAD/HYG math  
-- **9** bestiary (stroke SVG) · **7** peoples · **19** polities · **4** Bob factions  
-- **9** blog posts · **63** timeline events · **11** holotank VR plates (~409 KB inlined WebP)  
-- Books **1–5** released; **Bk6 *The Infinite Extent*** 2026-09-10 (`released: false`); 7 promised last  
+### Major features already shipped
 
-### Features already done (do not rebuild)
-
-Spoiler **READ THROUGH** (record / fate / prose separate); URL state; cross-register links; Sandbox Bob; mobile sheet+scrim; SCUT boot; filter bar cull (**5 chips on bar**, 8 address-only); CRT **removed**; **holotank VR core shipped** (`data/holo.json` + `assets/holo/*.webp` + validate + build + `tests/holo.test.js`).
+Provenance registry; spoiler **READ THROUGH**; URLs; cross-links; Sandbox Bob; mobile sheet; SCUT boot; filter cull; **holotank 2D**; **VESSELS** register; dual-mode gorilloid; **3D holotank orbit** (gen 1); green attachments; blog-first IA.
 
 ### Open research (not UI)
 
-Marcus parentage; Thor/Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm; 12 wiki leads; light bio sweep. Book 6: flip release flag → corpus → **CORPUS_CLAIMS** re-check → re-sweep. See `data/todo.json`.
+Marcus; Thor/Jeffrey/Milton/Zeke; Hector; Verne; 12 wiki leads; bio sweep; Book 6 procedure. See `data/todo.json`.
 
 ---
 
 ## 3. Ground rules (non-negotiable)
 
-1. **Never commit book text.** `books/` and `.cache/` gitignored. Paraphrase + cite in notes.  
-2. **Books are the only lineage source.** Wiki/online tree → `priorClaim` only until cited.  
-3. **Preserve disagreement** (`conflict`). Don’t silently pick winners.  
-4. **Inherited memory** — creating Bob’s POV preferred over clone’s self-narration.  
-5. **No external requests** in the shipped page. Art inlined (SVG / WebP data URIs). Stdlib Python build.  
-6. **`ORDER` whitelist** on Bob fields — schema + `build.py` must agree or the field never ships.  
-7. **No plate without a citation.** Handsome media must never paper over missing knowledge.  
-8. **Presentation is personal** — amber CRT is Bill’s room, not house-style BobNet.
+1. **Never commit book text.** Paraphrase + cite.  
+2. **Books-only lineage** (wiki → `priorClaim` only).  
+3. **Preserve disagreement** (`conflict`).  
+4. **Inherited memory** caution.  
+5. **Zero external requests** at runtime (inline art, models, Three bundle).  
+6. **`ORDER` whitelist** on Bob fields.  
+7. **No plate without a citation.**  
+8. **Presentation is personal** (amber is Bill’s room).  
+9. **Ackbar rule:** description-driven art, not trademarked reference clones (Guppy, Riker bridge, Homer cartoon, Locutus, etc.).
 
 ---
 
-## 4. Holotank — shipped architecture (keep)
+## 4. Holotank architecture
 
-### Design thesis
+### Design thesis (keep)
 
-- **Chrome vs payload:** drab file manager, rich document.  
-- **Word is holotank** (~34 book hits). **Not holosphere** (0 hits).  
-- Holotank = **inspect** a file. Manny/VR inhabit = different (we only reconstruct stills).  
-- Overlay, **not** a 12th media-browser tab — leaving the manager for a moment.
+- **Chrome vs payload:** drab file manager, rich opened file.  
+- Word is **holotank** (not holosphere).  
+- Overlay, not a media-browser tab.  
+- Address-keyed plates in `data/holo.json`: `about: "vessels/heaven_g1"` etc.  
+- **Three empty states:** no file / withheld / attachment button.  
+- Kinds: `vr` | `vessel` | `specimen` | `portrait`.
 
-### Implementation (live)
+### 2D stills
 
-| Piece | Path / rule |
+- `assets/holo/<plateId>.webp` → build inlines `src` as data URI.  
+- Card thumbs for vessels use **canvas + paint()** (not base64 in stage HTML — spoiler scan false positives).
+
+### 3D orbit (shipped, concept loved; mesh quality TBD)
+
+| Piece | Path / behavior |
 |---|---|
-| Manifest | `data/holo.json` → `plates[]` |
-| Images | `assets/holo/<id>.webp` (~520px long edge, offline encode, ~40 KB/plate) |
-| Inject | `build.py` → base64 data URI into page |
-| Validate | `_check_holo()` — cite, kind, note, spoil, `about` address, file exists |
-| UI | Overlay `#tank`; dossier row `attachRow()` |
+| Model files | `assets/holo-models/<id>.glb` |
+| Plate field | `"model": "vessel-heaven-1"` on plate in `holo.json` |
+| Build | Inlines `modelSrc` as `data:model/gltf-binary;base64,...` |
+| Viewer | `assets/holo3d/holo3d.js` — esbuild IIFE of Three + OrbitControls + GLTFLoader → `HOLO3D` global |
+| UI | Open attachment → **3D ORBIT** default if model present; **STILL** toggle; reduced-motion / no WebGL → still only |
+| Material | Amber standard material in-tank (textures stripped for size/schematic feel) |
 
-**Plates are keyed by console address**, not Bob fields:
+**Owner feedback (2026-08-16):** concept is a **love**; current Heaven gen 1 mesh looks **tattered** (aggressive decimate + no textures for first live ship). **Will redo the 3D model.** Size optimization **deferred** to later discussion — quality first next pass.
 
-```text
-about: "register/homer"   // same idea as blog posts' about
-kind:  vr | vessel | specimen | portrait
-cite:  required  (chapter that describes the thing in the picture)
-note:  required  (what the citation actually says; may use @bkN paragraph gates)
-spoil: book number for plate visibility
-```
+**Current live model:** ~10k faces, no textures, ~268 KB GLB. Spike full-quality clean was ~87 MB — not shippable inline without decimate.
 
-Why address-keying wins:
+### Ship recipe (2D plate)
 
-- `bobs.json` stays genealogy, not a picture library  
-- Any register can gain attachments without schema/`ORDER` growth  
-- Empty stays empty: **`[NO FILE ON RECORD]`** vs **`▨ FILE WITHHELD`** vs **`[ATTACHMENT: id]`**
+1. Cite-check · Ackbar · face lock if Bob  
+2. Imagine → keeper under `ideas/`  
+3. Encode WebP ~520px → `assets/holo/<id>.webp`  
+4. Entry in `data/holo.json`  
+5. `make validate && make test`
 
-### Shipped plates (15)
+### Ship recipe (3D model on a plate)
 
-**VR (11):** `vr-bob1`, `vr-bill`, `vr-riker`, `vr-homer-cartoon`, `vr-homer`, `vr-bart`, `vr-garfield`, `vr-mario`, `vr-linus`, `vr-locutus`, `vr-howard`
+1. Image→3D externally (Tripo / Meshy / etc.) from a **cropped** still (no moons in frame).  
+2. Manual Blender cleanup (moon blobs) — auto scripts struggle on fragmented AI meshes.  
+3. Decimate / strip textures as needed → `assets/holo-models/<id>.glb`  
+4. Plate: `"model": "<id>"` (same basename as GLB).  
+5. Rebuild Three bundle if updated:  
+   `ideas/experiments/holotank-3d/` → `npx esbuild bundle/entry.js --bundle --format=iife --global-name=HOLO3D --outfile=../../assets/holo3d/holo3d.js --minify`  
+6. `make validate && make test`
 
-**Vessel (4) — Heaven design gens, 2026-08-16:**
+### Local spike tools (not production)
 
-| id | about | cite | title |
-|---|---|---|---|
-| `vessel-heaven-1` | `vessels/heaven_g1` | Bk1 ch12 | Heaven design, generation 1 |
-| `vessel-heaven-2` | `vessels/heaven_g2` | Bk1 ch17 | Heaven design, generation 2 |
-| `vessel-heaven-3` | `vessels/heaven_g3` | Bk1 ch22 | Heaven design, combat class |
-| `vessel-heaven-4` | `vessels/heaven_g4` | Bk2 ch50 | Heaven design, carbon-black |
+`ideas/experiments/holotank-3d/`:
 
-Honesty pass applied: freighter-ugly DNA, red/green/**blue** running lights, no hull labels; v4 = same silhouette painted stealth, not a redesign. Ship **names** (Heaven-2, Heaven-6, …) ≠ design **generations**.  
+- Source stills for Heaven-1  
+- `npm run serve` → http://127.0.0.1:8765/ orbit test page  
+- Portable Blender: `~/bin/blender` (4.2.8 LTS under `~/tools/`)  
+- `./scripts/open-glb.sh models/foo.glb` — GUI import (CLI `blender foo.glb` **fails**; GLB is import-only)  
+- `./scripts/clean-glb.sh` — island/floater heuristics; **unreliable on Tripo soup**; prefer hand delete for moon  
+- **Orbit test: PASSED** for Heaven gen 1 quality before production decimate  
 
-**Specimen (1) — dual-mode fauna, 2026-08-16:**
+### AI 3D options (discussed)
 
-| id | about | cite | title |
-|---|---|---|---|
-| `specimen-gorilloid` | `bestiary/gorilloid` | Bk1 ch35 | Gorilloid — survey capture |
+| Path | Notes |
+|---|---|
+| **Web (Tripo/Meshy)** | Fast; used for first mesh |
+| **Local TripoSR etc.** | Installable; this machine has **no NVIDIA CUDA** (Ryzen 5500U) — CPU-only, slow |
+| **Imagine** | **2D + short video only**, not GLB meshes |
 
-Stroke SVG stays on the bestiary **card**; photoreal opens only in the **holotank**. Pattern for further fauna.  
-Source JPGs under `ideas/`; ship is WebP under `assets/holo/`.
+---
 
-### Charter for VR stills (books)
+## 5. Spatial models (architecture — do not fake)
 
-- **Bk1 ch17:** same face, **different rooms** in the video array. Face lock across Bobs is correct.  
-- Bare **blue room**, no window, hard floor = undecorated matrix.  
-- **Linus:** do not drop for “no cite” — **Bk1 ch40** Saturn dome cities. Aging / “had some issues” (Bk2) is a **second plate** opportunity, not a reason to delete the first.  
-- **Homer:** two plates — cartoon avatar then station after he dropped it (books date the switch).
+> **Local chart is geometry. Wormholes are topology. Galaxy is context.**
 
-### Ackbar rule (Guppy principle)
-
-Build from **description**, not trademarked reference art:
-
-| Subject | Books give | Do not ship |
+| Layer | Status | Role |
 |---|---|---|
-| Riker | Red uniform, spaceship bridge, no beard (then grows one later) | Enterprise-D, LCARS, Starfleet delta |
-| Homer cartoon | Cartoon avatar + catchphrase; later dropped | Unmistakable Groening/Fox house style as the claim |
-| Locutus | Borg-like, **more armor**, **steampunk**, “evolving” (Bk4 ch9) | Stock TNG Locutus costume |
+| **Local chart** | Shipped | Euclidean, Sol-origin, ~≤49 ly, real astrometry |
+| **Wormhole network** | Planned | Graph of cited edges — **not** stretched chart |
+| **Galaxy view** | Wanted (owner: 100%) | Context frame; more motivated once wormholes exist |
+| **SCUT / BobNet** | Boot gestures | Comms, not travel topology |
 
-IP-flavored v1s live in `rejected designs/`. Ackbar-compliant re-prompts were promoted.
-
-### What not to do to holotank
-
-- Do **not** move plates onto Bob records  
-- Do **not** add a media library register  
-- Do **not** pull Three.js for stills  
-- Do **not** give tier-C parentage a handsome room “to make up for it”  
-- Measure weight before adding dozens more plates (~11 already ~half of page growth from pre-holo)
-
-### Ship recipe (new plate)
-
-1. Cite-check description in books (paraphrase only in notes).  
-2. Generate/edit art (Imagine OK); Ackbar + face lock; no text labels on hulls.  
-3. Encode offline → `assets/holo/<id>.webp` (~520px long edge).  
-4. Add plate to `data/holo.json` (`id`, `about`, `kind`, `title`, `cite`, `spoil`, `note`).  
-5. `make validate && make test` (or project’s validate + test entrypoints).  
-6. Keep source / rejects under `ideas/` as desired; only WebP + json ship.
+Do **not** force Bk5+ mesh into Cartesian chart. See `data/systems.json` comment and `todo.json` wormhole item.
 
 ---
 
-## 5. Spatial models — three languages (never fake one with another)
+## 6. Vessels register
 
-**One-line rule:**
+**Shipped.** Canonical home for fleet art (not Bob dossiers alone).
 
-> **Local chart is geometry. Wormholes are topology. Galaxy is context. Never use one to fake another.**
+- Data: `data/vessels.json` + `vessels.schema.json`  
+- Kinds: `design` | `hull` | `class` | `weapon`  
+- Lines: `heaven` | `colony` | `exodus` | `medeiros` | `others` | `other`  
+- Design gen ≠ hull name (Heaven-2 is a ship; generation 2 is a design step)  
+- Bob `vessel` field links via `match`  
+- Holotank plates: `about: "vessels/<id>"`  
+- Cards show still thumbs when plates exist; 3D only when `model` set  
 
-### A. Local chart (shipped)
+**Catalogue includes:** Heaven g1–g4 designs + named hulls + colony/Exodus + Serra do Mar + Medeiros probe class + death asteroid + Others cargo/attendants.
 
-- Euclidean, Sol-origin, real coordinates, spectral colour, magnitude sizing, year scrubber  
-- Story bubble ~**≤ 49 ly** (farthest system on file: Eta Leporis ~48.8 ly)  
-- **Do not** stretch axes to fit wormhole endpoints or remote civilizations  
-- `systems.json` already notes: *book 5 wormhole network is not a distance graph and needs its own model*
+---
 
-### B. Wormhole network (not built — planned)
+## 7. Layout / IA decisions
 
-Book 5+ **expand reach**, not the Cartesian chart.
-
-| Wrong | Right |
+| Decision | Choice |
 |---|---|
-| Zoom the chart out and plot gates with invented ly | **Graph:** nodes + cited edges |
-| Collapse SCUT, sublight, and wormholes into one map | Three networks, three jobs |
-| Assume every terminus has Hipparcos coords | **Unlocated terminus** is valid (like systems without coords) |
+| Default view | **Blog** |
+| Tab order | Blog first, then replicants / world / log |
+| Attachment color | **Phosphor green** |
+| Attachment label | Keep `[ATTACHMENT:…]` for now |
+| Genealogy | Peer archive, not demoted, not front door |
+| CRT | **Removed** |
 
-Suggested shape (when implementing):
+---
 
-- Data e.g. `data/network.json` (or equivalent): nodes, edges with `cite`, optional control/era, spoil  
-- **Register or Chart mode: NETWORK** — schematic/force layout, not light-years  
-- Cross-link to Chart/Systems **only** when a node has real coordinates  
-- Spoiler-gate edges the same way everything else is gated  
-- Holotank may hold a **schematic still** of a gate; it is not the system of record  
+## 8. Video / scene shorts (discussed, not built)
 
-Also keep **SCUT / BobNet** distinct (comms / presence). Boot already gestures at system list + connect; that is not the wormhole mesh.
+Imagine can do **short video** (`image_to_video` ~6–10s, `reference_to_video` longer). Multi-shot movies = several clips + **FFmpeg concat**.
 
-### C. Galaxy view (wanted — planned; owner: 100% want)
+**Book 1 test recommendation (when wanted):**  
+**Heaven-1 vs Serra do Mar at Epsilon Eridani** (Bk1 ch15) — ship stills exist, few faces, cool, ~4–5 shots.
 
-- **Without** wormholes: mostly scale joke (“whole story &lt; 1 px of the galaxy”) + decoration  
-- **With** wormholes: **where the mesh sits** + scale honesty  
+Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
-Implement as **context mode** (on Chart or adjacent), not a second fake survey map:
+---
 
-- Local Bob bubble highlighted as a bead  
-- Remote nodes only with book-backed rough placement; otherwise mark unlocated  
-- Label artist’s impression / not survey precision (HYG ShareAlike already constrains embedded sky; MW art is separate honesty)  
-- **Not** a full-bleed background on every view  
+## 9. File map (high signal)
 
-**Dependency order when building:** topology (network) first if remote nodes exist → galaxy context as frame. Galaxy alone does not replace the graph.
+### Production
 
-### D. Holotank vs chart
-
-| Interactive local sky / scrubber | Chart register (canvas + SVG) |
+| Path | Role |
 |---|---|
-| Topology graph | Network view (future) |
-| Still image of a room/hull/specimen | Holotank plate |
-| Optional: chart pane “feels like a tank” | Framing chrome only (brackets, `[HOLOTANK]` label) — not WebP pipeline |
+| `data/holo.json` | Plates (cite, about, kind, optional `model`) |
+| `assets/holo/*.webp` | 2D plates |
+| `assets/holo-models/*.glb` | 3D models |
+| `assets/holo3d/holo3d.js` | Bundled Three viewer |
+| `data/vessels.json` | Vessels register |
+| `templates/genealogy.html` | Console (tank 3D UI, REGISTERS, green attach) |
+| `src/build.py` | Inline plates + models + HOLO3D |
+| `src/validate.py` | Holo cite + model file checks |
 
----
+### Ideas / experiment
 
-## 6. Layout / IA (product, not a rewrite)
-
-Already true:
-
-- Product title is Registry  
-- Default tab is Register  
-- Genealogy is peer + research backlog  
-
-Optional polish (low priority):
-
-1. README/CLAUDE lead with “registry/console,” genealogy as specialty archive  
-2. Soft labels on the three tab groups  
-3. Default stays **Register** (Blog only if deliberately “news first”)  
-
-**Do not:** invent a widget home dashboard; bury Genealogy; dramatic tab reordering for its own sake.
-
-**Filters:** second-row density already improved (8 chips address-only). Further collapse only if still painful; feature stays.
-
----
-
-## 7. Ships (Heaven design line) — art keepers, not yet in holotank
-
-Five **design generations** in text (v1–v5). Heaven-6/8/9/10 are usually **ship names**, not “version 10.”
-
-| Ver | Book delta (exterior) | Keeper |
-|---|---|---|
-| **1** | Elliptical, **ugly**, airlocks/doors, red/green/**blue** lights, SURGE ring, radiators separate (not ring flaps) · Bk1 ch12 | `ship-heaven-1.jpg` |
-| **2** | Larger; bigger SURGE/reactor; shielding; **rail-gun**; buster storage · Bk1 ch13–17 | `ship-heaven-2.jpg` |
-| **3** | Combat ~10 g, dual reactor, more busters, SUDDAR jam · Bk1 ch22 | `ship-heaven-3.jpg` |
-| **4** | **Carbon-black**, near-zero albedo, radar-quiet — **not a new silhouette** · Bk2 ch50 | `ship-heaven-4.jpg` |
-| **5** | “Virtual dreadnought”; cloaking-era plans · weak exterior text · Bk2 ch61 | *not generated* |
-
-**Before shipping as `kind: vessel`:** honesty pass vs Bk1 ch12 — current renders may be **too pretty** and **missing blue** running lights. No flap-as-ring; no “SURGE DRIVE” labels (rejects exist).
-
-Attach `about` to vessel records or system/Bob as data allows — same address pattern.
-
----
-
-## 8. File map
-
-### Concept art keepers (`ideas/`)
-
-| File | Status / notes |
+| Path | Role |
 |---|---|
-| `vr-*.jpg` (11 rooms) | **Shipped** as matching `assets/holo/vr-*.webp` (ids shortened) |
-| `ship-heaven-1.jpg` … `4.jpg` | Keepers after honesty pass; **shipped** as `vessel-heaven-1`…`4` WebP |
-| `beast-gorilloid-survey.jpg` | Photoreal **specimen** dual-mode (shipped as `specimen-gorilloid`); stroke card stays |
-| `bob-original-1.jpg` | Portrait candidate — interpretive ~31; books give age/height/skin, not a face recipe |
-| `bridget-replicant-1.jpg` | ~28, red hair, dimples · Bk3 ch41; face lock for Howard tropical plate |
-| `archimedes-1.jpg` | Young Deltan, stone-only tools |
-
-### Rejected (`ideas/rejected designs/`)
-
-Heaven flaps/labels; too-different / too-subtle / too-dark ship takes; Riker Enterprise-y; Homer Groening-y; Locutus TNG; Earth-ape gorilloid. Names are descriptive — `ls` the folder.
-
-### Shipped art (console)
-
-| Path | Content |
-|---|---|
-| `assets/holo/*.webp` | 11 VR plates |
-| `assets/bestiary/*.svg` | Stroke fauna (currentColor) |
-| `assets/peoples/*.svg` | Species portraits (stroke) |
-| `data/guppy.json` / sandbox | Pixel sprites |
-
-`ideas/` JPGs are **not** injected by the build. Only `assets/` + data manifests ship.
+| `ideas/*.jpg` | Keeper stills (many untracked large files OK) |
+| `ideas/rejected designs/` | Rejected art |
+| `ideas/experiments/holotank-3d/` | Spike viewer, scripts, source stills |
 
 ---
 
-## 9. Ordered next work
+## 10. Open / next (ordered)
 
-### A. Immediate content
+### Immediate product (owner-stated)
 
-1. ~~**Heaven vessels → holotank**~~ **done** (v1–v4 plates live).  
-2. ~~**One dual-mode specimen**~~ **done** (gorilloid); extend pattern to more fauna/peoples as wanted.  
-3. Optional: Linus “aged VR” second plate; Heaven-5 only if text supports a readable delta.  
-4. ~~**VESSELS register**~~ **done** (design gens + named hulls; plates on `vessels/*`; Bob vessel field links in). Still to grow: Medeiros, Others warware, death asteroids.  
-5. **Holotank 3D spike:** `ideas/experiments/holotank-3d/` — **orbit test passed** (Heaven gen 1 GLB). Not in production yet; size ~tens of MB must be crushed before inline ship.  
+1. **Redo Heaven gen 1 3D mesh** — less tattered; quality over size for now; then re-export to `assets/holo-models/vessel-heaven-1.glb` and rebuild.  
+2. **Size optimization later** — deliberate conversation; do not block redo on bytes.
 
-### B. Architecture when spatial scope grows
+### Content backlog
 
-1. **Wormhole network data + topology view** (cited edges, spoil-gated).  
-2. **Galaxy context mode** (scale honesty, local bead, unlocated OK).  
-3. Do **not** merge (1)(2) into an expanded fake Cartesian chart.  
+3. More vessel stills/models (Serra, death asteroid already have 2D).  
+4. More dual-mode fauna (gorilloid pattern).  
+5. Linus aged-VR second plate; Heaven-5 design if text supports.  
+6. Grow vessels: more hulls as cited.
 
-### C. Research / calendar
+### Architecture (later)
 
-- Genealogy open items when in reading mode (`todo.json` Genealogy category).  
-- **Book 6 (~2026-09-10):** flip `data/books.json` → `make corpus` → re-check CORPUS_CLAIMS → re-sweep parentage/memorium/leads. Don’t invent placeholders before the text.  
+7. Wormhole **topology** view (cited graph).  
+8. **Galaxy context** mode (owner wants eventually).  
+9. Optional soft label `[HOLOTANK · …]` on attachments.  
+10. Stitched **Book 1 scene** video test (Epsilon standoff).
 
-### D. Explicitly deprioritize
+### Research / calendar
 
-- Three.js / Bobmap clone for glow  
-- Galaxy as only feature without network model  
-- Home dashboard widgets  
-- Re-implementing holotank on Bob fields  
-- CRT overlay  
-- Shipping every ideas plate at once  
+11. Genealogy open items in `todo.json`.  
+12. Book 6 release procedure (~2026-09-10).
 
----
+### Explicitly deprioritized / wrong
 
-## 10. How to work this repo
-
-```bash
-make validate    # before commit; some checks need .cache/ + books
-make build       # → dist/index.html
-make test        # build + Node suites against shipped page
-make workbench   # multi phone sizes
-make corpus      # after ebooks change
-make scan-history  # before public: no book text in history
-```
-
-- Golden master / fail-closed suites — re-record snapshots only on intentional UI change.  
-- Publish path already exists (Pages); license: code MIT, data/prose CC BY, skyfield HYG → **built page ShareAlike**.  
-- Live: ashestoaltar.github.io/bobiverse-companion (+ custom domain per todo).  
+- Replacing Cartesian chart with Three.js map  
+- Dashboard home widgets  
+- Moving plates onto Bob fields as primary home  
+- Auto-clean scripts as sole mesh cleanup (hand Blender for hard cases)  
+- Committing multi‑10 MB un-decimated GLBs into the single-file page  
 
 ---
 
-## 11. Agent checklist on pickup
+## 11. Agent pickup checklist
 
-1. Read **this file**, then `CLAUDE.md`, then open items in `todo.json`.  
-2. `make validate && make test` to confirm baseline.  
-3. Prefer extending **holotank plates** and **data** over shell rewrites.  
-4. Any new image: cite → encode WebP → `holo.json` → tests.  
-5. Wormholes/galaxy: re-read §5 before writing code.  
-6. Update **this file** when keepers, ship status, or architecture decisions change.
+1. Read **this file**, then `CLAUDE.md`, then open `todo.json` items.  
+2. `make validate && make test`.  
+3. Prefer **data + holotank content** over shell rewrites.  
+4. New still → WebP + `holo.json`. New 3D → GLB in `holo-models` + `model` field.  
+5. Re-read **§5 spatial models** before chart/galaxy/wormhole work.  
+6. **Suggest improvements** when you see them; owner asked for that.  
+7. Update **this file** when keepers, ship state, or architecture decisions change.
 
 ---
 
-*Handoff for continuous ownership: code, data, tests, and image generation. Update when decisions change.*
+## 12. Session arc (2026-08-16) — what we did
+
+1. Full current-state review after compact; handoff refresh.  
+2. Layout discussion: registry-first, blog default, green attachments.  
+3. Heaven vessels → holotank; then **VESSELS** register + plate migration.  
+4. Dual-mode gorilloid; Medeiros/Others catalogue entries; stills for Serra + death asteroid.  
+5. True 3D holotank discussion; AI mesh options; local spike (Three + Blender).  
+6. Orbit test **passed**; wired production 3D for Heaven gen 1.  
+7. Owner: concept **loved**; mesh **redo** later; size **later**.  
+
+---
+
+*Handoff for continuous ownership. Update when decisions change. End of day 2026-08-16.*

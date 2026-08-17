@@ -291,12 +291,24 @@
     {
       "cat": "BobNet",
       "text": "Holotank, the rest of the captures",
-      "note": "Mechanism done; content remains.\n\n**Vessels register (done):** data/vessels.json, tab VESSELS, holotank plates on vessels/heaven_g1…g4. Bob vessel field links via match. Design gens ≠ hull names.\n\n**Dual-mode fauna (started):** specimen-gorilloid on bestiary/gorilloid.\n\nStill open: more specimens; Linus aged-VR; Heaven-5 plate; Medeiros / Others / death asteroids in the vessels catalogue; network topology + galaxy context later."
+      "note": "Mechanism done (2D + optional 3D). Content remains.\n\n**Done:** vessels register; Heaven g1–g4 stills; Serra + death asteroid stills; gorilloid dual-mode; 3D orbit on vessel-heaven-1 (concept loved).\n\n**Redo:** Heaven gen 1 GLB looks tattered (heavy decimate + no textures for first live). Owner will regenerate quality mesh; size optimization deferred.\n\nStill open: more models/stills; Linus aged-VR; Heaven-5; network topology + galaxy later. Full handoff: ideas/README.md (2026-08-16 EOD)."
     },
     {
       "cat": "Companion registers",
       "text": "Vessels register",
       "note": "Done. Peer register for design generations, named hulls, colony and Exodus craft. Holotank plates hang on vessels/<id>; Bob free-text vessel labels resolve through match. Room left for Medeiros, Others capital craft and death asteroids — do not force them onto the Cartesian chart.",
+      "done": true
+    },
+    {
+      "cat": "BobNet",
+      "text": "Redo Heaven gen 1 3D mesh for holotank",
+      "note": "Orbit concept shipped and loved. Current assets/holo-models/vessel-heaven-1.glb is over-decimated/tattered (first live pass, textures stripped). Generate a cleaner model (image→3D + Blender hand cleanup), re-export to the same path (or new id), rebuild. Discuss size budget separately — quality first. Spike full-quality clean was ~87MB; production needs decimate but less brutal than 10k-face amber-only. Pipeline: plate.model field, build inlines GLB, HOLO3D bundle in assets/holo3d/. See ideas/README.md §4 and experiments/holotank-3d/.",
+      "done": false
+    },
+    {
+      "cat": "BobNet",
+      "text": "3D holotank orbit (concept)",
+      "note": "Done as first ship: open attachment → 3D ORBIT / STILL toggle; offline Three IIFE; modelSrc on plates; zero external requests. Owner happy with concept 2026-08-16. Mesh quality pass is a separate open item.",
       "done": true
     }
   ]
