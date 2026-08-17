@@ -145,6 +145,24 @@
       "cite": "Bk1 ch35 · Bob, July 2165",
       "spoil": 1,
       "note": "Delta's apex predator, and the animal Bob measured against the Deltans the way a gorilla sits against a human — size and strength cousins, not the same thing. They take people for food in small packs, drag bodies off, and fight over the kill; no weapons, no plan. He watched until he was sure there was only animal intelligence behind the eyes, which is what let him arm the Deltans without calling it a war between peoples.\n\nThe stroke plate on the bestiary card is the console's native survey silhouette. This capture is the registry's photoreal reconstruction for the holotank — dual mode on purpose, not a replacement for the card."
+    },
+    {
+      "id": "vessel-serra-do-mar",
+      "about": "vessels/serra_do_mar",
+      "kind": "vessel",
+      "title": "Serra do Mar",
+      "cite": "Bk1 ch15 · Bob, Sep 2144",
+      "spoil": 1,
+      "note": "Brazilian Empire hull that answers Bob at Epsilon Eridani under Major Ernesto Medeiros. The books name the ship more than they blueprint it — a rival programme's armed probe, not a Heaven freighter — so the plate is a registry reconstruction of a compact military interstellar craft of that era. Later Brazilian probes are said to be similar to this one."
+    },
+    {
+      "id": "vessel-death-asteroid",
+      "about": "vessels/death_asteroid",
+      "kind": "vessel",
+      "title": "Death asteroid",
+      "cite": "Bk2 ch55 · Bill, Nov 2195",
+      "spoil": 2,
+      "note": "The Others' world-killing platforms as Bill first sizes the convoy: asteroid bulk turned into weapons, later chapters have them rotating to bring transmitter grids to bear. Not a navy destroyer — a mined rock with an industrial energy face. The plate follows that description rather than inventing a sleek alien capital ship."
     }
   ]
 }
