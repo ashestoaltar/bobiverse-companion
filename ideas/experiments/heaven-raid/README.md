@@ -1,6 +1,6 @@
 # Heaven Raid — Bobiverse shmup experiment
 
-**Status:** v1 playable (2026-08-20). **Not** part of BobNet Registry tabs.  
+**Status:** **Parked PoC** (2026-08-20). v1 is a good first pass — busters, Serra boss, 5-wave loops. Owner: develop more later. **Not** a Registry tab.  
 **Genre:** Atari-simple **Galaga** (formations / dives) + **1942** (vertical free-move).  
 **Skin:** You fly a **Heaven** probe. Enemies are **Brazilian Empire** probes. Boss = **Serra do Mar**.
 
@@ -38,12 +38,14 @@ No fixed “end.” Survive loops. HUD shows `WAVE x/5` and `LOOP`.
 - Taking a hit drops one tier (not all).
 - At max, extra pickups bank score.
 
-## Not yet
+## Later (when we pick it up)
 
-- Sound, wingmen, campaign map
-- Imagine sprites / holotank art
-- Wiring into `dist/` or REGISTERS
+- Sound, wingmen, more enemy patterns
+- Imagine sprites / holotank plate art (optional)
+- Difficulty / feel tuning from playtests
+- Only if earned: Sandbox/holotank “cartridge” or a Registry toy — **not** required for the PoC
 
 ## Why it’s here
 
-Prove fun in quarantine (`ideas/experiments/`), same as EE standoff / holotank-3d.
+Prove fun in quarantine (`ideas/experiments/`), same as EE standoff / holotank-3d.  
+**PoC verdict:** good first pass. Leave alone until a dedicated game pass.

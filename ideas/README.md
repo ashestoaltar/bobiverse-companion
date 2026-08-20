@@ -10,7 +10,7 @@ This file wins on **current product intent** when it conflicts with older review
 | [`../COLLABORATIVE-REVIEW.md`](../COLLABORATIVE-REVIEW.md) | Historical multi-pass notes — many ideas **already shipped** |
 | [`experiments/holotank-3d/README.md`](experiments/holotank-3d/README.md) | Local 3D spike tools (Blender clean, orbit test page) |
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
-| [`experiments/heaven-raid/README.md`](experiments/heaven-raid/README.md) | Atari shmup experiment: Heaven vs Empire probes (Galaga×1942). **Not** a Registry tab. |
+| [`experiments/heaven-raid/README.md`](experiments/heaven-raid/README.md) | **Parked PoC** shmup: Heaven vs Empire probes (Galaga×1942). v1 good; develop later. Not a Registry tab. |
 
 **Last handoff write-up:** 2026-08-20 (spatial stack live).  
 **Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and zero-network promises. Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
@@ -248,7 +248,7 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 | `ideas/rejected designs/` | Rejected art (incl. moot populate attempts) |
 | `ideas/experiments/holotank-3d/` | Spike viewer, scripts, source stills |
 | `ideas/experiments/scene-ee-standoff/` | Bk1 ch15 scene video PoC (frames, clips, final mp4) |
-| `ideas/experiments/heaven-raid/` | Bobiverse shmup v0 (canvas, geometric ships) |
+| `ideas/experiments/heaven-raid/` | **Parked PoC** shmup v1 (busters, Serra boss, 5-wave loops) |
 
 ### Locked face / character / set refs (do not re-roll)
 
@@ -275,26 +275,27 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 1. **Redo Heaven gen 1 3D mesh** — quality over size for now; re-export `assets/holo-models/vessel-heaven-1.glb`.  
 2. **Size optimization later** — deliberate conversation.  
 3. Optional: ship empty **moot hall** plate only if/when it earns a holotank cite path.  
-4. Optional: polish/ship EE standoff video later (PoC exists; not in `dist/`).
+4. Optional: polish/ship EE standoff video later (PoC exists; not in `dist/`).  
+5. Optional: **Heaven Raid** game pass later (parked PoC in `experiments/heaven-raid/` — v1 accepted).
 
 ### Content backlog
 
-5. **Grow Persons** — more cast as weight justifies; portraits on `persons/<id>` later. Foreign probes on file: Henry, Medeiros, Matias Araújo.  
-6. More vessel stills/models.  
-7. More dual-mode fauna (gorilloid pattern).  
-8. Linus aged-VR; Heaven-5 if text supports.  
-9. Grow vessels as cited.  
-10. Further GATES harvest only when a **named** hub/place/path is cite-checked (no anonymous gate rows).
+6. **Grow Persons** — more cast as weight justifies; portraits on `persons/<id>` later. Foreign probes on file: Henry, Medeiros, Matias Araújo.  
+7. More vessel stills/models.  
+8. More dual-mode fauna (gorilloid pattern).  
+9. Linus aged-VR; Heaven-5 if text supports.  
+10. Grow vessels as cited.  
+11. Further GATES harvest only when a **named** hub/place/path is cite-checked (no anonymous gate rows).
 
 ### Architecture (later)
 
-11. Soft label `[HOLOTANK · …]` on attachments if wanted.  
-12. Optional holotank still of the galaxy impression (cite path required).
+12. Soft label `[HOLOTANK · …]` on attachments if wanted.  
+13. Optional holotank still of the galaxy impression (cite path required).
 
 ### Research / calendar
 
-13. Genealogy open items in `data/todo.json` (11 open).  
-14. Book 6 release procedure (~2026-09-10).
+14. Genealogy open items in `data/todo.json` (11 open).  
+15. Book 6 release procedure (~2026-09-10).
 
 ### Explicitly deprioritized / wrong
 
@@ -351,8 +352,9 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 5. **GALAXY** context (`181c919`): impression disk, local bead, mesh overlay.  
 6. Spatial polish (`3e0840c`): Chart ↔ Gates ↔ Galaxy cross-links; Bill blog **three-maps**.  
 7. Canon note: alien mesh can hop **inward along radials** toward the core; it is **not** “every gate leads to the galactic centre.”  
-8. Local untracked keepers remain under `ideas/` — **do not dump into `dist/` without a cite path.**
+8. Local untracked keepers remain under `ideas/` — **do not dump into `dist/` without a cite path.**  
+9. **Heaven Raid** shmup experiment (`ideas/experiments/heaven-raid/`): v1 PoC accepted (busters, Serra boss, 5-wave loops). **Parked** — develop later; not a Registry tab.
 
 ---
 
-*Handoff for continuous ownership. Update when decisions change. Handoff 2026-08-20 (spatial stack).*
+*Handoff for continuous ownership. Update when decisions change. Handoff 2026-08-20 (spatial stack + Heaven Raid PoC parked).*
