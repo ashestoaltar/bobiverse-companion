@@ -2296,7 +2296,7 @@ function renderChart(){
         <svg class="chart-svg" id="chart" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
       ${rows}
-      <div class="hint" style="padding-top:6px">System positions, colours and sizes: SIMBAD astrometry, spectral class and absolute magnitude. Backdrop: ${SKYFIELD ? SKYFIELD.count.toLocaleString() : 0} naked-eye stars to magnitude ${SKYFIELD ? SKYFIELD.limit : 0} from the HYG Database v4.4 (CC BY-SA 4.0), coloured by their real B&minus;V index. Nothing on this chart is invented.</div>
+      <div class="hint" style="padding-top:6px">System positions, colours and sizes: SIMBAD astrometry, spectral class and absolute magnitude. Backdrop: ${SKYFIELD ? SKYFIELD.count.toLocaleString() : 0} naked-eye stars to magnitude ${SKYFIELD ? SKYFIELD.limit : 0} from the HYG Database v4.4 (CC BY-SA 4.0), coloured by their real B&minus;V index. Nothing on this chart is invented. Travel topology lives in <a href="${addr('gates')}">GATES</a>; galactic context in <a href="${addr('galaxy')}">GALAXY</a> — peers, not overlays on this map.</div>
     </div>`;
 }
 
@@ -2355,6 +2355,16 @@ function renderSystemDossier(sys){
           : '';
         return row('FAUNA ON RECORD', here, 'bestiary') +
                row('PEOPLES AND POLITIES', folk, 'peoples');
+      })()}
+      ${(() => {
+        const gatesHere = ((GATES && GATES.nodes) || [])
+          .filter(n => n.system === sys.id && !heldEntry(n));
+        if (!gatesHere.length) return '';
+        return `<div class="sec"><div class="sec-label">GATES — TOPOLOGY AT THIS SYSTEM</div>
+          <div class="kids">${gatesHere.map(n =>
+            `<a href="${addr('gates', n.id)}" data-gate="${esc(n.id)}">${esc(n.name)}</a>`
+          ).join('<span class="dim"> · </span>')}
+          <span class="dim"> · </span><a href="${addr('galaxy')}">GALAXY context →</a></div></div>`;
       })()}
       ${born.length ? `<div class="sec"><div class="sec-label">BUILT HERE — ${born.length}</div><div class="kids">${link(born)}</div></div>` : ''}
       ${lost.length ? `<div class="sec"><div class="sec-label">LOST HERE — ${lost.length}</div><div class="kids">${link(lost)}</div></div>` : ''}
@@ -3221,7 +3231,7 @@ function renderGates(rows){
   return `<div class="gates-wrap">
     <div class="gates-bar">
       <span class="hint">SCHEMATIC TOPOLOGY — NOT LIGHT-YEARS · TAP A NODE OR PATH</span>
-      <span class="hint">Ferry distances stay in the dossier; found mesh is never stretched onto the Chart</span>
+      <span class="hint">Ferry distances stay in the dossier · peers: <a href="${addr('chart')}">CHART</a> (geometry) · <a href="${addr('galaxy')}">GALAXY</a> (context)</span>
     </div>
     <div class="gates-stage" id="gates-stage">
       <svg class="gates-svg" id="gates-svg" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -3280,6 +3290,13 @@ function renderGateDossier(id){
       <p class="note">${located
         ? `<a href="${addr('chart', e.system)}" data-sys="${esc(e.system)}">${esc(sys.name)} →</a>`
         : esc(sys.name) + ' (no xyz)'}</p></div>` : ''}
+    <div class="sec"><div class="sec-label">SPATIAL PEERS</div>
+      <div class="kids">
+        ${located ? `<a href="${addr('chart', e.system)}" data-sys="${esc(e.system)}">→ CHART</a><span class="dim"> · </span>` : ''}
+        <a href="${addr('galaxy')}">→ GALAXY</a>
+        ${!located && e.layer === 'found' ? `<span class="dim"> · unlocated — bead cannot place this</span>` : ''}
+      </div>
+    </div>
     ${(e.also || []).length ? `<div class="sec"><div class="sec-label">RELATED</div>
       <div class="kids">${e.also.map(aid => {
         const pe = peopleById(aid);
@@ -3426,7 +3443,7 @@ function renderGalaxy(){
   return `<div class="galaxy-wrap">
     <div class="galaxy-bar">
       <span class="hint">CONTEXT FRAME — LOCAL CHART IS A BEAD</span>
-      <span class="hint">≤${bead.toFixed(1)} ly inside ~${(GALAXY.diameter_ly || 100000).toLocaleString()} ly · mesh from GATES is schematic</span>
+      <span class="hint">≤${bead.toFixed(1)} ly inside ~${(GALAXY.diameter_ly || 100000).toLocaleString()} ly · mesh from <a href="${addr('gates')}">GATES</a> is schematic · geometry: <a href="${addr('chart')}">CHART</a></span>
     </div>
     <div class="galaxy-stage" id="galaxy-stage">
       <svg class="galaxy-svg" id="galaxy-svg" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -3452,7 +3469,11 @@ function renderGalaxyDossier(id){
         At galactic scale it is smaller than a pixel — drawn larger here only so you can
         click it. Open the Chart for geometry.</p>
         <div class="sec"><div class="sec-label">OPEN</div>
-          <div class="kids"><a href="${addr('chart', 'sol')}" data-sys="sol">→ CHART</a></div>
+          <div class="kids">
+            <a href="${addr('chart', 'sol')}" data-sys="sol">→ CHART</a>
+            <span class="dim"> · </span>
+            <a href="${addr('gates')}">→ GATES</a>
+          </div>
         </div>
       </div>`;
   }
@@ -3476,8 +3497,14 @@ function renderGalaxyDossier(id){
         ${(() => { const g = proseGated(arm.note, arm);
             return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}
       </div>
-      <div class="sec"><div class="sec-label">RELATED</div>
-        <div class="kids"><a href="${addr('gates')}">→ GATES</a></div>
+      <div class="sec"><div class="sec-label">SPATIAL PEERS</div>
+        <div class="kids">
+          <a href="${addr('gates')}">→ GATES</a>
+          <span class="dim"> · </span>
+          <a href="${addr('chart')}">→ CHART</a>
+          <span class="dim"> · </span>
+          <a href="${addr('galaxy', 'local')}" data-galaxy="local">→ LOCAL BEAD</a>
+        </div>
       </div>
     </div>`;
 }
@@ -4204,6 +4231,9 @@ function renderPost(id){
             : view === 'peoples' ? (peopleById(id) || {}).name
             : view === 'persons' ? (personById(id) || {}).name
             : view === 'vessels' ? (vesselById(id) || {}).name
+            : view === 'gates' ? (gateById(id) || {}).name
+            : view === 'galaxy' ? (id === 'local' ? 'Local bead'
+                : (galaxyArmById(id) || {}).name)
             : view === 'blog' ? (postById(id) || {}).title
             : (byId[id] ? shown(byId[id]).name : null);
           return name ? [view, id, name] : null;

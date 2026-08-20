@@ -28,6 +28,9 @@ module.exports = ({ok, get, run, ROOT}) => {
   const markup = svg ? svg.innerHTML : '';
   ok(/LOCAL/.test(markup), 'local bead callout painted');
   ok(/ARTIST|IMPRESSION|NOT A SURVEY/i.test(markup), 'impression disclaimer painted');
+  const stage = doc.getElementById('stage').innerHTML;
+  ok(/GATES|gates/.test(stage) && /CHART|chart/.test(stage),
+     'galaxy bar cross-links GATES and CHART');
 
   // Mesh overlay only when gates visible
   const gateNodes = ((GATES && GATES.nodes) || []).length;

@@ -103,6 +103,8 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
   ok(/data-gate="path_ee_skippyland"/.test(markup), 'highway path is painted');
   ok(/→ CHART|CHART/.test(markup), 'located nodes badge Chart');
   ok(/UNLOCATED/.test(markup), 'unlocated nodes say so');
+  ok(/GALAXY|galaxy/.test(doc.getElementById('stage').innerHTML),
+     'gates stage points at GALAXY peer');
   // Paint must not encode ferry distances as layout — hop label is fine; ly chords are not.
   ok(!/\b82\s*ly\b/i.test(markup) && !/\b70\s*ly\b/i.test(markup),
      'ferry/span ly must not appear in the schematic paint');

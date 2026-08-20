@@ -601,6 +601,27 @@ def _system_ids() -> set | None:
 
 # Which pool an address's id has to be found in. The replicant views all list
 # the same records, so they share one; todo has no selectable items at all.
+def _gate_ids() -> set | None:
+    if not os.path.exists(GATES):
+        return None
+    with open(GATES) as fh:
+        g = json.load(fh)
+    out: set[str] = set()
+    for key in ("nodes", "paths", "summaries"):
+        for e in g.get(key) or []:
+            if e.get("id"):
+                out.add(e["id"])
+    return out
+
+
+def _galaxy_ids() -> set | None:
+    if not os.path.exists(GALAXY):
+        return None
+    with open(GALAXY) as fh:
+        g = json.load(fh)
+    return {a["id"] for a in g.get("arms") or [] if a.get("id")} | {"local"}
+
+
 ADDRESSABLE = {
     "register":   _bob_ids,
     "genealogy":  _bob_ids,
@@ -612,6 +633,8 @@ ADDRESSABLE = {
     "peoples":    lambda: _ids(PEOPLES, "entries"),
     "vessels":    lambda: _ids(VESSELS, "vessels"),
     "persons":    lambda: _ids(PERSONS, "persons"),
+    "gates":      _gate_ids,
+    "galaxy":     _galaxy_ids,
     "blog":       lambda: _ids(BLOG, "posts"),
     "todo":       lambda: None,
 }
