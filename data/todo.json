@@ -29,12 +29,14 @@
     {
       "cat": "BobNet",
       "text": "Galaxy scale view — later",
-      "note": "Owner wants this eventually. Everything the Bobs reach on sublight fits inside ~48.8 ly; the galaxy is ~100,000 ly across, so at that scale the local story is smaller than a pixel — that is the point of the framing, not an obstacle. Architecture locked in ideas/README.md §5: local chart = geometry (keep); wormholes = topology graph (separate model, do not invent ly distances); galaxy = context mode (artist's impression, local bead, unlocated termini OK). With book 5+ wormholes, galaxy earns its keep as where the mesh sits, not as a second fake survey map. Prefer building the network view first if remote nodes exist; galaxy alone is not a substitute. Holotank may hold schematic stills; it is not the system of record for either map."
+      "note": "Done 2026-08-20 as GALAXY register. Artist’s-impression disk (~100k ly), local bead from systems.json max distance (~48.8 ly) at honest ratio with callout, Orion Spur / Perseus Arm context (Bk5 ch14, spoiler-gated), schematic GATES overlay (not galactic xyz). Cross-links: bead dossier → Chart; mesh dots → GATES. Holotank still optional later — console is system of record.",
+      "done": true
     },
     {
       "cat": "BobNet",
       "text": "Wormhole network — topology view, not a bigger chart",
-      "note": "Phase 1 seeded 2026-08-20: GATES register (data/gates.json) with found-mesh nodes (Hub Zero, Roanoke, Centaurvania), Bob-built EE–Skippyland highway path, and mesh summaries. List + dossiers live; spoiler book 5; Chart link only when xyz exists; ferry_ly forbidden on found. Still open: schematic graph paint, deeper transit harvest, verify Hub Zero–Roanoke as place-not-edge. Architecture in ideas/README.md §5 and ideas/wormholes-inventory.md. SCUT stays separate. Galaxy after graph."
+      "note": "Done through schematic paint (fb6316f / ea8a2ab). GATES register with found-mesh nodes, EE–Skippyland highway, summaries; topology paint ignores ferry_ly. Deeper transit harvest later when weight justifies. Architecture in ideas/README.md §5 and ideas/wormholes-inventory.md.",
+      "done": true
     },
     {
       "cat": "BobNet",

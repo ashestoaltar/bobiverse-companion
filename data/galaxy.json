@@ -1,0 +1,24 @@
+{
+  "_comment": "Galaxy context — NOT a survey map.\n\nArchitecture (ideas/README.md §5):\n  Local chart = geometry (~≤49 ly, real xyz).\n  GATES = topology (cited hops; unlocated OK).\n  Galaxy = context frame: artist's-impression disk, local bead at true relative scale\n  (sub-pixel is the point), schematic mesh overlay from gates.json — never invent\n  galactic coordinates for Hub Zero / Skippyland / etc.\n\nSCUT/BobNet stays boot theatre, not a travel layer here.\nBead radius is derived at build/render from systems.json max distance_ly among placed stars.",
+  "spoil": 1,
+  "note": "Everything the Bobs reach on sublight fits inside about fifty light-years. The Milky Way is about a hundred thousand across — at that scale the local Chart is smaller than a pixel, and that is the framing, not a bug.\n\n@bk5 Icarus and Dae’s hub tour leaves the Orion Spur for the Perseus Arm after eight hub hops and about sixty degrees around the galaxy (Bk5 ch14). The GATES overlay on this view is schematic topology sitting in that context — not a second Euclidean map.",
+  "diameter_ly": 100000,
+  "arms": [
+    {
+      "id": "orion_spur",
+      "name": "Orion Spur",
+      "role": "Home spur — local Chart lives here",
+      "cite": "Bk5 ch14 · Icarus, Apr 2321",
+      "spoil": 5,
+      "note": "Icarus’s hub survey starts in the Orion Spur before the hops carry them into the Perseus Arm (Bk5 ch14). The local Euclidean Chart is a bead inside this spur — not drawn to galactic survey precision."
+    },
+    {
+      "id": "perseus_arm",
+      "name": "Perseus Arm",
+      "role": "Reached on the hub tour",
+      "cite": "Bk5 ch14 · Icarus, Apr 2321",
+      "spoil": 5,
+      "note": "After six months and eight hub hops — about sixty degrees around the galaxy — Icarus notes they have left the Orion Spur and are hopping through the Perseus Arm (Bk5 ch14). Filed as context for the impression, not as measured galactic longitude."
+    }
+  ]
+}

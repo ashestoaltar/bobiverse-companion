@@ -43,18 +43,18 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 
 ## 2. Current ship (do not re-plan from scratch)
 
-### Registers (14)
+### Registers (15)
 
 | Group | Tabs |
 |---|---|
 | **Feed** | **Blog** (first, default) |
 | **Replicants** | Register · Genealogy · Unresolved · In Memorium |
-| **World** | Chart · Systems · **Gates** · **Vessels** · Bestiary · Peoples · **Persons** |
+| **World** | Chart · Systems · **Gates** · **Galaxy** · **Vessels** · Bestiary · Peoples · **Persons** |
 | **Log** | Timeline · To-do |
 
 ### Approximate census
 
-- **89** Bobs · **22** systems · **5** gate nodes / **1** path / **4** summaries · **21** vessels · **9** fauna · **30** peoples/polities/factions · **26** persons  
+- **89** Bobs · **22** systems · **5** gate nodes / **1** path / **4** summaries · galaxy context · **21** vessels · **9** fauna · **30** peoples/polities/factions · **26** persons  
 - **9** blog posts · **63** timeline events  
 - **18** holotank plates (VR + vessel stills + gorilloid specimen)  
 - **1** plate with **3D model** (`vessel-heaven-1` → `assets/holo-models/vessel-heaven-1.glb`)  
@@ -63,7 +63,7 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 
 ### Major features already shipped
 
-Provenance registry; spoiler **READ THROUGH**; URLs; cross-links; Sandbox Bob; mobile sheet; SCUT boot; filter cull; **holotank 2D**; **VESSELS** register; dual-mode gorilloid; **3D holotank orbit** (gen 1); green attachments; blog-first IA; **PERSONS** register (named non-Heaven individuals; species ≠ substrate; foreign-probe replicants beside biologicals/AMIs).
+Provenance registry; spoiler **READ THROUGH**; URLs; cross-links; Sandbox Bob; mobile sheet; SCUT boot; filter cull; **holotank 2D**; **VESSELS** register; dual-mode gorilloid; **3D holotank orbit** (gen 1); green attachments; blog-first IA; **PERSONS**; **GATES** topology; **GALAXY** context (bead + mesh overlay).
 
 ### Open research (not UI)
 
@@ -164,7 +164,7 @@ Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional
 |---|---|---|
 | **Local chart** | Shipped | Euclidean, Sol-origin, ~≤49 ly, real astrometry |
 | **Wormhole / GATES** | **Shipped (list + schematic)** | Cited nodes/paths/summaries; schematic topology paint (not ly). Two layers: alien **found** mesh + Bob **planned/constructed** highway. See [`wormholes-inventory.md`](wormholes-inventory.md). |
-| **Galaxy view** | Wanted (owner: 100%) | Context frame; more motivated once GATES exists |
+| **Galaxy view** | **Shipped** | Context frame: impression disk, local ≤49 ly bead at true ratio, schematic GATES overlay. Not a survey map. |
 | **SCUT / BobNet** | Boot gestures | Comms, not travel topology |
 
 Do **not** force Bk5+ mesh into Cartesian chart. See `data/systems.json` comment, `todo.json` wormhole item, and the inventory ledger.
@@ -231,7 +231,8 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 | `data/persons.schema.json` | Persons schema (substrate enum includes `foreign_probe`). |
 | `data/gates.json` | Wormhole topology (nodes / paths / summaries). Unlocated OK; not Chart. |
 | `data/gates.schema.json` | Gates schema — `found` \| `constructed` \| `planned`; ferry_ly only on Bob-built. |
-| `templates/genealogy.html` | Console (tank 3D UI, REGISTERS, green attach, Persons, Gates) |
+| `data/galaxy.json` | Galaxy context metadata (diameter, arms, spoil-gated note). |
+| `templates/genealogy.html` | Console (tank 3D UI, REGISTERS, green attach, Persons, Gates, Galaxy) |
 | `src/build.py` | Inline plates + models + HOLO3D; strips `_comment` from persons |
 | `src/validate.py` | Holo cite + model file checks; Persons cite-mention, AMI/replicant evidence, role≤72, Bridget substrate prose gate |
 
@@ -282,8 +283,8 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 ### Architecture (later)
 
 10. Deepen GATES (more cited transits) when cast weight justifies.  
-11. **Galaxy context** mode (local bead + schematic mesh overlay).  
-12. Soft label `[HOLOTANK · …]` on attachments if wanted.
+11. Soft label `[HOLOTANK · …]` on attachments if wanted.  
+12. Optional holotank still of the galaxy impression (cite path required).
 
 ### Research / calendar
 

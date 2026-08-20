@@ -30,6 +30,7 @@ PEOPLES = os.path.join(ROOT, "data", "peoples.json")
 VESSELS = os.path.join(ROOT, "data", "vessels.json")
 PERSONS = os.path.join(ROOT, "data", "persons.json")
 GATES = os.path.join(ROOT, "data", "gates.json")
+GALAXY = os.path.join(ROOT, "data", "galaxy.json")
 MEMORIUM = os.path.join(ROOT, "data", "memorium.json")
 GUPPY = os.path.join(ROOT, "data", "guppy.json")
 ASSETS = os.path.join(ROOT, "assets")
@@ -48,6 +49,7 @@ PEOPLE_PLACEHOLDER = "/*__PEOPLES__*/null"
 VESSELS_PLACEHOLDER = "/*__VESSELS__*/null"
 PERSONS_PLACEHOLDER = "/*__PERSONS__*/null"
 GATES_PLACEHOLDER = "/*__GATES__*/null"
+GALAXY_PLACEHOLDER = "/*__GALAXY__*/null"
 GUPPY_PLACEHOLDER = "/*__GUPPY__*/null"
 SANDBOX = os.path.join(ROOT, "data", "sandbox.json")
 SANDBOX_PLACEHOLDER = "/*__SANDBOX__*/null"
@@ -346,6 +348,14 @@ def main() -> None:
         sys.exit(1)
     html = html.replace(GATES_PLACEHOLDER, json.dumps(gates, ensure_ascii=False), 1)
 
+    with open(GALAXY) as fh:
+        galaxy = json.load(fh)
+    galaxy.pop("_comment", None)
+    if GALAXY_PLACEHOLDER not in html:
+        print(f"ERROR: placeholder {GALAXY_PLACEHOLDER} missing from template")
+        sys.exit(1)
+    html = html.replace(GALAXY_PLACEHOLDER, json.dumps(galaxy, ensure_ascii=False), 1)
+
     # The In Memorium list is mostly assembled from bobs.json at render time;
     # this file carries only the entries that have no record to sit on.
     with open(MEMORIUM) as fh:
@@ -405,6 +415,7 @@ def main() -> None:
           f"{len(gates.get('nodes') or [])} gate nodes / "
           f"{len(gates.get('paths') or [])} paths / "
           f"{len(gates.get('summaries') or [])} summaries, "
+          f"galaxy context ({len(galaxy.get('arms') or [])} arms), "
           f"{len(blog['posts'])} posts, "
           f"guppy {guppy['width']}x{guppy['height']} in {len(guppy['frames'])} frames, "
           f"sandbox {sandbox['width']}x{sandbox['height']} in "

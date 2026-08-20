@@ -336,6 +336,34 @@
   .gates-empty{fill:var(--ash); font-size:12px}
   .gates-list{flex:0 0 auto; max-height:38%; overflow:auto; padding-bottom:12px}
 
+  /* --- galaxy context (impression — not a survey) --------------------- */
+  .galaxy-wrap{display:flex; flex-direction:column; height:100%; min-height:0; gap:10px}
+  .galaxy-bar{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding-bottom:6px; border-bottom:1px solid var(--rule);
+  }
+  .galaxy-bar .hint{font-size:11px; letter-spacing:.1em; color:var(--ash)}
+  .galaxy-stage{
+    position:relative; flex:1 1 auto; min-height:300px;
+    border:1px solid var(--rule); background:rgba(0,0,0,.22);
+  }
+  .galaxy-svg{position:absolute; inset:0; width:100%; height:100%; display:block}
+  .galaxy-disk{fill:rgba(255,176,0,.04); stroke:var(--rule); stroke-width:1}
+  .galaxy-arm{fill:none; stroke:var(--amber-dim); stroke-width:2; opacity:.35}
+  .galaxy-arm.on{opacity:.7; stroke:var(--phos)}
+  .galaxy-core{fill:var(--amber); opacity:.25}
+  .galaxy-bead{fill:var(--phos); stroke:var(--phos); cursor:pointer}
+  .galaxy-bead-ring{fill:none; stroke:var(--phos); stroke-width:1; opacity:.8; cursor:pointer}
+  .galaxy-callout{fill:var(--phos); font-size:11px; letter-spacing:.08em}
+  .galaxy-callout-dim{fill:var(--ash); font-size:10px; letter-spacing:.1em}
+  .galaxy-leader{stroke:var(--phos); stroke-width:1; opacity:.6}
+  .galaxy-mesh{fill:none; stroke:var(--phos); stroke-width:1; stroke-dasharray:3 4; opacity:.45}
+  .galaxy-mesh-node{fill:var(--panel); stroke:var(--phos); stroke-width:1.2; cursor:pointer}
+  .galaxy-mesh-node.sel{fill:rgba(57,255,20,.15)}
+  .galaxy-mesh-label{fill:var(--ash); font-size:9px; letter-spacing:.06em; pointer-events:none}
+  .galaxy-arm-hit{cursor:pointer; fill:transparent; stroke:transparent; stroke-width:14}
+  .galaxy-footnote{color:var(--amber-dim); font-size:13px; max-width:78ch; line-height:1.55; margin:0}
+
   /* --- unresolved register -------------------------------------------- */
   .unres{padding-bottom:40px}
   .unres-lead{color:var(--amber-dim); font-size:13.5px; max-width:74ch; margin:0 0 16px; line-height:1.62}
@@ -621,6 +649,8 @@
     .gates-wrap{height:auto}
     .gates-stage{flex:none; height:var(--sheet); min-height:220px}
     .gates-list{max-height:none}
+    .galaxy-wrap{height:auto}
+    .galaxy-stage{flex:none; height:var(--sheet); min-height:240px}
     /* The boot screen laid Guppy beside the text at a fixed 13px: 118px of
        portrait, a 26px gap and a 49-character line came to about 526px, in a
        390px viewport, inside a position:fixed layer with nothing to scroll. A
@@ -969,6 +999,8 @@ const PEOPLES = /*__PEOPLES__*/null;
    Others warware and worse. Design generation is not a hull name. */
 const VESSELS = /*__VESSELS__*/null;
 const GATES = /*__GATES__*/null;
+/* Galaxy context frame — impression disk + local bead + schematic mesh overlay. */
+const GALAXY = /*__GALAXY__*/null;
 /* Named individuals who are not Heaven replicants — humans, Deltans, Quinlans,
    AMIs. Label beside the name disambiguates Moses (Deltan) from any Bob Moses.
    Lineage stays in the Bob register; portraits may hang on persons/<id> later. */
@@ -1116,7 +1148,7 @@ const BOOK_WORD = numWord(BOOK_MAX);
    read it). The register and genealogy stay a tab away; they are not the lobby. */
 const state = {view:'blog', q:'', filters:new Set(), sort:'name', dir:1,
                selected:null, beast:null, people:null, person:null, vessel:null, gate:null,
-               blog:null, system:null,
+               galaxy:null, blog:null, system:null,
                book:BOOK_MAX};
 
 /* ---- registers --------------------------------------------------------
@@ -1239,6 +1271,29 @@ const REGISTERS = [
      const hit = e.target.closest('[data-entry]');
      if (!hit) return false;
      state.gate = state.gate === hit.dataset.entry ? null : hit.dataset.entry;
+     render();
+     return true;
+   }},
+  {id:'galaxy',     label:'GALAXY',     short:'GAL',   render: renderGalaxy,
+   paint: paintGalaxy,
+   onResize: paintGalaxy,
+   status: () => {
+     const bead = localBeadLy();
+     const mesh = ((GATES && GATES.nodes) || []).filter(n => !heldEntry(n)).length;
+     const arms = ((GALAXY && GALAXY.arms) || []).filter(a => !heldEntry(a)).length;
+     statusLine(`context · ~${(GALAXY && GALAXY.diameter_ly) || 100000} ly disk`,
+                `local bead ≤${bead.toFixed(1)} ly`,
+                mesh ? `${mesh} gate nodes overlaid` : `${arms} arms on file`);
+   },
+   dossier: () => state.galaxy ? renderGalaxyDossier(state.galaxy) : null,
+   onClick: e => {
+     const sys = e.target.closest('[data-sys]');
+     if (sys) { state.view = 'chart'; CHART.sel = sys.dataset.sys; render(); return true; }
+     const gate = e.target.closest('[data-gate]');
+     if (gate) { state.view = 'gates'; state.gate = gate.dataset.gate; render(); return true; }
+     const hit = e.target.closest('[data-galaxy]');
+     if (!hit) return false;
+     state.galaxy = state.galaxy === hit.dataset.galaxy ? null : hit.dataset.galaxy;
      render();
      return true;
    }},
@@ -3235,6 +3290,193 @@ function renderGateDossier(id){
     </div>`;
 }
 
+/* ---- Galaxy context ---------------------------------------------------
+   Artist's-impression disk. Local Euclidean story is a sub-pixel bead — that
+   ratio is the point. GATES mesh overlays as schematic topology, never as
+   invented galactic coordinates. */
+
+function localBeadLy(){
+  let m = 0;
+  for (const s of (SYSTEMS && SYSTEMS.systems) || []) {
+    if (s.xyz_ly && s.distance_ly != null && s.distance_ly > m) m = s.distance_ly;
+  }
+  return m || 49;
+}
+
+function galaxyArmById(id){
+  return ((GALAXY && GALAXY.arms) || []).find(a => a.id === id);
+}
+
+function galaxySvg(w, h){
+  const cx = w / 2, cy = h / 2;
+  const R = Math.min(w, h) * 0.42;
+  const diam = (GALAXY && GALAXY.diameter_ly) || 100000;
+  const beadLy = localBeadLy();
+  // Honest scale: bead is (beadLy / (diam/2)) * R — sub-pixel; draw 1.5px minimum
+  // so it exists, then shout the ratio in the callout.
+  const beadR = Math.max(1.2, R * (beadLy / (diam / 2)));
+  const out = [];
+
+  out.push(`<circle class="galaxy-disk" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${R.toFixed(1)}"/>`);
+  out.push(`<circle class="galaxy-core" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${(R * 0.08).toFixed(1)}"/>`);
+
+  // Two impression arms (logarithmic-ish polylines). Not survey tracks.
+  const arms = ((GALAXY && GALAXY.arms) || []).filter(a => !heldEntry(a));
+  const armPaths = [
+    // inner/home spur — hosts the local bead
+    {id: 'orion_spur', turns: 0.55, r0: 0.18, r1: 0.72, a0: -0.4},
+    // outer tour arm
+    {id: 'perseus_arm', turns: 0.7, r0: 0.28, r1: 0.95, a0: 2.2},
+  ];
+  for (const ap of armPaths) {
+    const arm = arms.find(a => a.id === ap.id);
+    if (!arm || heldEntry(arm)) continue;
+    const pts = [];
+    const N = 48;
+    for (let i = 0; i <= N; i++) {
+      const t = i / N;
+      const ang = ap.a0 + t * ap.turns * Math.PI * 2;
+      const rr = R * (ap.r0 + (ap.r1 - ap.r0) * t);
+      pts.push(`${(cx + Math.cos(ang) * rr).toFixed(1)},${(cy + Math.sin(ang) * rr).toFixed(1)}`);
+    }
+    const sel = state.galaxy === ap.id;
+    out.push(`<polyline class="galaxy-arm${sel ? ' on' : ''}" data-galaxy="${esc(ap.id)}" points="${pts.join(' ')}"/>`);
+    out.push(`<polyline class="galaxy-arm-hit" data-galaxy="${esc(ap.id)}" points="${pts.join(' ')}"/>`);
+  }
+
+  // Local bead — true relative scale (clamped for visibility) + callout.
+  // Place on the home spur, not at galactic centre.
+  const beadAng = -0.15;
+  const beadRad = R * 0.42;
+  const bx = cx + Math.cos(beadAng) * beadRad;
+  const by = cy + Math.sin(beadAng) * beadRad;
+  const beadSel = state.galaxy === 'local';
+  out.push(`<g data-galaxy="local">`);
+  out.push(`<circle class="galaxy-bead-ring" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="${Math.max(6, beadR + 4).toFixed(1)}" opacity="${beadSel ? 1 : 0.55}"/>`);
+  out.push(`<circle class="galaxy-bead" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="${beadR.toFixed(1)}"/>`);
+  out.push(`</g>`);
+  const callX = bx + 18, callY = by - 16;
+  out.push(`<line class="galaxy-leader" x1="${(bx + 4).toFixed(1)}" y1="${(by - 4).toFixed(1)}" x2="${callX.toFixed(1)}" y2="${callY.toFixed(1)}"/>`);
+  out.push(`<text class="galaxy-callout" x="${callX.toFixed(1)}" y="${callY.toFixed(1)}">LOCAL ≤${beadLy.toFixed(1)} ly</text>`);
+  out.push(`<text class="galaxy-callout-dim" x="${callX.toFixed(1)}" y="${(callY + 12).toFixed(1)}">→ CHART · bead is ~${(beadLy / diam * 100).toFixed(3)}% of disk</text>`);
+
+  // Schematic GATES overlay — Book 5+ only via heldEntry on nodes.
+  const nodes = ((GATES && GATES.nodes) || []).filter(n => !heldEntry(n));
+  const paths = ((GATES && GATES.paths) || []).filter(p => !heldEntry(p));
+  if (nodes.length) {
+    // Place found mesh along a 60° arc (cited tour angle) on the outer arm —
+    // schematic only. Constructed termini cluster near the local bead.
+    const meshPos = {};
+    const found = nodes.filter(n => n.layer === 'found');
+    const built = nodes.filter(n => n.layer !== 'found');
+    found.forEach((n, i) => {
+      const t = found.length <= 1 ? 0.5 : i / (found.length - 1 || 1);
+      const ang = 2.0 + t * (Math.PI / 3); // ~60°
+      const rr = R * (0.62 + (n.kind === 'hub' ? 0.05 : 0));
+      meshPos[n.id] = {x: cx + Math.cos(ang) * rr, y: cy + Math.sin(ang) * rr};
+    });
+    built.forEach((n, i) => {
+      const t = built.length <= 1 ? 0.5 : i / (built.length - 1 || 1);
+      const ang = beadAng - 0.25 + t * 0.5;
+      const rr = beadRad + 14 + t * 10;
+      meshPos[n.id] = {x: cx + Math.cos(ang) * rr, y: cy + Math.sin(ang) * rr};
+    });
+    for (const p of paths) {
+      const [a, b] = p.ends || [];
+      if (!meshPos[a] || !meshPos[b]) continue;
+      out.push(`<line class="galaxy-mesh" data-gate="${esc(p.id)}" x1="${meshPos[a].x.toFixed(1)}" y1="${meshPos[a].y.toFixed(1)}" x2="${meshPos[b].x.toFixed(1)}" y2="${meshPos[b].y.toFixed(1)}"/>`);
+    }
+    for (const n of nodes) {
+      const p = meshPos[n.id];
+      if (!p) continue;
+      const sel = state.galaxy === 'gate:' + n.id;
+      out.push(`<g data-gate="${esc(n.id)}">` +
+        `<circle class="galaxy-mesh-node${sel ? ' sel' : ''}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4"/>` +
+        `<text class="galaxy-mesh-label" x="${(p.x + 7).toFixed(1)}" y="${(p.y + 3).toFixed(1)}">${esc(n.name)}</text>` +
+        `</g>`);
+    }
+  }
+
+  out.push(`<text class="galaxy-callout-dim" x="16" y="${(h - 14).toFixed(1)}">ARTIST’S IMPRESSION · NOT A SURVEY · ~${diam.toLocaleString()} ly across</text>`);
+  return out.join('');
+}
+
+function paintGalaxy(){
+  const stage = document.getElementById('galaxy-stage');
+  const svg = document.getElementById('galaxy-svg');
+  if (!stage || !svg) return;
+  const w = stage.clientWidth || 640;
+  const h = stage.clientHeight || 360;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.innerHTML = galaxySvg(w, h);
+}
+
+function renderGalaxy(){
+  if (!GALAXY) return `<p class="empty">[GALAXY CONTEXT UNAVAILABLE]</p>`;
+  const bead = localBeadLy();
+  const gNote = (() => {
+    const gated = proseGated(GALAXY.note, GALAXY);
+    return gated.shown ? gated.html + (gated.held ? somewithheld(gated.held) : '') : '';
+  })();
+  return `<div class="galaxy-wrap">
+    <div class="galaxy-bar">
+      <span class="hint">CONTEXT FRAME — LOCAL CHART IS A BEAD</span>
+      <span class="hint">≤${bead.toFixed(1)} ly inside ~${(GALAXY.diameter_ly || 100000).toLocaleString()} ly · mesh from GATES is schematic</span>
+    </div>
+    <div class="galaxy-stage" id="galaxy-stage">
+      <svg class="galaxy-svg" id="galaxy-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <p class="galaxy-footnote">${gNote || 'Local Euclidean story versus galactic scale.'}</p>
+  </div>`;
+}
+
+function renderGalaxyDossier(id){
+  if (id === 'local') {
+    const bead = localBeadLy();
+    return `
+      <div class="dossier-head">
+        <div>
+          <div class="serial">[LOCAL BEAD]</div>
+          <h2>Sublight Chart scale</h2>
+          <div class="sub">≤${bead.toFixed(1)} ly · Euclidean survey</div>
+        </div>
+        <button class="dossier-close" id="d-close" aria-label="Close">✕</button>
+      </div>
+      <div class="dossier-body">
+        <p class="note">Everything with real coordinates in the Chart fits inside this bead.
+        At galactic scale it is smaller than a pixel — drawn larger here only so you can
+        click it. Open the Chart for geometry.</p>
+        <div class="sec"><div class="sec-label">OPEN</div>
+          <div class="kids"><a href="${addr('chart', 'sol')}" data-sys="sol">→ CHART</a></div>
+        </div>
+      </div>`;
+  }
+  const arm = galaxyArmById(id);
+  if (!arm || heldEntry(arm)) return null;
+  const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
+  return `
+    <div class="dossier-head">
+      <div>
+        <div class="serial">[ARM · CONTEXT]</div>
+        <h2>${esc(arm.name)}</h2>
+        <div class="sub">${esc(arm.role || 'galactic context')}</div>
+      </div>
+      <button class="dossier-close" id="d-close" aria-label="Close">✕</button>
+    </div>
+    <div class="dossier-body">
+      <dl class="fields">
+        ${f('FIRST ON RECORD', citeUpTo(arm.cite))}
+      </dl>
+      <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
+        ${(() => { const g = proseGated(arm.note, arm);
+            return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}
+      </div>
+      <div class="sec"><div class="sec-label">RELATED</div>
+        <div class="kids"><a href="${addr('gates')}">→ GATES</a></div>
+      </div>
+    </div>`;
+}
+
 function renderPersons(rows){
   if (!PERSONS) return `<p class="empty">[PERSONS REGISTER UNAVAILABLE]</p>`;
   const all = PERSONS.persons || [];
@@ -4149,6 +4391,9 @@ const SEL = {
              held: () => false},
   gates:    {get: () => state.gate,      set: v => state.gate = v,      ok: v => !!gateById(v),
              held: v => heldEntry(gateById(v) || {})},
+  galaxy:   {get: () => state.galaxy,    set: v => state.galaxy = v,
+             ok: v => v === 'local' || !!galaxyArmById(v),
+             held: v => v === 'local' ? false : heldEntry(galaxyArmById(v) || {})},
   bestiary: {get: () => state.beast,     set: v => state.beast = v,     ok: v => (BESTIARY?.creatures || []).some(c => c.id === v),
              held: v => heldEntry(beastById(v) || {})},
   peoples:  {get: () => state.people,    set: v => state.people = v,    ok: v => (PEOPLES?.entries || []).some(e => e.id === v),

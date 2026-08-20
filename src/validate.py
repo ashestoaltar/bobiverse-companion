@@ -490,6 +490,35 @@ def _check_spoil(bobs: list[dict]) -> tuple[list[str], list[str]]:
                             f"gates {e.get('id')}: note paragraph {i + 1} is marked safe "
                             f"at book {at} but cites Bk{inline}")
 
+    # Galaxy context: root note + arm notes.
+    if os.path.exists(GALAXY):
+        with open(GALAXY) as fh:
+            galaxy = json.load(fh)
+        entries = [{"id": "galaxy", "cite": galaxy.get("cite"),
+                    "spoil": galaxy.get("spoil"), "note": galaxy.get("note")}]
+        entries += galaxy.get("arms") or []
+        for e in entries:
+            eid = e.get("id") or "galaxy"
+            spoil, note = e.get("spoil"), e.get("note")
+            if spoil is None:
+                if note:
+                    undeclared.append(f"galaxy/{eid}")
+                continue
+            cited = _book_of(e.get("cite"))
+            if cited and spoil < cited:
+                errors.append(f"galaxy {eid}: spoil {spoil} is earlier than its own "
+                              f"citation in Bk{cited}")
+            for i, (at, text) in enumerate(_paragraphs(note, spoil)):
+                if at is None:
+                    errors.append(f"galaxy {eid}: note paragraph {i + 1} carries an "
+                                  f"unreadable @bk marker")
+                    continue
+                inline = _book_of(text)
+                if inline and inline > at:
+                    errors.append(
+                        f"galaxy {eid}: note paragraph {i + 1} is marked safe "
+                        f"at book {at} but cites Bk{inline}")
+
     warnings = []
     if undeclared:
         warnings.append(
@@ -521,6 +550,7 @@ BLOG = os.path.join(ROOT, "data", "blog.json")
 VESSELS = os.path.join(ROOT, "data", "vessels.json")
 PERSONS = os.path.join(ROOT, "data", "persons.json")
 GATES = os.path.join(ROOT, "data", "gates.json")
+GALAXY = os.path.join(ROOT, "data", "galaxy.json")
 VOICES = {"bobnet", "editor"}
 VESSEL_KINDS = {"design", "hull", "class", "weapon"}
 VESSEL_LINES = {"heaven", "colony", "exodus", "medeiros", "others", "other"}
@@ -939,6 +969,39 @@ def _check_gates() -> tuple[list[str], list[str]]:
                     f"gates {eid}: cite Bk{bk} ch{sq} never mentions "
                     f"{candidates[0]!r} — open the chapter before writing the note")
 
+    return errors, warnings
+
+
+def _check_galaxy() -> tuple[list[str], list[str]]:
+    """Galaxy context frame — impression + scale, not a second survey chart."""
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not os.path.exists(GALAXY):
+        return errors, warnings
+    with open(GALAXY) as fh:
+        g = json.load(fh)
+    if not g.get("note") or len(g.get("note") or "") < 40:
+        errors.append("galaxy: note too thin")
+    if not isinstance(g.get("spoil"), int) or g["spoil"] < 1:
+        errors.append("galaxy: spoil must be a book number")
+    diam = g.get("diameter_ly")
+    if not isinstance(diam, (int, float)) or diam < 1000:
+        errors.append("galaxy: diameter_ly should be a large scale figure (e.g. 100000)")
+    ids: set[str] = set()
+    for arm in g.get("arms") or []:
+        aid = arm.get("id") or "?"
+        if aid in ids:
+            errors.append(f"galaxy arm {aid}: duplicate id")
+        ids.add(aid)
+        if not arm.get("name") or not arm.get("cite") or not arm.get("note"):
+            errors.append(f"galaxy arm {aid}: name, cite, and note required")
+        if not isinstance(arm.get("spoil"), int) or arm["spoil"] < 1:
+            errors.append(f"galaxy arm {aid}: spoil must be a book number")
+        role = arm.get("role") or ""
+        if len(role) > GATE_ROLE_MAX:
+            errors.append(f"galaxy arm {aid}: role is {len(role)} chars (max {GATE_ROLE_MAX})")
+        if not str(arm.get("cite") or "").startswith("Bk"):
+            errors.append(f"galaxy arm {aid}: cite must start with Bk")
     return errors, warnings
 
 
@@ -1501,6 +1564,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     gate_errors, gate_warnings = _check_gates()
     errors += gate_errors
     warnings += gate_warnings
+
+    gal_errors, gal_warnings = _check_galaxy()
+    errors += gal_errors
+    warnings += gal_warnings
 
     holo_errors, holo_warnings = _check_holo()
     errors += holo_errors

@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Bobiverse galaxy context — impression frame, not a survey",
+  "type": "object",
+  "required": ["spoil", "note", "diameter_ly", "arms"],
+  "properties": {
+    "_comment": { "type": "string" },
+    "cite": {
+      "type": "string",
+      "description": "Optional. Prefer arm-level cites; root note uses spoil + @bk paragraphs."
+    },
+    "spoil": { "type": "integer", "minimum": 1 },
+    "note": { "type": "string" },
+    "diameter_ly": {
+      "type": "number",
+      "description": "Approximate Milky Way diameter in ly for scale callouts — not a measured plate solution."
+    },
+    "arms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "cite", "note", "spoil"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "name": { "type": "string" },
+          "role": { "type": "string", "maxLength": 72 },
+          "cite": { "type": "string" },
+          "note": { "type": "string" },
+          "spoil": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  }
+}
