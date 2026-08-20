@@ -163,7 +163,7 @@ Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional
 | Layer | Status | Role |
 |---|---|---|
 | **Local chart** | Shipped | Euclidean, Sol-origin, ~≤49 ly, real astrometry |
-| **Wormhole / GATES** | **Phase 1 seeded** | List register live: cited nodes/paths/summaries — **not** stretched chart. Two layers: alien **found** mesh + Bob **planned/constructed** highway. Schematic graph UI later. See [`wormholes-inventory.md`](wormholes-inventory.md). |
+| **Wormhole / GATES** | **Shipped (list + schematic)** | Cited nodes/paths/summaries; schematic topology paint (not ly). Two layers: alien **found** mesh + Bob **planned/constructed** highway. See [`wormholes-inventory.md`](wormholes-inventory.md). |
 | **Galaxy view** | Wanted (owner: 100%) | Context frame; more motivated once GATES exists |
 | **SCUT / BobNet** | Boot gestures | Comms, not travel topology |
 
@@ -281,8 +281,8 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ### Architecture (later)
 
-10. **GATES** schematic graph UI (list+dossiers seeded; paint topology next).  
-11. **Galaxy context** mode (after GATES graph).  
+10. Deepen GATES (more cited transits) when cast weight justifies.  
+11. **Galaxy context** mode (local bead + schematic mesh overlay).  
 12. Soft label `[HOLOTANK · …]` on attachments if wanted.
 
 ### Research / calendar

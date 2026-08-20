@@ -306,6 +306,35 @@
   .sky-pole{fill:var(--ash); font-size:9px; letter-spacing:.14em; text-anchor:middle}
   .spike{stroke-width:.9; opacity:.30}
 
+  /* --- gates topology (schematic — not Chart geometry) ---------------- */
+  .gates-wrap{display:flex; flex-direction:column; height:100%; min-height:0; gap:10px}
+  .gates-bar{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding-bottom:6px; border-bottom:1px solid var(--rule);
+  }
+  .gates-bar .hint{font-size:11px; letter-spacing:.1em; color:var(--ash)}
+  .gates-stage{
+    position:relative; flex:1 1 auto; min-height:280px;
+    border:1px solid var(--rule); background:rgba(0,0,0,.18);
+  }
+  .gates-svg{position:absolute; inset:0; width:100%; height:100%; display:block}
+  .gates-lane{fill:none; stroke:var(--rule); stroke-width:1; stroke-dasharray:2 6; opacity:.55}
+  .gates-lane-label{fill:var(--ash); font-size:10px; letter-spacing:.14em}
+  .gates-edge{fill:none; stroke:var(--amber-dim); stroke-width:1.6; cursor:pointer}
+  .gates-edge.planned{stroke-dasharray:6 5}
+  .gates-edge.found{stroke:var(--phos); stroke-opacity:.55}
+  .gates-edge.at{stroke:var(--ash); stroke-width:1; stroke-dasharray:2 4; opacity:.7}
+  .gates-edge.on, .gates-edge.sel{stroke:var(--phos); stroke-opacity:1}
+  .gates-edge-label{fill:var(--ash); font-size:10px; letter-spacing:.08em; text-anchor:middle; pointer-events:none}
+  .gates-node{cursor:pointer}
+  .gates-node .disk{fill:var(--panel); stroke:var(--amber-dim); stroke-width:1.4}
+  .gates-node.found .disk{stroke:var(--phos); stroke-opacity:.7}
+  .gates-node.sel .disk{stroke:var(--phos); fill:rgba(57,255,20,.08)}
+  .gates-node .label{fill:var(--amber-dim); font-size:12px; letter-spacing:.05em; pointer-events:none}
+  .gates-node.sel .label{fill:var(--phos)}
+  .gates-node .badge{fill:var(--phos); font-size:9px; letter-spacing:.12em; pointer-events:none}
+  .gates-empty{fill:var(--ash); font-size:12px}
+  .gates-list{flex:0 0 auto; max-height:38%; overflow:auto; padding-bottom:12px}
 
   /* --- unresolved register -------------------------------------------- */
   .unres{padding-bottom:40px}
@@ -589,6 +618,9 @@
     .main{display:block}
     .stage{overflow:visible; min-height:0}
     .chart-wrap{height:auto}
+    .gates-wrap{height:auto}
+    .gates-stage{flex:none; height:var(--sheet); min-height:220px}
+    .gates-list{max-height:none}
     /* The boot screen laid Guppy beside the text at a fixed 13px: 118px of
        portrait, a 26px gap and a 49-character line came to about 526px, in a
        390px viewport, inside a position:fixed layer with nothing to scroll. A
@@ -1182,6 +1214,8 @@ const REGISTERS = [
    }},
   {id:'gates',      label:'GATES',      short:'GATE',  render: renderGates,
    rows: gateRows,
+   paint: paintGates,
+   onResize: paintGates,
    status: rows => {
      const all = gateAll();
      const nodes = ((GATES && GATES.nodes) || []).filter(n => !heldEntry(n));
@@ -1197,7 +1231,11 @@ const REGISTERS = [
      const sys = e.target.closest('[data-sys]');
      if (sys) { state.view = 'chart'; CHART.sel = sys.dataset.sys; render(); return true; }
      const jump = e.target.closest('[data-gate]');
-     if (jump) { state.gate = jump.dataset.gate; render(); return true; }
+     if (jump) {
+       state.gate = state.gate === jump.dataset.gate ? null : jump.dataset.gate;
+       render();
+       return true;
+     }
      const hit = e.target.closest('[data-entry]');
      if (!hit) return false;
      state.gate = state.gate === hit.dataset.entry ? null : hit.dataset.entry;
@@ -2992,6 +3030,110 @@ function gateAll(){
 function gateRows(){ return gateAll().filter(e => !heldEntry(e)); }
 function gateById(id){ return gateAll().find(e => e.id === id); }
 
+/* Schematic seeds only — fractions of the stage, NOT ferry_ly / span_ly / xyz.
+   Found mesh on the left; Bob-built termini on the right. New nodes without a
+   seed fall into a layered auto slot so the paint never reads logistics fields. */
+const GATES_LAYOUT = {
+  hub_zero:        {x: 0.28, y: 0.36},
+  roanoke:         {x: 0.40, y: 0.58},
+  centaurvania:    {x: 0.20, y: 0.74},
+  epsilon_eridani: {x: 0.70, y: 0.30},
+  skippyland:      {x: 0.78, y: 0.70},
+};
+
+function gateLocated(n){
+  const sys = n && n.system && SYS[n.system];
+  return !!(sys && sys.xyz_ly);
+}
+
+function gateLayoutPositions(nodes){
+  // Never consult ferry_ly, span_ly, or Chart xyz when placing nodes.
+  const pos = {};
+  const found = nodes.filter(n => n.layer === 'found');
+  const built = nodes.filter(n => n.layer !== 'found');
+  const place = (list, x0, x1) => {
+    let auto = 0;
+    for (const n of list) {
+      const seed = GATES_LAYOUT[n.id];
+      if (seed) { pos[n.id] = {x: seed.x, y: seed.y}; continue; }
+      const i = auto++;
+      const t = list.length <= 1 ? 0.5 : (i + 1) / (list.length + 1);
+      pos[n.id] = {x: x0 + (x1 - x0) * 0.5, y: 0.18 + t * 0.64};
+    }
+  };
+  place(found, 0.12, 0.42);
+  place(built, 0.58, 0.88);
+  return pos;
+}
+
+function gatesSvg(w, h){
+  const nodes = ((GATES && GATES.nodes) || []).filter(n => !heldEntry(n));
+  const paths = ((GATES && GATES.paths) || []).filter(p => !heldEntry(p));
+  if (!nodes.length && !paths.length) {
+    return `<text class="gates-empty" x="20" y="28">[no gates visible at this reading position]</text>`;
+  }
+  const pad = 28;
+  const iw = Math.max(40, w - pad * 2);
+  const ih = Math.max(40, h - pad * 2);
+  const pos = gateLayoutPositions(nodes);
+  const xy = id => {
+    const p = pos[id] || {x: 0.5, y: 0.5};
+    return {x: pad + p.x * iw, y: pad + p.y * ih};
+  };
+  const out = [];
+  // Lane guides — topology columns, not light-years.
+  out.push(`<line class="gates-lane" x1="${(pad + 0.35 * iw).toFixed(1)}" y1="${pad}" x2="${(pad + 0.35 * iw).toFixed(1)}" y2="${(pad + ih).toFixed(1)}"/>`);
+  out.push(`<text class="gates-lane-label" x="${(pad + 0.18 * iw).toFixed(1)}" y="${(pad - 8).toFixed(1)}">FOUND MESH</text>`);
+  out.push(`<text class="gates-lane-label" x="${(pad + 0.68 * iw).toFixed(1)}" y="${(pad - 8).toFixed(1)}">BOB-BUILT</text>`);
+
+  // Containment links (place at hub) — not travel edges.
+  for (const n of nodes) {
+    if (!n.at || !pos[n.at] || !pos[n.id]) continue;
+    const a = xy(n.at), b = xy(n.id);
+    const on = state.gate === n.id || state.gate === n.at;
+    out.push(`<line class="gates-edge at${on ? ' on' : ''}" data-gate="${esc(n.id)}" ` +
+      `x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}"/>`);
+  }
+
+  // Travel paths — equal schematic chords. ferry_ly is dossier-only.
+  for (const p of paths) {
+    const [aId, bId] = p.ends || [];
+    if (!pos[aId] || !pos[bId]) continue;
+    const a = xy(aId), b = xy(bId);
+    const sel = state.gate === p.id;
+    const midX = (a.x + b.x) / 2, midY = (a.y + b.y) / 2;
+    const hop = p.hop_count != null ? `${p.hop_count} hops` : (p.kind || 'path');
+    out.push(`<line class="gates-edge ${esc(p.kind || '')}${sel ? ' sel' : ''}" data-gate="${esc(p.id)}" ` +
+      `x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}"/>`);
+    out.push(`<text class="gates-edge-label" x="${midX.toFixed(1)}" y="${(midY - 8).toFixed(1)}">${esc(hop)}</text>`);
+  }
+
+  for (const n of nodes) {
+    const p = xy(n.id);
+    const sel = state.gate === n.id;
+    const located = gateLocated(n);
+    const cls = `gates-node ${esc(n.layer || '')}${sel ? ' sel' : ''}`;
+    out.push(`<g class="${cls}" data-gate="${esc(n.id)}">` +
+      `<circle class="disk" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9"/>` +
+      `<text class="label" x="${(p.x + 14).toFixed(1)}" y="${(p.y + 4).toFixed(1)}">${esc(n.name)}</text>` +
+      (located
+        ? `<text class="badge" x="${(p.x + 14).toFixed(1)}" y="${(p.y + 16).toFixed(1)}">→ CHART</text>`
+        : `<text class="badge" x="${(p.x + 14).toFixed(1)}" y="${(p.y + 16).toFixed(1)}" style="fill:var(--ash)">UNLOCATED</text>`) +
+      `</g>`);
+  }
+  return out.join('');
+}
+
+function paintGates(){
+  const stage = document.getElementById('gates-stage');
+  const svg = document.getElementById('gates-svg');
+  if (!stage || !svg) return;
+  const w = stage.clientWidth || 640;
+  const h = stage.clientHeight || 320;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  svg.innerHTML = gatesSvg(w, h);
+}
+
 function renderGates(rows){
   if (!GATES) return `<p class="empty">[GATES REGISTER UNAVAILABLE]</p>`;
   const all = gateAll();
@@ -3010,27 +3152,25 @@ function renderGates(rows){
       </span>
     </button>`;
 
-  const nodes = rows.filter(e => e._bucket === 'node');
   const paths = rows.filter(e => e._bucket === 'path');
   const sums  = rows.filter(e => e._bucket === 'summary');
-  const found = nodes.filter(n => n.layer === 'found');
-  const built = nodes.filter(n => n.layer === 'constructed');
-
   const sec = (label, list) => list.length
     ? `<div class="sec"><div class="sec-label">${esc(label)}</div>
        <div class="entries">${list.map(card).join('')}</div></div>` : '';
 
-  return `<div class="reg-lead"><span class="redacted">[</span>${
-      rows.length === all.length ? `${all.length} on file` : `${rows.length} of ${all.length}`
-    }<span class="redacted">]</span><br><br>
-    Travel topology — wormhole gates and paths. Not the Euclidean Chart, and not
-    SCUT/BobNet. Unlocated termini are honest. Hundreds of anonymous alien gates
-    stay as summaries, not invented rows. Bob-built highways may cite ferry
-    distances; found mesh hops do not get fake light-years.</div>
-    ${sec('FOUND MESH — NODES', found)}
-    ${sec('BOB-BUILT / LOCAL — NODES', built)}
-    ${sec('PATHS', paths)}
-    ${sec('SUMMARIES — SCALE, NOT A CATALOGUE', sums)}`;
+  return `<div class="gates-wrap">
+    <div class="gates-bar">
+      <span class="hint">SCHEMATIC TOPOLOGY — NOT LIGHT-YEARS · TAP A NODE OR PATH</span>
+      <span class="hint">Ferry distances stay in the dossier; found mesh is never stretched onto the Chart</span>
+    </div>
+    <div class="gates-stage" id="gates-stage">
+      <svg class="gates-svg" id="gates-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="gates-list">
+      ${sec('PATHS', paths)}
+      ${sec('SUMMARIES — SCALE, NOT A CATALOGUE', sums)}
+    </div>
+  </div>`;
 }
 
 function renderGateDossier(id){

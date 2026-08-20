@@ -39,7 +39,8 @@
     {
       "cat": "BobNet",
       "text": "GATES schematic graph UI",
-      "note": "List register is live. Next: topology paint that does not use ferry_ly or Chart xyz to place found edges. Manual seeds / layered layout OK. Badge → CHART on located nodes."
+      "note": "Done 2026-08-20. Schematic SVG: found mesh left / Bob-built right; manual GATES_LAYOUT seeds; auto layer slots for new nodes; path chords and at-links; → CHART / UNLOCATED badges. Layout ignores ferry_ly, span_ly, and Chart xyz (asserted in gates.test.js). Summaries stay as a list under the stage. Ferry numbers remain dossier-only.",
+      "done": true
     },
     {
       "cat": "BobNet",

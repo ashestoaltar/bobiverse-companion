@@ -7,11 +7,11 @@
   "chart": 117,
   "core": 493,
   "guppy": 1331,
-  "legibility": 165,
+  "legibility": 170,
   "memorium": 323,
   "mobile": 97,
   "peoples": 403,
-  "registers": 165,
+  "registers": 167,
   "shell": 18,
   "snapshot": 336,
   "spoilers": 9216,
@@ -23,5 +23,5 @@
   "holo": 228,
   "vessels": 187,
   "persons": 331,
-  "gates": 44
+  "gates": 52
 }

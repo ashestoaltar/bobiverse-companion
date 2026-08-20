@@ -63,7 +63,9 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
 
   state.book = 5;
   run('render()');
-  ok(/Hub Zero/.test(doc.getElementById('stage').innerHTML), 'book 5 shows Hub Zero');
+  // Read the SVG node — stub DOM does not always reflect child paints on stage.innerHTML.
+  const svgAt5 = doc.getElementById('gates-svg');
+  ok(svgAt5 && /Hub Zero/.test(svgAt5.innerHTML), 'book 5 shows Hub Zero on the schematic');
 
   // Dossier + Chart link for located node
   state.gate = 'epsilon_eridani';
@@ -77,6 +79,35 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
   run('render()');
   ok(/ten hops|10/i.test(doc.getElementById('dossier').innerHTML),
      'path dossier shows hop count');
+
+  // Topology paint: schematic SVG, not Chart geometry
+  state.gate = null;
+  state.view = 'gates';
+  run('render()');
+  const svg = doc.getElementById('gates-svg');
+  ok(svg, 'gates schematic svg is on the stage');
+  const markup = svg ? svg.innerHTML : '';
+  ok(/data-gate="hub_zero"/.test(markup), 'Hub Zero is painted');
+  ok(/data-gate="skippyland"/.test(markup), 'Skippyland is painted');
+  ok(/data-gate="path_ee_skippyland"/.test(markup), 'highway path is painted');
+  ok(/→ CHART|CHART/.test(markup), 'located nodes badge Chart');
+  ok(/UNLOCATED/.test(markup), 'unlocated nodes say so');
+  // Paint must not encode ferry distances as layout — hop label is fine; ly chords are not.
+  ok(!/\b82\s*ly\b/i.test(markup) && !/\b70\s*ly\b/i.test(markup),
+     'ferry/span ly must not appear in the schematic paint');
+
+  const layout = get('gateLayoutPositions');
+  const heldEntry = get('heldEntry');
+  const hwy = GATES.paths.find(p => p.id === 'path_ee_skippyland');
+  const before = JSON.stringify(layout(GATES.nodes.filter(n => !heldEntry(n))));
+  // Mutate ferry fields — layout must be unchanged (topology ≠ logistics).
+  const savedFerry = hwy.ferry_ly_total, savedSpan = hwy.span_ly;
+  hwy.ferry_ly_total = 9999;
+  hwy.span_ly = 9999;
+  const after = JSON.stringify(layout(GATES.nodes.filter(n => !heldEntry(n))));
+  hwy.ferry_ly_total = savedFerry;
+  hwy.span_ly = savedSpan;
+  ok(before === after, 'gateLayoutPositions ignores ferry_ly / span_ly');
 
   console.log(`  ${GATES.nodes.length} nodes · ${GATES.paths.length} paths · ${GATES.summaries.length} summaries`);
 };

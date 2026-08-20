@@ -1,6 +1,6 @@
 # Wormholes — Phase 0 canon ledger
 
-**Status:** Phase 1 seeded (2026-08-20) — `data/gates.json` + list register **GATES** live. Schematic graph UI still open.  
+**Status:** Shipped (2026-08-20) — `data/gates.json` + **GATES** list/dossiers + schematic topology paint. Galaxy still open.  
 **Architecture:** local chart = geometry · wormholes = topology · galaxy = context · SCUT = comms ([`README.md`](README.md) §5).
 
 **Working freezes:**
