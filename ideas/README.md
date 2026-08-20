@@ -11,7 +11,7 @@ This file wins on **current product intent** when it conflicts with older review
 | [`experiments/holotank-3d/README.md`](experiments/holotank-3d/README.md) | Local 3D spike tools (Blender clean, orbit test page) |
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
 
-**Last handoff write-up:** 2026-08-20.  
+**Last handoff write-up:** 2026-08-20 (spatial stack live).  
 **Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and zero-network promises. Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
 
 **Owner intent (explicit):**  
@@ -30,7 +30,7 @@ This file wins on **current product intent** when it conflicts with older review
 | **In-console name** | **BobNet — Registry** |
 | **Thesis** | **Provenance** — books-only parentage, graded tiers, honest gaps, conflicts |
 | **Shell** | Amber phosphor; Guppy; brackets; SCUT boot; single `dist/index.html` |
-| **Payload** | Holotank (2D stills + optional 3D orbit), chart, stroke cards |
+| **Payload** | Holotank (2D stills + optional 3D orbit), Chart / Gates / Galaxy spatial stack, stroke cards |
 | **Not** | Official BobNet house skin, a wiki, or tree-only fan site |
 
 **Blog is the front door** (default view + first tab).  
@@ -54,21 +54,22 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 
 ### Approximate census
 
-- **89** Bobs · **22** systems · **10** gate nodes / **4** paths / **7** summaries · galaxy context · **21** vessels · **9** fauna · **30** peoples/polities/factions · **26** persons  
-- **10** blog posts · **63** timeline events  
+- **89** Bobs · **22** systems · **10** gate nodes / **4** paths / **7** summaries · galaxy (2 arms) · **21** vessels · **9** fauna · **30** peoples/polities/factions · **26** persons  
+- **10** blog posts · **64** timeline events  
 - **18** holotank plates (VR + vessel stills + gorilloid specimen)  
 - **1** plate with **3D model** (`vessel-heaven-1` → `assets/holo-models/vessel-heaven-1.glb`)  
-- Shipped page ~**2.2 MB** (stills + Three bundle + one decimated GLB)  
-- Books 1–5 released; **Bk6 *The Infinite Extent*** 2026-09-10 (`released: false`)
+- Shipped page ~**2.3 MB** (stills + Three bundle + one decimated GLB)  
+- Books 1–5 released; **Bk6 *The Infinite Extent*** 2026-09-10 (`released: false`)  
+- Todo: **11** open / **44** done
 
 ### Major features already shipped
 
-Provenance registry; spoiler **READ THROUGH**; URLs; cross-links; Sandbox Bob; mobile sheet; SCUT boot; filter cull; **holotank 2D**; **VESSELS** register; dual-mode gorilloid; **3D holotank orbit** (gen 1); green attachments; blog-first IA; **PERSONS**; **GATES** topology; **GALAXY** context (bead + mesh overlay).
+Provenance registry; spoiler **READ THROUGH**; URLs; cross-links; Sandbox Bob; mobile sheet; SCUT boot; filter cull; **holotank 2D**; **VESSELS**; dual-mode gorilloid; **3D holotank orbit** (gen 1); green attachments; blog-first IA; **PERSONS**; **GATES** topology (found + WormNet); **GALAXY** context; spatial peers wired Chart ↔ Gates ↔ Galaxy; Bill blog **three-maps**.
 
 ### Open research (not UI)
 
 Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional); **9** wiki leads (was 12); bio sweep; Book 6 procedure; **grow Persons** as cast weight justifies (portraits later).  
-**2026-08-17:** Icarus+Daedalus promoted under Bill (Bk3 ch6); Isaac priorClaim cleared (already Bart). Thor already under Calvin. See `data/todo.json`.
+**2026-08-17:** Icarus+Daedalus → Bill (Bk3 ch6); Isaac priorClaim cleared. See `data/todo.json`.
 
 ---
 
@@ -163,11 +164,11 @@ Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional
 | Layer | Status | Role |
 |---|---|---|
 | **Local chart** | Shipped | Euclidean, Sol-origin, ~≤49 ly, real astrometry |
-| **Wormhole / GATES** | **Shipped (list + schematic)** | Cited nodes/paths/summaries; schematic topology paint (not ly). Two layers: alien **found** mesh + Bob **planned/constructed** highway. See [`wormholes-inventory.md`](wormholes-inventory.md). |
-| **Galaxy view** | **Shipped** | Context frame: impression disk, local ≤49 ly bead at true ratio, schematic GATES overlay. Not a survey map. |
+| **Wormhole / GATES** | **Shipped** | 10 nodes / 4 paths / 7 summaries; schematic paint (not ly). Found mesh + WormNet. Peers: Chart, Galaxy. See [`wormholes-inventory.md`](wormholes-inventory.md). |
+| **Galaxy view** | **Shipped** | Impression disk; local ≤49 ly bead at true ratio; schematic GATES overlay. Not a survey map. |
 | **SCUT / BobNet** | Boot gestures | Comms, not travel topology |
 
-Do **not** force Bk5+ mesh into Cartesian chart. See `data/systems.json` comment, `todo.json` wormhole item, and the inventory ledger.
+**Do not** force Bk5+ mesh into Cartesian chart. Do not merge the three surfaces. Bill’s `three-maps` post is the in-world statement of that rule.
 
 ---
 
@@ -232,9 +233,11 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 | `data/gates.json` | Wormhole topology (nodes / paths / summaries). Unlocated OK; not Chart. |
 | `data/gates.schema.json` | Gates schema — `found` \| `constructed` \| `planned`; ferry_ly only on Bob-built. |
 | `data/galaxy.json` | Galaxy context metadata (diameter, arms, spoil-gated note). |
-| `templates/genealogy.html` | Console (tank 3D UI, REGISTERS, green attach, Persons, Gates, Galaxy) |
-| `src/build.py` | Inline plates + models + HOLO3D; strips `_comment` from persons |
-| `src/validate.py` | Holo cite + model file checks; Persons cite-mention, AMI/replicant evidence, role≤72, Bridget substrate prose gate |
+| `data/galaxy.schema.json` | Galaxy schema. |
+| `ideas/wormholes-inventory.md` | Cite-checked GATES/WormNet ledger + core-radial caveat. |
+| `templates/genealogy.html` | Console (tank 3D, REGISTERS, Persons, Gates, Galaxy, spatial peers) |
+| `src/build.py` | Inline plates + models + HOLO3D; companion registers |
+| `src/validate.py` | Holo + Persons + Gates + Galaxy + blog `about:` (incl. gates/*, galaxy/*) |
 
 ### Ideas / experiment
 
@@ -263,7 +266,7 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ### Near-term focus (owner)
 
-**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs. Persons grow-as-needed is content work, not a new register.
+**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs. Spatial stack (Chart / Gates / Galaxy) is live and cross-linked.
 
 ### Product (when resuming craft)
 
@@ -278,17 +281,17 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 6. More vessel stills/models.  
 7. More dual-mode fauna (gorilloid pattern).  
 8. Linus aged-VR; Heaven-5 if text supports.  
-9. Grow vessels as cited.
+9. Grow vessels as cited.  
+10. Further GATES harvest only when a **named** hub/place/path is cite-checked (no anonymous gate rows).
 
 ### Architecture (later)
 
-10. Deepen GATES (more cited transits) when cast weight justifies.  
 11. Soft label `[HOLOTANK · …]` on attachments if wanted.  
 12. Optional holotank still of the galaxy impression (cite path required).
 
 ### Research / calendar
 
-13. Genealogy open items in `todo.json`.  
+13. Genealogy open items in `data/todo.json` (11 open).  
 14. Book 6 release procedure (~2026-09-10).
 
 ### Explicitly deprioritized / wrong
@@ -308,7 +311,7 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 2. `make validate && make test`.  
 3. Prefer **data + console product** over shell rewrites and over new Imagine work (owner preference until further notice).  
 4. New still → WebP + `holo.json`. New 3D → GLB in `holo-models` + `model` field.  
-5. Re-read **§5 spatial models** before chart/galaxy/wormhole work.  
+5. Re-read **§5 spatial models** + `wormholes-inventory.md` before Chart/Gates/Galaxy work.  
 6. **Suggest improvements** when you see them; owner asked for that.  
 7. Update **this file** when keepers, ship state, or architecture decisions change.  
 8. Scene video pipeline notes: `experiments/scene-ee-standoff/README.md`.
@@ -337,15 +340,17 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ---
 
-## 14. Session arc (2026-08-20) — Persons live
+## 14. Session arc (2026-08-20) — Persons → spatial stack
 
 1. Catch-up from handoff; moot/pub and EE video left parked (not shipped).  
 2. Genealogy tidy already on main: Icarus/Daedalus → Bill; Isaac priorClaim cleared.  
-3. **PERSONS** cast-heavy expansion shipped (`4da00ae`): humans, Deltans, Quinlan, Charlie (AMI), Henry + **Medeiros** + **Captain Matias Araújo** (`foreign_probe`). Substrate gating for Bridget. Validate guardrails after Archimedes/Butterworth bio errors.  
-4. Araújo cite-checked Bk1 ch24 (Sol); distinct from Medeiros multi-copy line. Owner: more Persons later.  
-5. Local untracked keepers remain: VR stills, moot rejects, EE PoC, holotank-3d bin — **do not dump into `dist/` without a cite path.**  
-6. Compaction mid-session — this § is the recovery note.
+3. **PERSONS** cast-heavy expansion (`4da00ae`): humans, Deltans, Quinlan, Charlie (AMI), Henry + Medeiros + Captain Matias Araújo (`foreign_probe`). Substrate gating; bio guardrails.  
+4. **GATES** register + schematic paint (`ea8a2ab` … `fb6316f`); expand DMZ / Hub Six / WormNet / Sol / Omicron / radial-core summary (`1a80dbb`).  
+5. **GALAXY** context (`181c919`): impression disk, local bead, mesh overlay.  
+6. Spatial polish (`3e0840c`): Chart ↔ Gates ↔ Galaxy cross-links; Bill blog **three-maps**.  
+7. Canon note: alien mesh can hop **inward along radials** toward the core; it is **not** “every gate leads to the galactic centre.”  
+8. Local untracked keepers remain under `ideas/` — **do not dump into `dist/` without a cite path.**
 
 ---
 
-*Handoff for continuous ownership. Update when decisions change. Handoff 2026-08-20.*
+*Handoff for continuous ownership. Update when decisions change. Handoff 2026-08-20 (spatial stack).*

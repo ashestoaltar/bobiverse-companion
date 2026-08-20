@@ -1374,9 +1374,12 @@ register. Each needs its own data file, schema and view, and nothing else.
 (`galaxy.json` — impression + local bead + schematic mesh overlay, not a
 survey), In Memorium (`memorium.json`, plus `fate` on each Bob), the blog
 (`blog.json`), the timeline, and the holotank.
-**Still open:** content second passes and research nulls in `data/todo.json`.
-Spatial rule: local chart = geometry · gates = topology · galaxy = context.
-See `ideas/wormholes-inventory.md`.
+**Still open:** content second passes and research nulls in `data/todo.json`
+(11 open / 44 done as of 2026-08-20 handoff).
+Spatial rule: **local chart = geometry · gates = topology · galaxy = context**.
+Do not draw wormhole chords on the Chart. Do not invent galactic xyz for
+unlocated termini. See `ideas/wormholes-inventory.md` and Bill’s blog
+`three-maps`.
 
 **Persons (`data/persons.json`).** Named individuals who are **not** Heaven
 Bobs (Original Bob’s clone tree). Species/polities stay in `peoples.json`;
@@ -1385,6 +1388,16 @@ probe replicants, and AMIs (Charlie). Foreign probes on file: Henry Roberts
 (Australian), Major Ernesto Medeiros (Brazilian multi-copy line), Captain
 Matias Araújo (Brazilian Sol war-probe — Bk1 ch24, not Medeiros). Grow the
 cast as weight justifies; portraits later on `persons/<id>`.
+
+**GATES (`data/gates.json`).** Travel topology only. Layers: alien **found**
+mesh + Bob **WormNet** / planned highways. Unlocated nodes are valid. Individual
+alien gates are almost never named — file hubs, places, paths, and summaries,
+not anonymous gate rows. `ferry_ly` / `span_ly` are logistics facts for
+constructed/planned paths; layout paint must ignore them.
+
+**GALAXY (`data/galaxy.json`).** Context frame, not a survey. Local bead sized
+from Chart frontier (~48.8 ly) against ~100k ly disk; GATES overlay is
+schematic. Spoiler-gate arms and mesh; the bead and disk stay visible early.
 
 **Species vs substrate:** `label`/`species` = who they are; `substrate` =
 biological | replicated | ami | foreign_probe. **`substrateFrom`** = earliest
