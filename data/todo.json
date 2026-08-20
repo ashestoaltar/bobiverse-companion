@@ -34,7 +34,12 @@
     {
       "cat": "BobNet",
       "text": "Wormhole network — topology view, not a bigger chart",
-      "note": "Book 5 expands reach via wormholes; systems.json already says that mesh is not a distance graph and needs its own model. Do not stretch the Cartesian chart to fit gates. Plan: cited nodes/edges (e.g. data/network.json), spoiler-gated, schematic layout, cross-link to Chart only when a terminus has real coordinates; unlocated terminus is valid. SCUT/BobNet (comms) stays a third network. Full rule set and order of work in ideas/README.md §5. Not started."
+      "note": "Phase 1 seeded 2026-08-20: GATES register (data/gates.json) with found-mesh nodes (Hub Zero, Roanoke, Centaurvania), Bob-built EE–Skippyland highway path, and mesh summaries. List + dossiers live; spoiler book 5; Chart link only when xyz exists; ferry_ly forbidden on found. Still open: schematic graph paint, deeper transit harvest, verify Hub Zero–Roanoke as place-not-edge. Architecture in ideas/README.md §5 and ideas/wormholes-inventory.md. SCUT stays separate. Galaxy after graph."
+    },
+    {
+      "cat": "BobNet",
+      "text": "GATES schematic graph UI",
+      "note": "List register is live. Next: topology paint that does not use ferry_ly or Chart xyz to place found edges. Manual seeds / layered layout OK. Badge → CHART on located nodes."
     },
     {
       "cat": "BobNet",

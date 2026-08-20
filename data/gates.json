@@ -1,0 +1,110 @@
+{
+  "_comment": "Wormhole travel topology — NOT the Euclidean star chart, NOT SCUT/BobNet.\n\nArchitecture (ideas/README.md §5; ideas/wormholes-inventory.md):\n  Local chart = geometry. Gates = topology. Galaxy = context (later). SCUT = comms.\n\nTwo layers: found (alien mesh, Icarus/Dae) and constructed/planned (Bob-built highway).\nUnlocated termini are valid. Do not invent Hipparcos IDs or gate-by-gate catalogues.\nferry_ly / span_ly annotate Bob logistics only — never used to stretch Chart.\n\nIds are unique across nodes, paths, and summaries (one selection namespace).",
+  "nodes": [
+    {
+      "id": "epsilon_eridani",
+      "name": "Epsilon Eridani",
+      "kind": "system",
+      "layer": "constructed",
+      "system": "epsilon_eridani",
+      "role": "Near end of the Skippyland highway",
+      "cite": "Bk5 ch34 · Bill, Dec 2342",
+      "spoil": 5,
+      "note": "Survey star already on the Chart. In the gates register it matters as the near terminus of the planned Bob highway to Skippyland (Bk5 ch34): endpoints must be flown STL between systems, then hops become cheap. Chart link is legitimate because this system has real coordinates — unlike Hub Zero or Skippyland."
+    },
+    {
+      "id": "skippyland",
+      "name": "Skippyland",
+      "kind": "faction_home",
+      "layer": "constructed",
+      "role": "Far end of the highway; Skippy home",
+      "cite": "Bk5 ch34 · Bill, Dec 2342",
+      "spoil": 5,
+      "also": ["skippies"],
+      "note": "Unlocated on the Euclidean chart — Howard gives about seventy light-years from Epsilon Eridani when arguing for a wormhole highway (Bk5 ch34), breaking Skippy secrecy to do it. File here, not in systems.json: it is a faction home and terminus, not a Hipparcos survey row. Related polity: Skippies in peoples."
+    },
+    {
+      "id": "hub_zero",
+      "name": "Hub Zero",
+      "kind": "hub",
+      "layer": "found",
+      "role": "Bobs’ name for the mesh centre they mapped",
+      "cite": "Bk5 ch14 · Icarus, Apr 2321",
+      "spoil": 5,
+      "note": "After hub-hopping around the alien network, Icarus and Dae dub the theoretical centre Hub Zero (Bk5 ch14). Unlocated — no catalogue identity, no xyz. Later they return to the Hub Zero system (Bk5 ch52). One hub here has more than a thousand gates; do not expand that into rows. Six hubs spinward of Hub Zero are counted in the same survey pass — summary only."
+    },
+    {
+      "id": "roanoke",
+      "name": "Roanoke",
+      "kind": "place",
+      "layer": "found",
+      "at": "hub_zero",
+      "role": "Abandoned world in the Hub Zero region",
+      "cite": "Bk5 ch52 · Icarus, Jul 2337",
+      "spoil": 5,
+      "also": ["roanokians"],
+      "note": "Planet the Bobs name Roanoke — idyllic, emptied on purpose; species entry is Roanokians in peoples. Filed as a place at Hub Zero, not as a separate Hipparcos system and not as a guessed gate edge. Chapter heading pairs Hub Zero and Roanoke when Icarus returns from Centaurvania (Bk5 ch52)."
+    },
+    {
+      "id": "centaurvania",
+      "name": "Centaurvania",
+      "kind": "place",
+      "layer": "found",
+      "role": "Gunther’s world; STL leg to a wormhole",
+      "cite": "Bk5 ch48 · Icarus, Jan 2329",
+      "spoil": 5,
+      "note": "Gunther’s world, eight light-years by ordinary flight from the system where he found a wormhole (Bk5 ch48). The wormhole system itself is not named here — do not invent an id for it. Return to Hub Zero from this region costs another long STL bite to the nearest gate (Bk5 ch52). Mixed STL + found-mesh story; topology node without fake coordinates."
+    }
+  ],
+  "paths": [
+    {
+      "id": "path_ee_skippyland",
+      "name": "Epsilon Eridani–Skippyland highway",
+      "ends": ["epsilon_eridani", "skippyland"],
+      "kind": "planned",
+      "status": "building",
+      "hop_count": 10,
+      "intermediate_count": 9,
+      "ferry_ly_total": 82,
+      "span_ly": 70,
+      "role": "Bob-built endpoint chain; ten hops",
+      "cite": "Bk5 ch34 · Bill, Dec 2342",
+      "spoil": 5,
+      "note": "Howard’s plan: nine intermediate star systems between Epsilon Eridani and Skippyland, eighty-two light-years of chain to haul endpoints along, about seventy light-years straight-line, ten hops once built (Bk5 ch34). The books give the counts — not the nine Hipparcos names — so intermediates stay a number on this path. By Bk5 ch38 the endpoints are already under way and a path is expected within a few years; Howard also wants a wider quiet network. Status building, not open."
+    }
+  ],
+  "summaries": [
+    {
+      "id": "sum_first_hub",
+      "name": "First major hub — hundreds of signals",
+      "role": "Found-mesh scale, not a gate list",
+      "cite": "Bk5 ch8 · Icarus, Sep 2320",
+      "spoil": 5,
+      "note": "At the first serious hub Icarus reads literally hundreds of individual signals (Bk5 ch8). That is a scale fact for the register lead, not permission to invent hundreds of gate rows."
+    },
+    {
+      "id": "sum_gate_map",
+      "name": "Orbital gate map needs addresses",
+      "role": "Why a raw gate dump is useless",
+      "cite": "Bk5 ch12 · Icarus, Sep 2320",
+      "spoil": 5,
+      "note": "Icarus and Dae map hundreds of wormhole gates in various orbits and argue the builders must have had addressing — otherwise the mesh is just random holes (Bk5 ch12). We inherit the same restraint: cite topology, do not fabricate an address book."
+    },
+    {
+      "id": "sum_hub_tour",
+      "name": "Eight hub hops · sixty degrees",
+      "role": "Survey arc around the galaxy",
+      "cite": "Bk5 ch14 · Icarus, Apr 2321",
+      "spoil": 5,
+      "note": "Six months, eight hub hops, about sixty degrees around the galaxy — out of the Orion Spur into the Perseus Arm (Bk5 ch14). Typical hubs run a few hundred local connections; locals up to a couple of hundred light-years away; one monster exceeds a thousand. File as summary, not eight anonymous edges."
+    },
+    {
+      "id": "sum_endpoint_physics",
+      "name": "Endpoints must be flown",
+      "role": "Shared physics — found and Bob-built",
+      "cite": "Bk5 ch34 · Bill, Dec 2342",
+      "spoil": 5,
+      "note": "Same rule the aliens already lived by: create a pair together, fly one endpoint STL to the far system, brace it or it collapses. Bill’s moot demo pushes matter through after a short separation test (Bk5 ch34). Discovery-era Icarus had already guessed the STL pairing (Bk5 ch8). Travel topology is built by logistics, not by wishing a chord onto the Chart."
+    }
+  ]
+}

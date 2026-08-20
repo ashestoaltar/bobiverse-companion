@@ -1369,9 +1369,11 @@ register. Each needs its own data file, schema and view, and nothing else.
 
 **Built:** the star chart (`systems.json`), the system map, the bestiary
 (`bestiary.json`), peoples and polities (`peoples.json`), vessels
-(`vessels.json`), persons (`persons.json`), In Memorium (`memorium.json`, plus
+(`vessels.json`), persons (`persons.json`), wormhole **GATES**
+(`gates.json` — topology, not Chart geometry), In Memorium (`memorium.json`, plus
 `fate` on each Bob), the blog (`blog.json`), the timeline, and the holotank.
-**Still open:** content second passes and research nulls in `data/todo.json`.
+**Still open:** GATES schematic graph paint; content second passes and research
+nulls in `data/todo.json`. See `ideas/wormholes-inventory.md`.
 
 **Persons (`data/persons.json`).** Named individuals who are **not** Heaven
 Bobs (Original Bob’s clone tree). Species/polities stay in `peoples.json`;

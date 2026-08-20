@@ -936,6 +936,7 @@ const PEOPLES = /*__PEOPLES__*/null;
 /* Hulls, design generations, colony and Exodus craft — and room for Medeiros,
    Others warware and worse. Design generation is not a hull name. */
 const VESSELS = /*__VESSELS__*/null;
+const GATES = /*__GATES__*/null;
 /* Named individuals who are not Heaven replicants — humans, Deltans, Quinlans,
    AMIs. Label beside the name disambiguates Moses (Deltan) from any Bob Moses.
    Lineage stays in the Bob register; portraits may hang on persons/<id> later. */
@@ -1082,7 +1083,8 @@ const BOOK_WORD = numWord(BOOK_MAX);
 /* Blog first: it is the public BobNet surface (Bill needling people who do not
    read it). The register and genealogy stay a tab away; they are not the lobby. */
 const state = {view:'blog', q:'', filters:new Set(), sort:'name', dir:1,
-               selected:null, beast:null, people:null, person:null, vessel:null, blog:null, system:null,
+               selected:null, beast:null, people:null, person:null, vessel:null, gate:null,
+               blog:null, system:null,
                book:BOOK_MAX};
 
 /* ---- registers --------------------------------------------------------
@@ -1175,6 +1177,30 @@ const REGISTERS = [
      const hit = e.target.closest('[data-sys]');
      if (!hit) return false;
      state.system = state.system === hit.dataset.sys ? null : hit.dataset.sys;
+     render();
+     return true;
+   }},
+  {id:'gates',      label:'GATES',      short:'GATE',  render: renderGates,
+   rows: gateRows,
+   status: rows => {
+     const all = gateAll();
+     const nodes = ((GATES && GATES.nodes) || []).filter(n => !heldEntry(n));
+     const paths = ((GATES && GATES.paths) || []).filter(p => !heldEntry(p));
+     const unloc = nodes.filter(n => !(n.system && SYS[n.system] && SYS[n.system].xyz_ly)).length;
+     statusLine(rows.length === all.length ? `${all.length} on file`
+                                           : `${rows.length} of ${all.length}`,
+                `${nodes.length} nodes · ${paths.length} paths`,
+                `${unloc} unlocated`);
+   },
+   dossier: () => state.gate ? renderGateDossier(state.gate) : null,
+   onClick: e => {
+     const sys = e.target.closest('[data-sys]');
+     if (sys) { state.view = 'chart'; CHART.sel = sys.dataset.sys; render(); return true; }
+     const jump = e.target.closest('[data-gate]');
+     if (jump) { state.gate = jump.dataset.gate; render(); return true; }
+     const hit = e.target.closest('[data-entry]');
+     if (!hit) return false;
+     state.gate = state.gate === hit.dataset.entry ? null : hit.dataset.entry;
      render();
      return true;
    }},
@@ -2952,6 +2978,123 @@ function persons(){
     a.name.localeCompare(b.name));
 }
 
+/* ---- Gates (wormhole topology) ----------------------------------------
+   Peer to Chart: cited travel topology, not Euclidean geometry, not SCUT.
+   Book 5+. List view first; schematic graph is a later pass. */
+
+function gateAll(){
+  if (!GATES) return [];
+  return []
+    .concat((GATES.nodes || []).map(n => Object.assign({}, n, {_bucket: 'node'})))
+    .concat((GATES.paths || []).map(p => Object.assign({}, p, {_bucket: 'path'})))
+    .concat((GATES.summaries || []).map(s => Object.assign({}, s, {_bucket: 'summary'})));
+}
+function gateRows(){ return gateAll().filter(e => !heldEntry(e)); }
+function gateById(id){ return gateAll().find(e => e.id === id); }
+
+function renderGates(rows){
+  if (!GATES) return `<p class="empty">[GATES REGISTER UNAVAILABLE]</p>`;
+  const all = gateAll();
+  if (!rows.length) return `<p class="empty">[NO MATCH IN ${all.length} ENTRIES — READ THROUGH BOOK 5]</p>`;
+
+  const card = e => `
+    <button class="entry" data-entry="${esc(e.id)}" aria-pressed="${state.gate === e.id}">
+      <span class="entry-mark" aria-hidden="true">${
+        e._bucket === 'path' ? '⇄' : e._bucket === 'summary' ? '▣' : '◈'}</span>
+      <span class="entry-body">
+        <b>${esc(e.name)}</b><span class="dim exp">${esc(
+          e._bucket === 'path' ? (e.kind || 'path')
+          : e._bucket === 'summary' ? 'summary'
+          : (e.layer || e.kind || 'node'))}</span>
+        <span class="dim">${esc(e.role || '')}</span>
+      </span>
+    </button>`;
+
+  const nodes = rows.filter(e => e._bucket === 'node');
+  const paths = rows.filter(e => e._bucket === 'path');
+  const sums  = rows.filter(e => e._bucket === 'summary');
+  const found = nodes.filter(n => n.layer === 'found');
+  const built = nodes.filter(n => n.layer === 'constructed');
+
+  const sec = (label, list) => list.length
+    ? `<div class="sec"><div class="sec-label">${esc(label)}</div>
+       <div class="entries">${list.map(card).join('')}</div></div>` : '';
+
+  return `<div class="reg-lead"><span class="redacted">[</span>${
+      rows.length === all.length ? `${all.length} on file` : `${rows.length} of ${all.length}`
+    }<span class="redacted">]</span><br><br>
+    Travel topology — wormhole gates and paths. Not the Euclidean Chart, and not
+    SCUT/BobNet. Unlocated termini are honest. Hundreds of anonymous alien gates
+    stay as summaries, not invented rows. Bob-built highways may cite ferry
+    distances; found mesh hops do not get fake light-years.</div>
+    ${sec('FOUND MESH — NODES', found)}
+    ${sec('BOB-BUILT / LOCAL — NODES', built)}
+    ${sec('PATHS', paths)}
+    ${sec('SUMMARIES — SCALE, NOT A CATALOGUE', sums)}`;
+}
+
+function renderGateDossier(id){
+  const e = gateById(id);
+  if (!e || heldEntry(e)) return null;
+  const f = (label, val) => val || val === 0
+    ? `<div class="f"><dt>${label}</dt><dd>${typeof val === 'string' ? esc(val) : val}</dd></div>` : '';
+  const sys = e.system && SYS[e.system];
+  const located = !!(sys && sys.xyz_ly);
+  const parent = e.at && gateById(e.at);
+  const endLinks = (e.ends || []).map(eid => {
+    const n = gateById(eid);
+    return n && !heldEntry(n)
+      ? `<a href="${addr('gates', n.id)}" data-gate="${esc(n.id)}">${esc(n.name)}</a>`
+      : esc(eid);
+  }).join(' · ');
+
+  const kindLabel = e._bucket === 'path' ? `path · ${e.kind}`
+    : e._bucket === 'summary' ? 'summary'
+    : `${e.kind} · ${e.layer}`;
+
+  return `
+    <div class="dossier-head">
+      <div>
+        <div class="serial">[${esc((e._bucket || 'GATE').toUpperCase())}]</div>
+        <h2>${esc(e.name)}</h2>
+        <div class="sub">${esc(e.role || kindLabel)}</div>
+      </div>
+      <button class="dossier-close" id="d-close" aria-label="Close">✕</button>
+    </div>
+    <div class="dossier-body">
+    <dl class="fields">
+      ${f('KIND', kindLabel)}
+      ${e.status ? f('STATUS', e.status) : ''}
+      ${e.hop_count != null ? f('HOPS', e.hop_count) : ''}
+      ${e.intermediate_count != null ? f('INTERMEDIATES', e.intermediate_count + ' (unnamed)') : ''}
+      ${e.ferry_ly_total != null ? f('FERRY CHAIN', e.ferry_ly_total + ' ly') : ''}
+      ${e.span_ly != null ? f('SPAN', e.span_ly + ' ly (straight-line)') : ''}
+      ${f('FIRST ON RECORD', citeUpTo(e.cite))}
+      ${f('LOCATED', e._bucket === 'node' ? (located ? 'yes — Chart link' : 'no — topology only') : '')}
+    </dl>
+    ${endLinks ? `<div class="sec"><div class="sec-label">ENDS</div>
+      <div class="kids">${endLinks}</div></div>` : ''}
+    ${parent && !heldEntry(parent) ? `<div class="sec"><div class="sec-label">AT</div>
+      <p class="note"><a href="${addr('gates', parent.id)}" data-gate="${esc(parent.id)}">${esc(parent.name)}</a></p></div>` : ''}
+    ${sys ? `<div class="sec"><div class="sec-label">CHART</div>
+      <p class="note">${located
+        ? `<a href="${addr('chart', e.system)}" data-sys="${esc(e.system)}">${esc(sys.name)} →</a>`
+        : esc(sys.name) + ' (no xyz)'}</p></div>` : ''}
+    ${(e.also || []).length ? `<div class="sec"><div class="sec-label">RELATED</div>
+      <div class="kids">${e.also.map(aid => {
+        const pe = peopleById(aid);
+        return pe && !heldEntry(pe)
+          ? `<a href="${addr('peoples', pe.id)}" data-people="${esc(pe.id)}">${esc(pe.name)}</a>`
+          : '';
+      }).filter(Boolean).join('')}</div></div>` : ''}
+    <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
+      ${(() => { const g = proseGated(e.note, e);
+          return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}</div>
+      ${attachRow('gates', e.id)}
+      ${feedSection('gates', e.id)}
+    </div>`;
+}
+
 function renderPersons(rows){
   if (!PERSONS) return `<p class="empty">[PERSONS REGISTER UNAVAILABLE]</p>`;
   const all = PERSONS.persons || [];
@@ -3853,6 +3996,7 @@ const peopleById = id => ((PEOPLES?.entries  || []).find(e => e.id === id));
 const personById = id => ((PERSONS?.persons  || []).find(p => p.id === id));
 const postById   = id => ((BLOG?.posts     || []).find(p => p.id === id));
 // vesselById is declared with the vessels register above
+// gateById is declared with the gates register above
 
 /* `held` sits here with `ok` for the same reason `ok` does: it is a question
    only this register can answer, and answering it anywhere else would mean a
@@ -3863,6 +4007,8 @@ const SEL = {
              held: () => false},
   systems:  {get: () => state.system,    set: v => state.system = v,    ok: v => !!SYS[v],
              held: () => false},
+  gates:    {get: () => state.gate,      set: v => state.gate = v,      ok: v => !!gateById(v),
+             held: v => heldEntry(gateById(v) || {})},
   bestiary: {get: () => state.beast,     set: v => state.beast = v,     ok: v => (BESTIARY?.creatures || []).some(c => c.id === v),
              held: v => heldEntry(beastById(v) || {})},
   peoples:  {get: () => state.people,    set: v => state.people = v,    ok: v => (PEOPLES?.entries || []).some(e => e.id === v),

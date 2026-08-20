@@ -455,13 +455,6 @@ def _check_spoil(bobs: list[dict]) -> tuple[list[str], list[str]]:
             if cited and spoil < cited:
                 errors.append(f"{name} {e['id']}: spoil {spoil} is earlier than its own "
                               f"citation in Bk{cited}")
-            # Per paragraph, the same as a record's. The console already runs
-            # these notes through proseGated(), so a companion entry could
-            # always carry an @bk marker — this check just could not see one,
-            # and read the whole note against the entry's default. That made
-            # the marker unusable in exactly the register where a note is most
-            # likely to outgrow its own citation, because a species or a polity
-            # accumulates history across books while a fate does not.
             for i, (at, text) in enumerate(_paragraphs(note, spoil)):
                 if at is None:
                     errors.append(f"{name} {e['id']}: note paragraph {i + 1} carries an "
@@ -471,6 +464,31 @@ def _check_spoil(bobs: list[dict]) -> tuple[list[str], list[str]]:
                 if inline and inline > at:
                     errors.append(f"{name} {e['id']}: note paragraph {i + 1} is marked safe "
                                   f"at book {at} but cites Bk{inline}")
+    # Gates: nodes, paths, and summaries all carry gated prose.
+    if os.path.exists(GATES):
+        with open(GATES) as fh:
+            gates = json.load(fh)
+        for key in ("nodes", "paths", "summaries"):
+            for e in gates.get(key) or []:
+                spoil, note = e.get("spoil"), e.get("note")
+                if spoil is None:
+                    if note:
+                        undeclared.append(f"gates/{e.get('id')}")
+                    continue
+                cited = _book_of(e.get("cite"))
+                if cited and spoil < cited:
+                    errors.append(f"gates {e.get('id')}: spoil {spoil} is earlier than its own "
+                                  f"citation in Bk{cited}")
+                for i, (at, text) in enumerate(_paragraphs(note, spoil)):
+                    if at is None:
+                        errors.append(f"gates {e.get('id')}: note paragraph {i + 1} carries an "
+                                      f"unreadable @bk marker")
+                        continue
+                    inline = _book_of(text)
+                    if inline and inline > at:
+                        errors.append(
+                            f"gates {e.get('id')}: note paragraph {i + 1} is marked safe "
+                            f"at book {at} but cites Bk{inline}")
 
     warnings = []
     if undeclared:
@@ -502,6 +520,7 @@ def _check_names(bobs: list[dict]) -> list[str]:
 BLOG = os.path.join(ROOT, "data", "blog.json")
 VESSELS = os.path.join(ROOT, "data", "vessels.json")
 PERSONS = os.path.join(ROOT, "data", "persons.json")
+GATES = os.path.join(ROOT, "data", "gates.json")
 VOICES = {"bobnet", "editor"}
 VESSEL_KINDS = {"design", "hull", "class", "weapon"}
 VESSEL_LINES = {"heaven", "colony", "exodus", "medeiros", "others", "other"}
@@ -517,6 +536,11 @@ PERSON_AMI_EVIDENCE = re.compile(
 # Non-Bob matrix minds (Henry Roberts) — must not be slipped onto bobs.json casually.
 PERSON_REPLICANT_EVIDENCE = re.compile(
     r"\breplicant\b|not a(?:n)?(?:\s+Heaven)?\s+Bob\b|Australian (?:probe )?replicant", re.I)
+GATE_NODE_KINDS = {"hub", "system", "place", "faction_home"}
+GATE_LAYERS = {"found", "constructed"}
+GATE_PATH_KINDS = {"found", "constructed", "planned"}
+GATE_PATH_STATUS = {"surveyed", "planned", "building", "open"}
+GATE_ROLE_MAX = 72
 
 
 def _person_search_token(name: str) -> str:
@@ -767,6 +791,154 @@ def _check_persons() -> tuple[list[str], list[str]]:
         if len(set(labels)) < len(holders):
             who = ", ".join(h.get("id") or "?" for h in holders)
             warnings.append(f"persons name collision {name!r}: {who}")
+    return errors, warnings
+
+
+def _check_gates() -> tuple[list[str], list[str]]:
+    """Wormhole travel topology — not Chart geometry, not SCUT.
+
+    Nodes may be unlocated. Paths may carry ferry_ly only when kind is
+    constructed or planned. Summaries hold counted-mesh facts that must not
+    become fake edge rows. Ids are unique across nodes+paths+summaries.
+    """
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not os.path.exists(GATES):
+        return errors, warnings
+    with open(GATES) as fh:
+        data = json.load(fh)
+    nodes = data.get("nodes") or []
+    paths = data.get("paths") or []
+    summaries = data.get("summaries") or []
+
+    systems = set()
+    if os.path.exists(SYSTEMS):
+        with open(SYSTEMS) as fh:
+            systems = {s["id"] for s in json.load(fh)["systems"]}
+    people_ids: set[str] = set()
+    if os.path.exists(PEOPLES):
+        with open(PEOPLES) as fh:
+            people_ids = {e["id"] for e in json.load(fh)["entries"]}
+
+    ids: set[str] = set()
+    node_by_id = {}
+    for n in nodes:
+        nid = n.get("id") or "?"
+        if nid in ids:
+            errors.append(f"gates {nid}: duplicate id")
+        ids.add(nid)
+        node_by_id[nid] = n
+        if n.get("kind") not in GATE_NODE_KINDS:
+            errors.append(f"gates {nid}: kind {n.get('kind')!r} not in {sorted(GATE_NODE_KINDS)}")
+        if n.get("layer") not in GATE_LAYERS:
+            errors.append(f"gates {nid}: layer {n.get('layer')!r} not in {sorted(GATE_LAYERS)}")
+        if not n.get("cite") or not str(n.get("cite")).startswith("Bk"):
+            errors.append(f"gates {nid}: needs a Bk citation")
+        if not n.get("note") or len(n.get("note") or "") < 40:
+            errors.append(f"gates {nid}: note too thin")
+        if not isinstance(n.get("spoil"), int) or n["spoil"] < 1:
+            errors.append(f"gates {nid}: spoil must be a book number")
+        role = n.get("role") or ""
+        if len(role) > GATE_ROLE_MAX:
+            errors.append(f"gates {nid}: role is {len(role)} chars (max {GATE_ROLE_MAX})")
+        sid = n.get("system")
+        if sid and sid not in systems:
+            errors.append(f"gates {nid}: unknown system {sid!r}")
+        for aid in n.get("also") or []:
+            if aid not in people_ids:
+                errors.append(f"gates {nid}: also {aid!r} is not a peoples entry")
+
+    for n in nodes:
+        nid = n.get("id") or "?"
+        at = n.get("at")
+        if at and at not in node_by_id:
+            errors.append(f"gates {nid}: at {at!r} is not a gates node")
+        elif at and at == nid:
+            errors.append(f"gates {nid}: at cannot reference itself")
+
+    for p in paths:
+        pid = p.get("id") or "?"
+        if pid in ids:
+            errors.append(f"gates {pid}: duplicate id")
+        ids.add(pid)
+        if p.get("kind") not in GATE_PATH_KINDS:
+            errors.append(f"gates {pid}: kind {p.get('kind')!r} not in {sorted(GATE_PATH_KINDS)}")
+        status = p.get("status")
+        if status is not None and status not in GATE_PATH_STATUS:
+            errors.append(f"gates {pid}: status {status!r} not in {sorted(GATE_PATH_STATUS)}")
+        if not p.get("cite") or not str(p.get("cite")).startswith("Bk"):
+            errors.append(f"gates {pid}: needs a Bk citation")
+        if not p.get("note") or len(p.get("note") or "") < 40:
+            errors.append(f"gates {pid}: note too thin")
+        if not isinstance(p.get("spoil"), int) or p["spoil"] < 1:
+            errors.append(f"gates {pid}: spoil must be a book number")
+        role = p.get("role") or ""
+        if len(role) > GATE_ROLE_MAX:
+            errors.append(f"gates {pid}: role is {len(role)} chars (max {GATE_ROLE_MAX})")
+        ends = p.get("ends") or []
+        if len(ends) != 2:
+            errors.append(f"gates {pid}: ends must be exactly two node ids")
+        for end in ends:
+            if end not in node_by_id:
+                errors.append(f"gates {pid}: end {end!r} is not a gates node")
+        # ferry / span distances are logistics facts for Bob-built work only
+        if p.get("kind") == "found":
+            if p.get("ferry_ly_total") is not None or p.get("span_ly") is not None:
+                errors.append(f"gates {pid}: found paths cannot carry ferry_ly_total or span_ly")
+
+    for s in summaries:
+        sid = s.get("id") or "?"
+        if sid in ids:
+            errors.append(f"gates {sid}: duplicate id")
+        ids.add(sid)
+        if not s.get("cite") or not str(s.get("cite")).startswith("Bk"):
+            errors.append(f"gates {sid}: needs a Bk citation")
+        if not s.get("note") or len(s.get("note") or "") < 40:
+            errors.append(f"gates {sid}: note too thin")
+        if not isinstance(s.get("spoil"), int) or s["spoil"] < 1:
+            errors.append(f"gates {sid}: spoil must be a book number")
+        role = s.get("role") or ""
+        if len(role) > GATE_ROLE_MAX:
+            errors.append(f"gates {sid}: role is {len(role)} chars (max {GATE_ROLE_MAX})")
+
+    # Soft: cite chapter should mention a distinctive token from the name.
+    chapters = _chapters()
+    index = {(c["book"], c["seq"]): c for c in chapters} if chapters else {}
+    if chapters:
+        # Nodes must be named in their cite chapter. Paths check via end names.
+        # Summaries are editorial scale facts — title tokens need not appear.
+        for e in list(nodes) + list(paths):
+            eid = e.get("id") or "?"
+            cite = e.get("cite") or ""
+            m = re.match(r"^Bk(\d+)\s+ch(\d+)", cite)
+            if not m:
+                continue
+            token = _person_search_token(e.get("name") or "")
+            bk, sq = int(m.group(1)), int(m.group(2))
+            chapter = index.get((bk, sq))
+            if chapter is None:
+                errors.append(f"gates {eid}: cites Bk{bk} ch{sq}, which the corpus lacks")
+                continue
+            text = chapter.get("text") or ""
+            ok = False
+            candidates = [token] if token and len(token) >= 4 else []
+            for end in e.get("ends") or []:
+                n = node_by_id.get(end)
+                if n:
+                    t2 = _person_search_token(n.get("name") or "")
+                    if t2:
+                        candidates.append(t2)
+            for cand in candidates:
+                fold = unicodedata_normalize(cand)
+                if re.search(r"\b" + re.escape(cand) + r"\b", text, re.I) or re.search(
+                        r"\b" + re.escape(fold) + r"\b", unicodedata_normalize(text), re.I):
+                    ok = True
+                    break
+            if candidates and not ok:
+                errors.append(
+                    f"gates {eid}: cite Bk{bk} ch{sq} never mentions "
+                    f"{candidates[0]!r} — open the chapter before writing the note")
+
     return errors, warnings
 
 
@@ -1325,6 +1497,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     per_errors, per_warnings = _check_persons()
     errors += per_errors
     warnings += per_warnings
+
+    gate_errors, gate_warnings = _check_gates()
+    errors += gate_errors
+    warnings += gate_warnings
 
     holo_errors, holo_warnings = _check_holo()
     errors += holo_errors

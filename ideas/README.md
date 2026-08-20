@@ -43,18 +43,18 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 
 ## 2. Current ship (do not re-plan from scratch)
 
-### Registers (13)
+### Registers (14)
 
 | Group | Tabs |
 |---|---|
 | **Feed** | **Blog** (first, default) |
 | **Replicants** | Register · Genealogy · Unresolved · In Memorium |
-| **World** | Chart · Systems · **Vessels** · Bestiary · Peoples · **Persons** |
+| **World** | Chart · Systems · **Gates** · **Vessels** · Bestiary · Peoples · **Persons** |
 | **Log** | Timeline · To-do |
 
 ### Approximate census
 
-- **89** Bobs · **22** systems · **21** vessels · **9** fauna · **30** peoples/polities/factions · **26** persons  
+- **89** Bobs · **22** systems · **5** gate nodes / **1** path / **4** summaries · **21** vessels · **9** fauna · **30** peoples/polities/factions · **26** persons  
 - **9** blog posts · **63** timeline events  
 - **18** holotank plates (VR + vessel stills + gorilloid specimen)  
 - **1** plate with **3D model** (`vessel-heaven-1` → `assets/holo-models/vessel-heaven-1.glb`)  
@@ -163,11 +163,11 @@ Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional
 | Layer | Status | Role |
 |---|---|---|
 | **Local chart** | Shipped | Euclidean, Sol-origin, ~≤49 ly, real astrometry |
-| **Wormhole network** | Planned | Graph of cited edges — **not** stretched chart |
-| **Galaxy view** | Wanted (owner: 100%) | Context frame; more motivated once wormholes exist |
+| **Wormhole / GATES** | **Phase 1 seeded** | List register live: cited nodes/paths/summaries — **not** stretched chart. Two layers: alien **found** mesh + Bob **planned/constructed** highway. Schematic graph UI later. See [`wormholes-inventory.md`](wormholes-inventory.md). |
+| **Galaxy view** | Wanted (owner: 100%) | Context frame; more motivated once GATES exists |
 | **SCUT / BobNet** | Boot gestures | Comms, not travel topology |
 
-Do **not** force Bk5+ mesh into Cartesian chart. See `data/systems.json` comment and `todo.json` wormhole item.
+Do **not** force Bk5+ mesh into Cartesian chart. See `data/systems.json` comment, `todo.json` wormhole item, and the inventory ledger.
 
 ---
 
@@ -229,7 +229,9 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 | `data/vessels.json` | Vessels register |
 | `data/persons.json` | Persons register — not Heaven Bobs. `label`/`species` vs `substrate`/`substrateFrom`; kinds person / ami / replicant. **Bio discipline in CLAUDE.md** — open cite chapter first; no invented jobs/AMI; no book-text lifts. |
 | `data/persons.schema.json` | Persons schema (substrate enum includes `foreign_probe`). |
-| `templates/genealogy.html` | Console (tank 3D UI, REGISTERS, green attach, Persons) |
+| `data/gates.json` | Wormhole topology (nodes / paths / summaries). Unlocated OK; not Chart. |
+| `data/gates.schema.json` | Gates schema — `found` \| `constructed` \| `planned`; ferry_ly only on Bob-built. |
+| `templates/genealogy.html` | Console (tank 3D UI, REGISTERS, green attach, Persons, Gates) |
 | `src/build.py` | Inline plates + models + HOLO3D; strips `_comment` from persons |
 | `src/validate.py` | Holo cite + model file checks; Persons cite-mention, AMI/replicant evidence, role≤72, Bridget substrate prose gate |
 
@@ -279,8 +281,8 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ### Architecture (later)
 
-10. Wormhole **topology** view (cited graph).  
-11. **Galaxy context** mode.  
+10. **GATES** schematic graph UI (list+dossiers seeded; paint topology next).  
+11. **Galaxy context** mode (after GATES graph).  
 12. Soft label `[HOLOTANK · …]` on attachments if wanted.
 
 ### Research / calendar

@@ -47,6 +47,7 @@ module.exports = ({ok, get, run, ROOT}) => {
     peoples:  (((PEOPLES && PEOPLES.entries) || [])[0] || {}).id,
     persons:  ((((get('PERSONS') || {}).persons) || [])[0] || {}).id,
     vessels:  ((((get('VESSELS') || {}).vessels) || [])[0] || {}).id,
+    gates:    ((((get('GATES') || {}).nodes) || [])[0] || {}).id,
     blog:     (((get('BLOG') || {}).posts || [])[0] || {}).id,
   };
   const sampleFor = view => SAMPLE[view] || BOBS[0].id;

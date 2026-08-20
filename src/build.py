@@ -29,6 +29,7 @@ BESTIARY = os.path.join(ROOT, "data", "bestiary.json")
 PEOPLES = os.path.join(ROOT, "data", "peoples.json")
 VESSELS = os.path.join(ROOT, "data", "vessels.json")
 PERSONS = os.path.join(ROOT, "data", "persons.json")
+GATES = os.path.join(ROOT, "data", "gates.json")
 MEMORIUM = os.path.join(ROOT, "data", "memorium.json")
 GUPPY = os.path.join(ROOT, "data", "guppy.json")
 ASSETS = os.path.join(ROOT, "assets")
@@ -46,6 +47,7 @@ BOOKS_PLACEHOLDER = "/*__BOOKS__*/[]"
 PEOPLE_PLACEHOLDER = "/*__PEOPLES__*/null"
 VESSELS_PLACEHOLDER = "/*__VESSELS__*/null"
 PERSONS_PLACEHOLDER = "/*__PERSONS__*/null"
+GATES_PLACEHOLDER = "/*__GATES__*/null"
 GUPPY_PLACEHOLDER = "/*__GUPPY__*/null"
 SANDBOX = os.path.join(ROOT, "data", "sandbox.json")
 SANDBOX_PLACEHOLDER = "/*__SANDBOX__*/null"
@@ -335,6 +337,15 @@ def main() -> None:
     html, persons, drawn_n = inject_register(
         html, PERSONS, "persons", "persons", PERSONS_PLACEHOLDER)
 
+    # Gates is multi-collection (nodes / paths / summaries) — inject whole file.
+    with open(GATES) as fh:
+        gates = json.load(fh)
+    gates.pop("_comment", None)
+    if GATES_PLACEHOLDER not in html:
+        print(f"ERROR: placeholder {GATES_PLACEHOLDER} missing from template")
+        sys.exit(1)
+    html = html.replace(GATES_PLACEHOLDER, json.dumps(gates, ensure_ascii=False), 1)
+
     # The In Memorium list is mostly assembled from bobs.json at render time;
     # this file carries only the entries that have no record to sit on.
     with open(MEMORIUM) as fh:
@@ -391,6 +402,9 @@ def main() -> None:
           f"{len(peoples['entries'])} peoples and polities ({drawn_p} illustrated), "
           f"{len(vessels['vessels'])} vessels ({drawn_v} illustrated), "
           f"{len(persons['persons'])} persons ({drawn_n} illustrated), "
+          f"{len(gates.get('nodes') or [])} gate nodes / "
+          f"{len(gates.get('paths') or [])} paths / "
+          f"{len(gates.get('summaries') or [])} summaries, "
           f"{len(blog['posts'])} posts, "
           f"guppy {guppy['width']}x{guppy['height']} in {len(guppy['frames'])} frames, "
           f"sandbox {sandbox['width']}x{sandbox['height']} in "
