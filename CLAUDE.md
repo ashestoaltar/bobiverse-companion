@@ -6,16 +6,18 @@ every lineage claim carries a confidence tier, and disagreements between
 sources are surfaced rather than smoothed over.
 
 **Agent handoff:** read **`ideas/README.md` first** — product intent, holotank
-2D+3D, vessels, spatial models (chart · wormholes · galaxy), art/Ackbar rules,
+2D+3D, vessels, spatial stack (chart · gates · galaxy), parked experiments
+(Heaven Raid shmup, EE video), art/Ackbar rules,
 experiment tools, open checklist. Owner preference: one primary agent (Grok)
 owns code, data, tests, and media; suggest improvements freely; “locked”
 choices are not sacred if quality demands change. Living backlog:
 `data/todo.json`. This file stays ground rules and data layout.
 
-**Near-term (2026-08-17 wrap):** prefer **code/data/console product** until the
-owner says otherwise; Imagine stills/video are parked PoCs (see
-`ideas/experiments/scene-ee-standoff/`, moot empty hall + Jeeves locks in
-`ideas/`). Do not burn quota on multi-subject composites without a plan.
+**Near-term (2026-08-20 wrap):** prefer **code/data/console product** until the
+owner says otherwise. Parked PoCs: Imagine stills/video (`scene-ee-standoff/`),
+moot empty hall + Jeeves locks, **Heaven Raid** shmup (`heaven-raid/` — v1
+accepted, develop later). Do not burn Imagine quota on multi-subject composites
+without a plan.
 
 **3D holotank assets:** `assets/holo-models/*.glb`, viewer bundle
 `assets/holo3d/holo3d.js`, plate field `model` in `data/holo.json`. Spike tools

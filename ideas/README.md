@@ -12,7 +12,7 @@ This file wins on **current product intent** when it conflicts with older review
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
 | [`experiments/heaven-raid/README.md`](experiments/heaven-raid/README.md) | **Parked PoC** shmup: Heaven vs Empire probes (Galaga×1942). v1 good; develop later. Not a Registry tab. |
 
-**Last handoff write-up:** 2026-08-20 (spatial stack live).  
+**Last handoff write-up:** 2026-08-20 **EOD wrap** — spatial stack shipped; Heaven Raid PoC parked.  
 **Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and zero-network promises. Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
 
 **Owner intent (explicit):**  
@@ -21,6 +21,8 @@ This file wins on **current product intent** when it conflicts with older review
 - “Locked” decisions from earlier tools/sessions are **not sacred** if a better path appears.  
 - Books stay local; never commit book text.  
 - **Near-term:** stick to **code / data / product** until the console is where the owner wants it; **Imagine stills and video later** (PoC only for now). Imagine is the expensive budget — prefer code composites over re-rolls for multi-subject scenes.
+
+**Parked experiments (do not reopen unless asked):** Heaven Raid shmup · EE standoff video · populated moot hall · Heaven gen-1 mesh redo (wanted, not started).
 
 ---
 
@@ -317,7 +319,7 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 5. Re-read **§5 spatial models** + `wormholes-inventory.md` before Chart/Gates/Galaxy work.  
 6. **Suggest improvements** when you see them; owner asked for that.  
 7. Update **this file** when keepers, ship state, or architecture decisions change.  
-8. Scene video pipeline notes: `experiments/scene-ee-standoff/README.md`.
+8. Scene video: `experiments/scene-ee-standoff/README.md`. Shmup: `experiments/heaven-raid/README.md` (**parked**).
 
 ---
 
@@ -343,18 +345,23 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ---
 
-## 14. Session arc (2026-08-20) — Persons → spatial stack
+## 14. Session arc (2026-08-20) — wrap
 
-1. Catch-up from handoff; moot/pub and EE video left parked (not shipped).  
-2. Genealogy tidy already on main: Icarus/Daedalus → Bill; Isaac priorClaim cleared.  
-3. **PERSONS** cast-heavy expansion (`4da00ae`): humans, Deltans, Quinlan, Charlie (AMI), Henry + Medeiros + Captain Matias Araújo (`foreign_probe`). Substrate gating; bio guardrails.  
-4. **GATES** register + schematic paint (`ea8a2ab` … `fb6316f`); expand DMZ / Hub Six / WormNet / Sol / Omicron / radial-core summary (`1a80dbb`).  
-5. **GALAXY** context (`181c919`): impression disk, local bead, mesh overlay.  
-6. Spatial polish (`3e0840c`): Chart ↔ Gates ↔ Galaxy cross-links; Bill blog **three-maps**.  
-7. Canon note: alien mesh can hop **inward along radials** toward the core; it is **not** “every gate leads to the galactic centre.”  
-8. Local untracked keepers remain under `ideas/` — **do not dump into `dist/` without a cite path.**  
-9. **Heaven Raid** shmup experiment (`ideas/experiments/heaven-raid/`): v1 PoC accepted (busters, Serra boss, 5-wave loops). **Parked** — develop later; not a Registry tab.
+1. Catch-up / compaction; moot + EE video stayed parked.  
+2. **PERSONS** live (`4da00ae`) — Medeiros + Captain Matias Araújo; bio guardrails.  
+3. **Spatial stack shipped:** GATES (topology + WormNet + DMZ/Hub Six/radial-core) · GALAXY (bead + overlay) · Chart↔Gates↔Galaxy peers · Bill **three-maps** blog.  
+4. Canon: radials can go **toward** the galactic core; not “every gate leads there.” Ledger: `wormholes-inventory.md`.  
+5. **Heaven Raid** v1 PoC (`fd655c3` / `521fedd`): Galaga×1942, busters, Serra boss, 5-wave loops. **Parked** — good first pass; develop later. Not a Registry tab.  
+6. Untracked keepers under `ideas/` stay local — cite path before `dist/`.
+
+### Resume next session with (pick one)
+
+- Genealogy research (Marcus / Jeffrey·Milton·Zeke / Hector)  
+- Grow Persons  
+- Heaven gen-1 3D mesh redo  
+- Book 6 prep (~2026-09-10)  
+- Heaven Raid game pass (only if asked)
 
 ---
 
-*Handoff for continuous ownership. Update when decisions change. Handoff 2026-08-20 (spatial stack + Heaven Raid PoC parked).*
+*Handoff for continuous ownership. Session wrapped 2026-08-20.*
