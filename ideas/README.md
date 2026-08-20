@@ -9,15 +9,17 @@ This file wins on **current product intent** when it conflicts with older review
 | [`../data/todo.json`](../data/todo.json) | Item-level backlog (done vs open) |
 | [`../COLLABORATIVE-REVIEW.md`](../COLLABORATIVE-REVIEW.md) | Historical multi-pass notes — many ideas **already shipped** |
 | [`experiments/holotank-3d/README.md`](experiments/holotank-3d/README.md) | Local 3D spike tools (Blender clean, orbit test page) |
+| [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
 
-**Last handoff write-up:** 2026-08-16 (end of day).  
+**Last handoff write-up:** 2026-08-17 (wrap).  
 **Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and zero-network promises.
 
 **Owner intent (explicit):**  
 - One agent can own the whole stack — no need to bounce LLMs for art or implementation.  
 - Suggestions and improvements are welcome without being asked.  
 - “Locked” decisions from earlier tools/sessions are **not sacred** if a better path appears.  
-- Books stay local; never commit book text.
+- Books stay local; never commit book text.  
+- **Near-term (2026-08-17):** stick to **code / data / product** until the console is where the owner wants it; **Imagine stills and video later** (PoC only for now). Imagine is the expensive budget — prefer code composites over re-rolls for multi-subject scenes.
 
 ---
 
@@ -47,12 +49,12 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 |---|---|
 | **Feed** | **Blog** (first, default) |
 | **Replicants** | Register · Genealogy · Unresolved · In Memorium |
-| **World** | Chart · Systems · **Vessels** · Bestiary · Peoples |
+| **World** | Chart · Systems · **Vessels** · Bestiary · Peoples · **Persons** |
 | **Log** | Timeline · To-do |
 
 ### Approximate census
 
-- **89** Bobs · **22** systems · **21** vessels · **9** fauna · **30** peoples/polities/factions  
+- **89** Bobs · **22** systems · **21** vessels · **9** fauna · **30** peoples/polities/factions · **9** persons (seed)  
 - **9** blog posts · **63** timeline events  
 - **18** holotank plates (VR + vessel stills + gorilloid specimen)  
 - **1** plate with **3D model** (`vessel-heaven-1` → `assets/holo-models/vessel-heaven-1.glb`)  
@@ -61,11 +63,12 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 
 ### Major features already shipped
 
-Provenance registry; spoiler **READ THROUGH**; URLs; cross-links; Sandbox Bob; mobile sheet; SCUT boot; filter cull; **holotank 2D**; **VESSELS** register; dual-mode gorilloid; **3D holotank orbit** (gen 1); green attachments; blog-first IA.
+Provenance registry; spoiler **READ THROUGH**; URLs; cross-links; Sandbox Bob; mobile sheet; SCUT boot; filter cull; **holotank 2D**; **VESSELS** register; dual-mode gorilloid; **3D holotank orbit** (gen 1); green attachments; blog-first IA; **PERSONS** register (named non-replicants, bios by weight, label disambiguation).
 
 ### Open research (not UI)
 
-Marcus; Thor/Jeffrey/Milton/Zeke; Hector; Verne; 12 wiki leads; bio sweep; Book 6 procedure. See `data/todo.json`.
+Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional); **9** wiki leads (was 12); bio sweep; Book 6 procedure.  
+**2026-08-17:** Icarus+Daedalus promoted under Bill (Bk3 ch6); Isaac priorClaim cleared (already Bart). Thor already under Calvin. See `data/todo.json`.
 
 ---
 
@@ -197,12 +200,17 @@ Do **not** force Bk5+ mesh into Cartesian chart. See `data/systems.json` comment
 
 ---
 
-## 8. Video / scene shorts (discussed, not built)
+## 8. Video / scene shorts (PoC done — not shipping yet)
 
 Imagine can do **short video** (`image_to_video` ~6–10s, `reference_to_video` longer). Multi-shot movies = several clips + **FFmpeg concat**.
 
-**Book 1 test recommendation (when wanted):**  
-**Heaven-1 vs Serra do Mar at Epsilon Eridani** (Bk1 ch15) — ship stills exist, few faces, cool, ~4–5 shots.
+**In this Grok Build session (ZDR team):** `image_to_video` failed (needs `output.upload_url` not exposed on the tool). **Workaround that worked:** lock keyframe stills here → owner animates in Imagine externally → FFmpeg concat in-repo.
+
+**Book 1 PoC (2026-08-17) — parked, not shipping:**  
+**Heaven-1 vs Serra do Mar at Epsilon Eridani** (Bk1 ch15).  
+Dir: [`experiments/scene-ee-standoff/`](experiments/scene-ee-standoff/).  
+Final cut: `experiments/scene-ee-standoff/out/ee-standoff.mp4` (~30s, 5×6s clips, 736×400).  
+Lessons: seed frames from **locked ship stills**; multi-ship Imagine merges designs — **code composite** for standoff identity (Heaven + Serra); simple one-motion prompts per clip.
 
 Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
@@ -219,6 +227,7 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 | `assets/holo-models/*.glb` | 3D models |
 | `assets/holo3d/holo3d.js` | Bundled Three viewer |
 | `data/vessels.json` | Vessels register |
+| `data/persons.json` | Persons register (non-replicants; `label` disambiguates). **Bio discipline in CLAUDE.md** — cite chapter before writing; no invented jobs/AMI. |
 | `templates/genealogy.html` | Console (tank 3D UI, REGISTERS, green attach) |
 | `src/build.py` | Inline plates + models + HOLO3D |
 | `src/validate.py` | Holo cite + model file checks |
@@ -228,36 +237,54 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 | Path | Role |
 |---|---|
 | `ideas/*.jpg` | Keeper stills (many untracked large files OK) |
-| `ideas/rejected designs/` | Rejected art |
+| `ideas/rejected designs/` | Rejected art (incl. moot populate attempts) |
 | `ideas/experiments/holotank-3d/` | Spike viewer, scripts, source stills |
+| `ideas/experiments/scene-ee-standoff/` | Bk1 ch15 scene video PoC (frames, clips, final mp4) |
+
+### Locked face / character / set refs (do not re-roll)
+
+| File | Subject | Notes |
+|---|---|---|
+| `ideas/jeeves-locked.jpg` | **Jeeves** | Locked 2026-08-17. Cleese likeness, tuxedo + tails, coffee tray (Bk1 ch13; Bk2 ch1, ch32; Bk5 ch66). Source: `ideas/ref-john-cleese-jeeves.jpg` (Wikimedia). |
+| `ideas/moot-hall-empty-angled.jpg` | Moot hall (empty) | Three-quarter con-seminar hall (Vortex-panel energy, slight 2100s), virtual boards, pub door. Front-axis prior: `moot-hall-empty-keeper.jpg`. **Not shipped** as holotank plate yet. |
+| `ideas/ship-heaven-1.jpg` / `assets/holo/vessel-heaven-1.webp` | Heaven-1 | Live plate + keeper still. |
+| `ideas/vessel-serra-do-mar.jpg` / `assets/holo/vessel-serra-do-mar.webp` | Serra do Mar | Live plate + keeper still. |
+| `assets/holo/vr-bob1.webp` | Bob face | Holotank Bob. |
+
+**Moot populated scene:** Parked 2026-08-17. Multi-Bob + Jeeves identity/scale/gaze unreliable in Imagine; code composite better for scale but not production-ready. Rejects: `ideas/rejected designs/moot-hall-populated-*`. Empty hall only until a better approach.
 
 ---
 
 ## 10. Open / next (ordered)
 
-### Immediate product (owner-stated)
+### Near-term focus (owner 2026-08-17)
 
-1. **Redo Heaven gen 1 3D mesh** — less tattered; quality over size for now; then re-export to `assets/holo-models/vessel-heaven-1.glb` and rebuild.  
-2. **Size optimization later** — deliberate conversation; do not block redo on bytes.
+**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs.
+
+### Product (when resuming craft)
+
+1. **Redo Heaven gen 1 3D mesh** — quality over size for now; re-export `assets/holo-models/vessel-heaven-1.glb`.  
+2. **Size optimization later** — deliberate conversation.  
+3. Optional: ship empty **moot hall** plate only if/when it earns a holotank cite path.  
+4. Optional: polish/ship EE standoff video later (PoC exists; not in `dist/`).
 
 ### Content backlog
 
-3. More vessel stills/models (Serra, death asteroid already have 2D).  
-4. More dual-mode fauna (gorilloid pattern).  
-5. Linus aged-VR second plate; Heaven-5 design if text supports.  
-6. Grow vessels: more hulls as cited.
+5. More vessel stills/models.  
+6. More dual-mode fauna (gorilloid pattern).  
+7. Linus aged-VR; Heaven-5 if text supports.  
+8. Grow vessels as cited.
 
 ### Architecture (later)
 
-7. Wormhole **topology** view (cited graph).  
-8. **Galaxy context** mode (owner wants eventually).  
-9. Optional soft label `[HOLOTANK · …]` on attachments.  
-10. Stitched **Book 1 scene** video test (Epsilon standoff).
+9. Wormhole **topology** view (cited graph).  
+10. **Galaxy context** mode.  
+11. Soft label `[HOLOTANK · …]` on attachments if wanted.
 
 ### Research / calendar
 
-11. Genealogy open items in `todo.json`.  
-12. Book 6 release procedure (~2026-09-10).
+12. Genealogy open items in `todo.json`.  
+13. Book 6 release procedure (~2026-09-10).
 
 ### Explicitly deprioritized / wrong
 
@@ -266,6 +293,7 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 - Moving plates onto Bob fields as primary home  
 - Auto-clean scripts as sole mesh cleanup (hand Blender for hard cases)  
 - Committing multi‑10 MB un-decimated GLBs into the single-file page  
+- Burning Imagine on multi-face populated moots until a better pipeline exists  
 
 ---
 
@@ -273,24 +301,35 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 1. Read **this file**, then `CLAUDE.md`, then open `todo.json` items.  
 2. `make validate && make test`.  
-3. Prefer **data + holotank content** over shell rewrites.  
+3. Prefer **data + console product** over shell rewrites and over new Imagine work (owner preference until further notice).  
 4. New still → WebP + `holo.json`. New 3D → GLB in `holo-models` + `model` field.  
 5. Re-read **§5 spatial models** before chart/galaxy/wormhole work.  
 6. **Suggest improvements** when you see them; owner asked for that.  
-7. Update **this file** when keepers, ship state, or architecture decisions change.
+7. Update **this file** when keepers, ship state, or architecture decisions change.  
+8. Scene video pipeline notes: `experiments/scene-ee-standoff/README.md`.
 
 ---
 
-## 12. Session arc (2026-08-16) — what we did
+## 12. Session arc (2026-08-16) — prior day
 
 1. Full current-state review after compact; handoff refresh.  
-2. Layout discussion: registry-first, blog default, green attachments.  
-3. Heaven vessels → holotank; then **VESSELS** register + plate migration.  
-4. Dual-mode gorilloid; Medeiros/Others catalogue entries; stills for Serra + death asteroid.  
-5. True 3D holotank discussion; AI mesh options; local spike (Three + Blender).  
-6. Orbit test **passed**; wired production 3D for Heaven gen 1.  
-7. Owner: concept **loved**; mesh **redo** later; size **later**.  
+2. Layout: registry-first, blog default, green attachments.  
+3. Heaven vessels → holotank; **VESSELS** register + plate migration.  
+4. Dual-mode gorilloid; Medeiros/Others; Serra + death asteroid stills.  
+5. 3D holotank; local spike; orbit **passed**; production Heaven gen 1.  
+6. Owner: concept **loved**; mesh **redo** later; size **later**.
 
 ---
 
-*Handoff for continuous ownership. Update when decisions change. End of day 2026-08-16.*
+## 13. Session arc (2026-08-17) — wrap
+
+1. Moot hall research (Bill + books): con-seminar aesthetic, virtual boards, pub annex — **sparse canon, house reconstruction**.  
+2. Empty hall stills locked (angled keeper); populated multi-Bob + Jeeves **parked** (rejects).  
+3. **Jeeves** standalone locked (`jeeves-locked.jpg`).  
+4. EE standoff **scene video PoC**: keyframes + owner Imagine clips + FFmpeg → `out/ee-standoff.mp4`. **Not shipping.**  
+5. Efficiency note: Imagine expensive; code-first until product is ready; video later.  
+6. Spike server was already off from prior session.
+
+---
+
+*Handoff for continuous ownership. Update when decisions change. Wrap 2026-08-17.*

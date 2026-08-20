@@ -32,7 +32,7 @@ module.exports = ({ok, get, run, ROOT}) => {
 
   const reset = () => {
     state.view = 'register'; state.selected = null; state.beast = null;
-    state.people = null; state.vessel = null; state.q = ''; state.filters.clear();
+    state.people = null; state.person = null; state.vessel = null; state.q = ''; state.filters.clear();
     get('CHART').sel = null;
   };
 
@@ -45,6 +45,7 @@ module.exports = ({ok, get, run, ROOT}) => {
     systems:  Object.keys(SYS)[0],
     bestiary: (((BESTIARY && BESTIARY.creatures) || [])[0] || {}).id,
     peoples:  (((PEOPLES && PEOPLES.entries) || [])[0] || {}).id,
+    persons:  ((((get('PERSONS') || {}).persons) || [])[0] || {}).id,
     vessels:  ((((get('VESSELS') || {}).vessels) || [])[0] || {}).id,
     blog:     (((get('BLOG') || {}).posts || [])[0] || {}).id,
   };

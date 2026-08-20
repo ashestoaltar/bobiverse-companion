@@ -936,6 +936,10 @@ const PEOPLES = /*__PEOPLES__*/null;
 /* Hulls, design generations, colony and Exodus craft — and room for Medeiros,
    Others warware and worse. Design generation is not a hull name. */
 const VESSELS = /*__VESSELS__*/null;
+/* Named individuals who are not Heaven replicants — humans, Deltans, Quinlans,
+   AMIs. Label beside the name disambiguates Moses (Deltan) from any Bob Moses.
+   Lineage stays in the Bob register; portraits may hang on persons/<id> later. */
+const PERSONS = /*__PERSONS__*/null;
 
 /* Guppy. The books put him on screen as the ship's AI and describe him as
    looking like Admiral Ackbar — a character we can't reproduce, so this is
@@ -1078,7 +1082,7 @@ const BOOK_WORD = numWord(BOOK_MAX);
 /* Blog first: it is the public BobNet surface (Bill needling people who do not
    read it). The register and genealogy stay a tab away; they are not the lobby. */
 const state = {view:'blog', q:'', filters:new Set(), sort:'name', dir:1,
-               selected:null, beast:null, people:null, vessel:null, blog:null, system:null,
+               selected:null, beast:null, people:null, person:null, vessel:null, blog:null, system:null,
                book:BOOK_MAX};
 
 /* ---- registers --------------------------------------------------------
@@ -1211,7 +1215,7 @@ const REGISTERS = [
      render();
      return true;
    }},
-  {id:'peoples',    label:'PEOPLES',    short:'PEOP',  tabGapAfter:true, render: renderPeoples,
+  {id:'peoples',    label:'PEOPLES',    short:'PEOP',  render: renderPeoples,
    rows: peoples,
    status: rows => {
      const all = (PEOPLES && PEOPLES.entries) || [];
@@ -1230,6 +1234,28 @@ const REGISTERS = [
      const hit = e.target.closest('[data-entry]');
      if (!hit) return false;
      state.people = state.people === hit.dataset.entry ? null : hit.dataset.entry;
+     render();
+     return true;
+   }},
+  {id:'persons',    label:'PERSONS',    short:'PERS',  tabGapAfter:true, render: renderPersons,
+   rows: persons,
+   status: rows => {
+     const all = (PERSONS && PERSONS.persons) || [];
+     statusLine(rows.length === all.length ? `${all.length} on file`
+                                           : `${rows.length} of ${all.length}`,
+                `${all.filter(p => p.kind === 'person').length} biological`,
+                `${all.filter(p => p.kind === 'ami').length} AMI`,
+                `${all.filter(p => p.kind === 'replicant').length} other replicants`);
+   },
+   dossier: () => state.person ? renderPersonDossier(state.person) : null,
+   onClick: e => {
+     const sys = e.target.closest('[data-sys]');
+     if (sys) { state.view = 'chart'; CHART.sel = sys.dataset.sys; render(); return true; }
+     const jump = e.target.closest('[data-person]');
+     if (jump) { state.person = jump.dataset.person; render(); return true; }
+     const hit = e.target.closest('[data-entry]');
+     if (!hit) return false;
+     state.person = state.person === hit.dataset.entry ? null : hit.dataset.entry;
      render();
      return true;
    }},
@@ -2469,6 +2495,16 @@ function renderDossier(){
       ${ch.length ? `<div class="sec"><div class="sec-label">CLONES ON RECORD — ${ch.length}</div>
         <div class="kids">${ch.map(c => `<button data-id="${c.id}">${esc(shown(c).name)}</button>`).join('<span class="dim"> · </span>')}</div></div>` : ''}
 
+      ${(() => {
+        const related = ((PERSONS && PERSONS.persons) || [])
+          .filter(p => !heldEntry(p) && (p.bobs || []).includes(b.id));
+        if (!related.length) return '';
+        return `<div class="sec"><div class="sec-label">PERSONS ON RECORD — ${related.length}</div>
+          <div class="kids">${related.map(p =>
+            `<a href="${addr('persons', p.id)}" data-person="${esc(p.id)}">${esc(p.name)}` +
+            `<span class="dim"> · ${esc(p.label)}</span></a>`).join('')}</div></div>`;
+      })()}
+
       ${feedSection('register', b.id)}
       ${(() => {
         // Our prose is the one thing no citation bounds, so it is held as a
@@ -2873,6 +2909,128 @@ function renderPeopleDossier(id){
           return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}</div>
       ${attachRow('peoples', e.id)}
       ${feedSection('peoples', e.id)}
+    </div>`;
+}
+
+/* ---- persons ----------------------------------------------------------
+   Named individuals who are not Heaven Bobs. Label beside the name is the
+   collision fix: Moses · Deltan stays distinct from any Bob Moses.
+   `substrate` is what they run on; `substrateFrom` spoiler-gates changes
+   (Bridget is biological until book 3, then replicated). */
+
+const SUBSTRATE_WORD = {
+  biological:   'biological',
+  replicated:   'replicated — matrix mind',
+  ami:          'AMI — not a Heaven matrix',
+  foreign_probe:'foreign probe replicant — not Original Bob’s line',
+};
+
+/* Before substrateFrom, change-arcs look biological so early readers are not
+   spoiled. Entries that appear already replicated set substrateFrom to their
+   cite book, so the whole card is held until then via heldEntry(cite). */
+function shownSubstrate(p){
+  const sub = p.substrate || 'biological';
+  const from = p.substrateFrom || 1;
+  if (gating() && past(from, state.book)) {
+    if (sub === 'replicated') return 'biological';
+    // ami / foreign_probe / biological: if the entry is visible, substrate is
+    // part of who they are at first meeting — do not invent a fake earlier form.
+  }
+  return sub;
+}
+
+function persons(){
+  const all = ((PERSONS && PERSONS.persons) || []).filter(p => !heldEntry(p));
+  const q = state.q.trim().toLowerCase();
+  const rows = !q ? all.slice() : all.filter(p =>
+    [p.name, p.label, p.role, p.kind, p.species, p.note, p.cite]
+      .some(v => v && String(v).toLowerCase().includes(q)));
+  const rank = {person: 0, ami: 1, replicant: 2};
+  return rows.sort((a, b) =>
+    (rank[a.kind] || 0) - (rank[b.kind] || 0) ||
+    a.label.localeCompare(b.label) ||
+    a.name.localeCompare(b.name));
+}
+
+function renderPersons(rows){
+  if (!PERSONS) return `<p class="empty">[PERSONS REGISTER UNAVAILABLE]</p>`;
+  const all = PERSONS.persons || [];
+  if (!rows.length) return `<p class="empty">[NO MATCH IN ${all.length} ENTRIES]</p>`;
+
+  const card = p => `
+    <button class="entry" data-entry="${esc(p.id)}" aria-pressed="${state.person === p.id}">
+      <span class="entry-mark" aria-hidden="true">${p.kind === 'person' ? '◆' : '◇'}</span>
+      <span class="entry-body">
+        <b>${esc(p.name)}</b><span class="dim exp">${esc(p.label)}</span>
+        <span class="dim">${esc(p.role)}</span>
+      </span>
+    </button>`;
+
+  const bio = rows.filter(p => p.kind === 'person');
+  const ami = rows.filter(p => p.kind === 'ami');
+  const reps = rows.filter(p => p.kind === 'replicant');
+  const byLabel = {};
+  for (const p of bio) (byLabel[p.label] || (byLabel[p.label] = [])).push(p);
+  const groups = Object.keys(byLabel).sort().map(label =>
+    `<div class="sec"><div class="sec-label">${esc(label).toUpperCase()}</div>` +
+    `<div class="entries">${byLabel[label].map(card).join('')}</div></div>`).join('');
+
+  return `<div class="reg-lead"><span class="redacted">[</span>${
+      rows.length === all.length ? `${all.length} on file` : `${rows.length} of ${all.length}`
+    }<span class="redacted">]</span><br><br>
+    Named individuals who are not Heaven-vessel Bobs. The short label beside each
+    name is deliberate — Moses the Deltan is not a Bob named Moses. Bios run longer
+    for the people the books keep returning to. Australian (and other) probe minds
+    that are not Original Bob’s line sit here too, not in the Bob register.</div>
+    ${groups}
+    ${ami.length ? `<div class="sec"><div class="sec-label">AMI — NOT A HEAVEN MATRIX</div><div class="entries">${ami.map(card).join('')}</div></div>` : ''}
+    ${reps.length ? `<div class="sec"><div class="sec-label">OTHER REPLICANTS — NOT BOB JOHANSSON’S LINE</div><div class="entries">${reps.map(card).join('')}</div></div>` : ''}`;
+}
+
+function renderPersonDossier(id){
+  const p = personById(id);
+  if (!p || heldEntry(p)) return null;
+  const f = (label, val) => val ? `<div class="f"><dt>${label}</dt><dd>${esc(val)}</dd></div>` : '';
+  const species = p.species && peopleById(p.species);
+  const sys = p.system && SYS[p.system];
+  return `
+    <div class="dossier-head">
+      <div>
+        <div class="serial">[${esc(p.label).toUpperCase()}]</div>
+        <h2>${esc(p.name)}</h2>
+        <div class="sub">${esc(p.role)}</div>
+      </div>
+      <button class="dossier-close" id="d-close" aria-label="Close">✕</button>
+    </div>
+    <div class="dossier-body">
+    <dl class="fields">
+      ${f('KIND', p.kind === 'ami' ? 'AMI'
+        : p.kind === 'replicant' ? 'foreign replicant'
+        : 'person')}
+      ${species ? `<div class="f"><dt>SPECIES</dt><dd><a href="${addr('peoples', species.id)}" data-people="${esc(species.id)}">${esc(species.name)}</a></dd></div>` : ''}
+      ${f('LABEL', p.label)}
+      ${f('SUBSTRATE', SUBSTRATE_WORD[shownSubstrate(p)] || shownSubstrate(p))}
+      ${f('FIRST ON RECORD', citeUpTo(p.cite))}
+    </dl>
+    ${(p.bobs || []).length ? `<div class="sec"><div class="sec-label">RELATED REPLICANTS</div>
+      <div class="kids">${p.bobs.filter(id => byId[id] && !heldRecord(byId[id])).map(id =>
+        linkTo('register', id, shown(byId[id]).name)).join('')}</div></div>` : ''}
+    ${(p.also || []).length ? `<div class="sec"><div class="sec-label">NAME COLLISION — NOT THE SAME PERSON</div>
+      <div class="kids">${p.also.map(aid => {
+        const bob = byId[aid];
+        const other = personById(aid);
+        if (bob && !heldRecord(bob)) return linkTo('register', aid, shown(bob).name + ' (Bob)');
+        if (other && !heldEntry(other))
+          return `<a href="${addr('persons', other.id)}" data-person="${esc(other.id)}">${esc(other.name)} · ${esc(other.label)}</a>`;
+        return '';
+      }).filter(Boolean).join('')}</div></div>` : ''}
+    ${sys ? `<div class="sec"><div class="sec-label">SYSTEM</div>
+      <p class="note"><a href="${addr('chart', p.system)}" data-sys="${esc(p.system)}">${esc(sys.name)}</a></p></div>` : ''}
+    <div class="sec"><div class="sec-label">ANNOTATION — REGISTRY EDITOR, NOT BOBNET</div>
+      ${(() => { const g = proseGated(p.note, p);
+          return g.shown ? g.html + (g.held ? somewithheld(g.held) : '') : withheld('ANNOTATION'); })()}</div>
+      ${attachRow('persons', p.id)}
+      ${feedSection('persons', p.id)}
     </div>`;
 }
 
@@ -3514,6 +3672,8 @@ function renderPost(id){
           const name = view === 'chart' ? sysName(id)
             : view === 'bestiary' ? (beastById(id) || {}).name
             : view === 'peoples' ? (peopleById(id) || {}).name
+            : view === 'persons' ? (personById(id) || {}).name
+            : view === 'vessels' ? (vesselById(id) || {}).name
             : view === 'blog' ? (postById(id) || {}).title
             : (byId[id] ? shown(byId[id]).name : null);
           return name ? [view, id, name] : null;
@@ -3690,6 +3850,7 @@ function select(id){
    new register declares itself here and nowhere else. */
 const beastById  = id => ((BESTIARY?.creatures || []).find(c => c.id === id));
 const peopleById = id => ((PEOPLES?.entries  || []).find(e => e.id === id));
+const personById = id => ((PERSONS?.persons  || []).find(p => p.id === id));
 const postById   = id => ((BLOG?.posts     || []).find(p => p.id === id));
 // vesselById is declared with the vessels register above
 
@@ -3706,6 +3867,8 @@ const SEL = {
              held: v => heldEntry(beastById(v) || {})},
   peoples:  {get: () => state.people,    set: v => state.people = v,    ok: v => (PEOPLES?.entries || []).some(e => e.id === v),
              held: v => heldEntry(peopleById(v) || {})},
+  persons:  {get: () => state.person,    set: v => state.person = v,    ok: v => (PERSONS?.persons || []).some(p => p.id === v),
+             held: v => heldEntry(personById(v) || {})},
   vessels:  {get: () => state.vessel,    set: v => state.vessel = v,    ok: v => !!(VESSELS?.vessels || []).some(x => x.id === v),
              held: v => heldEntry(vesselById(v) || {})},
   blog:     {get: () => state.blog,      set: v => state.blog = v,      ok: v => (BLOG?.posts || []).some(p => p.id === v),

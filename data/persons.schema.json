@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Bobiverse persons — named individuals who are not Heaven replicants",
+  "type": "object",
+  "required": ["persons"],
+  "properties": {
+    "_comment": { "type": "string" },
+    "persons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "kind", "label", "substrate", "substrateFrom", "role", "cite", "note", "spoil"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$",
+            "description": "Stable key. Holotank plates may later hang on persons/<id>."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name as the books use it (Bridget Sheehy, Theresa Sykorski)."
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["person", "ami", "replicant"],
+            "description": "person = biological individual; ami = artificial body/mind that is not a Bob matrix (Charlie); replicant = uploaded human mind that is not Original Bob's Heaven line (Henry Roberts)."
+          },
+          "label": {
+            "type": "string",
+            "description": "Short disambiguator shown beside the name — human, Deltan, Quinlan, AMI, Australian replicant, etc."
+          },
+          "species": {
+            "type": "string",
+            "description": "peoples.json id with kind people. Required for kind person and replicant; omitted for ami."
+          },
+          "substrate": {
+            "type": "string",
+            "enum": ["biological", "replicated", "ami", "foreign_probe"],
+            "description": "What they run on as of the end of the cited corpus. Separate from species: Bridget is human who becomes replicated; Henry is human mind on a foreign probe."
+          },
+          "substrateFrom": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Earliest book that may show the true substrate. Before that book (when gating), the console shows biological for change-arcs (Bridget). Entries met already replicated set this to their cite book."
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 72,
+            "description": "Short job headline only — not a second bio. Open the cite chapter before writing it; do not invent titles."
+          },
+          "cite": {
+            "type": "string",
+            "description": "Chapter that establishes this entry. validate.py requires that chapter's corpus text to mention them."
+          },
+          "note": {
+            "type": "string",
+            "description": "Biography. Length tracks importance. Every factual claim must be supportable from the cite (or @bk paragraphs). Never book text. Never invent AMI/job classifications."
+          },
+          "spoil": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Latest book the bio's ungated prose draws on; later books use @bk paragraphs."
+          },
+          "bobs": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Related Bob ids (Howard↔Bridget, Bob-1↔Landers)."
+          },
+          "system": {
+            "type": "string",
+            "description": "systems.json id when the person is strongly placed."
+          },
+          "also": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Other persons or bobs ids that share a bare name — collision pointers, not merges."
+          }
+        }
+      }
+    }
+  }
+}

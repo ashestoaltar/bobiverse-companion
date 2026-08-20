@@ -12,6 +12,11 @@ owns code, data, tests, and media; suggest improvements freely; “locked”
 choices are not sacred if quality demands change. Living backlog:
 `data/todo.json`. This file stays ground rules and data layout.
 
+**Near-term (2026-08-17 wrap):** prefer **code/data/console product** until the
+owner says otherwise; Imagine stills/video are parked PoCs (see
+`ideas/experiments/scene-ee-standoff/`, moot empty hall + Jeeves locks in
+`ideas/`). Do not burn quota on multi-subject composites without a plan.
+
 **3D holotank assets:** `assets/holo-models/*.glb`, viewer bundle
 `assets/holo3d/holo3d.js`, plate field `model` in `data/holo.json`. Spike tools
 under `ideas/experiments/holotank-3d/`.
@@ -1363,10 +1368,32 @@ The same machinery — corpus, extractor, validator, console — carries every
 register. Each needs its own data file, schema and view, and nothing else.
 
 **Built:** the star chart (`systems.json`), the system map, the bestiary
-(`bestiary.json`), peoples and polities (`peoples.json`), In Memorium
-(`memorium.json`, plus `fate` on each Bob), the blog (`blog.json`) and the
-timeline. **Still to come:** ship designs, the holotank, and the second passes
-recorded in `data/todo.json`.
+(`bestiary.json`), peoples and polities (`peoples.json`), vessels
+(`vessels.json`), persons (`persons.json`), In Memorium (`memorium.json`, plus
+`fate` on each Bob), the blog (`blog.json`), the timeline, and the holotank.
+**Still open:** content second passes and research nulls in `data/todo.json`.
+
+**Persons (`data/persons.json`).** Named individuals who are **not** Heaven
+Bobs (Original Bob’s clone tree). Species/polities stay in `peoples.json`;
+lineage stays in `bobs.json`. Includes biological people, ex-humans, foreign
+probe replicants (Henry Roberts — not a Bob), and AMIs (Charlie).
+
+**Species vs substrate:** `label`/`species` = who they are; `substrate` =
+biological | replicated | ami | foreign_probe. **`substrateFrom`** = earliest
+book that may show the true substrate. Before that book, change-arcs display as
+**biological** (Bridget replicates in Bk3 — critical spoiler). Entries met
+already replicated (Gilligan, Turnbull) set `substrateFrom` to their cite book
+so the whole card is held until then.
+
+**Persons bio discipline — non-negotiable (learned the hard way):**
+
+1. **Open the cite chapter in the corpus before writing `role` or `note`.**
+2. **Every factual claim must be supportable from that cite** (or `@bk`).
+3. **Do not invent jobs** or AMI classifications (Archimedes is a Deltan).
+4. **Spoiler-gate substrate changes** with `substrateFrom` + `@bk` prose — never
+   put “she replicated” in an early ungated paragraph.
+5. **`role` stays a short headline** (validator caps length).
+6. Cite-chapter mention check is necessary, not sufficient.
 
 **Three of those own no data file of their own** — In Memorium, the timeline and
 the map — and that is the pattern to reach for first. Each is an axis over

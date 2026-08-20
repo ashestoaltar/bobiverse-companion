@@ -1,0 +1,462 @@
+{
+  "_comment": "Named individuals who are not Heaven-vessel Bobs (Original Bob’s clone tree stays in bobs.json).\n\nFIELDS: species/label = who they are; substrate = what they run on (biological | replicated | ami | foreign_probe). substrateFrom = earliest book that may show the true substrate — before that, the console shows biological for arcs that change (Bridget replicates in Bk3). Gilligan/Turnbull appear already replicated at first cite.\n\nBIO DISCIPLINE: open the cite chapter before writing role/note; no invented jobs; kind ami / foreign_probe need textual evidence; validate checks cite mentions them.\n\nHenry Roberts is an Australian probe replicant — not a Bob. Bridget is human who later replicates — spoiler-gate substrateFrom.",
+  "persons": [
+    {
+      "id": "bridget",
+      "name": "Bridget Sheehy",
+      "kind": "person",
+      "label": "human",
+      "species": "humans",
+      "substrate": "replicated",
+      "substrateFrom": 3,
+      "role": "Senior biologist, Vulcan; Howard’s partner",
+      "cite": "Bk2 ch25 · Howard",
+      "spoil": 2,
+      "bobs": [
+        "howard"
+      ],
+      "system": "omicron2_eridani",
+      "note": "Dr. Bridget Sheehy — senior biologist for the Vulcan colony and Howard’s partner (Cast of Characters; Bk2). Mother of Howie with Stéphane Brodeur.\n\n@bk3 After her death she is scanned and woken in a matrix — the first non-Bob Heaven-adjacent replication arc Howard fights the courts for (Bk3). Until that book she is biological only.\n\n@bk4 Travels and surveys with Howard beyond Vulcan.\n\n@bk5 Present among human guests at later moots; her name for the anti-manny movement (Luddies) is used in-world."
+    },
+    {
+      "id": "draper",
+      "name": "Chief Draper",
+      "kind": "person",
+      "label": "human",
+      "species": "humans",
+      "substrate": "biological",
+      "substrateFrom": 2,
+      "role": "Poseidon colony chief",
+      "cite": "Bk2 ch49 · Mulder",
+      "spoil": 2,
+      "bobs": [
+        "mulder",
+        "marcus"
+      ],
+      "note": "Human chief of the Poseidon setup — the one Monty and Marcus expect to blow up when schedules slip (Bk2 ch49). Colony-side hinge at Poseidon; not a Bob."
+    },
+    {
+      "id": "butterworth",
+      "name": "Colonel Butterworth",
+      "kind": "person",
+      "label": "human",
+      "species": "humans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "USE colonel; Earth enclave, then Vulcan colony",
+      "cite": "Bk1 ch26 · Riker",
+      "spoil": 1,
+      "bobs": [
+        "riker"
+      ],
+      "system": "sol",
+      "note": "Colonel Butterworth of the USE Army Corps — leads the USE refuge after Sol is ruined and later the USE settlement on Vulcan (Cast of Characters; Bk1 ch26). Riker’s hard-bargaining counterpart for the first colony ships.\n\nNot VEHEMENT. When that fringe appears he only unpacks their name for Riker and hedges it (Bk1 ch38).\n\n@bk3 He retires on Vulcan and chooses death over a posthumous scan."
+    },
+    {
+      "id": "landers",
+      "name": "Dr. Landers",
+      "kind": "person",
+      "label": "human",
+      "species": "humans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "FAITH physician; wakes the original Bob",
+      "cite": "Bk1 ch2 · Bob, Jun 2133",
+      "spoil": 1,
+      "bobs": [
+        "bob1"
+      ],
+      "system": "sol",
+      "note": "The CryoEterna / FAITH doctor who greets Bob after the car accident memory — June 2133, New Handeltown — and walks him through what he has become (Bk1 ch2). He expands USE on the page. Structural hinge: first human face of the program that printed Bob into a probe. Role stops there; he is not a colony governor or VEHEMENT contact."
+    },
+    {
+      "id": "valter",
+      "name": "Gudmund Valter",
+      "kind": "person",
+      "label": "human",
+      "species": "humans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "Spitsbergen enclave leader",
+      "cite": "Bk1 ch33 · Riker",
+      "spoil": 1,
+      "bobs": [
+        "riker"
+      ],
+      "system": "sol",
+      "note": "Cast: Spitsbergen enclave leader on post-war Earth. Ex-military, abrupt; bargains with Riker over winter food and emigration priority while the Spits hold the Svalbard vaults as leverage (Bk1)."
+    },
+    {
+      "id": "hector_rodriguez",
+      "name": "Hector Rodriguez",
+      "kind": "person",
+      "label": "human",
+      "species": "humans",
+      "substrate": "biological",
+      "substrateFrom": 5,
+      "role": "Human huey-venture lead",
+      "cite": "Bk5 ch33 · Howard",
+      "spoil": 5,
+      "bobs": [
+        "howard",
+        "riker"
+      ],
+      "also": [
+        "hector",
+        "hector18"
+      ],
+      "note": "Human. Introduces himself to Howard and Bridget as Hector Rodriguez while pitching the huey commercial plan against Luddie fear (Bk5 ch33). Later shows more fight than Howard first credited; Will has advised him (Bk5 ch45).\n\nNot either Bob named Hector on the register. Those two stay on bobs.json with a conflict; this card is the human third."
+    },
+    {
+      "id": "julia_hendricks",
+      "name": "Julia Hendricks",
+      "kind": "person",
+      "label": "human",
+      "species": "humans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "Andrea’s descendant; Clan Bob matriarch",
+      "cite": "Bk1 ch38 · Riker",
+      "spoil": 3,
+      "bobs": [
+        "riker"
+      ],
+      "system": "sol",
+      "note": "Andrea Johansson’s three-times-great granddaughter — Riker’s first living family contact after Sol (Bk1 ch38). She anchors Clan Bob through the Exodus to Vulcan space and the long video visits.\n\n@bk3 Dies of an aneurysm on Vulcan; Will borrows Howard’s manny for the hospital and funeral (Bk3 ch12)."
+    },
+    {
+      "id": "justin_hendricks",
+      "name": "Justin Hendricks",
+      "kind": "person",
+      "label": "human",
+      "species": "humans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "Julia’s son; Riker’s ‘Space Cadet’",
+      "cite": "Bk1 ch54 · Riker",
+      "spoil": 3,
+      "bobs": [
+        "riker"
+      ],
+      "system": "sol",
+      "note": "Julia’s son — Space Cadet Justin on her lap in the early calls (Bk1 ch54). Grows up calling Will uncle; brings news of Julia’s collapse; asks Will to be a pallbearer (Bk3 ch12).\n\n@bk3 Later clan patriarch; on his seventy-fifth birthday still refuses replication (Bk3 ch53). Not every Hendricks child is filed — Justin is the one with the arc."
+    },
+    {
+      "id": "cranston",
+      "name": "Minister Cranston",
+      "kind": "person",
+      "label": "human",
+      "species": "humans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "FAITH enclave lead; Romulus colony",
+      "cite": "Bk1 ch33 · Riker",
+      "spoil": 2,
+      "bobs": [
+        "riker"
+      ],
+      "system": "sol",
+      "note": "Minister Michael Cranston — Cast: FAITH post-war enclave and FAITH Romulus colony. Riker’s FAITH counterpart in the emigration fights (Bk1); stages Julia Hendricks’s introduction to pressure the famous ancestor. Not USE; not Butterworth."
+    },
+    {
+      "id": "hannah_turnbull",
+      "name": "Professor Hannah Turnbull",
+      "kind": "person",
+      "label": "ex-human",
+      "species": "humans",
+      "substrate": "replicated",
+      "substrateFrom": 5,
+      "role": "Post-life physicist; warp collaborator",
+      "cite": "Bk5 ch19 · Bill",
+      "spoil": 5,
+      "bobs": [
+        "bill"
+      ],
+      "note": "Professor Hannah Turnbull — transitions to post-life after a heart attack (Bk5 ch19); Bill meets her as a replicant avatar. Works on warp/FTL ideas; select moot guest (Bk5 ch61). Ex-human, not a Heaven Bob."
+    },
+    {
+      "id": "steven_gilligan",
+      "name": "Professor Steven Gilligan",
+      "kind": "person",
+      "label": "ex-human",
+      "species": "humans",
+      "substrate": "replicated",
+      "substrateFrom": 4,
+      "role": "Post-life academic; megastructure expert",
+      "cite": "Bk4 ch16 · Will",
+      "spoil": 5,
+      "bobs": [
+        "riker"
+      ],
+      "note": "Professor Steven Gilligan — met already as a post-life mind in virt (“when he was alive…”, Bk4 ch16). Artificial-environments specialist; later moot regular with Bridget and Turnbull (Bk5). Ex-human replicant, not a Heaven Bob."
+    },
+    {
+      "id": "stephane_brodeur",
+      "name": "Stéphane Brodeur",
+      "kind": "person",
+      "label": "human",
+      "species": "humans",
+      "substrate": "biological",
+      "substrateFrom": 2,
+      "role": "Vulcan security chief; Bridget’s partner",
+      "cite": "Bk2 ch2 · Howard",
+      "spoil": 2,
+      "bobs": [
+        "howard"
+      ],
+      "system": "omicron2_eridani",
+      "note": "Head of security for the Vulcan colony — Cast ties him to Bridget as Howie’s other parent (Stéphane). Field lead against raptors and fence work with Howard’s drones (Bk2). Human, not a Bob; not Professor Steven Gilligan."
+    },
+    {
+      "id": "archimedes",
+      "name": "Archimedes",
+      "kind": "person",
+      "label": "Deltan",
+      "species": "deltans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "Deltan flint-worker; Bob’s friend on Eden",
+      "cite": "Bk1 ch30 · Bob",
+      "spoil": 3,
+      "bobs": [
+        "bob1",
+        "marvin"
+      ],
+      "system": "delta_eridani",
+      "note": "Cast of Characters: Deltan native that Bob befriends — not an AMI. Bob names him from tribe/cohort tags (C.3.41) and watches a solitary juvenile learn tools and flint; Moses teaches him knapping; Diana is his mate; Buster his eldest son.\n\n@bk3 Bob lives among the Deltans in an android for years; Archimedes’s illness and funeral on Eden are when Bob leaves the tribe (Bk3 ch68–70)."
+    },
+    {
+      "id": "arnold",
+      "name": "Arnold",
+      "kind": "person",
+      "label": "Deltan",
+      "species": "deltans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "Deltan warrior; Bob’s name for him",
+      "cite": "Bk1 ch35 · Bob",
+      "spoil": 1,
+      "bobs": [
+        "bob1"
+      ],
+      "system": "delta_eridani",
+      "note": "Cast of Characters: large Deltan warrior. Bob assigns the name; he is the imposing fighter in the early gorilloid fights who leans over opponents and sticks spears (Bk1). Short entry — supporting cast."
+    },
+    {
+      "id": "belinda",
+      "name": "Belinda",
+      "kind": "person",
+      "label": "Deltan",
+      "species": "deltans",
+      "substrate": "biological",
+      "substrateFrom": 2,
+      "role": "Buster’s mate",
+      "cite": "Bk2 ch41 · Bob",
+      "spoil": 4,
+      "bobs": [
+        "bob1"
+      ],
+      "system": "delta_eridani",
+      "note": "Cast: Buster’s mate. Stands with Diana and spears when the family is under threat (Bk2); later with Archimedes as a grandmother (Bk2 ch65). @bk4 Distinct from Theresa’s granddaughter Belinda the Quinlan — this Belinda is Deltan."
+    },
+    {
+      "id": "buster",
+      "name": "Buster",
+      "kind": "person",
+      "label": "Deltan",
+      "species": "deltans",
+      "substrate": "biological",
+      "substrateFrom": 2,
+      "role": "Archimedes’s eldest son",
+      "cite": "Bk2 ch22 · Bob",
+      "spoil": 3,
+      "bobs": [
+        "bob1"
+      ],
+      "system": "delta_eridani",
+      "note": "Cast: Archimedes’s eldest son. Wants to make tools; grows into the family Bob stays close to — bows at the riot’s edge, new pups with Belinda, and Archimedes’s last days (Bk2–3). One of the Deltans with real page-time after Archimedes."
+    },
+    {
+      "id": "cruella",
+      "name": "Cruella",
+      "kind": "person",
+      "label": "Deltan",
+      "species": "deltans",
+      "substrate": "biological",
+      "substrateFrom": 2,
+      "role": "Deltan medicine woman",
+      "cite": "Bk2 ch1 · Bob",
+      "spoil": 2,
+      "bobs": [
+        "bob1"
+      ],
+      "system": "delta_eridani",
+      "note": "Cast: Deltan medicine woman. Bob’s name for her; she argues with his drones and tends wounds in Camelot (Bk2 ch1). Supporting; short entry."
+    },
+    {
+      "id": "diana",
+      "name": "Diana",
+      "kind": "person",
+      "label": "Deltan",
+      "species": "deltans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "Archimedes’s mate",
+      "cite": "Bk1 ch53 · Bob",
+      "spoil": 2,
+      "bobs": [
+        "bob1"
+      ],
+      "system": "delta_eridani",
+      "note": "Cast: Archimedes’s mate, Deltan native. Bob names her; early on she fears the drone but stays with Archimedes (Bk1). Later stands with spears beside Belinda when the family is threatened (Bk2)."
+    },
+    {
+      "id": "donald",
+      "name": "Donald",
+      "kind": "person",
+      "label": "Deltan",
+      "species": "deltans",
+      "substrate": "biological",
+      "substrateFrom": 2,
+      "role": "Arnold’s son",
+      "cite": "Bk2 ch56 · Bob",
+      "spoil": 2,
+      "bobs": [
+        "bob1"
+      ],
+      "system": "delta_eridani",
+      "note": "Cast: Arnold’s son, Deltan. Shows up in hexghi contests opposite Buster — uncomfortable but won’t back down (Bk2 ch56). Supporting cast; short entry."
+    },
+    {
+      "id": "hoffa",
+      "name": "Hoffa",
+      "kind": "person",
+      "label": "Deltan",
+      "species": "deltans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "Camelot council leader",
+      "cite": "Bk1 ch44 · Bob",
+      "spoil": 2,
+      "bobs": [
+        "bob1"
+      ],
+      "system": "delta_eridani",
+      "note": "Cast: Deltan native, council leader in Camelot. Bob’s name; early interlocutor about the floating probe and gorilloids (Bk1 ch44), still pressing Bob later (Bk2)."
+    },
+    {
+      "id": "moses",
+      "name": "Moses",
+      "kind": "person",
+      "label": "Deltan",
+      "species": "deltans",
+      "substrate": "biological",
+      "substrateFrom": 1,
+      "role": "Deltan elder; teaches Archimedes flint",
+      "cite": "Bk1 ch35 · Bob",
+      "spoil": 1,
+      "bobs": [
+        "bob1"
+      ],
+      "system": "delta_eridani",
+      "note": "Cast of Characters: Deltan native, elder who teaches Archimedes flint-work. Bob invents the name ‘for no good reason’ (Bk1 ch35). Label Deltan is load-bearing if a Bob ever shares the name."
+    },
+    {
+      "id": "theresa_sykorski",
+      "name": "Theresa Sykorski",
+      "kind": "person",
+      "label": "Quinlan",
+      "species": "quinlans",
+      "substrate": "biological",
+      "substrateFrom": 4,
+      "role": "Quinlan elder; Bob’s ally",
+      "cite": "Bk4 ch54 · Bob",
+      "spoil": 4,
+      "bobs": [
+        "bob1"
+      ],
+      "note": "Quinlan — Belinda’s grandmother in the Heaven’s River chapters; too old for long swims, sharp-tongued, and one of the Quinlans Bob befriends (Bk4 ch54 names her Theresa Sykorski).\n\n@bk5 Appears at a moot in human avatar among Bridget and other human guests. Biological Quinlan, not ANEC."
+    },
+    {
+      "id": "charlie",
+      "name": "Charlie",
+      "kind": "ami",
+      "label": "AMI",
+      "substrate": "ami",
+      "substrateFrom": 2,
+      "role": "Bob’s Deltan-configured android",
+      "cite": "Bk2 ch71 · Bob",
+      "spoil": 2,
+      "bobs": [
+        "bob1"
+      ],
+      "system": "delta_eridani",
+      "note": "Cast: Bob’s Deltan-configured android — AMI, not a Heaven replicant matrix and not a biological Deltan. Bob builds and wears him to walk among Archimedes’s people (Bk2 ch71). Artificial body/mind interface Bob inhabits; keep kind ami."
+    },
+    {
+      "id": "henry_roberts",
+      "name": "Henry Roberts",
+      "kind": "replicant",
+      "label": "Australian replicant",
+      "species": "humans",
+      "substrate": "foreign_probe",
+      "substrateFrom": 1,
+      "role": "Australian probe mind; not a Heaven Bob",
+      "cite": "Bk1 ch40 · Linus",
+      "spoil": 2,
+      "bobs": [
+        "linus",
+        "bill"
+      ],
+      "also": [
+        "medeiros",
+        "matias_araujo"
+      ],
+      "note": "Cast: the Australian replicant. Linus finds him at Epsilon Indi after sensory deprivation left him sailing a VR boat and inventing torturers (Bk1 ch40). Bill welcomes him explicitly as not a Bob (Bk2 ch32). He recovers enough to attend moots, refuses to clone, and takes to sailing human waters (Bk3). File here — not on bobs.json — because he is another nation’s matrix, not Original Bob’s line."
+    },
+    {
+      "id": "medeiros",
+      "name": "Major Ernesto Medeiros",
+      "kind": "replicant",
+      "label": "Brazilian replicant",
+      "species": "humans",
+      "substrate": "foreign_probe",
+      "substrateFrom": 1,
+      "role": "Brazilian Empire replicant; many copies",
+      "cite": "Bk1 ch15 · Bob, Sep 2144",
+      "spoil": 3,
+      "bobs": [
+        "bob1",
+        "milo"
+      ],
+      "system": "epsilon_eridani",
+      "also": [
+        "matias_araujo",
+        "henry_roberts"
+      ],
+      "note": "Cast lists him as the Brazilian Empire’s replicant programme: many matrices, not one hull. Bob’s first contact is audio-only at Epsilon Eridani on Serra do Mar (Bk1 ch15) — Major Ernesto Medeiros answering. Calvin and Goku kill a copy at Alpha Centauri; another kills Milo at 82 Eridani and draws Bill’s revenge fleet. File here — not on bobs.json — because this is another nation’s matrix line, not Original Bob’s.\n\n@bk3 A Medeiros is still hunting printers and Bobs at 82 Eridani until the system is finally cleared."
+    },
+    {
+      "id": "matias_araujo",
+      "name": "Captain Matias Araújo",
+      "kind": "replicant",
+      "label": "Brazilian replicant",
+      "species": "humans",
+      "substrate": "foreign_probe",
+      "substrateFrom": 1,
+      "role": "Brazilian war-probe captain at Sol",
+      "cite": "Bk1 ch24 · Riker, Apr 2157",
+      "spoil": 1,
+      "bobs": [
+        "riker",
+        "homer"
+      ],
+      "system": "sol",
+      "also": [
+        "medeiros",
+        "henry_roberts"
+      ],
+      "note": "Not Medeiros. When Riker challenges the Sol Brazilian war-probes, the voice that answers names itself Captain Matias Araújo and promises to be their end (Bk1 ch24). Homer and Riker then talk about the Araújos as a gang: last armed tech left in-system after the ground war, yard broken, no autofactory aboard, rocks aimed at China for revenge. The Bobs wipe them. Same class of foreign probe replicant as Medeiros, different mind, Sol-only — Cast foregrounds Medeiros; this name appears once. File here, not on bobs.json."
+    }
+  ]
+}

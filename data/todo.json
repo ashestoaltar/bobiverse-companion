@@ -44,28 +44,28 @@
     },
     {
       "cat": "Genealogy",
-      "text": "Chase the 12 remaining dropped-source leads through the text",
-      "note": "Twelve left, all from the fandom wiki; the eighteen from Taylor's tree were settled by the genealogy printed in book 2. The claim isn't drawn, but it says where to look. Anything the books confirm gets promoted; anything they contradict is worth writing up."
+      "text": "Chase the remaining dropped-source leads through the text",
+      "note": "Nine left after 2026-08-17 tidy (was twelve). Promoted from books: Icarus and Daedalus under Bill (Bk3 ch6); Isaac already under Bart (Bk3 ch21) — stale priorClaims removed. Still open wiki leads: Jeffrey, Milton, Zeke (→Bill); Hugh (→Bill, soft 'descendant' only); Owen, Jack (→Bart); Sam, Monty, Harvey (→Will). Anything the books confirm gets promoted; anything they contradict is worth writing up."
     },
     {
       "cat": "Genealogy",
       "text": "Marcus — parentage",
-      "note": "Ten POV chapters across books 3 and 4, and no source anywhere names who built him. The last major POV character still unaccounted for."
+      "note": "Ten POV chapters across books 3 and 4, and no source anywhere names who built him. First on-page at Poseidon with Mulder and Monty (Bk2 ch49); not in the printed genealogy. Corpus re-check 2026-08-17: still null. Soft cohort association with Mulder's Poseidon setup is not enough for an edge. The last major POV character still unaccounted for."
     },
     {
       "cat": "Genealogy",
-      "text": "Thor, Jeffrey, Milton, Zeke — parentage",
-      "note": "Jeffrey, Milton and Zeke have a citation for their deaths at 82 Eridani. Nothing names who made them."
+      "text": "Jeffrey, Milton, Zeke — parentage",
+      "note": "Thor settled under Calvin by Bk2 · Genealogy (tier T). Jeffrey, Milton and Zeke still have a citation only for their deaths at 82 Eridani (Bk2 ch50 · Loki); nothing names who made them. Wiki priorClaim under Bill remains a research lead only."
     },
     {
       "cat": "Genealogy",
       "text": "Resolve the Hector collision",
-      "note": "A third-generation Hector lost at 82 Eridani and an ~18th-generation Hector emailing Bill in 2343. Either the naming convention broke down or they're two Bobs. Currently two records and the only standing validator warning."
+      "note": "Two Bob records plus a human: (1) early Hector lost with Tom at 82 Eridani (Bk1 ch60 · Khan); (2) ~18th-generation Hector emailing Bill in 2343 (Bk5 ch38 — Bill does not recognize the name); (3) Hector Rodriguez, human (Bk5 ch33+). Corpus re-check 2026-08-17: nothing merges the two Bobs. Conflict on hector18 stands. Currently two records and the only standing validator warning if still flagged."
     },
     {
       "cat": "Genealogy",
       "text": "Verne — parentage beyond the appendix",
-      "note": "Settled as Bill's clone by the Cast of Characters. The narrative only ever put him on Loki's crew at 82 Eridani, which was suggestive and never stated. Worth a look for a narrative confirmation."
+      "note": "Settled as Bill's clone by the Cast of Characters (tier T, cite Bk2 · Cast of Characters). The narrative only ever puts him on Loki's crew at 82 Eridani (Bk2 ch50), which was suggestive and never states parentage. Corpus re-check 2026-08-17: still no narrative confirmation beyond the appendix. Optional nice-to-have, not a broken edge."
     },
     {
       "cat": "Biography",
@@ -291,7 +291,13 @@
     {
       "cat": "BobNet",
       "text": "Holotank, the rest of the captures",
-      "note": "Mechanism done (2D + optional 3D). Content remains.\n\n**Done:** vessels register; Heaven g1–g4 stills; Serra + death asteroid stills; gorilloid dual-mode; 3D orbit on vessel-heaven-1 (concept loved).\n\n**Redo:** Heaven gen 1 GLB looks tattered (heavy decimate + no textures for first live). Owner will regenerate quality mesh; size optimization deferred.\n\nStill open: more models/stills; Linus aged-VR; Heaven-5; network topology + galaxy later. Full handoff: ideas/README.md (2026-08-16 EOD)."
+      "note": "Mechanism done (2D + optional 3D). Content remains.\n\n**Done:** vessels register; Heaven g1–g4 stills; Serra + death asteroid stills; gorilloid dual-mode; 3D orbit on vessel-heaven-1 (concept loved).\n\n**Redo:** Heaven gen 1 GLB looks tattered (heavy decimate + no textures for first live). Owner will regenerate quality mesh; size optimization deferred.\n\n**Parked art (2026-08-17):** empty moot-hall still (ideas/moot-hall-empty-angled.jpg) + Jeeves lock (ideas/jeeves-locked.jpg); populated moot abandoned for now. EE standoff scene video PoC in ideas/experiments/scene-ee-standoff/out/ee-standoff.mp4 — not shipping. Owner: code/product first, Imagine later. Full handoff: ideas/README.md (2026-08-17 wrap)."
+    },
+    {
+      "cat": "BobNet",
+      "text": "Book 1 scene video PoC — EE standoff",
+      "note": "Done as proof of concept only, not in dist/. Heaven-1 vs Serra do Mar (Bk1 ch15). Pipeline: locked ship stills → keyframes → owner Imagine clips externally (in-session image_to_video blocked on ZDR) → FFmpeg concat → ideas/experiments/scene-ee-standoff/out/ee-standoff.mp4. Polish/ship later if wanted.",
+      "done": true
     },
     {
       "cat": "Companion registers",
@@ -309,6 +315,12 @@
       "cat": "BobNet",
       "text": "3D holotank orbit (concept)",
       "note": "Done as first ship: open attachment → 3D ORBIT / STILL toggle; offline Three IIFE; modelSrc on plates; zero external requests. Owner happy with concept 2026-08-16. Mesh quality pass is a separate open item.",
+      "done": true
+    },
+    {
+      "cat": "Companion registers",
+      "text": "Persons register — named non-replicants",
+      "note": "Done as first ship 2026-08-17; bios re-audited same day after false AMI/VEHEMENT classifications. Seed: Landers, Butterworth, Bridget, Stéphane Brodeur (not Gilligan), Hector Rodriguez, Arnold, Moses, Archimedes (Deltan), Theresa Sykorski. Guardrails: CLAUDE.md Persons discipline; validate cite-chapter mention check; ami evidence required; role max length. Portraits later via persons/<id>.",
       "done": true
     }
   ]

@@ -439,7 +439,7 @@ def _check_spoil(bobs: list[dict]) -> tuple[list[str], list[str]]:
     # two checks — a note cannot be safe before its entry, and cannot name a
     # book past the one it claims to reach
     for path, key in ((BESTIARY, "creatures"), (PEOPLES, "entries"),
-                      (VESSELS, "vessels")):
+                      (VESSELS, "vessels"), (PERSONS, "persons")):
         if not os.path.exists(path):
             continue
         with open(path) as fh:
@@ -501,9 +501,29 @@ def _check_names(bobs: list[dict]) -> list[str]:
 
 BLOG = os.path.join(ROOT, "data", "blog.json")
 VESSELS = os.path.join(ROOT, "data", "vessels.json")
+PERSONS = os.path.join(ROOT, "data", "persons.json")
 VOICES = {"bobnet", "editor"}
 VESSEL_KINDS = {"design", "hull", "class", "weapon"}
 VESSEL_LINES = {"heaven", "colony", "exodus", "medeiros", "others", "other"}
+PERSON_KINDS = {"person", "ami", "replicant"}
+PERSON_SUBSTRATES = {"biological", "replicated", "ami", "foreign_probe"}
+PERSON_REQUIRED = ("id", "name", "kind", "label", "substrate", "substrateFrom",
+                   "role", "cite", "note", "spoil")
+# Role is a headline, not a second bio — long roles invite invented jobs.
+PERSON_ROLE_MAX = 72
+# AMI classification is easy to invent (Archimedes was wrongly filed as AMI once).
+PERSON_AMI_EVIDENCE = re.compile(
+    r"\bAMI\b|artificial mind|android|not a(?:n)?(?:\s+Heaven)?\s+replicant", re.I)
+# Non-Bob matrix minds (Henry Roberts) — must not be slipped onto bobs.json casually.
+PERSON_REPLICANT_EVIDENCE = re.compile(
+    r"\breplicant\b|not a(?:n)?(?:\s+Heaven)?\s+Bob\b|Australian (?:probe )?replicant", re.I)
+
+
+def _person_search_token(name: str) -> str:
+    """Surname / distinctive token used to verify the cite chapter mentions them."""
+    n = re.sub(r"^(Dr\.|Colonel|Professor)\s+", "", name or "", flags=re.I).strip()
+    parts = n.split()
+    return parts[-1] if parts else n
 
 
 def _ids(path: str, key: str, field: str = "id") -> set | None:
@@ -537,6 +557,7 @@ ADDRESSABLE = {
     "bestiary":   lambda: _ids(BESTIARY, "creatures"),
     "peoples":    lambda: _ids(PEOPLES, "entries"),
     "vessels":    lambda: _ids(VESSELS, "vessels"),
+    "persons":    lambda: _ids(PERSONS, "persons"),
     "blog":       lambda: _ids(BLOG, "posts"),
     "todo":       lambda: None,
 }
@@ -594,6 +615,165 @@ def _check_vessels() -> tuple[list[str], list[str]]:
             if lab and lab not in matches:
                 warnings.append(f"bob {b['id']}: vessel {lab!r} has no vessels.match entry")
     return errors, warnings
+
+
+def _check_persons() -> tuple[list[str], list[str]]:
+    """Named people and AMIs who are not replicants: species resolve, Bobs resolve.
+
+    Bios are easy to invent. Guardrails here are necessary but not sufficient:
+    the cite chapter must mention them, AMI kind needs textual evidence, roles
+    stay short. Wrong paraphrase (Butterworth as VEHEMENT liaison) still needs
+    a human reading the chapter — see CLAUDE.md Persons discipline.
+    """
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not os.path.exists(PERSONS):
+        return errors, warnings
+    with open(PERSONS) as fh:
+        persons = json.load(fh)["persons"]
+    bob_ids = _bob_ids() or set()
+    systems = _load_systems()
+    chapters = _chapters()
+    index = {(c["book"], c["seq"]): c for c in chapters} if chapters else {}
+    people_ids: set[str] | None = None
+    if os.path.exists(PEOPLES):
+        with open(PEOPLES) as fh:
+            people_ids = {e["id"] for e in json.load(fh)["entries"]
+                          if e.get("kind") == "people"}
+    ids: set[str] = set()
+    by_name: dict[str, list[dict]] = {}
+    for p in persons:
+        pid = p.get("id") or "?"
+        if pid in ids:
+            errors.append(f"persons {pid}: duplicate id")
+        ids.add(pid)
+        if not re.match(r"^[a-z0-9_]+$", pid):
+            errors.append(f"persons {pid}: id must match ^[a-z0-9_]+$")
+        for key in PERSON_REQUIRED:
+            if not p.get(key) and p.get(key) != 0:
+                errors.append(f"persons {pid}: missing required field '{key}'")
+        if p.get("kind") not in PERSON_KINDS:
+            errors.append(f"persons {pid}: kind {p.get('kind')!r} not in {sorted(PERSON_KINDS)}")
+        if p.get("kind") == "person":
+            species = p.get("species")
+            if not species:
+                errors.append(f"persons {pid}: kind person needs a species")
+            elif people_ids is not None and species not in people_ids:
+                errors.append(f"persons {pid}: species {species!r} is not a people "
+                              f"in peoples.json")
+            note = p.get("note") or ""
+            if re.search(r"\bis an AMI\b|\bas an AMI\b", note, re.I):
+                errors.append(f"persons {pid}: note claims AMI but kind is person")
+        elif p.get("kind") == "ami":
+            if p.get("species"):
+                errors.append(f"persons {pid}: kind ami must not have a species")
+            note = p.get("note") or ""
+            if not PERSON_AMI_EVIDENCE.search(note):
+                errors.append(
+                    f"persons {pid}: kind ami needs the note to state AMI / android / "
+                    f"artificial mind / not a replicant — do not invent this classification")
+        elif p.get("kind") == "replicant":
+            species = p.get("species")
+            if not species:
+                errors.append(f"persons {pid}: kind replicant needs a species "
+                              f"(usually humans)")
+            elif people_ids is not None and species not in people_ids:
+                errors.append(f"persons {pid}: species {species!r} is not a people "
+                              f"in peoples.json")
+            note = p.get("note") or ""
+            if not PERSON_REPLICANT_EVIDENCE.search(note):
+                errors.append(
+                    f"persons {pid}: kind replicant needs the note to state they are a "
+                    f"replicant / not a Heaven Bob — Henry Roberts is the type case")
+        substrate = p.get("substrate")
+        if substrate not in PERSON_SUBSTRATES:
+            errors.append(f"persons {pid}: substrate {substrate!r} not in "
+                          f"{sorted(PERSON_SUBSTRATES)}")
+        sub_from = p.get("substrateFrom")
+        if not isinstance(sub_from, int) or sub_from < 1:
+            errors.append(f"persons {pid}: substrateFrom must be a book number")
+        # kind ↔ substrate consistency
+        if substrate == "ami" and p.get("kind") != "ami":
+            errors.append(f"persons {pid}: substrate ami requires kind ami")
+        if substrate == "foreign_probe" and p.get("kind") != "replicant":
+            errors.append(f"persons {pid}: substrate foreign_probe requires kind replicant")
+        if substrate in ("biological", "replicated") and p.get("kind") not in ("person",):
+            errors.append(f"persons {pid}: substrate {substrate} requires kind person")
+        # Change-arc: replicated with substrateFrom > cite book is Bridget-shaped;
+        # if substrateFrom equals cite book they appeared already replicated.
+        cite_book = _book_of(p.get("cite"))
+        if (substrate == "replicated" and isinstance(sub_from, int) and cite_book
+                and sub_from < cite_book):
+            errors.append(
+                f"persons {pid}: substrateFrom {sub_from} is earlier than cite book "
+                f"{cite_book} — cannot reveal matrix status before they appear")
+        role = p.get("role") or ""
+        if len(role) > PERSON_ROLE_MAX:
+            errors.append(f"persons {pid}: role is {len(role)} chars "
+                          f"(max {PERSON_ROLE_MAX}) — keep the job title short")
+        if not p.get("note") or len(p.get("note") or "") < 40:
+            errors.append(f"persons {pid}: note too thin")
+        spoil = p.get("spoil")
+        if not isinstance(spoil, int) or spoil < 1:
+            errors.append(f"persons {pid}: spoil must be a book number")
+        cite = p.get("cite") or ""
+        if cite and not cite.startswith("Bk"):
+            errors.append(f"persons {pid}: cite {cite!r} does not start with Bk")
+        # Early prose must not leak a gated substrate change (Bridget).
+        if (substrate == "replicated" and isinstance(sub_from, int) and sub_from > 1):
+            for i, (at, para) in enumerate(_paragraphs(p.get("note"), spoil)):
+                if at is None:
+                    continue
+                if at < sub_from and re.search(
+                        r"\breplicat|\bmatrix\b|post-life|scanned and woken", para, re.I):
+                    errors.append(
+                        f"persons {pid}: note paragraph {i + 1} is safe at book {at} but "
+                        f"mentions replication before substrateFrom {sub_from}")
+        # Cite chapter must actually mention them (corpus present).
+        token = _person_search_token(p.get("name") or "")
+        m = re.match(r"^Bk(\d+)\s+ch(\d+)", cite)
+        if chapters and m and token:
+            bk, sq = int(m.group(1)), int(m.group(2))
+            chapter = index.get((bk, sq))
+            if chapter is None:
+                errors.append(f"persons {pid}: cites Bk{bk} ch{sq}, which the corpus lacks")
+            elif not re.search(r"\b" + re.escape(token) + r"\b", chapter.get("text") or "", re.I):
+                # Accent-fold: Stephane vs Stéphane
+                fold = unicodedata_normalize(token)
+                text = chapter.get("text") or ""
+                if not re.search(r"\b" + re.escape(fold) + r"\b",
+                                 unicodedata_normalize(text), re.I):
+                    errors.append(
+                        f"persons {pid}: cite Bk{bk} ch{sq} never mentions {token!r} — "
+                        f"open the chapter before writing the bio")
+        for bid in p.get("bobs") or []:
+            if bid not in bob_ids:
+                errors.append(f"persons {pid}: bob {bid!r} is not a Bob on file")
+        sid = p.get("system")
+        if sid and systems and sid not in systems:
+            errors.append(f"persons {pid}: unknown system {sid!r}")
+        if p.get("name"):
+            by_name.setdefault(p["name"], []).append(p)
+    for p in persons:
+        pid = p.get("id") or "?"
+        for aid in p.get("also") or []:
+            if aid in ids or aid in bob_ids:
+                continue
+            errors.append(f"persons {pid}: also {aid!r} is neither a person nor a Bob on file")
+    for name, holders in by_name.items():
+        if len(holders) < 2:
+            continue
+        labels = [h.get("label") for h in holders]
+        if len(set(labels)) < len(holders):
+            who = ", ".join(h.get("id") or "?" for h in holders)
+            warnings.append(f"persons name collision {name!r}: {who}")
+    return errors, warnings
+
+
+def unicodedata_normalize(s: str) -> str:
+    """Fold accents for cite mention checks (Stéphane → Stephane)."""
+    import unicodedata
+    return "".join(c for c in unicodedata.normalize("NFKD", s) if not unicodedata.combining(c))
 
 
 HOLO = os.path.join(ROOT, "data", "holo.json")
@@ -1141,6 +1321,10 @@ def validate(bobs: list[dict]) -> tuple[list[str], list[str]]:
     ves_errors, ves_warnings = _check_vessels()
     errors += ves_errors
     warnings += ves_warnings
+
+    per_errors, per_warnings = _check_persons()
+    errors += per_errors
+    warnings += per_warnings
 
     holo_errors, holo_warnings = _check_holo()
     errors += holo_errors

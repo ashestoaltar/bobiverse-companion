@@ -28,6 +28,7 @@ OUT = os.path.join(ROOT, "dist", "index.html")
 BESTIARY = os.path.join(ROOT, "data", "bestiary.json")
 PEOPLES = os.path.join(ROOT, "data", "peoples.json")
 VESSELS = os.path.join(ROOT, "data", "vessels.json")
+PERSONS = os.path.join(ROOT, "data", "persons.json")
 MEMORIUM = os.path.join(ROOT, "data", "memorium.json")
 GUPPY = os.path.join(ROOT, "data", "guppy.json")
 ASSETS = os.path.join(ROOT, "assets")
@@ -44,6 +45,7 @@ BOOKS = os.path.join(ROOT, "data", "books.json")
 BOOKS_PLACEHOLDER = "/*__BOOKS__*/[]"
 PEOPLE_PLACEHOLDER = "/*__PEOPLES__*/null"
 VESSELS_PLACEHOLDER = "/*__VESSELS__*/null"
+PERSONS_PLACEHOLDER = "/*__PERSONS__*/null"
 GUPPY_PLACEHOLDER = "/*__GUPPY__*/null"
 SANDBOX = os.path.join(ROOT, "data", "sandbox.json")
 SANDBOX_PLACEHOLDER = "/*__SANDBOX__*/null"
@@ -180,7 +182,7 @@ def inject_register(html: str, path: str, key: str, register: str,
                     placeholder: str) -> tuple[str, dict, int]:
     """Load a companion register, attach any artwork, and splice it in.
 
-    Both companion registers work the same way, so they share this: strip the
+    Companion registers work the same way, so they share this: strip the
     editorial comment, inline assets/<register>/<id>.svg into each entry's
     `art`, and replace the placeholder.
     """
@@ -330,6 +332,8 @@ def main() -> None:
         html, PEOPLES, "entries", "peoples", PEOPLE_PLACEHOLDER)
     html, vessels, drawn_v = inject_register(
         html, VESSELS, "vessels", "vessels", VESSELS_PLACEHOLDER)
+    html, persons, drawn_n = inject_register(
+        html, PERSONS, "persons", "persons", PERSONS_PLACEHOLDER)
 
     # The In Memorium list is mostly assembled from bobs.json at render time;
     # this file carries only the entries that have no record to sit on.
@@ -386,6 +390,7 @@ def main() -> None:
           f"{len(bestiary['creatures'])} creatures ({drawn} illustrated), "
           f"{len(peoples['entries'])} peoples and polities ({drawn_p} illustrated), "
           f"{len(vessels['vessels'])} vessels ({drawn_v} illustrated), "
+          f"{len(persons['persons'])} persons ({drawn_n} illustrated), "
           f"{len(blog['posts'])} posts, "
           f"guppy {guppy['width']}x{guppy['height']} in {len(guppy['frames'])} frames, "
           f"sandbox {sandbox['width']}x{sandbox['height']} in "
