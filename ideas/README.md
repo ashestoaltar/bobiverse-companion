@@ -54,7 +54,7 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 
 ### Approximate census
 
-- **89** Bobs · **22** systems · **5** gate nodes / **1** path / **4** summaries · galaxy context · **21** vessels · **9** fauna · **30** peoples/polities/factions · **26** persons  
+- **89** Bobs · **22** systems · **10** gate nodes / **4** paths / **7** summaries · galaxy context · **21** vessels · **9** fauna · **30** peoples/polities/factions · **26** persons  
 - **9** blog posts · **63** timeline events  
 - **18** holotank plates (VR + vessel stills + gorilloid specimen)  
 - **1** plate with **3D model** (`vessel-heaven-1` → `assets/holo-models/vessel-heaven-1.glb`)  

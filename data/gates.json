@@ -1,5 +1,5 @@
 {
-  "_comment": "Wormhole travel topology — NOT the Euclidean star chart, NOT SCUT/BobNet.\n\nArchitecture (ideas/README.md §5; ideas/wormholes-inventory.md):\n  Local chart = geometry. Gates = topology. Galaxy = context (later). SCUT = comms.\n\nTwo layers: found (alien mesh, Icarus/Dae) and constructed/planned (Bob-built highway).\nUnlocated termini are valid. Do not invent Hipparcos IDs or gate-by-gate catalogues.\nferry_ly / span_ly annotate Bob logistics only — never used to stretch Chart.\n\nIds are unique across nodes, paths, and summaries (one selection namespace).",
+  "_comment": "Wormhole travel topology — NOT the Euclidean star chart, NOT SCUT/BobNet.\n\nArchitecture (ideas/README.md §5; ideas/wormholes-inventory.md):\n  Local chart = geometry. Gates = topology. Galaxy = context. SCUT = comms.\n\nTwo layers: found (alien mesh, Icarus/Dae) and constructed/planned (Bob-built / WormNet).\nUnlocated termini are valid. Do not invent Hipparcos IDs or gate-by-gate catalogues.\nferry_ly / span_ly annotate Bob logistics only — never used to stretch Chart.\n\nGalactic structure (cite-checked): hubs sit on radial lines; spinward hub-hopping is not the same as “every gate leads to the galactic centre.” Icarus’s original sublight aim was the core; the mesh can hop inward along radials (one investigated line ~10k ly closer to the core, Bk5 ch60).\n\nIds are unique across nodes, paths, and summaries (one selection namespace).",
   "nodes": [
     {
       "id": "epsilon_eridani",
@@ -7,10 +7,10 @@
       "kind": "system",
       "layer": "constructed",
       "system": "epsilon_eridani",
-      "role": "Near end of the Skippyland highway",
-      "cite": "Bk5 ch34 · Bill, Dec 2342",
+      "role": "WormNet hub of the local Bob highway",
+      "cite": "Bk5 ch63 · Bill",
       "spoil": 5,
-      "note": "Survey star already on the Chart. In the gates register it matters as the near terminus of the planned Bob highway to Skippyland (Bk5 ch34): endpoints must be flown STL between systems, then hops become cheap. Chart link is legitimate because this system has real coordinates — unlike Hub Zero or Skippyland."
+      "note": "Survey star already on the Chart. Becomes the ceremonial and practical heart of early WormNet: Bill places direct wormholes from here toward Sol and Omicron² Eridani in the Oort (Bk5 ch63), after Howard’s Skippyland highway plan (Bk5 ch34). Chart link is legitimate — real coordinates — unlike Hub Zero or Skippyland."
     },
     {
       "id": "skippyland",
@@ -24,6 +24,28 @@
       "note": "Unlocated on the Euclidean chart — Howard gives about seventy light-years from Epsilon Eridani when arguing for a wormhole highway (Bk5 ch34), breaking Skippy secrecy to do it. File here, not in systems.json: it is a faction home and terminus, not a Hipparcos survey row. Related polity: Skippies in peoples."
     },
     {
+      "id": "sol",
+      "name": "Sol",
+      "kind": "system",
+      "layer": "constructed",
+      "system": "sol",
+      "role": "WormNet terminus from Epsilon Eridani",
+      "cite": "Bk5 ch63 · Bill",
+      "spoil": 5,
+      "note": "Bill already has a wormhole from Epsilon Eridani leading directly to Sol, parked in a slightly different Oort-cloud orbit from the Omicron link (Bk5 ch63). Chart-located constructed terminus — geometry stays on the Chart; this row is the topology edge’s far end."
+    },
+    {
+      "id": "omicron2_eridani",
+      "name": "Omicron² Eridani",
+      "kind": "system",
+      "layer": "constructed",
+      "system": "omicron2_eridani",
+      "role": "WormNet terminus; Vulcan/Romulus neighbourhood",
+      "cite": "Bk5 ch63 · Bill",
+      "spoil": 5,
+      "note": "Direct wormhole from Epsilon Eridani alongside the Sol link (Bk5 ch63). Will had already flagged an Omicron endpoint as a way to get descendants clear of FAITH quickly (Bk5 ch35). Chart-located; topology only here."
+    },
+    {
       "id": "hub_zero",
       "name": "Hub Zero",
       "kind": "hub",
@@ -31,7 +53,17 @@
       "role": "Bobs’ name for the mesh centre they mapped",
       "cite": "Bk5 ch14 · Icarus, Apr 2321",
       "spoil": 5,
-      "note": "After hub-hopping around the alien network, Icarus and Dae dub the theoretical centre Hub Zero (Bk5 ch14). Unlocated — no catalogue identity, no xyz. Later they return to the Hub Zero system (Bk5 ch52). One hub here has more than a thousand gates; do not expand that into rows. Six hubs spinward of Hub Zero are counted in the same survey pass — summary only."
+      "note": "After hub-hopping around the alien network, Icarus and Dae dub the theoretical centre Hub Zero (Bk5 ch14). Unlocated — no catalogue identity, no xyz. Later they return to the Hub Zero system (Bk5 ch52). One hub here has more than a thousand gates; do not expand that into rows. Federation capital traffic also comes through here (Bk5 ch68)."
+    },
+    {
+      "id": "hub_six",
+      "name": "Hub Six",
+      "kind": "hub",
+      "layer": "found",
+      "role": "Outermost spinward hub label on their survey",
+      "cite": "Bk5 ch14 · Icarus, Apr 2321",
+      "spoil": 5,
+      "note": "Bob survey label, not an alien proper name. Six hubs sit spinward of Hub Zero; travel from Hub Six back to Hub Zero is mostly gate-to-gate and takes less than a day of their time (Bk5 ch14). Unlocated. Sibling labels Hub One–Five are implied by the count — not given on-page as a roll call, so they stay unfiled."
     },
     {
       "id": "roanoke",
@@ -53,7 +85,28 @@
       "role": "Gunther’s world; STL leg to a wormhole",
       "cite": "Bk5 ch48 · Icarus, Jan 2329",
       "spoil": 5,
-      "note": "Gunther’s world, eight light-years by ordinary flight from the system where he found a wormhole (Bk5 ch48). The wormhole system itself is not named here — do not invent an id for it. Return to Hub Zero from this region costs another long STL bite to the nearest gate (Bk5 ch52). Mixed STL + found-mesh story; topology node without fake coordinates."
+      "note": "Gunther’s world, eight light-years by ordinary flight from the system where he found a wormhole (Bk5 ch48). The wormhole system itself is not named here — do not invent an id for it. A second wormhole sits at right angles in that system; Gunther had not explored it. Return to Hub Zero costs another long STL bite to the nearest gate (Bk5 ch52)."
+    },
+    {
+      "id": "dmz",
+      "name": "DMZ",
+      "kind": "hub",
+      "layer": "found",
+      "role": "Firewall system on the alien mesh",
+      "cite": "Bk5 ch28 · Icarus, Aug 2321",
+      "spoil": 5,
+      "note": "Icarus’s name for a heavily secured stretch of the network — a firewall with border-guard energy (Bk5 ch28). They keep returning to the gate that leads into it; later attempts fail hard enough that they go sample other civilisations instead (Bk5 ch56, ch60). Unlocated. Not a Hipparcos row and not every anonymous gate on the path."
+    },
+    {
+      "id": "federation_capital",
+      "name": "Federation capital",
+      "kind": "place",
+      "layer": "found",
+      "at": "hub_zero",
+      "role": "Pan Galactic Federation capital world",
+      "cite": "Bk5 ch68 · Icarus, Jun 2345",
+      "spoil": 5,
+      "note": "Capital world of the Pan Galactic Federation — reachable through Hub Zero, which surprises nobody by then (Bk5 ch68). Filed as a place at Hub Zero, not as its own catalogue star. Challenge on exit; they can finally understand the hail."
     }
   ],
   "paths": [
@@ -70,7 +123,42 @@
       "role": "Bob-built endpoint chain; ten hops",
       "cite": "Bk5 ch34 · Bill, Dec 2342",
       "spoil": 5,
-      "note": "Howard’s plan: nine intermediate star systems between Epsilon Eridani and Skippyland, eighty-two light-years of chain to haul endpoints along, about seventy light-years straight-line, ten hops once built (Bk5 ch34). The books give the counts — not the nine Hipparcos names — so intermediates stay a number on this path. By Bk5 ch38 the endpoints are already under way and a path is expected within a few years; Howard also wants a wider quiet network. Status building, not open."
+      "note": "Howard’s plan: nine intermediate star systems between Epsilon Eridani and Skippyland, eighty-two light-years of chain to haul endpoints along, about seventy light-years straight-line, ten hops once built (Bk5 ch34). The books give the counts — not the nine Hipparcos names — so intermediates stay a number on this path. By Bk5 ch38 the endpoints are already under way; Howard also wants a wider quiet network. Part of what Will nicknames WormNet."
+    },
+    {
+      "id": "path_ee_sol",
+      "name": "Epsilon Eridani–Sol wormhole",
+      "ends": ["epsilon_eridani", "sol"],
+      "kind": "constructed",
+      "status": "open",
+      "hop_count": 1,
+      "role": "Direct WormNet link; Oort parking",
+      "cite": "Bk5 ch63 · Bill",
+      "spoil": 5,
+      "note": "Direct Bob-built wormhole EE → Sol, one of the first ceremonial WormNet openings (Bk5 ch63). Both ends are Chart systems — still drawn here as topology, not as a ly chord on the star chart."
+    },
+    {
+      "id": "path_ee_omicron2",
+      "name": "Epsilon Eridani–Omicron² Eridani wormhole",
+      "ends": ["epsilon_eridani", "omicron2_eridani"],
+      "kind": "constructed",
+      "status": "open",
+      "hop_count": 1,
+      "role": "Direct WormNet link beside Sol",
+      "cite": "Bk5 ch63 · Bill",
+      "spoil": 5,
+      "note": "Sister link to the Sol wormhole, slightly different Oort parking (Bk5 ch63). Gives topology to the colony neighbourhood without inventing new stars."
+    },
+    {
+      "id": "path_hub_six_zero",
+      "name": "Hub Six–Hub Zero spine",
+      "ends": ["hub_six", "hub_zero"],
+      "kind": "found",
+      "status": "surveyed",
+      "role": "Spinward hub chain (many gates, one label)",
+      "cite": "Bk5 ch14 · Icarus, Apr 2321",
+      "spoil": 5,
+      "note": "Not a single gate — the spinward hub-to-hub run from Hub Six back to Hub Zero, mostly moving from one hub gate to the next (Bk5 ch14). Filed as one found path so the survey spine is visible without inventing the intermediate hub ids."
     }
   ],
   "summaries": [
@@ -80,7 +168,7 @@
       "role": "Found-mesh scale, not a gate list",
       "cite": "Bk5 ch8 · Icarus, Sep 2320",
       "spoil": 5,
-      "note": "At the first serious hub Icarus reads literally hundreds of individual signals (Bk5 ch8). That is a scale fact for the register lead, not permission to invent hundreds of gate rows."
+      "note": "At the first serious hub Icarus reads hundreds of individual signals (Bk5 ch8). That is a scale fact for the register lead, not permission to invent hundreds of gate rows."
     },
     {
       "id": "sum_gate_map",
@@ -88,7 +176,7 @@
       "role": "Why a raw gate dump is useless",
       "cite": "Bk5 ch12 · Icarus, Sep 2320",
       "spoil": 5,
-      "note": "Icarus and Dae map hundreds of wormhole gates in various orbits and argue the builders must have had addressing — otherwise the mesh is just random holes (Bk5 ch12). We inherit the same restraint: cite topology, do not fabricate an address book."
+      "note": "Icarus and Dae map hundreds of wormhole gates in various orbits and argue the builders must have had addressing — otherwise the mesh is just random holes (Bk5 ch12). Far-side addresses plus galactic positions might decode the map; we still do not invent the address book."
     },
     {
       "id": "sum_hub_tour",
@@ -105,6 +193,30 @@
       "cite": "Bk5 ch34 · Bill, Dec 2342",
       "spoil": 5,
       "note": "Same rule the aliens already lived by: create a pair together, fly one endpoint STL to the far system, brace it or it collapses. Bill’s moot demo pushes matter through after a short separation test (Bk5 ch34). Discovery-era Icarus had already guessed the STL pairing (Bk5 ch8). Travel topology is built by logistics, not by wishing a chord onto the Chart."
+    },
+    {
+      "id": "sum_wormnet",
+      "name": "WormNet",
+      "role": "Bob name for the growing constructed mesh",
+      "cite": "Bk5 ch34 · Bill, Dec 2342",
+      "spoil": 5,
+      "note": "Will’s nickname for the Bob-built wormhole network — Bill hates it and uses it anyway (Bk5 ch34). By the ceremonial opening, EE already links to Sol and Omicron² Eridani, with more endpoints still flying in (Bk5 ch63). Distinct from the alien found mesh and from SCUT."
+    },
+    {
+      "id": "sum_terminal_hub",
+      "name": "Terminal hub · ~80 ly from Earth",
+      "role": "Anti-spinward end of the surveyed arc",
+      "cite": "Bk5 ch14 · Icarus, Apr 2321",
+      "spoil": 5,
+      "note": "They do not find a wormhole until roughly eighty light-years from Earth. Addresses on that first hub show no anti-spinward continuations — a terminal hub at that radius, so the mesh does not simply loop the whole galaxy there (Bk5 ch14). Might close farther in; not proven on the page."
+    },
+    {
+      "id": "sum_radial_core",
+      "name": "Radial lines toward the galactic core",
+      "role": "Structure ≠ ‘all gates lead to centre’",
+      "cite": "Bk5 ch14 · Icarus, Apr 2321",
+      "spoil": 5,
+      "note": "Icarus and Dae’s original sublight mission was the galactic centre; the wormhole mesh is how they stop crawling. Every hub they map sits on a radial line, but early on they have barely hopped inward or outward (Bk5 ch14). Later, one unexplored radial is about ten thousand light-years closer to the core — enough for Icarus to crow about maybe visiting soon (Bk5 ch60). So: the network can take you inward along radials; it is not a single labelled highway whose every gate ‘leads to the centre.’"
     }
   ]
 }

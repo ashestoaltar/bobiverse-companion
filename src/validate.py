@@ -951,12 +951,16 @@ def _check_gates() -> tuple[list[str], list[str]]:
                 continue
             text = chapter.get("text") or ""
             ok = False
-            candidates = [token] if token and len(token) >= 4 else []
+            # Allow short all-caps tokens (DMZ) and numbered hubs (Six).
+            def _usable(t: str) -> bool:
+                return bool(t) and (len(t) >= 4 or t.isupper() or t.isdigit()
+                                    or re.fullmatch(r"[A-Z]?[a-z]*\d*", t) and len(t) >= 3)
+            candidates = [token] if _usable(token) else []
             for end in e.get("ends") or []:
                 n = node_by_id.get(end)
                 if n:
                     t2 = _person_search_token(n.get("name") or "")
-                    if t2:
+                    if _usable(t2):
                         candidates.append(t2)
             for cand in candidates:
                 fold = unicodedata_normalize(cand)

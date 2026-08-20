@@ -43,13 +43,28 @@ Cited primarily from **Bk5 ch8** (Icarus discovery) and **Bk5 ch34** (Bill/Howar
 
 **Do not** expand these into hundreds of anonymous gate rows.
 
-### Named nodes (v1 candidates)
+### Named nodes (seeded)
 
 | id | Name | Located? | Notes | Cite anchors |
 |---|---|---|---|---|
-| `hub_zero` | Hub Zero | **no** | Bobs’ name for theoretical center of explored mesh | exploration arc; return Bk5 ch52 |
-| `roanoke` | Roanoke | **no** | Abandoned world; species in `peoples.json` (`roanokians`) | Bk5 ch52 (+ earlier naming) |
-| `centaurvania` | Centaurvania | **no** | Gunther’s world; **8 ly STL** to the system where he found a wormhole | Bk5 ch48; return ch52 |
+| `hub_zero` | Hub Zero | **no** | Bobs’ name for theoretical center of explored mesh | Bk5 ch14; return ch52 |
+| `hub_six` | Hub Six | **no** | Outermost spinward survey label | Bk5 ch14 |
+| `roanoke` | Roanoke | **no** | Abandoned world; species in `peoples.json` (`roanokians`) | Bk5 ch52 |
+| `federation_capital` | Federation capital | **no** | Pan Galactic Federation capital via Hub Zero | Bk5 ch68 |
+| `dmz` | DMZ | **no** | Firewall stretch of the alien mesh | Bk5 ch28 (+ ch56, ch60) |
+| `centaurvania` | Centaurvania | **no** | Gunther’s world; **8 ly STL** to a wormhole system | Bk5 ch48; return ch52 |
+| `epsilon_eridani` | Epsilon Eridani | **yes** | WormNet / highway near end | Bk5 ch34, ch63 |
+| `skippyland` | Skippyland | **no** | Highway far end | Bk5 ch34 |
+| `sol` | Sol | **yes** | Direct WormNet link from EE | Bk5 ch63 |
+| `omicron2_eridani` | Omicron² Eridani | **yes** | Direct WormNet link from EE | Bk5 ch63 |
+
+### Galactic centre (do not overclaim)
+
+Icarus/Dae’s **original sublight destination** was the galactic centre (Bk5 ch1). The alien mesh is **not** “every gate leads to the centre”:
+
+- Hubs lie on **radial lines**; early survey barely hops inward/outward (Bk5 ch14).
+- Spinward hub-hopping circumnavigates at their radius; anti-spinward end is a **terminal hub** (~80 ly from Earth).
+- A later radial is ~**10,000 ly closer to the core** — possible core visit, not a labelled highway to the centre (Bk5 ch60).
 
 ### Edges / links (verify before filing)
 

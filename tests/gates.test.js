@@ -45,12 +45,23 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
   }, 1);
 
   ok(GATES.nodes.some(n => n.id === 'hub_zero' && !n.system), 'Hub Zero unlocated');
+  ok(GATES.nodes.some(n => n.id === 'hub_six' && !n.system), 'Hub Six unlocated');
+  ok(GATES.nodes.some(n => n.id === 'dmz' && !n.system), 'DMZ unlocated');
   ok(GATES.nodes.some(n => n.id === 'skippyland' && !n.system), 'Skippyland unlocated');
   ok(GATES.nodes.some(n => n.id === 'epsilon_eridani' && n.system === 'epsilon_eridani'),
      'EE links to Chart system');
+  ok(GATES.nodes.some(n => n.id === 'sol' && n.system === 'sol'), 'Sol WormNet terminus');
+  ok(GATES.nodes.some(n => n.id === 'omicron2_eridani' && n.system === 'omicron2_eridani'),
+     'Omicron² WormNet terminus');
   ok(GATES.paths.some(p => p.id === 'path_ee_skippyland' && p.hop_count === 10
                          && p.intermediate_count === 9),
      'EE–Skippyland highway counts');
+  ok(GATES.paths.some(p => p.id === 'path_ee_sol' && p.status === 'open'), 'EE–Sol open');
+  ok(GATES.paths.some(p => p.id === 'path_ee_omicron2' && p.status === 'open'),
+     'EE–Omicron open');
+  ok(GATES.summaries.some(s => s.id === 'sum_radial_core'),
+     'radial/core structure summary on file');
+  ok(GATES.summaries.some(s => s.id === 'sum_wormnet'), 'WormNet summary on file');
 
   // Spoiler: book 4 sees nothing
   state.book = 4;
