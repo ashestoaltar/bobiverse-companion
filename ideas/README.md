@@ -10,6 +10,7 @@ This file wins on **current product intent** when it conflicts with older review
 | [`../COLLABORATIVE-REVIEW.md`](../COLLABORATIVE-REVIEW.md) | Historical multi-pass notes — many ideas **already shipped** |
 | [`experiments/holotank-3d/README.md`](experiments/holotank-3d/README.md) | Local 3D spike tools (Blender clean, orbit test page) |
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
+| [`experiments/heaven-raid/README.md`](experiments/heaven-raid/README.md) | Atari shmup experiment: Heaven vs Empire probes (Galaga×1942). **Not** a Registry tab. |
 
 **Last handoff write-up:** 2026-08-20 (spatial stack live).  
 **Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and zero-network promises. Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
@@ -247,6 +248,7 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 | `ideas/rejected designs/` | Rejected art (incl. moot populate attempts) |
 | `ideas/experiments/holotank-3d/` | Spike viewer, scripts, source stills |
 | `ideas/experiments/scene-ee-standoff/` | Bk1 ch15 scene video PoC (frames, clips, final mp4) |
+| `ideas/experiments/heaven-raid/` | Bobiverse shmup v0 (canvas, geometric ships) |
 
 ### Locked face / character / set refs (do not re-roll)
 

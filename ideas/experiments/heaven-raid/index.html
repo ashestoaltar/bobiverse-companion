@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>Heaven Raid — Bobiverse experiment</title>
+  <style>
+    :root {
+      --bg: #0a0704;
+      --amber: #ffb000;
+      --amber-dim: #c47e00;
+      --phos: #39ff14;
+      --ash: #8a7a60;
+      --danger: #ff3b3b;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; height: 100%;
+      background: var(--bg); color: var(--amber);
+      font-family: ui-monospace, "Cascadia Code", "SF Mono", Menlo, monospace;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    h1 {
+      margin: 0 0 6px; font-size: 14px; letter-spacing: .28em; font-weight: 400;
+      color: var(--phos);
+    }
+    .sub { font-size: 11px; letter-spacing: .12em; color: var(--ash); margin-bottom: 12px; }
+    #wrap {
+      position: relative;
+      border: 1px solid var(--amber-dim);
+      box-shadow: 0 0 0 1px #000, 0 0 24px rgba(255,176,0,.12);
+    }
+    canvas { display: block; background: #050302; image-rendering: pixelated; }
+    .hud {
+      margin-top: 10px; font-size: 11px; letter-spacing: .14em; color: var(--amber-dim);
+      min-height: 1.4em;
+    }
+    .hud b { color: var(--amber); font-weight: 400; }
+    .note {
+      margin-top: 14px; max-width: 42ch; text-align: center;
+      font-size: 10px; line-height: 1.55; letter-spacing: .06em; color: var(--ash);
+    }
+  </style>
+</head>
+<body>
+  <h1>HEAVEN RAID</h1>
+  <div class="sub">EXPERIMENT · NOT BOBNET · GEOMETRIC V0</div>
+  <div id="wrap"><canvas id="c" width="360" height="480" aria-label="Heaven Raid game"></canvas></div>
+  <div class="hud" id="hud">ENTER TO LAUNCH · ARROWS/WASD MOVE · SPACE FIRE</div>
+  <p class="note">You are a Heaven vessel. They are Brazilian Empire probes.
+    Galaga formations, 1942 scroll. Prove it’s fun before art or Registry chrome.</p>
+  <script src="game.js"></script>
+</body>
+</html>
