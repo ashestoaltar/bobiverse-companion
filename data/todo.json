@@ -319,8 +319,8 @@
     },
     {
       "cat": "Companion registers",
-      "text": "Persons register — named non-replicants",
-      "note": "Done as first ship 2026-08-17; bios re-audited same day after false AMI/VEHEMENT classifications. Seed: Landers, Butterworth, Bridget, Stéphane Brodeur (not Gilligan), Hector Rodriguez, Arnold, Moses, Archimedes (Deltan), Theresa Sykorski. Guardrails: CLAUDE.md Persons discipline; validate cite-chapter mention check; ami evidence required; role max length. Portraits later via persons/<id>.",
+      "text": "Persons register — named non-Heaven individuals",
+      "note": "Done and live on main (4da00ae, 2026-08-20). Cast-heavy: humans (Landers, Butterworth USE not VEHEMENT, Bridget with substrateFrom 3, Hendricks, Cranston, Valter, Stéphane Brodeur ≠ Gilligan, Hector Rodriguez), Deltan circle, Theresa Sykorski, Charlie (AMI), foreign_probe replicants Henry Roberts + Major Ernesto Medeiros + Captain Matias Araújo (Bk1 ch24 Sol — not Medeiros). Species≠substrate; validate cite-mention, AMI/replicant evidence, role≤72, no book-text lifts, Bridget prose gate. Portraits later via persons/<id>. Owner: grow further later.",
       "done": true
     }
   ]

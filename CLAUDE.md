@@ -1376,24 +1376,30 @@ register. Each needs its own data file, schema and view, and nothing else.
 **Persons (`data/persons.json`).** Named individuals who are **not** Heaven
 Bobs (Original Bob’s clone tree). Species/polities stay in `peoples.json`;
 lineage stays in `bobs.json`. Includes biological people, ex-humans, foreign
-probe replicants (Henry Roberts — not a Bob), and AMIs (Charlie).
+probe replicants, and AMIs (Charlie). Foreign probes on file: Henry Roberts
+(Australian), Major Ernesto Medeiros (Brazilian multi-copy line), Captain
+Matias Araújo (Brazilian Sol war-probe — Bk1 ch24, not Medeiros). Grow the
+cast as weight justifies; portraits later on `persons/<id>`.
 
 **Species vs substrate:** `label`/`species` = who they are; `substrate` =
 biological | replicated | ami | foreign_probe. **`substrateFrom`** = earliest
 book that may show the true substrate. Before that book, change-arcs display as
 **biological** (Bridget replicates in Bk3 — critical spoiler). Entries met
 already replicated (Gilligan, Turnbull) set `substrateFrom` to their cite book
-so the whole card is held until then.
+so the whole card is held until then. `foreign_probe` requires `kind:
+replicant` and textual evidence in the note.
 
 **Persons bio discipline — non-negotiable (learned the hard way):**
 
 1. **Open the cite chapter in the corpus before writing `role` or `note`.**
 2. **Every factual claim must be supportable from that cite** (or `@bk`).
-3. **Do not invent jobs** or AMI classifications (Archimedes is a Deltan).
+3. **Do not invent jobs** or AMI classifications (Archimedes is a Deltan;
+   Butterworth is USE, not VEHEMENT).
 4. **Spoiler-gate substrate changes** with `substrateFrom` + `@bk` prose — never
    put “she replicated” in an early ungated paragraph.
 5. **`role` stays a short headline** (validator caps length).
-6. Cite-chapter mention check is necessary, not sufficient.
+6. Cite-chapter mention check is necessary, not sufficient — also no book-text
+   lifts (12-word paraphrase rule).
 
 **Three of those own no data file of their own** — In Memorium, the timeline and
 the map — and that is the pattern to reach for first. Each is an axis over

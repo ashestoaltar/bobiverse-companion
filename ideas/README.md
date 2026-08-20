@@ -11,15 +11,15 @@ This file wins on **current product intent** when it conflicts with older review
 | [`experiments/holotank-3d/README.md`](experiments/holotank-3d/README.md) | Local 3D spike tools (Blender clean, orbit test page) |
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
 
-**Last handoff write-up:** 2026-08-17 (wrap).  
-**Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and zero-network promises.
+**Last handoff write-up:** 2026-08-20.  
+**Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and zero-network promises. Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
 
 **Owner intent (explicit):**  
 - One agent can own the whole stack — no need to bounce LLMs for art or implementation.  
 - Suggestions and improvements are welcome without being asked.  
 - “Locked” decisions from earlier tools/sessions are **not sacred** if a better path appears.  
 - Books stay local; never commit book text.  
-- **Near-term (2026-08-17):** stick to **code / data / product** until the console is where the owner wants it; **Imagine stills and video later** (PoC only for now). Imagine is the expensive budget — prefer code composites over re-rolls for multi-subject scenes.
+- **Near-term:** stick to **code / data / product** until the console is where the owner wants it; **Imagine stills and video later** (PoC only for now). Imagine is the expensive budget — prefer code composites over re-rolls for multi-subject scenes.
 
 ---
 
@@ -43,7 +43,7 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 
 ## 2. Current ship (do not re-plan from scratch)
 
-### Registers (12)
+### Registers (13)
 
 | Group | Tabs |
 |---|---|
@@ -54,7 +54,7 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 
 ### Approximate census
 
-- **89** Bobs · **22** systems · **21** vessels · **9** fauna · **30** peoples/polities/factions · **9** persons (seed)  
+- **89** Bobs · **22** systems · **21** vessels · **9** fauna · **30** peoples/polities/factions · **26** persons  
 - **9** blog posts · **63** timeline events  
 - **18** holotank plates (VR + vessel stills + gorilloid specimen)  
 - **1** plate with **3D model** (`vessel-heaven-1` → `assets/holo-models/vessel-heaven-1.glb`)  
@@ -63,11 +63,11 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 
 ### Major features already shipped
 
-Provenance registry; spoiler **READ THROUGH**; URLs; cross-links; Sandbox Bob; mobile sheet; SCUT boot; filter cull; **holotank 2D**; **VESSELS** register; dual-mode gorilloid; **3D holotank orbit** (gen 1); green attachments; blog-first IA; **PERSONS** register (named non-replicants, bios by weight, label disambiguation).
+Provenance registry; spoiler **READ THROUGH**; URLs; cross-links; Sandbox Bob; mobile sheet; SCUT boot; filter cull; **holotank 2D**; **VESSELS** register; dual-mode gorilloid; **3D holotank orbit** (gen 1); green attachments; blog-first IA; **PERSONS** register (named non-Heaven individuals; species ≠ substrate; foreign-probe replicants beside biologicals/AMIs).
 
 ### Open research (not UI)
 
-Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional); **9** wiki leads (was 12); bio sweep; Book 6 procedure.  
+Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional); **9** wiki leads (was 12); bio sweep; Book 6 procedure; **grow Persons** as cast weight justifies (portraits later).  
 **2026-08-17:** Icarus+Daedalus promoted under Bill (Bk3 ch6); Isaac priorClaim cleared (already Bart). Thor already under Calvin. See `data/todo.json`.
 
 ---
@@ -227,10 +227,11 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 | `assets/holo-models/*.glb` | 3D models |
 | `assets/holo3d/holo3d.js` | Bundled Three viewer |
 | `data/vessels.json` | Vessels register |
-| `data/persons.json` | Persons register (non-replicants; `label` disambiguates). **Bio discipline in CLAUDE.md** — cite chapter before writing; no invented jobs/AMI. |
-| `templates/genealogy.html` | Console (tank 3D UI, REGISTERS, green attach) |
-| `src/build.py` | Inline plates + models + HOLO3D |
-| `src/validate.py` | Holo cite + model file checks |
+| `data/persons.json` | Persons register — not Heaven Bobs. `label`/`species` vs `substrate`/`substrateFrom`; kinds person / ami / replicant. **Bio discipline in CLAUDE.md** — open cite chapter first; no invented jobs/AMI; no book-text lifts. |
+| `data/persons.schema.json` | Persons schema (substrate enum includes `foreign_probe`). |
+| `templates/genealogy.html` | Console (tank 3D UI, REGISTERS, green attach, Persons) |
+| `src/build.py` | Inline plates + models + HOLO3D; strips `_comment` from persons |
+| `src/validate.py` | Holo cite + model file checks; Persons cite-mention, AMI/replicant evidence, role≤72, Bridget substrate prose gate |
 
 ### Ideas / experiment
 
@@ -257,9 +258,9 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ## 10. Open / next (ordered)
 
-### Near-term focus (owner 2026-08-17)
+### Near-term focus (owner)
 
-**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs.
+**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs. Persons grow-as-needed is content work, not a new register.
 
 ### Product (when resuming craft)
 
@@ -270,21 +271,22 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ### Content backlog
 
-5. More vessel stills/models.  
-6. More dual-mode fauna (gorilloid pattern).  
-7. Linus aged-VR; Heaven-5 if text supports.  
-8. Grow vessels as cited.
+5. **Grow Persons** — more cast as weight justifies; portraits on `persons/<id>` later. Foreign probes on file: Henry, Medeiros, Matias Araújo.  
+6. More vessel stills/models.  
+7. More dual-mode fauna (gorilloid pattern).  
+8. Linus aged-VR; Heaven-5 if text supports.  
+9. Grow vessels as cited.
 
 ### Architecture (later)
 
-9. Wormhole **topology** view (cited graph).  
-10. **Galaxy context** mode.  
-11. Soft label `[HOLOTANK · …]` on attachments if wanted.
+10. Wormhole **topology** view (cited graph).  
+11. **Galaxy context** mode.  
+12. Soft label `[HOLOTANK · …]` on attachments if wanted.
 
 ### Research / calendar
 
-12. Genealogy open items in `todo.json`.  
-13. Book 6 release procedure (~2026-09-10).
+13. Genealogy open items in `todo.json`.  
+14. Book 6 release procedure (~2026-09-10).
 
 ### Explicitly deprioritized / wrong
 
@@ -332,4 +334,15 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ---
 
-*Handoff for continuous ownership. Update when decisions change. Wrap 2026-08-17.*
+## 14. Session arc (2026-08-20) — Persons live
+
+1. Catch-up from handoff; moot/pub and EE video left parked (not shipped).  
+2. Genealogy tidy already on main: Icarus/Daedalus → Bill; Isaac priorClaim cleared.  
+3. **PERSONS** cast-heavy expansion shipped (`4da00ae`): humans, Deltans, Quinlan, Charlie (AMI), Henry + **Medeiros** + **Captain Matias Araújo** (`foreign_probe`). Substrate gating for Bridget. Validate guardrails after Archimedes/Butterworth bio errors.  
+4. Araújo cite-checked Bk1 ch24 (Sol); distinct from Medeiros multi-copy line. Owner: more Persons later.  
+5. Local untracked keepers remain: VR stills, moot rejects, EE PoC, holotank-3d bin — **do not dump into `dist/` without a cite path.**  
+6. Compaction mid-session — this § is the recovery note.
+
+---
+
+*Handoff for continuous ownership. Update when decisions change. Handoff 2026-08-20.*
