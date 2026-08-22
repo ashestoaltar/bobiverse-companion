@@ -1,16 +1,21 @@
-"""Render data/bobs.json into dist/index.html.
+"""Render data/bobs.json into dist/index.html (+ local assets/).
 
 The template is the console with its data literal replaced by a placeholder,
 so the interface and the data evolve independently. Validation runs first;
 a failing dataset never reaches dist/.
+
+Heavy media (holotank WebPs, GLBs, the Three.js viewer) ships beside the page
+under dist/assets/ with relative URLs — still offline, no CDN. Prefer
+`make serve` (or any local static server); file:// works for stills, but some
+browsers block GLB fetch off the filesystem.
 """
 
 from __future__ import annotations
 
-import base64
 import json
 import os
 import re
+import shutil
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -23,7 +28,8 @@ TODO = os.path.join(ROOT, "data", "todo.json")
 SYSTEMS = os.path.join(ROOT, "data", "systems.json")
 SKYFIELD = os.path.join(ROOT, "data", "skyfield.json")
 TEMPLATE = os.path.join(ROOT, "templates", "genealogy.html")
-OUT = os.path.join(ROOT, "dist", "index.html")
+DIST = os.path.join(ROOT, "dist")
+OUT = os.path.join(DIST, "index.html")
 
 BESTIARY = os.path.join(ROOT, "data", "bestiary.json")
 PEOPLES = os.path.join(ROOT, "data", "peoples.json")
@@ -57,7 +63,16 @@ HOLO = os.path.join(ROOT, "data", "holo.json")
 HOLO_PLACEHOLDER = "/*__HOLO__*/null"
 HOLO_MODELS = os.path.join(ROOT, "assets", "holo-models")
 HOLO3D_JS = os.path.join(ROOT, "assets", "holo3d", "holo3d.js")
+# Legacy inline slot — emptied; Three loads on demand from assets/holo3d/.
 HOLO3D_PLACEHOLDER = "/*__HOLO3D_JS__*/"
+
+
+def _copy_dist_asset(src: str, rel: str) -> str:
+    """Copy src into dist/<rel> and return the relative URL (posix)."""
+    dest = os.path.join(DIST, rel.replace("/", os.sep))
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    shutil.copy2(src, dest)
+    return rel.replace("\\", "/")
 
 
 def _check_pixels(art: dict, who: str = "guppy") -> None:
@@ -84,20 +99,13 @@ def _check_pixels(art: dict, who: str = "guppy") -> None:
 
 
 def inject_holo(html: str) -> tuple[str, dict, int]:
-    """The holotank's plates, inlined as data URIs.
+    """Publish holotank plates as relative assets under dist/assets/.
 
-    Same promise as every other asset: zero external requests, and the page has
-    to keep working when it is double-clicked out of a folder. That means the
-    bytes travel inside the file, so this is the one place where a decision
-    about image size becomes a decision about page weight — 520px on the long
-    edge, WebP, which is about 40KB a plate once base64 has had its third.
-
-    Optional `model` on a plate names assets/holo-models/<model>.glb — inlined
-    the same way for offline 3D holotank orbit. The Three.js viewer is injected
-    separately from assets/holo3d/holo3d.js (bundled offline).
-
-    The encoding happens offline and the optimised file is what gets committed.
-    Nothing here needs an image library, which keeps the toolchain stdlib-only.
+    Offline promise: no CDN / no network. The console loads stills and GLBs
+    from paths beside index.html (serve with `make serve`, or open the folder).
+    WebP plates stay ~520px on the long edge; models keep their own budgets.
+    The Three.js viewer is copied to assets/holo3d/holo3d.js and loaded on
+    demand by the console — not inlined into the HTML.
     """
     with open(HOLO) as fh:
         holo = json.load(fh)
@@ -111,10 +119,9 @@ def inject_holo(html: str) -> tuple[str, dict, int]:
             print(f"ERROR: holotank plate {plate['id']!r} has no file at "
                   f"{os.path.relpath(path, ROOT)}")
             sys.exit(1)
-        with open(path, "rb") as fh:
-            raw = fh.read()
-        total += len(raw)
-        plate["src"] = "data:image/webp;base64," + base64.b64encode(raw).decode()
+        rel = f"assets/holo/{plate['id']}.webp"
+        total += os.path.getsize(path)
+        plate["src"] = _copy_dist_asset(path, rel)
         mid = plate.get("model")
         if mid:
             mpath = os.path.join(HOLO_MODELS, mid + ".glb")
@@ -122,32 +129,26 @@ def inject_holo(html: str) -> tuple[str, dict, int]:
                 print(f"ERROR: holotank plate {plate['id']!r} model {mid!r} "
                       f"missing at {os.path.relpath(mpath, ROOT)}")
                 sys.exit(1)
-            with open(mpath, "rb") as fh:
-                mraw = fh.read()
-            total += len(mraw)
-            plate["modelSrc"] = ("data:model/gltf-binary;base64,"
-                                 + base64.b64encode(mraw).decode())
+            mrel = f"assets/holo-models/{mid}.glb"
+            total += os.path.getsize(mpath)
+            plate["modelSrc"] = _copy_dist_asset(mpath, mrel)
             models_used = True
     if HOLO_PLACEHOLDER not in html:
         print(f"ERROR: placeholder {HOLO_PLACEHOLDER} missing from template")
         sys.exit(1)
     html = html.replace(HOLO_PLACEHOLDER, json.dumps(holo, ensure_ascii=False), 1)
 
-    # 3D viewer: only ship the bundle if a plate actually uses a model
+    # 3D viewer: copy beside the page; console lazy-loads it. Clear any legacy
+    # inline placeholder so the HTML does not carry a 700KB+ script blob.
+    if HOLO3D_PLACEHOLDER in html:
+        html = html.replace(HOLO3D_PLACEHOLDER, "", 1)
     if models_used:
         if not os.path.exists(HOLO3D_JS):
             print(f"ERROR: 3D holotank needs {os.path.relpath(HOLO3D_JS, ROOT)} "
                   f"(build with esbuild from ideas/experiments/holotank-3d)")
             sys.exit(1)
-        with open(HOLO3D_JS) as fh:
-            holo3d = fh.read()
-        if HOLO3D_PLACEHOLDER not in html:
-            print(f"ERROR: placeholder {HOLO3D_PLACEHOLDER} missing from template")
-            sys.exit(1)
-        html = html.replace(HOLO3D_PLACEHOLDER, holo3d, 1)
-        total += len(holo3d.encode())
-    else:
-        html = html.replace(HOLO3D_PLACEHOLDER, "", 1)
+        total += os.path.getsize(HOLO3D_JS)
+        _copy_dist_asset(HOLO3D_JS, "assets/holo3d/holo3d.js")
 
     return html, holo, total
 
@@ -206,13 +207,10 @@ def inject_register(html: str, path: str, key: str, register: str,
 
 
 def load_art(register: str, cid: str) -> str | None:
-    """Inline assets/<register>/<id>.svg, if someone has drawn one.
+    """Inline assets/<register>/<id>.svg into the register JSON, if drawn.
 
-    The console is a single file that makes no external requests, so an
-    illustration can't be an <img src>. Inline SVG is the format that fits:
-    a few KB, scales to any size, and can be stroked in phosphor so it looks
-    native to the display rather than pasted on. A raster image works too —
-    base64 it into a data: URI and drop it in the same field.
+    Stroke SVGs stay inlined (small, phosphor via currentColor). Heavy stills
+    and meshes use relative files under dist/assets/ instead — see inject_holo.
 
     Nothing here is hand-edited into bestiary.json. Draw a file, name it after
     the creature's id, rebuild.
@@ -400,9 +398,16 @@ def main() -> None:
 
     html, holo, holo_bytes = inject_holo(html)
 
-    os.makedirs(os.path.dirname(OUT), exist_ok=True)
+    os.makedirs(DIST, exist_ok=True)
     with open(OUT, "w") as fh:
         fh.write(html)
+
+    assets_dir = os.path.join(DIST, "assets")
+    assets_bytes = 0
+    if os.path.isdir(assets_dir):
+        for dirpath, _dirnames, filenames in os.walk(assets_dir):
+            for name in filenames:
+                assets_bytes += os.path.getsize(os.path.join(dirpath, name))
 
     print(f"built {os.path.relpath(OUT, ROOT)} — {len(bobs)} records, "
           f"{len(todo['items'])} to-do items, "
@@ -420,9 +425,9 @@ def main() -> None:
           f"guppy {guppy['width']}x{guppy['height']} in {len(guppy['frames'])} frames, "
           f"sandbox {sandbox['width']}x{sandbox['height']} in "
           f"{len(sandbox['frames'])} frames, "
-          f"{len(holo['plates'])} holotank plates ({holo_bytes / 1024:,.0f} KB), "
+          f"{len(holo['plates'])} holotank plates ({holo_bytes / 1024:,.0f} KB on disk), "
           f"{sum(1 for p in holo['plates'] if p.get('modelSrc'))} with 3D models, "
-          f"{len(html):,} bytes")
+          f"html {len(html):,} bytes · assets {assets_bytes:,} bytes")
 
 
 if __name__ == "__main__":

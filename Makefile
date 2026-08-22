@@ -5,10 +5,10 @@ help:
 	@echo "verify-books check books/ against books/MANIFEST.sha256"
 	@echo "validate     check data/bobs.json for schema and integrity errors"
 	@echo "scan-history check every commit ever made for book text"
-	@echo "build        render data/bobs.json into dist/index.html"
+	@echo "build        render console into dist/index.html + dist/assets/"
 	@echo "test         build, then run the console's test suites"
 	@echo "snapshots    re-record the golden-master snapshots (review the diff!)"
-	@echo "serve        build, then serve dist/ on :8000"
+	@echo "serve        build, then serve dist/ on :8000 (preferred over file://)"
 	@echo "workbench    the console at four phone sizes at once, on :8000"
 	@echo "clean        remove dist/ and .cache/ (never books/)"
 

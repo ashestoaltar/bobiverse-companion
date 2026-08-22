@@ -997,7 +997,8 @@
   </footer>
 </div>
 
-<!-- Bundled Three.js when any plate has a 3D model; empty otherwise. -->
+<!-- Holotank Three.js viewer: lazy-loaded from assets/holo3d/holo3d.js.
+     Legacy build slot kept empty so old injectors stay harmless. -->
 <script>/*__HOLO3D_JS__*/</script>
 <script>
 /* =========================================================================
@@ -3739,14 +3740,33 @@ function heldPlate(p){
 }
 
 /* ---- holotank 3D (optional model on a plate) ---------------------------
-   When a plate carries modelSrc (inlined GLB) and HOLO3D is present (bundled
-   Three.js), the tank can orbit the mesh. Still image remains always available.
-   Reduced motion / missing WebGL / missing bundle → still only. */
+   A plate may carry modelSrc (relative GLB under assets/holo-models/). The
+   Three.js viewer loads on demand from assets/holo3d/holo3d.js — not inlined
+   into the HTML. Still image remains always available. Reduced motion /
+   missing WebGL / failed load → still only. */
 let TANK3D = null; // { renderer, scene, camera, controls, root, raf }
+let HOLO3D_LOADING = null;
+const HOLO3D_SRC = 'assets/holo3d/holo3d.js';
+
+function ensureHolo3d(){
+  if (typeof HOLO3D !== 'undefined' && HOLO3D && HOLO3D.THREE) return Promise.resolve(HOLO3D);
+  if (HOLO3D_LOADING) return HOLO3D_LOADING;
+  HOLO3D_LOADING = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = HOLO3D_SRC;
+    s.async = true;
+    s.onload = () => {
+      if (typeof HOLO3D !== 'undefined' && HOLO3D && HOLO3D.THREE) resolve(HOLO3D);
+      else reject(new Error('HOLO3D missing after load'));
+    };
+    s.onerror = () => reject(new Error('failed to load ' + HOLO3D_SRC));
+    (document.head || document.documentElement).appendChild(s);
+  });
+  return HOLO3D_LOADING;
+}
 
 function tankHas3D(p){
-  return !!(p && p.modelSrc && typeof HOLO3D !== 'undefined' && HOLO3D
-            && HOLO3D.THREE && HOLO3D.OrbitControls && HOLO3D.GLTFLoader
+  return !!(p && p.modelSrc
             && !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 }
 
@@ -3901,11 +3921,18 @@ function openTank(id){
   el.hidden = false;
   document.getElementById('tank-close').focus();
   if (can3d) {
-    const ok = startTank3D(p.modelSrc);
-    if (!ok) {
+    setTankMode('2d');
+    ensureHolo3d().then(() => {
+      if (el.hidden) return;   // closed while the viewer was loading
+      const ok = startTank3D(p.modelSrc);
+      if (!ok) {
+        if (bar) bar.hidden = true;
+        setTankMode('2d');
+      }
+    }).catch(() => {
       if (bar) bar.hidden = true;
       setTankMode('2d');
-    }
+    });
   } else {
     setTankMode('2d');
   }

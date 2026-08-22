@@ -60,6 +60,18 @@ if (appError) {
   process.exit(1);
 }
 
+// Holotank Three.js ships beside the page and lazy-loads in the browser.
+// Tests preload it into the same VM so HOLO3D exists without a network.
+const HOLO3D_PATH = path.join(ROOT, 'dist', 'assets', 'holo3d', 'holo3d.js');
+if (fs.existsSync(HOLO3D_PATH)) {
+  try {
+    vm.runInContext(fs.readFileSync(HOLO3D_PATH, 'utf8'), sandbox, {filename: 'holo3d.js'});
+  } catch (e) {
+    console.error('holo3d.js failed to load in the test VM:\n ', e.stack);
+    process.exit(1);
+  }
+}
+
 // ---- assertion plumbing ------------------------------------------------
 let failures = [];
 let checks = 0;

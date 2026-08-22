@@ -90,5 +90,18 @@ module.exports = ({ok, get, run, ROOT}) => {
      'strip legend should stay hidden for link arrivals');
   run('ARRIVED_ON_LINK = false');
 
+  // Phase B: heavy media lives beside the page, not inside it.
+  ok(!/data:image\/webp;base64,/.test(html),
+     'holotank stills should not be base64-inlined into the HTML');
+  ok(!/data:model\/gltf-binary;base64,/.test(html),
+     'GLBs should not be base64-inlined into the HTML');
+  const holo3d = path.join(ROOT, 'dist', 'assets', 'holo3d', 'holo3d.js');
+  ok(fs.existsSync(holo3d), 'dist/assets/holo3d/holo3d.js should ship with the page');
+  // Console code may mention THREE.*; the minified IIFE bundle must not.
+  ok(!/var HOLO3D=\(\)=>\{/.test(html),
+     'the HOLO3D IIFE bundle should not be inlined into index.html');
+  ok(html.length < 900000,
+     `index.html is ${html.length} bytes — still too heavy for a data-only shell`);
+
   console.log(`  ${html.length.toLocaleString()} bytes, standards mode, theme ${themed ? themed[1] : '?'}`);
 };

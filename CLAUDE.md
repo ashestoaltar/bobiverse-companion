@@ -14,14 +14,16 @@ choices are not sacred if quality demands change. Living backlog:
 `data/todo.json`. This file stays ground rules and data layout.
 
 **Near-term (2026-08-22):** Phases **A** (World hub) + **A2** (first
-impression) shipped. Next: **B** multi-file local `dist/` (offline, no CDN —
-single-HTML ceiling retired), then **C** 3D Chart flair. Prefer
-code/data/console before Imagine burn. Parked PoCs: EE video, moot populate,
-Heaven Raid. Do not burn Imagine on multi-subject composites without a plan.
+impression) + **B** (multi-file local `dist/assets/`) shipped. Next: **C** 3D
+Chart flair / Heaven mesh redo. Prefer code/data/console before Imagine burn.
+Parked PoCs: EE video, moot populate, Heaven Raid. Do not burn Imagine on
+multi-subject composites without a plan.
 
-**3D holotank assets:** `assets/holo-models/*.glb`, viewer bundle
-`assets/holo3d/holo3d.js`, plate field `model` in `data/holo.json`. Spike tools
-under `ideas/experiments/holotank-3d/`.
+**3D holotank assets:** source under `assets/holo-models/*.glb` and
+`assets/holo3d/holo3d.js`; build copies them to `dist/assets/` and the console
+lazy-loads the viewer via `ensureHolo3d()`. Plate field `model` in
+`data/holo.json`. Spike tools under `ideas/experiments/holotank-3d/`. Prefer
+`make serve` over `file://` for 3D.
 
 ## Ground rules
 
@@ -353,9 +355,10 @@ flinch rather than a blink.
 
 ## The holotank
 
-`data/holo.json` plus `assets/holo/<id>.webp`, inlined by the build as data
-URIs. The console is a file manager and stays one; a file you open is allowed
-to be rich.
+`data/holo.json` plus `assets/holo/<id>.webp` (copied to `dist/assets/holo/`
+with relative URLs). Optional GLBs and the Three viewer live under
+`dist/assets/` and load on demand. The console is a file manager and stays one;
+a file you open is allowed to be rich.
 
 **Why that is not a contradiction.** The phosphor shell is a presentation
 choice, not a claim that the Bobiverse looks like a 1980s terminal. Bob starts

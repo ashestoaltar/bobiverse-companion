@@ -41,11 +41,13 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
        `${p.id}: its note is marked safe earlier than the chapter it is drawn from`);
   }, 5);
 
-  // ---- the bytes are here, and they are ours ------------------------------
+  // ---- plates resolve to local assets (offline, no CDN) -------------------
   each('plate images', HOLO.plates, p => {
-    ok(/^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(p.src || ''),
-       `${p.id}: not inlined as a data URI — the page promises zero external requests`);
-    ok(p.src.length > 4000, `${p.id}: image is suspiciously small`);
+    ok(/^assets\/holo\/[a-z0-9-]+\.webp$/.test(p.src || ''),
+       `${p.id}: expected a relative assets/holo/*.webp path, got ${p.src}`);
+    const file = path.join(ROOT, 'dist', p.src);
+    ok(fs.existsSync(file), `${p.id}: missing on disk at dist/${p.src}`);
+    ok(fs.statSync(file).size > 1000, `${p.id}: image is suspiciously small`);
   }, 5);
 
   // ---- every plate hangs on something that exists -------------------------
@@ -101,18 +103,23 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
      'the tank does not say whose picture this is');
   ok(!/NaN|undefined/.test(doc.getElementById('tank-body') ? '' : fields), 'tank rendered a hole');
 
-  // 3D models: plate may carry modelSrc (inlined GLB). Stub DOM may lack WebGL;
-  // we only assert the payload is on the plate and the viewer global exists.
+  // 3D models: relative GLB beside the page; Three viewer lazy-loads from
+  // assets/holo3d/. Stub DOM may lack WebGL — assert paths + viewer global.
   const modeled = HOLO.plates.filter(p => p.modelSrc);
   ok(modeled.length > 0, 'expected at least one plate with a 3D model');
   each('3D plates', modeled, p => {
-    ok(/^data:model\/gltf-binary;base64,/.test(p.modelSrc),
-       `${p.id}: modelSrc is not an inlined GLB`);
-    ok(p.modelSrc.length > 1000, `${p.id}: model payload suspiciously small`);
+    ok(/^assets\/holo-models\/[a-z0-9-]+\.glb$/.test(p.modelSrc),
+       `${p.id}: modelSrc should be assets/holo-models/*.glb, got ${p.modelSrc}`);
+    const file = path.join(ROOT, 'dist', p.modelSrc);
+    ok(fs.existsSync(file), `${p.id}: missing GLB at dist/${p.modelSrc}`);
+    ok(fs.statSync(file).size > 1000, `${p.id}: model payload suspiciously small`);
   }, 1);
+  ok(fs.existsSync(path.join(ROOT, 'dist', 'assets', 'holo3d', 'holo3d.js')),
+     'HOLO3D viewer bundle should be copied to dist/assets/holo3d/');
   const lib = get('HOLO3D');
   ok(lib && lib.THREE && lib.OrbitControls && lib.GLTFLoader,
-     'HOLO3D viewer bundle should ship when models are present');
+     'HOLO3D viewer should be available to the test VM (preloaded from dist)');
+  ok(typeof get('ensureHolo3d') === 'function', 'ensureHolo3d should exist for lazy load');
 
   run('closeTank()');
   ok(tank.hidden, 'the tank did not close');
@@ -132,5 +139,5 @@ module.exports = ({ok, get, run, each, need, ROOT}) => {
   ok(new Set(HOLO.plates.map(p => p.id)).size === HOLO.plates.length, 'duplicate plate id');
 
   console.log(`  ${HOLO.plates.length} plates, ` +
-              `${Math.round(HOLO.plates.reduce((n, p) => n + p.src.length, 0) / 1024)} KB inlined`);
+              `${HOLO.plates.filter(p => p.modelSrc).length} with 3D`);
 };

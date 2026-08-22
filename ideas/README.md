@@ -12,8 +12,8 @@ This file wins on **current product intent** when it conflicts with older review
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
 | [`experiments/heaven-raid/README.md`](experiments/heaven-raid/README.md) | **Parked PoC** shmup: Heaven vs Empire probes (Galaga×1942). v1 good; develop later. Not a Registry tab. |
 
-**Last handoff write-up:** 2026-08-22 — **Phase A World hub + Phase A2 first impression**; setup-evolution plan locked (IA → delivery → spatial flair).  
-**Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and **offline** promises (local multi-file OK — single-HTML ceiling retired as dogma). Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
+**Last handoff write-up:** 2026-08-22 — **Phases A + A2 + B**: World hub, first impression, multi-file local `dist/`.  
+**Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and **offline** promises (local multi-file OK). Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
 
 **Owner intent (explicit):**  
 - One agent can own the whole stack — no need to bounce LLMs for art or implementation.  
@@ -64,7 +64,7 @@ Encyclopaedia drawers share one top tab so the spatial stack stays first-class. 
 - **11** blog posts · **64** timeline events  
 - **18** holotank plates (VR + vessel stills + gorilloid specimen)  
 - **1** plate with **3D model** (`vessel-heaven-1` → `assets/holo-models/vessel-heaven-1.glb`)  
-- Shipped page ~**2.3 MB** (stills + Three bundle + one decimated GLB)  
+- Shipped as **`dist/index.html` + `dist/assets/`** — HTML holds data/UI; stills, GLBs, and Three live beside it (prefer `make serve`) 
 - Books 1–5 released; **Bk6 *The Infinite Extent*** 2026-09-10 (`released: false`)  
 - Todo: **11** open / **44** done
 
@@ -85,7 +85,7 @@ Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional
 2. **Books-only lineage** (wiki → `priorClaim` only).  
 3. **Preserve disagreement** (`conflict`).  
 4. **Inherited memory** caution.  
-5. **Zero external requests** at runtime (inline art, models, Three bundle).  
+5. **Offline at runtime** — no CDN / no network. Local relative assets under `dist/assets/` are fine; stroke SVGs still inline. 
 6. **`ORDER` whitelist** on Bob fields.  
 7. **No plate without a citation.**  
 8. **Presentation is personal** (amber is Bill’s room).  
@@ -106,23 +106,23 @@ Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional
 
 ### 2D stills
 
-- `assets/holo/<plateId>.webp` → build inlines `src` as data URI.  
-- Card thumbs for vessels use **canvas + paint()** (not base64 in stage HTML — spoiler scan false positives).
+- Source: `assets/holo/<plateId>.webp` → build copies to `dist/assets/holo/` and sets `src` to a **relative path**.  
+- Card thumbs for vessels use **canvas + paint()** (not embedding bytes in stage HTML — spoiler scan false positives).
 
 ### 3D orbit (shipped, concept loved; mesh quality TBD)
 
 | Piece | Path / behavior |
 |---|---|
-| Model files | `assets/holo-models/<id>.glb` |
+| Model files | `assets/holo-models/<id>.glb` → copied to `dist/assets/holo-models/` |
 | Plate field | `"model": "vessel-heaven-1"` on plate in `holo.json` |
-| Build | Inlines `modelSrc` as `data:model/gltf-binary;base64,...` |
-| Viewer | `assets/holo3d/holo3d.js` — esbuild IIFE of Three + OrbitControls + GLTFLoader → `HOLO3D` global |
-| UI | Open attachment → **3D ORBIT** default if model present; **STILL** toggle; reduced-motion / no WebGL → still only |
+| Build | Sets `modelSrc` to `assets/holo-models/<id>.glb` (relative) |
+| Viewer | `dist/assets/holo3d/holo3d.js` — lazy-loaded via `ensureHolo3d()` on first 3D open |
+| UI | Open attachment → load viewer → **3D ORBIT** if model present; **STILL** toggle; reduced-motion / no WebGL / load fail → still only |
 | Material | Amber standard material in-tank (textures stripped for size/schematic feel) |
 
-**Owner feedback (2026-08-16):** concept is a **love**; current Heaven gen 1 mesh looks **tattered** (aggressive decimate + no textures for first live ship). **Will redo the 3D model.** Size optimization **deferred** to later discussion — quality first next pass.
+**Owner feedback (2026-08-16):** concept is a **love**; current Heaven gen 1 mesh looks **tattered** (aggressive decimate + no textures for first live ship). **Will redo the 3D model.** Quality first; multi-file delivery (Phase B) removes the inline-size ceiling.
 
-**Current live model:** ~10k faces, no textures, ~268 KB GLB. Spike full-quality clean was ~87 MB — not shippable inline without decimate.
+**Current live model:** ~10k faces, no textures, ~268 KB GLB. Spike full-quality clean was ~87 MB — fine beside the page after Phase B; still prefer a clean mesh over shipping Tripo soup.
 
 ### Ship recipe (2D plate)
 
@@ -130,17 +130,17 @@ Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional
 2. Imagine → keeper under `ideas/`  
 3. Encode WebP ~520px → `assets/holo/<id>.webp`  
 4. Entry in `data/holo.json`  
-5. `make validate && make test`
+5. `make validate && make test` (build copies into `dist/assets/holo/`)
 
 ### Ship recipe (3D model on a plate)
 
 1. Image→3D externally (Tripo / Meshy / etc.) from a **cropped** still (no moons in frame).  
 2. Manual Blender cleanup (moon blobs) — auto scripts struggle on fragmented AI meshes.  
-3. Decimate / strip textures as needed → `assets/holo-models/<id>.glb`  
+3. Export → `assets/holo-models/<id>.glb` (quality first; no longer capped by HTML inline size).  
 4. Plate: `"model": "<id>"` (same basename as GLB).  
 5. Rebuild Three bundle if updated:  
    `ideas/experiments/holotank-3d/` → `npx esbuild bundle/entry.js --bundle --format=iife --global-name=HOLO3D --outfile=../../assets/holo3d/holo3d.js --minify`  
-6. `make validate && make test`
+6. `make validate && make test` — open via `make serve` to exercise 3D
 
 ### Local spike tools (not production)
 
@@ -281,8 +281,8 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 ### Setup evolution (locked direction)
 
 1. **A — World hub** — **done 2026-08-22.**  
-2. **A2 — First impression** — **done 2026-08-22:** boot lands on `Ready · FEED`; dismissible strip legend (FEED · REPLICANTS · SPACE · WORLD · LOG); editor post `you-are-here` (spoil 1). Root README census refreshed in Phase A.  
-3. **B — Delivery** — `dist/` as small app shell + relative assets; lazy-load Three/GLBs; keep offline.  
+2. **A2 — First impression** — **done 2026-08-22.**  
+3. **B — Delivery** — **done 2026-08-22:** `dist/assets/` for stills/GLBs/Three; relative URLs; `ensureHolo3d()` lazy load; prefer `make serve`.  
 4. **C — Spatial flair** — navigable 3D Chart (tooltips, click-to-focus); richer Gates/Galaxy interaction language; Heaven mesh redo with quality assets.
 
 ### Product (when resuming craft)
@@ -321,9 +321,9 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ### Retired as dogma (now staged goals)
 
-- **Three.js Chart** — was “wrong forever”; now **Phase C** after delivery unlock  
-- **Single-file base64 ceiling** — was blocking realism; **Phase B** moves to relative local assets + lazy load (still offline, no CDN)  
-- **Multi‑10 MB GLBs** — wrong on first paint / inlined HTML; fine beside the page after Phase B 
+- **Three.js Chart** — was “wrong forever”; now **Phase C** (delivery unlocked)  
+- **Single-file base64 ceiling** — **retired in Phase B**  
+- **Multi‑10 MB GLBs** — wrong on first paint; fine beside the page under `dist/assets/`
 
 ---
 
@@ -373,20 +373,20 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ---
 
-## 15. Session arc (2026-08-22) — site setup + World hub + A2
+## 15. Session arc (2026-08-22) — setup evolution A → A2 → B
 
 1. Discussed overall feel / crowded World strip / first impression; reopened genealogy-era limits.  
 2. Locked direction: World IA **Option A**; offline = local multi-file / no CDN; roadmap **A → A2 → B → C**.  
 3. **Phase A:** WORLD hub tab + sub-nav; spatial peers stay top-level; deep links preserved.  
-4. **Phase A2:** boot `Ready · FEED`; dismissible strip legend; editor post **you-are-here** (spoil 1, complements three-maps).
+4. **Phase A2:** boot `Ready · FEED`; dismissible strip legend; editor post **you-are-here**.  
+5. **Phase B:** `dist/assets/` for WebP/GLB/Three; relative URLs; `ensureHolo3d()` lazy load; single-HTML ceiling retired.
 
 ### Resume next with (pick one)
 
-- **Phase B** — multi-file `dist/` + lazy assets (unlocks realism / 3D Chart)  
+- **Phase C** — 3D Chart flair / Heaven mesh redo  
 - Genealogy research / Grow Persons / Book 6 prep  
-- Heaven mesh redo (better after Phase B)  
 - Heaven Raid (only if asked)
 
 ---
 
-*Handoff for continuous ownership. Phases A + A2 shipped 2026-08-22.*
+*Handoff for continuous ownership. Phases A + A2 + B shipped 2026-08-22.*
