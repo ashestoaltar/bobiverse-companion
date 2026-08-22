@@ -122,6 +122,35 @@
     flex:none; width:1px; align-self:stretch; margin:0 4px;
     background:var(--ash); opacity:.55;
   }
+  /* Encyclopaedia drawers under the WORLD hub — spatial peers stay top-level. */
+  .world-sub{
+    display:flex; flex-wrap:wrap; gap:0; margin:0 0 14px;
+    border:1px solid var(--rule); background:var(--panel);
+  }
+  .world-sec{
+    flex:1 1 auto; min-width:5.5em; text-align:center; text-decoration:none;
+    font:inherit; font-size:11px; letter-spacing:.12em; color:var(--amber-dim);
+    padding:7px 10px; border-right:1px solid var(--rule); cursor:pointer;
+  }
+  .world-sec:last-child{border-right:0}
+  .world-sec:hover{color:var(--amber-hi); background:var(--panel-hi)}
+  .world-sec[aria-current="page"]{background:var(--amber); color:var(--void)}
+  .world-sec .tab-full{display:inline}
+  .world-sec .tab-short{display:none}
+  /* First-visit strip legend — orientation, not a tutorial modal. */
+  .strip-legend{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin:0; padding:5px 10px;
+    border:1px solid var(--rule); background:var(--panel);
+    font-size:10px; letter-spacing:.14em; color:var(--amber-dim);
+  }
+  .strip-legend[hidden]{display:none !important}
+  .strip-legend b{color:var(--amber); font-weight:normal}
+  .strip-legend button{
+    flex:none; background:transparent; border:0; color:var(--amber-dim);
+    font:inherit; font-size:12px; letter-spacing:.1em; cursor:pointer; padding:2px 6px;
+  }
+  .strip-legend button:hover{color:var(--amber-hi)}
   /* Content-affecting, so it reads as part of the instrument rather than as
      the decoration in the footer. It goes amber when it is actually holding
      something back — a guard you cannot tell is on is a guard you will forget. */
@@ -727,6 +756,10 @@
     .tab .tab-full{display:none}
     .tab .tab-short{display:inline}
     .tab{padding:6px 10px; letter-spacing:.08em; font-size:11px}
+    .world-sec .tab-full{display:none}
+    .world-sec .tab-short{display:inline}
+    .world-sec{padding:6px 8px; letter-spacing:.08em; font-size:10px}
+    .strip-legend{font-size:9px; letter-spacing:.1em; padding:4px 8px; flex-wrap:wrap}
   }
   @media (prefers-reduced-motion:reduce){
     *{transition:none !important; animation:none !important}
@@ -917,6 +950,12 @@
 
       <!-- filled from REGISTERS; adding a register must not mean editing markup -->
       <div class="tabs" id="tabs" role="tablist" aria-label="View"></div>
+    </div>
+
+    <!-- First visit only: names the strip groups. Dismissible; never a modal. -->
+    <div class="strip-legend" id="strip-legend" hidden>
+      <span><b>FEED</b> · REPLICANTS · SPACE · WORLD · LOG — the strip, grouped</span>
+      <button type="button" id="strip-legend-dismiss" aria-label="Dismiss strip legend">DISMISS</button>
     </div>
 
     <div class="toolbar-row">
@@ -1149,6 +1188,7 @@ const BOOK_WORD = numWord(BOOK_MAX);
 const state = {view:'blog', q:'', filters:new Set(), sort:'name', dir:1,
                selected:null, beast:null, people:null, person:null, vessel:null, gate:null,
                galaxy:null, blog:null, system:null,
+               worldLast:'vessels',
                book:BOOK_MAX};
 
 /* ---- registers --------------------------------------------------------
@@ -1176,6 +1216,9 @@ const state = {view:'blog', q:'', filters:new Set(), sort:'name', dir:1,
                      handled it, false to let the normal row/sort/chip handling
                      run. The bestiary uses it for its own cards, since those
                      aren't replicant rows.
+     hub:'world'     encyclopaedia register: keeps its own URL (#vessels/…)
+                     but shares one top-level WORLD tab + in-stage sub-nav.
+                     Spatial peers (chart/systems/gates/galaxy) stay top-level.
 
    Function declarations hoist, so naming renderChart here before it appears
    further down is fine. */
@@ -1297,7 +1340,7 @@ const REGISTERS = [
      render();
      return true;
    }},
-  {id:'vessels',    label:'VESSELS',    short:'SHIP',  render: renderVessels,
+  {id:'vessels',    label:'VESSELS',    short:'SHIP',  hub:'world', render: renderVessels,
    rows: vesselRows,
    paint: paintVesselThumbs,
    status: rows => {
@@ -1315,7 +1358,7 @@ const REGISTERS = [
      render();
      return true;
    }},
-  {id:'bestiary',   label:'BESTIARY',   short:'BEST',  render: renderBestiary,
+  {id:'bestiary',   label:'BESTIARY',   short:'BEST',  hub:'world', render: renderBestiary,
    rows: beasts,
    status: rows => {
      const all = (BESTIARY && BESTIARY.creatures) || [];
@@ -1334,7 +1377,7 @@ const REGISTERS = [
      render();
      return true;
    }},
-  {id:'peoples',    label:'PEOPLES',    short:'PEOP',  render: renderPeoples,
+  {id:'peoples',    label:'PEOPLES',    short:'PEOP',  hub:'world', render: renderPeoples,
    rows: peoples,
    status: rows => {
      const all = (PEOPLES && PEOPLES.entries) || [];
@@ -1356,7 +1399,7 @@ const REGISTERS = [
      render();
      return true;
    }},
-  {id:'persons',    label:'PERSONS',    short:'PERS',  tabGapAfter:true, render: renderPersons,
+  {id:'persons',    label:'PERSONS',    short:'PERS',  hub:'world', render: renderPersons,
    rows: persons,
    status: rows => {
      const all = (PERSONS && PERSONS.persons) || [];
@@ -1391,6 +1434,41 @@ const REGISTERS = [
 /* Looked up on demand rather than cached in a map, so a register appended at
    runtime resolves like any other. The list is five long; the lookup is free. */
 const currentRegister = () => REGISTERS.find(r => r.id === state.view) || REGISTERS[0];
+
+/* WORLD hub: vessels / bestiary / peoples / persons stay addressable registers
+   but share one top-level tab. Spatial peers stay first-class beside it. */
+const isWorldView = v => REGISTERS.some(r => r.id === v && r.hub === 'world');
+const worldMembers = () => REGISTERS.filter(r => r.hub === 'world');
+const worldTabTarget = () =>
+  (isWorldView(state.worldLast) ? state.worldLast : null)
+  || (worldMembers()[0] && worldMembers()[0].id)
+  || 'vessels';
+
+/* Top-strip order: every register except hub children, with a single 'world'
+   sentinel standing in for the encyclopaedia drawers. Arrow keys and focus
+   tests walk this list, not REGISTERS.map(r => r.id). */
+function tabStripIds(){
+  const out = [];
+  let worldDone = false;
+  for (const r of REGISTERS) {
+    if (r.hub === 'world') {
+      if (!worldDone) { out.push('world'); worldDone = true; }
+      continue;
+    }
+    out.push(r.id);
+  }
+  return out;
+}
+
+function renderWorldSubnav(){
+  return `<nav class="world-sub" aria-label="World registers">` +
+    worldMembers().map(r => {
+      const on = r.id === state.view;
+      return `<a class="world-sec" href="${addr(r.id)}" aria-current="${on ? 'page' : 'false'}">` +
+        `<span class="tab-full">${esc(r.label)}</span>` +
+        `<span class="tab-short">${esc(r.short || r.label)}</span></a>`;
+    }).join('') + `</nav>`;
+}
 
 /* ---- helpers ---------------------------------------------------------- */
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -4289,16 +4367,36 @@ function renderStatus(rows){
 
 /* Both spellings of every label ship, and CSS picks one by width. Swapping the
    text itself would change the accessible name depending on the size of the
-   window, which is a strange thing for a screen reader to be told. */
+   window, which is a strange thing for a screen reader to be told.
+
+   Hub children (hub:'world') do not each get a top tab — one WORLD tab stands
+   for all of them. Deep links (#vessels/…, #persons/…) still address the
+   underlying register. */
 function renderTabs(){
   const bits = [];
+  let worldDone = false;
   for (const r of REGISTERS) {
+    if (r.hub === 'world') {
+      if (worldDone) continue;
+      worldDone = true;
+      const on = isWorldView(state.view);
+      bits.push(
+        `<button class="tab" role="tab" id="tab-world" aria-selected="${on}" ` +
+        `aria-controls="stage" tabindex="${on ? 0 : -1}" ` +
+        `data-view="world" title="WORLD">` +
+        `<span class="tab-full">WORLD</span>` +
+        `<span class="tab-short">WORLD</span></button>`
+      );
+      bits.push(`<span class="tab-gap" aria-hidden="true"></span>`);
+      continue;
+    }
+    const on = r.id === state.view;
     bits.push(
-      `<button class="tab" role="tab" id="tab-${r.id}" aria-selected="${r.id === state.view}" ` +
+      `<button class="tab" role="tab" id="tab-${r.id}" aria-selected="${on}" ` +
       // A tablist owns one tab stop, not ten. Without the roving tabindex, Tab
       // walks every register before reaching the register itself; without
       // aria-controls, nothing says which region a tab governs.
-      `aria-controls="stage" tabindex="${r.id === state.view ? 0 : -1}" ` +
+      `aria-controls="stage" tabindex="${on ? 0 : -1}" ` +
       `data-view="${r.id}" title="${esc(r.label)}">` +
       `<span class="tab-full">${esc(r.label)}</span>` +
       `<span class="tab-short">${esc(r.short || r.label)}</span></button>`
@@ -4371,16 +4469,38 @@ function clearSelection(){
   restoreFocus();
 }
 
+/* Quiet first-visit orientation for the tab strip. Shown until dismissed;
+   remembered in localStorage. Link arrivals skip it — someone sent them
+   somewhere specific, and a legend in the way is rude. */
+const STRIP_LEGEND_KEY = 'bobnet-strip-legend';
+function stripLegendDismissed(){
+  try { return localStorage.getItem(STRIP_LEGEND_KEY) === '1'; } catch (e) { return false; }
+}
+function dismissStripLegend(){
+  try { localStorage.setItem(STRIP_LEGEND_KEY, '1'); } catch (e) {}
+  syncStripLegend();
+}
+function syncStripLegend(){
+  const el = document.getElementById('strip-legend');
+  if (!el) return;
+  const show = !stripLegendDismissed() && !ARRIVED_ON_LINK;
+  el.hidden = !show;
+}
+
 function render(){
   const reg = currentRegister();
+  if (isWorldView(state.view)) state.worldLast = state.view;
   const rows = (reg.rows || visible)();
-  document.getElementById('stage').innerHTML = reg.render(rows);
+  let html = reg.render(rows);
+  if (reg.hub === 'world') html = renderWorldSubnav() + html;
+  document.getElementById('stage').innerHTML = html;
   renderTabs();
   // Whether there are chips at all is now a property of the view, so this has
   // to run on every render rather than only when a chip is clicked.
   renderChips();
   syncReading();
   syncSheet();
+  syncStripLegend();
   renderDossier();
   (reg.status || renderStatus)(rows);
   if (reg.paint) reg.paint();
@@ -4481,7 +4601,7 @@ function syncHash(){
    the new register and syncHash quietly rewrites the bar to the current name.
    Aliases are cheap and permanent: removing one breaks a link somebody already
    has, and there is no way to know who. */
-const VIEW_ALIAS = {lineage: 'genealogy'};
+const VIEW_ALIAS = {lineage: 'genealogy', world: 'vessels'};
 
 function applyHash(){
   const raw = String(window.location.hash || '').replace(/^#/, '');
@@ -4665,8 +4785,15 @@ function applyHash(){
 
 /* ---- events ----------------------------------------------------------- */
 document.addEventListener('click', e => {
+  if (e.target.closest('#strip-legend-dismiss')) { dismissStripLegend(); return; }
+
   const tab = e.target.closest('.tab');
-  if (tab) { state.view = tab.dataset.view; render(); return; }
+  if (tab) {
+    const v = tab.dataset.view;
+    state.view = v === 'world' ? worldTabTarget() : v;
+    render();
+    return;
+  }
 
   // the active register gets first refusal on everything else
   const own = currentRegister().onClick;
@@ -4717,15 +4844,16 @@ document.addEventListener('keydown', e => {
                 document.activeElement.dataset.view;
   if (onTab && /^(ArrowLeft|ArrowRight|Home|End)$/.test(e.key)) {
     e.preventDefault();
-    const ids = REGISTERS.map(r => r.id);
+    const ids = tabStripIds();
     const i = ids.indexOf(onTab);
     const to = e.key === 'Home' ? 0
              : e.key === 'End' ? ids.length - 1
              : e.key === 'ArrowRight' ? (i + 1) % ids.length
              : (i - 1 + ids.length) % ids.length;
-    state.view = ids[to];
+    const next = ids[to];
+    state.view = next === 'world' ? worldTabTarget() : next;
     render();
-    const el = document.getElementById('tab-' + ids[to]);
+    const el = document.getElementById(next === 'world' ? 'tab-world' : 'tab-' + next);
     if (el && el.focus) el.focus({preventScroll:true});
     return;
   }
@@ -4871,8 +4999,8 @@ function bootLines(){
      `${folk.filter(e => e.kind === 'people').length} species, ` +
      `${folk.filter(e => e.kind === 'polity').length} polities, ` +
      `${folk.filter(e => e.kind === 'faction').length} factions]`, 180],
-    // A real hold on the last line — the sequence should land, not stop.
-    ['[STATUS: Ready]', 700],
+    // Land on Ready, and name the lobby so Blog does not feel accidental.
+    ['[STATUS: Ready \u00b7 FEED]', 700],
   ];
 }
 

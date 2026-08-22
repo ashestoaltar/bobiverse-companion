@@ -45,6 +45,20 @@ module.exports = ({ok, get, run, each, need}) => {
   ok(all.some(p => p.voice === 'editor'), 'expected at least one post in the registry voice');
   ok(all.some(p => p.voice === 'bobnet'), 'expected at least one post in Bill\'s voice');
 
+  // ---- first-impression orientation post --------------------------------
+  // Complements Bill's spatial note without replacing it: room layout, READ
+  // THROUGH, holotank — spoil-safe for book one.
+  const orient = all.find(p => p.id === 'you-are-here');
+  ok(orient, 'missing you-are-here orientation post');
+  if (orient) {
+    ok(orient.voice === 'editor', 'orientation post should be registry voice');
+    ok(orient.spoil === 1, 'orientation post should be visible from book one');
+    const text = `${orient.title} ${orient.dek || ''} ${orient.body}`.toLowerCase();
+    for (const must of ['feed', 'read through', 'holotank', 'world']) {
+      ok(text.includes(must), `orientation post should mention '${must}'`);
+    }
+  }
+
   // ---- rendering ---------------------------------------------------------
   reset();
   run('render()');
@@ -94,7 +108,10 @@ module.exports = ({ok, get, run, each, need}) => {
   }
 
   // forwards: the post carries the links
-  const withLinks = all.find(p => (p.about || []).length);
+  // Prefer a post that names a specific record — register-only abouts (blog,
+  // chart, …) are valid, but the reverse-link check needs an id to open.
+  const withLinks = all.find(p => (p.about || []).some(a => a.includes('/')))
+                 || all.find(p => (p.about || []).length);
   ok(withLinks, 'expected a post that points somewhere');
   reset();
   state.blog = withLinks.id;

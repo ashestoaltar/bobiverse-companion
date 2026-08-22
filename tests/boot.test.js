@@ -43,6 +43,9 @@ module.exports = ({ok, get, run}) => {
   ok(all.includes(`${species} species`), 'boot misreports the species count');
   ok(all.includes(`${polities} polities`), 'boot misreports the polity count');
   ok(/STATUS: Ready/.test(all), 'boot never says it is ready');
+  // First impression: Ready names the lobby so Blog does not feel accidental.
+  ok(/STATUS: Ready · FEED/.test(all) || /STATUS: Ready \u00b7 FEED/.test(all),
+     'boot Ready line should name the FEED lobby');
 
   // ---- it is a SCUT connect, not a mainframe coming up -------------------
   // The books show this twice and agree — Riker in Bk1 ch41, Mulder in Bk2 ch6.
@@ -59,6 +62,7 @@ module.exports = ({ok, get, run}) => {
   ok(available >= 0, 'boot never lists the connections available');
   ok(connect > available, 'boot connects before it has offered anywhere to connect to');
   ok(ready === lines.length - 1, 'the sequence should land on ready, not pass through it');
+  ok(/FEED/.test(lines[ready][0]), 'the landing line should name FEED');
 
   // The systems it offers are derived, not typed: the earliest contacted, in
   // order. That they come out as the four the books print is checkable rather

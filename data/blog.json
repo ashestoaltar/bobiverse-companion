@@ -2,6 +2,27 @@
   "_comment": "Dated posts, rendered as a peer register. Bill's blog is canon (Bk4 ch5). `voice` says who is talking: bobnet is Bill and may not know the novels exist, editor is this registry's own voice and may. Prose is ours in both cases — never a passage from the books, and never a quotation from Taylor's own blog.",
   "posts": [
     {
+      "id": "you-are-here",
+      "date": "2345-08-21",
+      "voice": "editor",
+      "by": "Registry editor",
+      "title": "You are here",
+      "dek": "A short map of this console, for anyone who just finished the handshake.",
+      "tags": [
+        "meta",
+        "orientation"
+      ],
+      "about": [
+        "blog",
+        "register",
+        "genealogy",
+        "chart",
+        "vessels"
+      ],
+      "spoil": 1,
+      "body": "If the boot just handed you to the feed, that was on purpose. This blog is the lobby — Bill's public surface on BobNet, plus a few notes from the registry itself when the work needs a voice that can say \"book\" out loud.\n\nThe strip across the top is grouped, even when it does not label the groups. Feed is this page. Replicants are the provenance work: Register, Genealogy, Unresolved, In Memorium. Space starts with Chart and Systems; later reading opens more map surfaces beside them. World is one tab with drawers underneath — vessels, fauna, peoples, persons — so the encyclopaedia can grow without crowding the sky. Log is Timeline and the to-do list.\n\nREAD THROUGH in the toolbar is the courtesy gate. Set it to the book you have finished. The console will hold back anything it can only cite from further on. It is not a lock, and it is not magic — open the page source and the held text is still there — but it keeps a mid-series reader from walking into a name they have not earned yet.\n\nGreen attachment marks open the holotank: stills and, where we have one, a 3D orbit. The chrome stays drab on purpose; the payload is supposed to feel like a file that opened.\n\nBill has a longer note on this feed about why some maps refuse to merge. Read that when your reading position allows it. This one is only the room layout.\n\nPing the tree if a parentage looks wrong. Bring a citation, not a vibe."
+    },
+    {
       "id": "what-a-partial-is",
       "date": "2174-01-18",
       "voice": "bobnet",

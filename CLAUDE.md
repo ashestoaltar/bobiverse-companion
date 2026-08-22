@@ -13,11 +13,11 @@ owns code, data, tests, and media; suggest improvements freely; “locked”
 choices are not sacred if quality demands change. Living backlog:
 `data/todo.json`. This file stays ground rules and data layout.
 
-**Near-term (2026-08-20 wrap):** prefer **code/data/console product** until the
-owner says otherwise. Parked PoCs: Imagine stills/video (`scene-ee-standoff/`),
-moot empty hall + Jeeves locks, **Heaven Raid** shmup (`heaven-raid/` — v1
-accepted, develop later). Do not burn Imagine quota on multi-subject composites
-without a plan.
+**Near-term (2026-08-22):** Phases **A** (World hub) + **A2** (first
+impression) shipped. Next: **B** multi-file local `dist/` (offline, no CDN —
+single-HTML ceiling retired), then **C** 3D Chart flair. Prefer
+code/data/console before Imagine burn. Parked PoCs: EE video, moot populate,
+Heaven Raid. Do not burn Imagine on multi-subject composites without a plan.
 
 **3D holotank assets:** `assets/holo-models/*.glb`, viewer bundle
 `assets/holo3d/holo3d.js`, plate field `model` in `data/holo.json`. Spike tools

@@ -32,10 +32,11 @@ module.exports = ({ok, get, run, each, need}) => {
   const tabsOf = () => [...doc.getElementById('tabs').innerHTML.matchAll(/<button[^>]*>/g)]
     .map(m => m[0]);
 
+  const strip = run('tabStripIds()');
   each('tabs', tabsOf(), tab => {
     ok(/aria-controls="stage"/.test(tab), `a tab does not say what it controls: ${tab.slice(0, 60)}`);
     ok(/tabindex="(0|-1)"/.test(tab), `a tab has no explicit tab stop: ${tab.slice(0, 60)}`);
-  }, REGISTERS.length);
+  }, strip.length);
 
   // A tablist is one tab stop, not ten. Without this, Tab walks every register
   // before it reaches the register.
@@ -48,8 +49,9 @@ module.exports = ({ok, get, run, each, need}) => {
   // drive the same state transition the handler performs and assert the tab bar
   // follows. What is being tested is that the roving stop tracks the view — the
   // key mapping itself is asserted from the shipped source below.
-  each('registers to move between', REGISTERS.map(r => r.id), id => {
-    state.view = id;
+  // Walk the top strip (WORLD stands in for vessels/bestiary/peoples/persons).
+  each('registers to move between', strip, id => {
+    state.view = id === 'world' ? run('worldTabTarget()') : id;
     run('render()');
     const one = tabsOf().filter(t => /tabindex="0"/.test(t));
     ok(one.length === 1 && new RegExp(`data-view="${id}"`).test(one[0]),
@@ -118,5 +120,5 @@ module.exports = ({ok, get, run, each, need}) => {
   }
 
   reset();
-  console.log(`  ${REGISTERS.length} tabs, one tab stop, focus returns on close`);
+  console.log(`  ${strip.length} top tabs (${REGISTERS.length} registers), one tab stop, focus returns on close`);
 };

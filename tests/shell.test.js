@@ -9,9 +9,12 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = ({ok, ROOT}) => {
+module.exports = ({ok, get, run, ROOT}) => {
   const html = fs.readFileSync(path.join(ROOT, 'dist', 'index.html'), 'utf8');
   const head = html.slice(0, html.indexOf('</head>'));
+  const doc = get('document');
+  const win = get('window');
+  const state = get('state');
 
   // ---- standards mode ----------------------------------------------------
   ok(/^<!doctype html>/i.test(html.trimStart()),
@@ -62,6 +65,30 @@ module.exports = ({ok, ROOT}) => {
                         'status-tools', 'SCANLINES', 'text-shadow:inherit']) {
     ok(!html.includes(orphan), `'${orphan}' survived the CRT removal`);
   }
+
+  // ---- first-visit strip legend ------------------------------------------
+  // Orientation for the grouped tab strip. Shown until dismissed; skipped on
+  // link arrivals. Never a modal.
+  ok(/id="strip-legend"/.test(html), 'strip legend markup missing from the shell');
+  ok(/id="strip-legend-dismiss"/.test(html), 'strip legend dismiss control missing');
+
+  get('localStorage').removeItem('bobnet-strip-legend');
+  run('ARRIVED_ON_LINK = false');
+  state.view = 'blog';
+  run('render()');
+  ok(doc.getElementById('strip-legend').hidden === false,
+     'strip legend should show on a cold visit');
+  run('dismissStripLegend()');
+  ok(get('localStorage').getItem('bobnet-strip-legend') === '1',
+     'dismissing the strip legend should persist');
+  ok(doc.getElementById('strip-legend').hidden === true,
+     'strip legend should hide after dismiss');
+  run('ARRIVED_ON_LINK = true');
+  get('localStorage').removeItem('bobnet-strip-legend');
+  run('syncStripLegend()');
+  ok(doc.getElementById('strip-legend').hidden === true,
+     'strip legend should stay hidden for link arrivals');
+  run('ARRIVED_ON_LINK = false');
 
   console.log(`  ${html.length.toLocaleString()} bytes, standards mode, theme ${themed ? themed[1] : '?'}`);
 };

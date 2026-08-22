@@ -58,10 +58,14 @@ record now says so.
 
 ## The console
 
-Eleven registers, with live search across names, aliases, designations, systems,
-notes and citations — and every view has an address, so any of them can be
-linked to, in either direction: a post says what it is about and every record it
-names shows that the post exists.
+Fifteen registers behind a twelve-tab strip (Blog default), with live search
+across names, aliases, designations, systems, notes and citations — and every
+view has an address, so any of them can be linked to, in either direction: a
+post says what it is about and every record it names shows that the post exists.
+
+**Top strip groups:** Feed (Blog) · Replicants · Space (Chart / Systems / Gates /
+Galaxy) · **WORLD** hub (Vessels / Bestiary / Peoples / Persons behind one tab) ·
+Log (Timeline / To-do). Deep links like `#vessels/heaven_g1` still work.
 
 - **Register** — the full list, sortable on every column.
 - **Genealogy** — the descent tree (Bill's word for the work; the books never

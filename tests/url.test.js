@@ -80,6 +80,14 @@ module.exports = ({ok, get, run, ROOT}) => {
   ok(state.selected === 'bill', 'the selection should survive the alias');
   ok(run('hashFor()') === '#genealogy/bill', `alias came back as ${run('hashFor()')}`);
 
+  // #world is the top-strip hub label; it resolves to the default encyclopaedia
+  // drawer (vessels) and respells so shared links stay on the real register.
+  reset();
+  win.location.hash = '#world';
+  ok(run('applyHash()') === true, '#world should resolve via VIEW_ALIAS');
+  ok(state.view === 'vessels', `#world landed on '${state.view}'`);
+  ok(run('hashFor()') === '#vessels', `#world came back as ${run('hashFor()')}`);
+
   win.history.calls.length = 0;
   run('syncHash()');
   ok(win.history.calls.length === 1 && win.history.calls[0][0] === 'replace',

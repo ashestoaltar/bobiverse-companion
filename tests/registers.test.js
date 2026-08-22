@@ -28,10 +28,21 @@ module.exports = ({ok, get, run}) => {
   ok(new Set(views).size === views.length, 'duplicate register id');
 
   // ---- the tab bar is generated, not hand-written ----
+  // Hub children (hub:'world') share one WORLD tab; they keep their own URLs
+  // and stay in REGISTERS, but they do not each own a top-strip button.
   state.view = views[0];
   run('render()');
   const tabs = doc.getElementById('tabs').innerHTML;
+  const strip = run('tabStripIds()');
+  ok(Array.isArray(strip) && strip.includes('world'), 'tabStripIds should include the world hub');
+  ok(tabs.includes('data-view="world"'), 'world hub: no tab rendered');
+  ok(tabs.includes('>WORLD<'), 'world hub: label missing from the tab bar');
   for (const r of REGISTERS) {
+    if (r.hub === 'world') {
+      ok(!tabs.includes(`data-view="${r.id}"`),
+         `${r.id}: hub child should not own a top-strip tab`);
+      continue;
+    }
     ok(tabs.includes(`data-view="${r.id}"`), `${r.id}: no tab rendered`);
     ok(tabs.includes(`>${r.label}<`), `${r.id}: label "${r.label}" missing from the tab bar`);
   }
@@ -40,7 +51,10 @@ module.exports = ({ok, get, run}) => {
 
   // Both spellings ship and CSS chooses; swapping the text by width would mean
   // a screen reader hears a different name depending on the size of the window.
+  ok(tabs.includes('<span class="tab-short">WORLD</span>'),
+     'world hub: no short label in the tab bar');
   for (const r of REGISTERS) {
+    if (r.hub === 'world') continue;
     ok(tabs.includes(`<span class="tab-short">${r.short || r.label}</span>`),
        `${r.id}: no short label in the tab bar`);
   }
@@ -73,8 +87,13 @@ module.exports = ({ok, get, run}) => {
     const selected = [...html.matchAll(/<button[^>]*>/g)].map(m => m[0])
       .filter(t => /aria-selected="true"/.test(t))
       .map(t => (/data-view="([^"]+)"/.exec(t) || [])[1]);
-    ok(selected.length === 1 && selected[0] === v,
-       `view ${v}: tab bar marks ${selected.join(',') || 'nothing'} as selected`);
+    const expect = (REGISTERS.find(r => r.id === v) || {}).hub === 'world' ? 'world' : v;
+    ok(selected.length === 1 && selected[0] === expect,
+       `view ${v}: tab bar marks ${selected.join(',') || 'nothing'} as selected (want ${expect})`);
+    if (expect === 'world') {
+      ok(doc.getElementById('stage').innerHTML.includes('world-sub'),
+         `view ${v}: world hub should render the in-stage sub-nav`);
+    }
   }
 
   // ---- add one at runtime and see if the console notices ----

@@ -12,8 +12,8 @@ This file wins on **current product intent** when it conflicts with older review
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
 | [`experiments/heaven-raid/README.md`](experiments/heaven-raid/README.md) | **Parked PoC** shmup: Heaven vs Empire probes (Galaga×1942). v1 good; develop later. Not a Registry tab. |
 
-**Last handoff write-up:** 2026-08-20 **EOD wrap** — spatial stack shipped; Heaven Raid PoC parked.  
-**Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and zero-network promises. Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
+**Last handoff write-up:** 2026-08-22 — **Phase A World hub + Phase A2 first impression**; setup-evolution plan locked (IA → delivery → spatial flair).  
+**Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and **offline** promises (local multi-file OK — single-HTML ceiling retired as dogma). Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
 
 **Owner intent (explicit):**  
 - One agent can own the whole stack — no need to bounce LLMs for art or implementation.  
@@ -46,19 +46,22 @@ Holotank openers: **phosphor green** (not amber) so attachments are visible. Lab
 
 ## 2. Current ship (do not re-plan from scratch)
 
-### Registers (15)
+### Registers (15) — top strip is 12 tabs
 
-| Group | Tabs |
+| Group | Top tabs |
 |---|---|
 | **Feed** | **Blog** (first, default) |
 | **Replicants** | Register · Genealogy · Unresolved · In Memorium |
-| **World** | Chart · Systems · **Gates** · **Galaxy** · **Vessels** · Bestiary · Peoples · **Persons** |
+| **Space** | Chart · Systems · **Gates** · **Galaxy** |
+| **World hub** | **WORLD** → in-stage sub-nav: Vessels · Bestiary · Peoples · Persons (deep links `#vessels/…` etc. unchanged; `#world` aliases to vessels) |
 | **Log** | Timeline · To-do |
+
+Encyclopaedia drawers share one top tab so the spatial stack stays first-class. See setup-evolution plan (session plan.md): Phase A2 impression → Phase B multi-file delivery → Phase C 3D Chart flair.
 
 ### Approximate census
 
 - **89** Bobs · **22** systems · **10** gate nodes / **4** paths / **7** summaries · galaxy (2 arms) · **21** vessels · **9** fauna · **30** peoples/polities/factions · **26** persons  
-- **10** blog posts · **64** timeline events  
+- **11** blog posts · **64** timeline events  
 - **18** holotank plates (VR + vessel stills + gorilloid specimen)  
 - **1** plate with **3D model** (`vessel-heaven-1` → `assets/holo-models/vessel-heaven-1.glb`)  
 - Shipped page ~**2.3 MB** (stills + Three bundle + one decimated GLB)  
@@ -196,11 +199,14 @@ Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional
 | Decision | Choice |
 |---|---|
 | Default view | **Blog** |
-| Tab order | Blog first, then replicants / world / log |
+| Tab order | Blog → replicants → **space** (Chart/Systems/Gates/Galaxy) → **WORLD hub** → log |
+| World strip | **Option A (2026-08-22):** encyclopaedia under one WORLD tab + sub-nav; spatial peers stay top-level |
+| First impression | Boot lands on `Ready · FEED`; dismissible strip legend (`bobnet-strip-legend`); editor post `you-are-here` (spoil 1) |
 | Attachment color | **Phosphor green** |
 | Attachment label | Keep `[ATTACHMENT:…]` for now |
 | Genealogy | Peer archive, not demoted, not front door |
 | CRT | **Removed** |
+| Offline promise | **Local folder / local server, no CDN** — single self-contained HTML was a genealogy-era ceiling; retire as dogma in Phase B (relative assets + lazy load). Aesthetic unchanged. |
 
 ---
 
@@ -270,43 +276,54 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ### Near-term focus (owner)
 
-**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs. Spatial stack (Chart / Gates / Galaxy) is live and cross-linked.
+**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs. Spatial stack live; **World hub IA shipped (Phase A)**.
+
+### Setup evolution (locked direction)
+
+1. **A — World hub** — **done 2026-08-22.**  
+2. **A2 — First impression** — **done 2026-08-22:** boot lands on `Ready · FEED`; dismissible strip legend (FEED · REPLICANTS · SPACE · WORLD · LOG); editor post `you-are-here` (spoil 1). Root README census refreshed in Phase A.  
+3. **B — Delivery** — `dist/` as small app shell + relative assets; lazy-load Three/GLBs; keep offline.  
+4. **C — Spatial flair** — navigable 3D Chart (tooltips, click-to-focus); richer Gates/Galaxy interaction language; Heaven mesh redo with quality assets.
 
 ### Product (when resuming craft)
 
-1. **Redo Heaven gen 1 3D mesh** — quality over size for now; re-export `assets/holo-models/vessel-heaven-1.glb`.  
-2. **Size optimization later** — deliberate conversation.  
-3. Optional: ship empty **moot hall** plate only if/when it earns a holotank cite path.  
-4. Optional: polish/ship EE standoff video later (PoC exists; not in `dist/`).  
-5. Optional: **Heaven Raid** game pass later (parked PoC in `experiments/heaven-raid/` — v1 accepted).
+5. **Redo Heaven gen 1 3D mesh** — preferably after Phase B so size isn’t the ceiling.  
+6. Optional: ship empty **moot hall** plate only if/when it earns a holotank cite path.  
+7. Optional: polish/ship EE standoff video later (PoC exists; not in `dist/`).  
+8. Optional: **Heaven Raid** game pass later (parked PoC in `experiments/heaven-raid/` — v1 accepted).
 
 ### Content backlog
 
-6. **Grow Persons** — more cast as weight justifies; portraits on `persons/<id>` later. Foreign probes on file: Henry, Medeiros, Matias Araújo.  
-7. More vessel stills/models.  
-8. More dual-mode fauna (gorilloid pattern).  
-9. Linus aged-VR; Heaven-5 if text supports.  
-10. Grow vessels as cited.  
-11. Further GATES harvest only when a **named** hub/place/path is cite-checked (no anonymous gate rows).
+9. **Grow Persons** — more cast as weight justifies; portraits on `persons/<id>` later. Foreign probes on file: Henry, Medeiros, Matias Araújo.  
+10. More vessel stills/models.  
+11. More dual-mode fauna (gorilloid pattern).  
+12. Linus aged-VR; Heaven-5 if text supports.  
+13. Grow vessels as cited.  
+14. Further GATES harvest only when a **named** hub/place/path is cite-checked (no anonymous gate rows).
 
 ### Architecture (later)
 
-12. Soft label `[HOLOTANK · …]` on attachments if wanted.  
-13. Optional holotank still of the galaxy impression (cite path required).
+15. Soft label `[HOLOTANK · …]` on attachments if wanted.  
+16. Optional holotank still of the galaxy impression (cite path required).
 
 ### Research / calendar
 
-14. Genealogy open items in `data/todo.json` (11 open).  
-15. Book 6 release procedure (~2026-09-10).
+17. Genealogy open items in `data/todo.json` (11 open).  
+18. Book 6 release procedure (~2026-09-10).
 
 ### Explicitly deprioritized / wrong
 
-- Replacing Cartesian chart with Three.js map  
 - Dashboard home widgets  
 - Moving plates onto Bob fields as primary home  
 - Auto-clean scripts as sole mesh cleanup (hand Blender for hard cases)  
-- Committing multi‑10 MB un-decimated GLBs into the single-file page  
 - Burning Imagine on multi-face populated moots until a better pipeline exists  
+- Faking wormhole geometry on the Euclidean chart (spatial honesty stays)
+
+### Retired as dogma (now staged goals)
+
+- **Three.js Chart** — was “wrong forever”; now **Phase C** after delivery unlock  
+- **Single-file base64 ceiling** — was blocking realism; **Phase B** moves to relative local assets + lazy load (still offline, no CDN)  
+- **Multi‑10 MB GLBs** — wrong on first paint / inlined HTML; fine beside the page after Phase B 
 
 ---
 
@@ -354,14 +371,22 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 5. **Heaven Raid** v1 PoC (`fd655c3` / `521fedd`): Galaga×1942, busters, Serra boss, 5-wave loops. **Parked** — good first pass; develop later. Not a Registry tab.  
 6. Untracked keepers under `ideas/` stay local — cite path before `dist/`.
 
-### Resume next session with (pick one)
+---
 
-- Genealogy research (Marcus / Jeffrey·Milton·Zeke / Hector)  
-- Grow Persons  
-- Heaven gen-1 3D mesh redo  
-- Book 6 prep (~2026-09-10)  
-- Heaven Raid game pass (only if asked)
+## 15. Session arc (2026-08-22) — site setup + World hub + A2
+
+1. Discussed overall feel / crowded World strip / first impression; reopened genealogy-era limits.  
+2. Locked direction: World IA **Option A**; offline = local multi-file / no CDN; roadmap **A → A2 → B → C**.  
+3. **Phase A:** WORLD hub tab + sub-nav; spatial peers stay top-level; deep links preserved.  
+4. **Phase A2:** boot `Ready · FEED`; dismissible strip legend; editor post **you-are-here** (spoil 1, complements three-maps).
+
+### Resume next with (pick one)
+
+- **Phase B** — multi-file `dist/` + lazy assets (unlocks realism / 3D Chart)  
+- Genealogy research / Grow Persons / Book 6 prep  
+- Heaven mesh redo (better after Phase B)  
+- Heaven Raid (only if asked)
 
 ---
 
-*Handoff for continuous ownership. Session wrapped 2026-08-20.*
+*Handoff for continuous ownership. Phases A + A2 shipped 2026-08-22.*
