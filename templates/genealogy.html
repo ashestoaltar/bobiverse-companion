@@ -418,6 +418,23 @@
   .galaxy-callout{fill:var(--phos); font-size:11px; letter-spacing:.08em}
   .galaxy-callout-dim{fill:var(--ash); font-size:10px; letter-spacing:.1em}
   .galaxy-leader{stroke:var(--phos); stroke-width:1; opacity:.6}
+  .galaxy-bar button[data-punch]{
+    background:transparent; border:1px solid var(--phos); font:inherit; font-size:11px;
+    letter-spacing:.12em; color:var(--phos); padding:4px 10px; cursor:pointer;
+  }
+  .galaxy-bar button[data-punch]:hover{background:rgba(124,232,164,.08); color:var(--amber-hi); border-color:var(--amber)}
+  .galaxy-stage.punching{overflow:hidden}
+  .galaxy-stage.punching .galaxy-svg{
+    transform-origin:center center;
+    animation:galaxy-punch .72s ease-in forwards;
+  }
+  @keyframes galaxy-punch{
+    0%{transform:scale(1); opacity:1; filter:blur(0)}
+    100%{transform:scale(16); opacity:0; filter:blur(2px)}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .galaxy-stage.punching .galaxy-svg{animation:none}
+  }
   .galaxy-mesh{fill:none; stroke:var(--phos); stroke-width:1; stroke-dasharray:3 4; opacity:.45}
   .galaxy-mesh-node{fill:var(--panel); stroke:var(--phos); stroke-width:1.2; cursor:pointer}
   .galaxy-mesh-node.sel{fill:rgba(57,255,20,.15)}
@@ -1363,12 +1380,21 @@ const REGISTERS = [
    },
    dossier: () => state.galaxy ? renderGalaxyDossier(state.galaxy) : null,
    onClick: e => {
+     if (e.target.closest('[data-punch="neighbourhood"]')) {
+       punchIntoNeighbourhood();
+       return true;
+     }
      const sys = e.target.closest('[data-sys]');
      if (sys) { state.view = 'chart'; CHART.sel = sys.dataset.sys; render(); return true; }
      const gate = e.target.closest('[data-gate]');
      if (gate) { state.view = 'gates'; state.gate = gate.dataset.gate; render(); return true; }
      const hit = e.target.closest('[data-galaxy]');
      if (!hit) return false;
+     // Local bead: punch into the Chart neighbourhood (scale story).
+     if (hit.dataset.galaxy === 'local') {
+       punchIntoNeighbourhood();
+       return true;
+     }
      state.galaxy = state.galaxy === hit.dataset.galaxy ? null : hit.dataset.galaxy;
      render();
      return true;
@@ -3658,7 +3684,7 @@ function galaxySvg(w, h){
   const callX = bx + 18, callY = by - 16;
   out.push(`<line class="galaxy-leader" x1="${(bx + 4).toFixed(1)}" y1="${(by - 4).toFixed(1)}" x2="${callX.toFixed(1)}" y2="${callY.toFixed(1)}"/>`);
   out.push(`<text class="galaxy-callout" x="${callX.toFixed(1)}" y="${callY.toFixed(1)}">LOCAL ≤${beadLy.toFixed(1)} ly</text>`);
-  out.push(`<text class="galaxy-callout-dim" x="${callX.toFixed(1)}" y="${(callY + 12).toFixed(1)}">→ CHART · bead is ~${(beadLy / diam * 100).toFixed(3)}% of disk</text>`);
+  out.push(`<text class="galaxy-callout-dim" x="${callX.toFixed(1)}" y="${(callY + 12).toFixed(1)}">CLICK TO ENTER · ~${(beadLy / diam * 100).toFixed(3)}% of disk</text>`);
 
   // Schematic GATES overlay — Book 5+ only via heldEntry on nodes.
   const nodes = ((GATES && GATES.nodes) || []).filter(n => !heldEntry(n));
@@ -3721,13 +3747,40 @@ function renderGalaxy(){
   return `<div class="galaxy-wrap">
     <div class="galaxy-bar">
       <span class="hint">CONTEXT FRAME — LOCAL CHART IS A BEAD</span>
-      <span class="hint">≤${bead.toFixed(1)} ly inside ~${(GALAXY.diameter_ly || 100000).toLocaleString()} ly · mesh from <a href="${addr('gates')}">GATES</a> is schematic · geometry: <a href="${addr('chart')}">CHART</a></span>
+      <button type="button" data-punch="neighbourhood" title="Open the Euclidean Chart inside the local bead">ENTER NEIGHBOURHOOD →</button>
+      <span class="hint">≤${bead.toFixed(1)} ly inside ~${(GALAXY.diameter_ly || 100000).toLocaleString()} ly · mesh from <a href="${addr('gates')}">GATES</a> is schematic</span>
     </div>
     <div class="galaxy-stage" id="galaxy-stage">
       <svg class="galaxy-svg" id="galaxy-svg" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <p class="galaxy-footnote">${gNote || 'Local Euclidean story versus galactic scale.'}</p>
   </div>`;
+}
+
+/* GALAXY → CHART punch-in: scale story, not a merged survey map. */
+let PUNCHING = false;
+function punchIntoNeighbourhood(){
+  if (PUNCHING) return;
+  const reduce = typeof window !== 'undefined' && window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const land = () => {
+    PUNCHING = false;
+    state.galaxy = null;
+    state.view = 'chart';
+    CHART.sel = null;
+    // Welcome framing — inside the bead, not a random leftover camera.
+    Object.assign(CHART, {yaw: -0.62, pitch: 0.50, zoom: 1.2, panx: 0, pany: 0});
+    render();
+  };
+  if (reduce) { land(); return; }
+  const stage = document.getElementById('galaxy-stage');
+  if (!stage) { land(); return; }
+  PUNCHING = true;
+  stage.classList.add('punching');
+  setTimeout(() => {
+    stage.classList.remove('punching');
+    land();
+  }, 720);
 }
 
 function renderGalaxyDossier(id){
@@ -3745,10 +3798,10 @@ function renderGalaxyDossier(id){
       <div class="dossier-body">
         <p class="note">Everything with real coordinates in the Chart fits inside this bead.
         At galactic scale it is smaller than a pixel — drawn larger here only so you can
-        click it. Open the Chart for geometry.</p>
+        find it. Click the bead (or Enter neighbourhood) to drop into the Euclidean tank.</p>
         <div class="sec"><div class="sec-label">OPEN</div>
           <div class="kids">
-            <a href="${addr('chart', 'sol')}" data-sys="sol">→ CHART</a>
+            <button type="button" class="chip" data-punch="neighbourhood">ENTER NEIGHBOURHOOD →</button>
             <span class="dim"> · </span>
             <a href="${addr('gates')}">→ GATES</a>
           </div>

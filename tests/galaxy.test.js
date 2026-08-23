@@ -53,11 +53,31 @@ module.exports = ({ok, get, run, ROOT}) => {
   state.galaxy = 'local';
   run('render()');
   const doss = doc.getElementById('dossier').innerHTML;
-  ok(/CHART|local/i.test(doss), 'local dossier offers Chart');
+  ok(/ENTER NEIGHBOURHOOD|neighbourhood/i.test(doss),
+     'local dossier offers punch-in to the Chart neighbourhood');
 
   // Layout must not use gate ferry distances
   ok(!/\b82\s*ly\b/i.test(markup) && !/\b70\s*ly\b/i.test(markup),
      'ferry distances must not appear in galaxy paint');
+
+  // ---- Phase C.2: Galaxy → Chart punch-in --------------------------------
+  ok(typeof get('punchIntoNeighbourhood') === 'function',
+     'punchIntoNeighbourhood should exist');
+  ok(/data-punch="neighbourhood"/.test(doc.getElementById('stage').innerHTML),
+     'galaxy bar should offer ENTER NEIGHBOURHOOD');
+  ok(/CLICK TO ENTER/.test(markup), 'bead callout should invite punch-in');
+
+  // Reduced-motion path lands on Chart with welcome framing (no animation wait).
+  state.view = 'galaxy';
+  state.galaxy = 'orion_spur';
+  get('CHART').sel = 'epsilon_eridani';
+  get('CHART').zoom = 9;
+  run(`window.matchMedia = q => ({matches: /prefers-reduced-motion/.test(String(q))})`);
+  run('punchIntoNeighbourhood()');
+  ok(state.view === 'chart', 'punch-in should land on Chart');
+  ok(state.galaxy == null, 'punch-in should clear galaxy selection');
+  ok(get('CHART').sel == null, 'welcome framing clears a leftover selection');
+  ok(Math.abs(get('CHART').zoom - 1.2) < 1e-9, 'welcome zoom should reset near 1.2');
 
   console.log(`  bead ≤${bead.toFixed(1)} ly · disk ~${GALAXY.diameter_ly} ly · ${GALAXY.arms.length} arms`);
 };

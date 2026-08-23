@@ -284,7 +284,8 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 1. **A — World hub** — **done 2026-08-22.**  
 2. **A2 — First impression** — **done 2026-08-22.**  
 3. **B — Delivery** — **done 2026-08-22.**  
-4. **C.1 — 3D Chart** — **done 2026-08-22:** Three.js Chart (lazy HOLO3D + `assets/chart3d/chart3d.js`), hover tooltips, click-to-focus; legacy canvas+SVG fallback. Gates/Galaxy unchanged; Heaven mesh redo still open.
+4. **C.1 — 3D Chart** — **done 2026-08-22** (`45677e1`).  
+5. **C.2 — Galaxy → neighbourhood punch-in** — **shipping:** bead / ENTER NEIGHBOURHOOD → animated handoff into Chart; reduced-motion = instant. Heaven mesh redo still open.
 
 ### Product (when resuming craft)
 
@@ -381,14 +382,15 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 3. **Phase A:** WORLD hub tab + sub-nav; spatial peers stay top-level; deep links preserved.  
 4. **Phase A2:** boot `Ready · FEED`; dismissible strip legend; editor post **you-are-here**.  
 5. **Phase B:** `dist/assets/` for WebP/GLB/Three; relative URLs; `ensureHolo3d()` lazy load.  
-6. **Phase C.1:** 3D Chart environment — `BobChart3D` / `ensureChart3d()`; tooltips; click-to-focus; legacy fallback.
+6. **Phase C.1:** 3D Chart — `BobChart3D` / `ensureChart3d()`.  
+7. **Phase C.2:** Galaxy punch-in — `punchIntoNeighbourhood()`; bead click + ENTER NEIGHBOURHOOD.
 
 ### Resume next with (pick one)
 
-- **C.2** — Heaven mesh redo / richer Gates·Galaxy interaction  
+- Heaven mesh redo / Gates interaction polish / Chart→Galaxy zoom-out  
 - Genealogy research / Grow Persons / Book 6 prep  
 - Heaven Raid (only if asked)
 
 ---
 
-*Handoff for continuous ownership. Phases A → C.1 shipped 2026-08-22.*
+*Handoff for continuous ownership. Phases A → C.2 in flight 2026-08-22.*
