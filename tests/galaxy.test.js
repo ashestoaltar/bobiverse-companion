@@ -79,5 +79,11 @@ module.exports = ({ok, get, run, ROOT}) => {
   ok(get('CHART').sel == null, 'welcome framing clears a leftover selection');
   ok(Math.abs(get('CHART').zoom - 1.2) < 1e-9, 'welcome zoom should reset near 1.2');
 
+  // After punch-in, Chart HTML is new — 3D controller must not claim it is still
+  // bound to a detached canvas (that left labels-only / blank WebGL).
+  ok(typeof get('chart3dBound') === 'function', 'chart3dBound helper should exist');
+  ok(get('chart3dBound')() === false,
+     'fresh Chart DOM after punch-in should not look bound until remount');
+
   console.log(`  bead ≤${bead.toFixed(1)} ly · disk ~${GALAXY.diameter_ly} ly · ${GALAXY.arms.length} arms`);
 };

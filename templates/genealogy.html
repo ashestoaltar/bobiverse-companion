@@ -2483,8 +2483,20 @@ function showChartTip(sysId, clientX, clientY){
   if (CHART3D) CHART3D.setHoverId(sysId);
 }
 
+function chart3dCanvas(){
+  return document.getElementById('chart-3d');
+}
+
+function chart3dBound(){
+  const canvas = chart3dCanvas();
+  return !!(CHART3D && CHART3D.isBoundTo && CHART3D.isBoundTo(canvas));
+}
+
 function ensureChart3d(){
-  if (CHART3D && CHART3D.isLive()) return Promise.resolve(CHART3D);
+  // Still live AND attached to the canvas currently in the DOM. After punch-in
+  // (or any full render), Chart HTML is new and the old WebGL canvas is gone —
+  // labels remounted while the renderer kept drawing to a detached node.
+  if (chart3dBound()) return Promise.resolve(CHART3D);
   if (CHART3D_LOADING) return CHART3D_LOADING;
   if (!chartWants3d()) {
     CHART3D_MODE = 'legacy';
@@ -2494,7 +2506,7 @@ function ensureChart3d(){
   CHART3D_LOADING = ensureHolo3d()
     .then(() => ensureChart3dScript())
     .then(api => {
-      const canvas = document.getElementById('chart-3d');
+      const canvas = chart3dCanvas();
       const stage = document.getElementById('chart-stage');
       if (!canvas || !stage) return null;
       if (!CHART3D) {
@@ -2540,7 +2552,7 @@ function paintChart(){
     paintChartLegacy();
     return;
   }
-  if (CHART3D && CHART3D.isLive()) {
+  if (chart3dBound()) {
     setChartStageMode('3d');
     CHART3D.start();
     CHART3D.paint();

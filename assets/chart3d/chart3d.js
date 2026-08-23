@@ -464,6 +464,10 @@
     return {
       mount, paint, start, stop, dispose, pick, focusSystem, cancelFocus,
       isLive: () => state.live,
+      getCanvas: () => state.canvas,
+      // True when the live renderer still owns the canvas currently in the DOM
+      // (false after render() rebuilds Chart HTML — e.g. Galaxy punch-in).
+      isBoundTo: el => !!(state.live && el && state.canvas === el && el.isConnected),
       getHoverId: () => state.hoverId,
       setHoverId: id => { state.hoverId = id; },
     };
