@@ -260,4 +260,32 @@ module.exports = ({ok, get, run, each, need, sandbox, ROOT}) => {
      'a drag still repaints once per pointer event');
   ok(moveHandler && !/[^n]\bpaintChart\(\)/.test(moveHandler[0]),
      'the drag path still calls paintChart directly');
+
+  // ---- Phase C.1: 3D Chart ships beside the page --------------------------
+  ok(fs.existsSync(path.join(ROOT, 'dist', 'assets', 'chart3d', 'chart3d.js')),
+     'chart3d.js should be copied to dist/assets/');
+  ok(fs.existsSync(path.join(ROOT, 'dist', 'assets', 'holo3d', 'holo3d.js')),
+     'Chart 3D reuses the holotank Three bundle');
+  const BobChart3D = get('BobChart3D');
+  ok(BobChart3D && typeof BobChart3D.create === 'function',
+     'BobChart3D factory should load in the test VM');
+  ok(/id="chart-3d"/.test(bar), 'Chart stage should include the WebGL canvas');
+  ok(/id="chart-tip"/.test(bar), 'Chart stage should include the hover tooltip');
+  ok(typeof get('ensureChart3d') === 'function', 'ensureChart3d should exist');
+  ok(typeof get('paintChartLegacy') === 'function',
+     'legacy canvas+SVG paint must remain as fallback');
+  // Factory builds without mounting (no WebGL in the stub).
+  const api = BobChart3D.create({
+    THREE: get('HOLO3D').THREE,
+    getChart: () => CHART,
+    getPlaced: () => PLACED,
+    getSky: () => SKY,
+    getFarthest: () => get('FARTHEST'),
+    starColour: get('starColour'),
+    starRadius: get('starRadius'),
+    starClass: get('starClass'),
+    styleSky: get('styleSky'),
+  });
+  ok(api && typeof api.mount === 'function' && typeof api.pick === 'function',
+     'BobChart3D.create should return a controller');
 };

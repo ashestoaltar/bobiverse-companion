@@ -13,10 +13,10 @@ owns code, data, tests, and media; suggest improvements freely; “locked”
 choices are not sacred if quality demands change. Living backlog:
 `data/todo.json`. This file stays ground rules and data layout.
 
-**Near-term (2026-08-22):** Phases **A** (World hub) + **A2** (first
-impression) + **B** (multi-file local `dist/assets/`) shipped. Next: **C** 3D
-Chart flair / Heaven mesh redo. Prefer code/data/console before Imagine burn.
-Parked PoCs: EE video, moot populate, Heaven Raid. Do not burn Imagine on
+**Near-term (2026-08-22):** Phases **A** → **C.1** shipped (World hub, first
+impression, multi-file `dist/assets/`, **3D Chart**). Next: Heaven mesh redo /
+Gates·Galaxy flair, or content backlog. Prefer code/data/console before Imagine
+burn. Parked PoCs: EE video, moot populate, Heaven Raid. Do not burn Imagine on
 multi-subject composites without a plan.
 
 **3D holotank assets:** source under `assets/holo-models/*.glb` and

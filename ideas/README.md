@@ -12,7 +12,7 @@ This file wins on **current product intent** when it conflicts with older review
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
 | [`experiments/heaven-raid/README.md`](experiments/heaven-raid/README.md) | **Parked PoC** shmup: Heaven vs Empire probes (Galaga×1942). v1 good; develop later. Not a Registry tab. |
 
-**Last handoff write-up:** 2026-08-22 — **Phases A + A2 + B**: World hub, first impression, multi-file local `dist/`.  
+**Last handoff write-up:** 2026-08-22 — **Phases A + A2 + B + C.1**: World hub, first impression, multi-file dist, **3D Chart**.  
 **Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and **offline** promises (local multi-file OK). Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
 
 **Owner intent (explicit):**  
@@ -235,7 +235,8 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 | `data/holo.json` | Plates (cite, about, kind, optional `model`) |
 | `assets/holo/*.webp` | 2D plates |
 | `assets/holo-models/*.glb` | 3D models |
-| `assets/holo3d/holo3d.js` | Bundled Three viewer |
+| `assets/holo3d/holo3d.js` | Bundled Three viewer (holotank + Chart) |
+| `assets/chart3d/chart3d.js` | Chart 3D environment (`BobChart3D`); lazy-loaded with Three |
 | `data/vessels.json` | Vessels register |
 | `data/persons.json` | Persons register — not Heaven Bobs. `label`/`species` vs `substrate`/`substrateFrom`; kinds person / ami / replicant. **Bio discipline in CLAUDE.md** — open cite chapter first; no invented jobs/AMI; no book-text lifts. |
 | `data/persons.schema.json` | Persons schema (substrate enum includes `foreign_probe`). |
@@ -282,8 +283,8 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 1. **A — World hub** — **done 2026-08-22.**  
 2. **A2 — First impression** — **done 2026-08-22.**  
-3. **B — Delivery** — **done 2026-08-22:** `dist/assets/` for stills/GLBs/Three; relative URLs; `ensureHolo3d()` lazy load; prefer `make serve`.  
-4. **C — Spatial flair** — navigable 3D Chart (tooltips, click-to-focus); richer Gates/Galaxy interaction language; Heaven mesh redo with quality assets.
+3. **B — Delivery** — **done 2026-08-22.**  
+4. **C.1 — 3D Chart** — **done 2026-08-22:** Three.js Chart (lazy HOLO3D + `assets/chart3d/chart3d.js`), hover tooltips, click-to-focus; legacy canvas+SVG fallback. Gates/Galaxy unchanged; Heaven mesh redo still open.
 
 ### Product (when resuming craft)
 
@@ -379,14 +380,15 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 2. Locked direction: World IA **Option A**; offline = local multi-file / no CDN; roadmap **A → A2 → B → C**.  
 3. **Phase A:** WORLD hub tab + sub-nav; spatial peers stay top-level; deep links preserved.  
 4. **Phase A2:** boot `Ready · FEED`; dismissible strip legend; editor post **you-are-here**.  
-5. **Phase B:** `dist/assets/` for WebP/GLB/Three; relative URLs; `ensureHolo3d()` lazy load; single-HTML ceiling retired.
+5. **Phase B:** `dist/assets/` for WebP/GLB/Three; relative URLs; `ensureHolo3d()` lazy load.  
+6. **Phase C.1:** 3D Chart environment — `BobChart3D` / `ensureChart3d()`; tooltips; click-to-focus; legacy fallback.
 
 ### Resume next with (pick one)
 
-- **Phase C** — 3D Chart flair / Heaven mesh redo  
+- **C.2** — Heaven mesh redo / richer Gates·Galaxy interaction  
 - Genealogy research / Grow Persons / Book 6 prep  
 - Heaven Raid (only if asked)
 
 ---
 
-*Handoff for continuous ownership. Phases A + A2 + B shipped 2026-08-22.*
+*Handoff for continuous ownership. Phases A → C.1 shipped 2026-08-22.*

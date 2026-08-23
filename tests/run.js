@@ -71,6 +71,15 @@ if (fs.existsSync(HOLO3D_PATH)) {
     process.exit(1);
   }
 }
+const CHART3D_PATH = path.join(ROOT, 'dist', 'assets', 'chart3d', 'chart3d.js');
+if (fs.existsSync(CHART3D_PATH)) {
+  try {
+    vm.runInContext(fs.readFileSync(CHART3D_PATH, 'utf8'), sandbox, {filename: 'chart3d.js'});
+  } catch (e) {
+    console.error('chart3d.js failed to load in the test VM:\n ', e.stack);
+    process.exit(1);
+  }
+}
 
 // ---- assertion plumbing ------------------------------------------------
 let failures = [];

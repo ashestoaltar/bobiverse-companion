@@ -313,6 +313,38 @@
   .chart-sky{position:absolute; inset:0; width:100%; height:100%; display:block; pointer-events:none}
   .chart-svg{position:absolute; inset:0; width:100%; height:100%; cursor:grab; touch-action:none; display:block}
   .chart-svg.drag{cursor:grabbing}
+  .chart-3d{
+    position:absolute; inset:0; z-index:2; width:100%; height:100%;
+    display:block; cursor:grab; touch-action:none; background:var(--void);
+  }
+  .chart-3d.drag{cursor:grabbing}
+  .chart-3d[hidden]{display:none !important}
+  .chart-labels{
+    position:absolute; inset:0; z-index:3; pointer-events:none; overflow:hidden;
+  }
+  .chart-label{
+    position:absolute; transform:translate(8px, -50%);
+    color:var(--amber-hi); font-size:11px; letter-spacing:.06em;
+    text-shadow:0 0 6px rgba(10,7,4,.95), 0 1px 0 rgba(10,7,4,.9);
+    white-space:nowrap;
+  }
+  .chart-label.sel{color:var(--phos)}
+  .chart-label.dim{color:var(--ash)}
+  .chart-tip{
+    position:absolute; z-index:4; pointer-events:none;
+    min-width:10em; max-width:18em; padding:7px 10px;
+    border:1px solid var(--rule); background:rgba(18,13,7,.92);
+    color:var(--amber-dim); font-size:11px; letter-spacing:.06em;
+  }
+  .chart-tip[hidden]{display:none !important}
+  .chart-tip b{display:block; color:var(--amber-hi); letter-spacing:.1em; margin-bottom:2px}
+  .chart-tip .dim{color:var(--ash)}
+  /* display:none — visibility:hidden still left legacy SVG spikes composited. */
+  .chart-stage.mode-3d .chart-sky,
+  .chart-stage.mode-3d .chart-svg{display:none !important}
+  .chart-stage.mode-legacy .chart-3d,
+  .chart-stage.mode-legacy .chart-labels{display:none !important}
+  .chart-stage.mode-pending .chart-3d{opacity:0}
   .ring{fill:none; stroke:var(--rule); stroke-width:1}
   .ring-label{fill:var(--ash); font-size:9px; letter-spacing:.1em; text-anchor:middle}
   .stalk{stroke:var(--rule); stroke-width:1}
@@ -2324,7 +2356,65 @@ function chartSvg(w, h){
   return out.join('');
 }
 
-function paintChart(){
+/* ---- Chart 3D (Phase C.1) ----------------------------------------------
+   Lazy-loads HOLO3D + assets/chart3d/chart3d.js. Falls back to canvas+SVG
+   when WebGL / reduced motion / load fails. project() stays for tests. */
+let CHART3D = null;
+let CHART3D_MODE = 'pending'; // pending | '3d' | 'legacy'
+let CHART3D_LOADING = null;
+const CHART3D_SRC = 'assets/chart3d/chart3d.js';
+
+function chartWants3d(){
+  if (typeof window === 'undefined') return false;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    return false;
+  try {
+    const c = document.createElement('canvas');
+    return !!(c.getContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+  } catch (e) { return false; }
+}
+
+function ensureChart3dScript(){
+  if (typeof BobChart3D !== 'undefined' && BobChart3D && BobChart3D.create)
+    return Promise.resolve(BobChart3D);
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = CHART3D_SRC;
+    s.async = true;
+    s.onload = () => {
+      if (typeof BobChart3D !== 'undefined' && BobChart3D) resolve(BobChart3D);
+      else reject(new Error('BobChart3D missing after load'));
+    };
+    s.onerror = () => reject(new Error('failed to load ' + CHART3D_SRC));
+    (document.head || document.documentElement).appendChild(s);
+  });
+}
+
+function setChartStageMode(mode){
+  const stage = document.getElementById('chart-stage');
+  if (!stage) return;
+  stage.classList.toggle('mode-3d', mode === '3d');
+  stage.classList.toggle('mode-legacy', mode === 'legacy');
+  stage.classList.toggle('mode-pending', mode === 'pending');
+  const c3 = document.getElementById('chart-3d');
+  if (c3) c3.hidden = mode !== '3d' && mode !== 'pending';
+  // Once 3D owns the stage, wipe legacy markup so spikes can't ghost through.
+  if (mode === '3d') {
+    const svg = document.getElementById('chart');
+    const sky = document.getElementById('chart-sky');
+    if (svg) svg.innerHTML = '';
+    if (sky) {
+      const g = sky.getContext && sky.getContext('2d');
+      if (g) g.clearRect(0, 0, sky.width || 0, sky.height || 0);
+    }
+  }
+  if (mode === 'legacy') {
+    const labels = document.getElementById('chart-labels');
+    if (labels) labels.innerHTML = '';
+  }
+}
+
+function paintChartLegacy(){
   const svg = document.getElementById('chart');
   if (!svg) return;
   const w = svg.clientWidth || 800, h = svg.clientHeight || 520;
@@ -2332,6 +2422,9 @@ function paintChart(){
   const cv = document.getElementById('chart-sky');
   if (cv) paintSky(cv, w, h);
   svg.innerHTML = chartSvg(w, h);
+}
+
+function updateChartChrome(){
   const yr = document.getElementById('chart-year');
   if (yr) yr.textContent = CHART.year >= YEAR_MAX ? 'ALL' : CHART.year;
   const n = PLACED.filter(s => s.first_year != null && s.first_year <= CHART.year).length;
@@ -2339,6 +2432,109 @@ function paintChart(){
                   .reduce((m, s) => Math.max(m, s.distance_ly), 0);
   const st = document.getElementById('chart-stat');
   if (st) st.textContent = `[${n} systems reached · frontier ${f.toFixed(1)} ly]`;
+}
+
+function hideChartTip(){
+  const tip = document.getElementById('chart-tip');
+  if (tip) tip.hidden = true;
+  if (CHART3D) CHART3D.setHoverId(null);
+}
+
+function showChartTip(sysId, clientX, clientY){
+  const tip = document.getElementById('chart-tip');
+  const stage = document.getElementById('chart-stage');
+  const sys = SYS[sysId];
+  if (!tip || !stage || !sys) { hideChartTip(); return; }
+  const reached = sys.first_year != null && sys.first_year <= CHART.year;
+  tip.innerHTML = `<b>${esc(sys.name)}</b>` +
+    `<span class="dim">${sys.distance_ly != null ? sys.distance_ly.toFixed(1) + ' ly' : 'distance —'}` +
+    `${sys.spectral ? ' · ' + esc(sys.spectral) : ''}` +
+    `${reached ? '' : ' · not yet reached'}</span>`;
+  const rect = stage.getBoundingClientRect();
+  tip.style.left = Math.min(rect.width - 160, Math.max(8, clientX - rect.left)) + 'px';
+  tip.style.top = Math.min(rect.height - 48, Math.max(8, clientY - rect.top)) + 'px';
+  tip.hidden = false;
+  if (CHART3D) CHART3D.setHoverId(sysId);
+}
+
+function ensureChart3d(){
+  if (CHART3D && CHART3D.isLive()) return Promise.resolve(CHART3D);
+  if (CHART3D_LOADING) return CHART3D_LOADING;
+  if (!chartWants3d()) {
+    CHART3D_MODE = 'legacy';
+    setChartStageMode('legacy');
+    return Promise.resolve(null);
+  }
+  CHART3D_LOADING = ensureHolo3d()
+    .then(() => ensureChart3dScript())
+    .then(api => {
+      const canvas = document.getElementById('chart-3d');
+      const stage = document.getElementById('chart-stage');
+      if (!canvas || !stage) return null;
+      if (!CHART3D) {
+        CHART3D = api.create({
+          THREE: HOLO3D.THREE,
+          getChart: () => CHART,
+          getPlaced: () => PLACED,
+          getSky: () => SKY,
+          getFarthest: () => FARTHEST,
+          getLabelLayer: () => document.getElementById('chart-labels'),
+          starColour, starRadius, starClass, styleSky,
+        });
+      }
+      const ok = CHART3D.mount(canvas, stage);
+      if (!ok) {
+        CHART3D_MODE = 'legacy';
+        setChartStageMode('legacy');
+        CHART3D = null;
+        return null;
+      }
+      CHART3D_MODE = '3d';
+      setChartStageMode('3d');
+      return CHART3D;
+    })
+    .catch(() => {
+      CHART3D_MODE = 'legacy';
+      setChartStageMode('legacy');
+      return null;
+    })
+    .finally(() => { CHART3D_LOADING = null; });
+  return CHART3D_LOADING;
+}
+
+function paintChart(){
+  updateChartChrome();
+  if (state.view !== 'chart') {
+    if (CHART3D) CHART3D.stop();
+    hideChartTip();
+    return;
+  }
+  if (CHART3D_MODE === 'legacy') {
+    setChartStageMode('legacy');
+    paintChartLegacy();
+    return;
+  }
+  if (CHART3D && CHART3D.isLive()) {
+    setChartStageMode('3d');
+    CHART3D.start();
+    CHART3D.paint();
+    return;
+  }
+  // Do not paint legacy SVG while 3D is loading — that left diffraction
+  // spikes composited over the WebGL tank on first open.
+  if (chartWants3d()) {
+    setChartStageMode('pending');
+    ensureChart3d().then(api => {
+      if (state.view !== 'chart') return;
+      if (api) { setChartStageMode('3d'); api.paint(); }
+      else { setChartStageMode('legacy'); paintChartLegacy(); }
+      updateChartChrome();
+    });
+    return;
+  }
+  CHART3D_MODE = 'legacy';
+  setChartStageMode('legacy');
+  paintChartLegacy();
 }
 
 /* Pointer events do not arrive at the refresh rate. A modern phone reports at
@@ -2367,12 +2563,15 @@ function renderChart(){
         <input id="chart-slider" type="range" min="${YEAR_MIN}" max="${YEAR_MAX}" value="${CHART.year}" aria-label="Year">
         <span class="hint" id="chart-stat"></span>
         <button data-cam="in">+</button><button data-cam="out">&minus;</button><button data-cam="reset">RESET</button>
-        <span class="hint">${TOUCH ? 'DRAG ROTATE · PINCH ZOOM · TWO-FINGER PAN · TAP A STAR'
-                                     : 'DRAG ROTATE · WHEEL ZOOM · SHIFT-DRAG PAN'}</span>
+        <span class="hint">${TOUCH ? 'DRAG ROTATE · PINCH ZOOM IN · TWO-FINGER PAN · TAP A STAR'
+                                     : 'DRAG ROTATE · WHEEL ZOOM IN · SHIFT-DRAG PAN · HOVER / CLICK'}</span>
       </div>
-      <div class="chart-stage">
+      <div class="chart-stage" id="chart-stage">
         <canvas class="chart-sky" id="chart-sky"></canvas>
         <svg class="chart-svg" id="chart" xmlns="http://www.w3.org/2000/svg"></svg>
+        <canvas class="chart-3d" id="chart-3d" hidden></canvas>
+        <div class="chart-labels" id="chart-labels" aria-hidden="true"></div>
+        <div class="chart-tip" id="chart-tip" hidden></div>
       </div>
       ${rows}
       <div class="hint" style="padding-top:6px">System positions, colours and sizes: SIMBAD astrometry, spectral class and absolute magnitude. Backdrop: ${SKYFIELD ? SKYFIELD.count.toLocaleString() : 0} naked-eye stars to magnitude ${SKYFIELD ? SKYFIELD.limit : 0} from the HYG Database v4.4 (CC BY-SA 4.0), coloured by their real B&minus;V index. Nothing on this chart is invented. Travel topology lives in <a href="${addr('gates')}">GATES</a>; galactic context in <a href="${addr('galaxy')}">GALAXY</a> — peers, not overlays on this map.</div>
@@ -4702,10 +4901,14 @@ function applyHash(){
   let mode = null;                // rotate | pan | pinch
   let pinch = null;               // spread and centroid when the second finger landed
   let moved = 0;                  // total travel, to tell a tap from a drag
-  let downOn = null;              // the star the gesture began on, if any
+  let downOn = null;              // legacy SVG star, or sys id string for 3D
+  let downXY = null;
 
-  const clampZoom = z => Math.max(0.35, Math.min(9, z));
-  const svgOf = e => e.target.closest && e.target.closest('#chart');
+  // Wide zoom so the local bead can open into separated systems (old max 9
+  // left everything as one ly-scale blob).
+  const clampZoom = z => Math.max(0.25, Math.min(80, z));
+  const surfaceOf = e => e.target.closest && (
+    e.target.closest('#chart-3d') || e.target.closest('#chart'));
   const centre = () => {
     let x = 0, y = 0;
     for (const p of pts.values()) { x += p.x; y += p.y; }
@@ -4717,18 +4920,23 @@ function applyHash(){
   };
 
   document.addEventListener('pointerdown', e => {
-    const svg = svgOf(e);
-    if (!svg) return;
+    const surface = surfaceOf(e);
+    if (!surface) return;
+    if (CHART3D) CHART3D.cancelFocus();
     pts.set(e.pointerId, {x: e.clientX, y: e.clientY});
     if (pts.size === 1) {
       moved = 0;
-      downOn = e.target.closest('.star');
+      downXY = {x: e.clientX, y: e.clientY};
+      if (surface.id === 'chart-3d' && CHART3D) {
+        downOn = CHART3D.pick(e.clientX, e.clientY);
+      } else {
+        const star = e.target.closest('.star');
+        downOn = star || null;
+      }
       mode = e.shiftKey ? 'pan' : 'rotate';
-      svg.classList.add('drag');
-      svg.setPointerCapture && svg.setPointerCapture(e.pointerId);
+      surface.classList.add('drag');
+      surface.setPointerCapture && surface.setPointerCapture(e.pointerId);
     } else if (pts.size === 2) {
-      // a second finger converts the gesture; whatever rotation the first one
-      // began stands, but it is no longer a tap and no longer a rotation
       mode = 'pinch';
       downOn = null;
       pinch = {dist: spread(), c: centre(), zoom: CHART.zoom};
@@ -4736,6 +4944,14 @@ function applyHash(){
   });
 
   document.addEventListener('pointermove', e => {
+    // Hover tooltip in 3D when not dragging.
+    if (!pts.size && CHART3D_MODE === '3d' && CHART3D && CHART3D.isLive()
+        && e.target.closest && e.target.closest('#chart-3d')) {
+      const id = CHART3D.pick(e.clientX, e.clientY);
+      if (id) showChartTip(id, e.clientX, e.clientY);
+      else hideChartTip();
+    }
+
     const prev = pts.get(e.pointerId);
     if (!prev) return;
     const before = pts.size === 2 ? centre() : null;
@@ -4744,7 +4960,7 @@ function applyHash(){
     if (mode === 'pinch' && pts.size === 2) {
       const d = spread();
       if (pinch.dist > 0) CHART.zoom = clampZoom(pinch.zoom * (d / pinch.dist));
-      const after = centre();                      // two fingers also pan
+      const after = centre();
       CHART.panx += after.x - before.x;
       CHART.pany += after.y - before.y;
     } else if (mode) {
@@ -4756,47 +4972,59 @@ function applyHash(){
         CHART.pitch = Math.max(-1.5, Math.min(1.5, CHART.pitch + dy * 0.008));
       }
     } else return;
+    hideChartTip();
     paintChartSoon();
   });
 
   const release = e => {
     if (!pts.delete(e.pointerId)) return;
     if (pts.size === 0) {
-      // A tap that travelled less than a thumb's wobble is a selection. Eight
-      // pixels is generous for a mouse and about right for a finger.
+      // A tap that travelled less than a thumb's wobble is a selection.
       if (downOn && moved < 8) {
-        CHART.sel = downOn.dataset.sys;
-        renderDossier();
-        syncHash();
-        syncSheet();
+        const id = typeof downOn === 'string' ? downOn
+                 : (downOn.dataset && downOn.dataset.sys);
+        if (id) {
+          CHART.sel = id;
+          if (CHART3D && CHART3D_MODE === '3d') CHART3D.focusSystem(id);
+          renderDossier();
+          syncHash();
+          syncSheet();
+        }
       }
-      mode = null; downOn = null; pinch = null;
+      mode = null; downOn = null; pinch = null; downXY = null;
       const svg = document.getElementById('chart');
+      const c3 = document.getElementById('chart-3d');
       if (svg) svg.classList.remove('drag');
+      if (c3) c3.classList.remove('drag');
       paintChart();
     } else if (pts.size === 1) {
-      // lifting one of two fingers goes back to rotating, but never to a tap
       mode = 'rotate'; moved = 1e6; pinch = null;
     }
   };
   document.addEventListener('pointerup', release);
   document.addEventListener('pointercancel', release);
 
+  document.addEventListener('pointerleave', e => {
+    if (e.target && e.target.id === 'chart-3d') hideChartTip();
+  }, true);
+
   document.addEventListener('wheel', e => {
-    if (!svgOf(e)) return;
+    if (!surfaceOf(e)) return;
     e.preventDefault();
+    if (CHART3D) CHART3D.cancelFocus();
     CHART.zoom = clampZoom(CHART.zoom * (e.deltaY < 0 ? 1.12 : 1/1.12));
-    paintChartSoon();                 // a trackpad emits these faster than frames
+    paintChartSoon();
   }, {passive: false});
 
   document.addEventListener('input', e => {
     if (e.target.id !== 'chart-slider') return;
-    CHART.year = +e.target.value; paintChartSoon();   // dragging the scrubber
+    CHART.year = +e.target.value; paintChartSoon();
   });
 
   document.addEventListener('click', e => {
     const b = e.target.closest('.chart-bar button[data-cam]');
     if (!b) return;
+    if (CHART3D) CHART3D.cancelFocus();
     const k = b.dataset.cam;
     if (k === 'in')  CHART.zoom = clampZoom(CHART.zoom * 1.25);
     if (k === 'out') CHART.zoom = clampZoom(CHART.zoom / 1.25);

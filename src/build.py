@@ -63,6 +63,7 @@ HOLO = os.path.join(ROOT, "data", "holo.json")
 HOLO_PLACEHOLDER = "/*__HOLO__*/null"
 HOLO_MODELS = os.path.join(ROOT, "assets", "holo-models")
 HOLO3D_JS = os.path.join(ROOT, "assets", "holo3d", "holo3d.js")
+CHART3D_JS = os.path.join(ROOT, "assets", "chart3d", "chart3d.js")
 # Legacy inline slot — emptied; Three loads on demand from assets/holo3d/.
 HOLO3D_PLACEHOLDER = "/*__HOLO3D_JS__*/"
 
@@ -147,6 +148,19 @@ def inject_holo(html: str) -> tuple[str, dict, int]:
             print(f"ERROR: 3D holotank needs {os.path.relpath(HOLO3D_JS, ROOT)} "
                   f"(build with esbuild from ideas/experiments/holotank-3d)")
             sys.exit(1)
+        total += os.path.getsize(HOLO3D_JS)
+        _copy_dist_asset(HOLO3D_JS, "assets/holo3d/holo3d.js")
+
+    # Chart 3D helper (uses HOLO3D.THREE at runtime). Always ship — Chart lazy-loads it.
+    if os.path.exists(CHART3D_JS):
+        total += os.path.getsize(CHART3D_JS)
+        _copy_dist_asset(CHART3D_JS, "assets/chart3d/chart3d.js")
+    else:
+        print(f"ERROR: missing {os.path.relpath(CHART3D_JS, ROOT)}")
+        sys.exit(1)
+
+    # Three bundle is required for Chart even when no holotank model is present.
+    if not models_used and os.path.exists(HOLO3D_JS):
         total += os.path.getsize(HOLO3D_JS)
         _copy_dist_asset(HOLO3D_JS, "assets/holo3d/holo3d.js")
 
