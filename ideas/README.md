@@ -12,7 +12,7 @@ This file wins on **current product intent** when it conflicts with older review
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
 | [`experiments/heaven-raid/README.md`](experiments/heaven-raid/README.md) | **Parked PoC** shmup: Heaven vs Empire probes (Galaga×1942). v1 good; develop later. Not a Registry tab. |
 
-**Last handoff write-up:** 2026-08-22 — **Phases A + A2 + B + C.1**: World hub, first impression, multi-file dist, **3D Chart**.  
+**Last handoff write-up:** 2026-08-22 **EOD wrap** — Phases **A → C.2** shipped (World hub, first impression, multi-file dist, 3D Chart, Galaxy→Chart punch-in).  
 **Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and **offline** promises (local multi-file OK). Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
 
 **Owner intent (explicit):**  
@@ -277,41 +277,43 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ### Near-term focus (owner)
 
-**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs. Spatial stack live; **World hub IA shipped (Phase A)**.
+**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs. Spatial stack + 3D Chart + Galaxy punch-in are live.
 
-### Setup evolution (locked direction)
+### Setup evolution (locked direction) — A→C.2 complete
 
-1. **A — World hub** — **done 2026-08-22.**  
-2. **A2 — First impression** — **done 2026-08-22.**  
-3. **B — Delivery** — **done 2026-08-22.**  
-4. **C.1 — 3D Chart** — **done 2026-08-22** (`45677e1`).  
-5. **C.2 — Galaxy → neighbourhood punch-in** — **shipping:** bead / ENTER NEIGHBOURHOOD → animated handoff into Chart; reduced-motion = instant. Heaven mesh redo still open.
+1. **A — World hub** — **done** (`4044a41`).  
+2. **A2 — First impression** — **done** (same commit family).  
+3. **B — Delivery** — **done** (`c7611df`): `dist/assets/`, relative URLs, lazy Three. Prefer `make serve`.  
+4. **C.1 — 3D Chart** — **done** (`45677e1`): `assets/chart3d/chart3d.js`, labels, deep zoom, legacy fallback.  
+5. **C.2 — Galaxy → neighbourhood punch-in** — **done** (`e958edb` + remount fix `9a4dc4d`): bead / ENTER NEIGHBOURHOOD → Chart; remount WebGL after DOM rebuild.
 
 ### Product (when resuming craft)
 
-5. **Redo Heaven gen 1 3D mesh** — preferably after Phase B so size isn’t the ceiling.  
-6. Optional: ship empty **moot hall** plate only if/when it earns a holotank cite path.  
-7. Optional: polish/ship EE standoff video later (PoC exists; not in `dist/`).  
-8. Optional: **Heaven Raid** game pass later (parked PoC in `experiments/heaven-raid/` — v1 accepted).
+6. **Redo Heaven gen 1 3D mesh** — quality first; multi-file delivery already allows larger GLBs.  
+7. Optional: Gates interaction polish (tooltip / pick parity with Chart).  
+8. Optional: Chart → Galaxy zoom-out reverse of C.2.  
+9. Optional: ship empty **moot hall** plate only if/when it earns a holotank cite path.  
+10. Optional: polish/ship EE standoff video later (PoC exists; not in `dist/`).  
+11. Optional: **Heaven Raid** game pass later (parked PoC in `experiments/heaven-raid/` — v1 accepted).
 
 ### Content backlog
 
-9. **Grow Persons** — more cast as weight justifies; portraits on `persons/<id>` later. Foreign probes on file: Henry, Medeiros, Matias Araújo.  
-10. More vessel stills/models.  
-11. More dual-mode fauna (gorilloid pattern).  
-12. Linus aged-VR; Heaven-5 if text supports.  
-13. Grow vessels as cited.  
-14. Further GATES harvest only when a **named** hub/place/path is cite-checked (no anonymous gate rows).
+12. **Grow Persons** — more cast as weight justifies; portraits on `persons/<id>` later. Foreign probes on file: Henry, Medeiros, Matias Araújo.  
+13. More vessel stills/models.  
+14. More dual-mode fauna (gorilloid pattern).  
+15. Linus aged-VR; Heaven-5 if text supports.  
+16. Grow vessels as cited.  
+17. Further GATES harvest only when a **named** hub/place/path is cite-checked (no anonymous gate rows).
 
 ### Architecture (later)
 
-15. Soft label `[HOLOTANK · …]` on attachments if wanted.  
-16. Optional holotank still of the galaxy impression (cite path required).
+18. Soft label `[HOLOTANK · …]` on attachments if wanted.  
+19. Optional holotank still of the galaxy impression (cite path required).
 
 ### Research / calendar
 
-17. Genealogy open items in `data/todo.json` (11 open).  
-18. Book 6 release procedure (~2026-09-10).
+20. Genealogy open items in `data/todo.json` (11 open).  
+21. Book 6 release procedure (~2026-09-10).
 
 ### Explicitly deprioritized / wrong
 
@@ -375,22 +377,23 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ---
 
-## 15. Session arc (2026-08-22) — setup evolution A → A2 → B
+## 15. Session arc (2026-08-22) — setup evolution A → C.2 (wrap)
 
 1. Discussed overall feel / crowded World strip / first impression; reopened genealogy-era limits.  
-2. Locked direction: World IA **Option A**; offline = local multi-file / no CDN; roadmap **A → A2 → B → C**.  
-3. **Phase A:** WORLD hub tab + sub-nav; spatial peers stay top-level; deep links preserved.  
-4. **Phase A2:** boot `Ready · FEED`; dismissible strip legend; editor post **you-are-here**.  
-5. **Phase B:** `dist/assets/` for WebP/GLB/Three; relative URLs; `ensureHolo3d()` lazy load.  
-6. **Phase C.1:** 3D Chart — `BobChart3D` / `ensureChart3d()`.  
-7. **Phase C.2:** Galaxy punch-in — `punchIntoNeighbourhood()`; bead click + ENTER NEIGHBOURHOOD.
+2. Locked: World IA **Option A**; offline = local multi-file / no CDN; roadmap **A → A2 → B → C**.  
+3. **A + A2:** WORLD hub; boot `Ready · FEED`; strip legend; `you-are-here` post (`4044a41`).  
+4. **B:** `dist/assets/` stills/GLB/Three; relative URLs; lazy load (`c7611df`).  
+5. **C.1:** 3D Chart — layering fix, ly-scale markers, deep zoom, labels (`45677e1`).  
+6. **C.2:** Galaxy punch-in (`e958edb`); remount WebGL after DOM rebuild so punch-in isn’t labels-only (`9a4dc4d`).  
+7. Owner: Chart “looks much better”; good stop after handoff tidy.
 
-### Resume next with (pick one)
+### Resume next session with (pick one)
 
-- Heaven mesh redo / Gates interaction polish / Chart→Galaxy zoom-out  
-- Genealogy research / Grow Persons / Book 6 prep  
+- Heaven gen-1 3D mesh redo  
+- Gates interaction polish / Chart→Galaxy zoom-out  
+- Genealogy research / Grow Persons / Book 6 prep (~2026-09-10)  
 - Heaven Raid (only if asked)
 
 ---
 
-*Handoff for continuous ownership. Phases A → C.2 in flight 2026-08-22.*
+*Handoff for continuous ownership. Session wrapped 2026-08-22 — Phases A → C.2 shipped.*
