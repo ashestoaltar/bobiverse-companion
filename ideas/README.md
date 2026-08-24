@@ -11,8 +11,9 @@ This file wins on **current product intent** when it conflicts with older review
 | [`experiments/holotank-3d/README.md`](experiments/holotank-3d/README.md) | Local 3D spike tools (Blender clean, orbit test page) |
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
 | [`experiments/heaven-raid/README.md`](experiments/heaven-raid/README.md) | **Parked PoC** shmup: Heaven vs Empire probes (Galaga×1942). v1 good; develop later. Not a Registry tab. |
+| [`bobiverse-tv/README.md`](bobiverse-tv/README.md) | **Fan TV workshop** (separate from Registry). Option A season map; two-part premiere beats; script drafts versioned. |
 
-**Last handoff write-up:** 2026-08-23 **EOD wrap** — books 1–5 genealogy nulls closed + light bio recoveries (`7c1a2a3`). Phases **A → C.2** already live from prior day.  
+**Last handoff write-up:** 2026-08-23 **late wrap** — genealogy nulls shipped (`7c1a2a3`); fan TV bible started under `ideas/bobiverse-tv/`. Phases **A → C.2** live.  
 **Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and **offline** promises (local multi-file OK). Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
 
 **Owner intent (explicit):**  
@@ -397,16 +398,29 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 3. **Batch cleanup:** 9 wiki leads null (priorClaim retained); JMZ null; Hector standing dual-record (conflict on `hector18` only, spoil-safe); Verne-beyond-Cast closed optional.  
 4. **Light bio pass:** designations exhausted (11/11 already held); Linus → `Heaven-8` + vessels register entry; Bashful/Dopey/Sleepy/Hungry → born May 2180.  
 5. Shipped `7c1a2a3` and pushed to `main`.  
-6. Owner: wrap for the day after handoff tidy.
+6. Midday handoff tidy (`0db266f`); session continued into TV workshop (§17).
+
+---
+
+## 17. Session arc (2026-08-23 late) — TV workshop + wrap
+
+1. Morning: genealogy research shipped (`7c1a2a3` / handoff `0db266f`).  
+2. Chat: Bobiverse adaptation odds (series &gt; film; Lord Miller/Universal — format unannounced).  
+3. Fan series bible: Homer/Will tragedy arc; Option A (**S1 = The Bob**, S2 = Legion braid).  
+4. Workshop moved to **`ideas/bobiverse-tv/`** (ideas root too crowded). Drafts versioned.  
+5. Premiere = **two-parter**; beats over storyboard-first; dialogue TBD.  
+6. Canon locks: no living-Bob geopolitics; **custom VR en route (Ep 3)** not at FAITH wake.  
+7. Scripts `s1e01 v0.1–v0.2` = experiments; **do not write v0.3 until beats approved**.  
+8. Owner: wrap (weekly limit).
 
 ### Resume next session with (pick one)
 
-- Gates interaction polish / Chart→Galaxy zoom-out  
-- Book 6 prep / release procedure (~2026-09-10)  
-- Opportunistic bio fills / Grow Persons  
-- Heaven gen-1 3D mesh redo  
+- **Fan TV:** approve/tweak `PREMIERE-BEATS.md` → write S1E01 v0.3 (+ S1E02)  
+- Registry craft: Gates polish / Chart→Galaxy zoom-out  
+- Book 6 prep (~2026-09-10)  
+- Bio / Persons / Heaven mesh  
 - Heaven Raid (only if asked)
 
 ---
 
-*Handoff for continuous ownership. Session wrapped 2026-08-23 — genealogy books 1–5 nulls closed; bio pass partial.*
+*Handoff for continuous ownership. Session wrapped 2026-08-23 late — genealogy nulls shipped; fan TV beats parked for next session.*

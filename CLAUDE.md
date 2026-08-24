@@ -13,12 +13,12 @@ owns code, data, tests, and media; suggest improvements freely; “locked”
 choices are not sacred if quality demands change. Living backlog:
 `data/todo.json`. This file stays ground rules and data layout.
 
-**Near-term (2026-08-23 EOD wrap):** Phases **A → C.2** shipped. Genealogy
-books 1–5 nulls closed + light bio recoveries (`7c1a2a3`). Todo 6 open / 49
-done. Next: Gates polish / Chart→Galaxy zoom-out / Book 6 prep (~2026-09-10) /
-opportunistic bio / Heaven mesh. Prefer code/data/console before Imagine burn.
-Parked: EE video, moot populate, Heaven Raid. Read **`ideas/README.md`** §10
-+ §16.
+**Near-term (2026-08-23 late wrap):** Phases **A → C.2** shipped. Genealogy
+books 1–5 nulls closed (`7c1a2a3`). Fan TV workshop: `ideas/bobiverse-tv/`
+(Option A; two-part premiere beats; VR/geopolitics canon locks). Next: TV
+S1E01 v0.3 after beat approval, and/or Gates polish / Book 6 prep
+(~2026-09-10). Prefer code/data/console before Imagine burn. Parked: EE video,
+moot populate, Heaven Raid. Read **`ideas/README.md`** §10 + §17.
 
 **3D holotank assets:** source under `assets/holo-models/*.glb` and
 `assets/holo3d/holo3d.js`; build copies them to `dist/assets/` and the console
