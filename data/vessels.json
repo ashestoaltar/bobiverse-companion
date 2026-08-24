@@ -115,6 +115,21 @@
       "note": "Homer's hull. On the register as the ship he is associated with in the first volume and after; fate of the vessel and fate of the Bob are graded separately."
     },
     {
+      "id": "heaven_8",
+      "name": "Heaven-8",
+      "kind": "hull",
+      "line": "heaven",
+      "generation": 3,
+      "design": "heaven_g3",
+      "match": "Heaven-8",
+      "crew": [
+        "linus"
+      ],
+      "cite": "Bk1 ch40 · Linus, Apr 2165",
+      "spoil": 1,
+      "note": "Linus's hull — he identifies it by name when he hails the Australian probe at Epsilon Indi. Same version-3 cohort as Calvin and Goku; the oversized combat specs in that design pass are called out for Heaven-9 and Heaven-10, not for this ship."
+    },
+    {
       "id": "heaven_9",
       "name": "Heaven-9",
       "kind": "hull",

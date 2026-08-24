@@ -53,32 +53,37 @@
     {
       "cat": "Genealogy",
       "text": "Chase the remaining dropped-source leads through the text",
-      "note": "Nine left after 2026-08-17 tidy (was twelve). Promoted from books: Icarus and Daedalus under Bill (Bk3 ch6); Isaac already under Bart (Bk3 ch21) — stale priorClaims removed. Still open wiki leads: Jeffrey, Milton, Zeke (→Bill); Hugh (→Bill, soft 'descendant' only); Owen, Jack (→Bart); Sam, Monty, Harvey (→Will). Anything the books confirm gets promoted; anything they contradict is worth writing up."
+      "note": "Closed as books 1–5 nulls (2026-08-23). All nine remaining wiki leads re-swept: Jeffrey, Milton, Zeke (→Bill); Hugh (→Bill, soft); Owen, Jack (→Bart); Sam, Monty, Harvey (→Will). Nothing in the narrative promotes any of them. Soft associations checked and rejected as edges: JMZ share Loki's crew with Bill's Verne/Surly; Owen/Jack share a colony run with Bart's Isaac; Sam takes orders from Riker on Exodus-3; Monty works Poseidon with Mulder; Harvey is tenth-generation with Bill/Will visiting; Hugh draws a POV speculation about Marvin/Luke (Bob-1's line), not Bill. priorClaim lines stay on the records as leads. Book 6 re-sweep item covers any new evidence.",
+      "done": true
     },
     {
       "cat": "Genealogy",
       "text": "Marcus — parentage",
-      "note": "Ten POV chapters across books 3 and 4, and no source anywhere names who built him. First on-page at Poseidon with Mulder and Monty (Bk2 ch49); not in the printed genealogy. Corpus re-check 2026-08-17: still null. Soft cohort association with Mulder's Poseidon setup is not enough for an edge. The last major POV character still unaccounted for."
+      "note": "Closed as a books 1–5 null (2026-08-23). First on-page at Poseidon with Mulder and Monty (Bk2 ch49); Bob-in-residence when Mulder leaves (Bk2 ch62); ten POV chapters in books 3–4. Absent from Cast of Characters and printed Genealogy (Bk2 and Bk4). Mulder's only named clones in-text are Skinner and Jonny. Full-corpus parentage patterns within 250 chars of every Marcus hit: zero. Soft Poseidon association is not an edge. Record cite corrected to first attestation; note documents the null. Reopens automatically under the Book 6 re-sweep item if the new book names a parent.",
+      "done": true
     },
     {
       "cat": "Genealogy",
       "text": "Jeffrey, Milton, Zeke — parentage",
-      "note": "Thor settled under Calvin by Bk2 · Genealogy (tier T). Jeffrey, Milton and Zeke still have a citation only for their deaths at 82 Eridani (Bk2 ch50 · Loki); nothing names who made them. Wiki priorClaim under Bill remains a research lead only."
+      "note": "Closed as books 1–5 null (2026-08-23). Single shared mention: death at 82 Eridani (Bk2 ch50 · Loki). Absent from Cast and Genealogy. No parentage cues in corpus. Deltan council-leader Jeffrey (Bk3) is a different person. Wiki priorClaim under Bill remains a lead only. Reopens with Book 6 if named.",
+      "done": true
     },
     {
       "cat": "Genealogy",
       "text": "Resolve the Hector collision",
-      "note": "Two Bob records plus a human: (1) early Hector lost with Tom at 82 Eridani (Bk1 ch60 · Khan); (2) ~18th-generation Hector emailing Bill in 2343 (Bk5 ch38 — Bill does not recognize the name); (3) Hector Rodriguez, human (Bk5 ch33+). Corpus re-check 2026-08-17: nothing merges the two Bobs. Conflict on hector18 stands. Currently two records and the only standing validator warning if still flagged."
+      "note": "Closed as a standing, documented collision (2026-08-23) — not a merge. (1) early Hector presumed lost with Tom at 82 Eridani (Bk1 ch60 · Khan); (2) ~18th-generation Hector emailing Bill in 2343 — Bill does not recognize the name (Bk5 ch38); (3) Hector Rodriguez, human (Persons). Corpus re-check: nothing merges the two Bobs. conflict on hector18 only (spoil-safe); early hector stays book-1 clean. Validator name-collision warning expected. Book 6 may yet clarify.",
+      "done": true
     },
     {
       "cat": "Genealogy",
       "text": "Verne — parentage beyond the appendix",
-      "note": "Settled as Bill's clone by the Cast of Characters (tier T, cite Bk2 · Cast of Characters). The narrative only ever puts him on Loki's crew at 82 Eridani (Bk2 ch50), which was suggestive and never states parentage. Corpus re-check 2026-08-17: still no narrative confirmation beyond the appendix. Optional nice-to-have, not a broken edge."
+      "note": "Closed optional (2026-08-23). Parentage remains Cast of Characters only (Bill's clone, tier T, cite Bk2 · Cast of Characters). Narrative puts him on Loki's crew and later with the Gamers but never restates who made him. Nice-to-have, not a broken edge. Book 6 may add a narrative cite.",
+      "done": true
     },
     {
       "cat": "Biography",
       "text": "Light biographical sweep, name by name",
-      "note": "Rebuild born, vessel and designation from the text rather than from the sources we dropped. 17 birth dates, 3 vessels and 43 generation numbers came out in the sweep; some are certainly recoverable by reading around each name."
+      "note": "Pass 2026-08-23: designation inventory exhausted — all eleven HIC/Bob-N strings in the corpus already on records. Vessel recovery: Linus → Heaven-8 (self-ID, Bk1 ch40). Born recovery: Bashful, Dopey, Sleepy, Hungry → May 2180 (Mario constructs the four in Bk2 ch13). Tight co-occurrence and wakeup scans found no other book-supported born/vessel/desig fills; remaining gaps stay blank rather than guess from chapter dates of later appearances. Still open for opportunistic fills when reading; Book 6 may restore more."
     },
     {
       "cat": "Biography",

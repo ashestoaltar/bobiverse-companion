@@ -215,7 +215,8 @@
       "fate": "active",
       "ref": "Linus van Pelt, Peanuts",
       "spoil": 1,
-      "note": "Struck out for Epsilon Indi alone rather than wait for Bill's next cohort, and fourteen and a half years later found Henry Roberts there — the Australian probe's replicant, whose programme officially did not exist."
+      "note": "Struck out for Epsilon Indi alone rather than wait for Bill's next cohort, and fourteen and a half years later found Henry Roberts there — the Australian probe's replicant, whose programme officially did not exist.",
+      "vessel": "Heaven-8"
     },
     {
       "id": "mulder",
@@ -407,7 +408,7 @@
       "ref": "—",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
       "spoil": 2,
-      "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
+      "note": "Named once: vanished from Loki's status board with the other two when Medeiros' passive ordnance caught the second 82 Eridani formation (Bk2 ch50). Absent from Cast of Characters and the printed Genealogy. Crew-mates Verne and Surly are Bill's by the Cast, but that does not transfer. Parentage sweep 2026-08-23: null. Wiki priorClaim under Bill kept as a research lead only."
     },
     {
       "id": "milton",
@@ -425,7 +426,7 @@
       "ref": "Office Space?",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
       "spoil": 2,
-      "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
+      "note": "Named once: vanished from Loki's status board with the other two when Medeiros' passive ordnance caught the second 82 Eridani formation (Bk2 ch50). Absent from Cast of Characters and the printed Genealogy. Crew-mates Verne and Surly are Bill's by the Cast, but that does not transfer. Parentage sweep 2026-08-23: null. Wiki priorClaim under Bill kept as a research lead only."
     },
     {
       "id": "zeke",
@@ -443,7 +444,7 @@
       "ref": "—",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
       "spoil": 2,
-      "note": "Vanished from the status board when Medeiros' passive ordnance caught the formation at 82 Eridani."
+      "note": "Named once: vanished from Loki's status board with the other two when Medeiros' passive ordnance caught the second 82 Eridani formation (Bk2 ch50). Absent from Cast of Characters and the printed Genealogy. Crew-mates Verne and Surly are Bill's by the Cast, but that does not transfer. Parentage sweep 2026-08-23: null. Wiki priorClaim under Bill kept as a research lead only."
     },
     {
       "id": "icarus",
@@ -484,7 +485,8 @@
       "ref": "—",
       "priorClaim": "an unnamed secondary source put this Bob under Bill. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
       "spoil": 4,
-      "note": "The Skippies' representative on the Heaven's River expedition, in a grey coverall. His group has dropped names for numeric designations and speech for packetized communication, but they still answer to nicknames when dealing with everyone else."
+      "note": "Skippies' representative on the Heaven's River expedition, introduced in a grey coverall (Bk4 ch9). Parentage sweep 2026-08-23: null. Bob briefly wonders whether Hugh might be a descendant of Marvin or Luke (Bk4 ch56) — soft speculation in a POV, not a claim, and that line would be Bob-1's anyway, not Bill's. Secondary-source priorClaim under Bill kept as a lead only.",
+      "cite": "Bk4 ch9 · Bob, Aug 2333"
     },
     {
       "id": "bart",
@@ -521,7 +523,8 @@
       "fate": "active",
       "ref": "—",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 3
+      "spoil": 3,
+      "note": "Colony-ship Bob at 82 Eridani with Isaac (Bk3 ch18 · Mack); the three leave once colonists are offloaded. Isaac is Bart's (tier T); sharing a delivery run is not parentage. Sweep 2026-08-23: no clone/cohort language names a parent. Wiki priorClaim under Bart kept as a research lead only."
     },
     {
       "id": "jack",
@@ -536,7 +539,8 @@
       "fate": "active",
       "ref": "—",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Bart. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 3
+      "spoil": 3,
+      "note": "Colony-ship Bob at 82 Eridani with Isaac (Bk3 ch18 · Mack); the three leave once colonists are offloaded. Isaac is Bart's (tier T); sharing a delivery run is not parentage. Sweep 2026-08-23: no clone/cohort language names a parent. Wiki priorClaim under Bart kept as a research lead only."
     },
     {
       "id": "isaac",
@@ -609,7 +613,8 @@
       "fate": "active",
       "ref": "Snow White dwarf",
       "spoil": 2,
-      "note": "One of the four Mario built at Gliese 54 to help find the Others' range. He drew GL 877, picked for being nondescript, and found it full of artificial radio noise."
+      "note": "One of the four Mario built at Gliese 54 to help find the Others' range. He drew GL 877, picked for being nondescript, and found it full of artificial radio noise.",
+      "born": "May 2180"
     },
     {
       "id": "dopey",
@@ -619,7 +624,8 @@
       "cite": "Bk2 ch13 · Mario, May 2180; Bk2 · Cast of Characters",
       "origin": "gliese_54",
       "fate": "active",
-      "ref": "Snow White dwarf"
+      "ref": "Snow White dwarf",
+      "born": "May 2180"
     },
     {
       "id": "sleepy",
@@ -629,7 +635,8 @@
       "cite": "Bk2 ch13 · Mario, May 2180; Bk2 · Cast of Characters",
       "origin": "gliese_54",
       "fate": "active",
-      "ref": "Snow White dwarf"
+      "ref": "Snow White dwarf",
+      "born": "May 2180"
     },
     {
       "id": "hungry",
@@ -641,7 +648,8 @@
       "fate": "active",
       "ref": "Not a dwarf. Mario's cohort ran out of real ones.",
       "spoil": 2,
-      "note": "One of the four Mario built for company at Gliese 54 when he decided he did not want to face the Others alone. The four named themselves after the dwarfs and it was pointed out at some length that there is no Hungry among the seven; he was unmoved. Mario also proposed renaming him Surly, on the evidence of his refusing the drinks theme and taking a coffee, and got an obscene gesture for it — but Mario keeps using it anyway, and one narrative aside a few pages later calls him Surly and corrects itself. See Surly's record: a Bob of that name is operating at 82 Eridani fifteen years later, and the appendix makes him Bill's, not Mario's."
+      "note": "One of the four Mario built for company at Gliese 54 when he decided he did not want to face the Others alone. The four named themselves after the dwarfs and it was pointed out at some length that there is no Hungry among the seven; he was unmoved. Mario also proposed renaming him Surly, on the evidence of his refusing the drinks theme and taking a coffee, and got an obscene gesture for it — but Mario keeps using it anyway, and one narrative aside a few pages later calls him Surly and corrects itself. See Surly's record: a Bob of that name is operating at 82 Eridani fifteen years later, and the appendix makes him Bill's, not Mario's.",
+      "born": "May 2180"
     },
     {
       "id": "hal",
@@ -793,7 +801,7 @@
       "id": "sam",
       "name": "Sam",
       "src": "c",
-      "cite": "Bk2 ch8 · Howard, Apr 2189",
+      "cite": "Bk2 ch5 · Howard, Dec 2188",
       "vessel": "Exodus-3",
       "origin": "sol",
       "visited": [
@@ -802,7 +810,8 @@
       "fate": "active",
       "ref": "—",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 3
+      "spoil": 3,
+      "note": "Exodus-3 controlling replicant (Cast of Characters; narrative from Bk2 ch5). Riker gives him flight orders — chain of command for the emigration, not a parent edge. Cast names no parent. Sweep 2026-08-23: null. Wiki priorClaim under Will kept as a research lead only. (Bk4 Quinlan 'Sam' is Bob's river alias, not this Bob.)"
     },
     {
       "id": "monty",
@@ -816,7 +825,8 @@
       "fate": "active",
       "ref": "Monty Burns? Monty Python?",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 3
+      "spoil": 3,
+      "note": "Colony transport Bob for the Poseidon settlers; on-page with Mulder and Marcus (Bk2 ch49), returns toward Earth after setup (Bk2 ch62). Sweep 2026-08-23: no parentage language. Soft geography with Mulder's project is not an edge. Wiki priorClaim under Will kept as a research lead only."
     },
     {
       "id": "harvey",
@@ -830,7 +840,8 @@
       "fate": "active",
       "ref": "—",
       "priorClaim": "the Bobiverse Fandom wiki registry put this Bob under Will. No page in the books has been found that says so, and we no longer treat that source as authoritative — note the difference, which cost us eighteen records: not found is a research state, does not exist is a claim. Kept as a research lead, not asserted.",
-      "spoil": 3
+      "spoil": 3,
+      "note": "Bob-in-residence on Earth, named as tenth-generation when Bob visits (Bk3 ch74) — generation held, parent not. Bill and Will print mannies through him for that visit; still no parent named. Sweep 2026-08-23: null. Wiki priorClaim under Will kept as a research lead only. (Bk4 river deckhand Harvey is a Quinlan, not this Bob.)"
     },
     {
       "id": "rudy",
@@ -908,6 +919,7 @@
       "id": "hector",
       "name": "Hector",
       "src": "c",
+      "cite": "Bk1 ch60 · Khan, Apr 2185",
       "origin": "epsilon_eridani",
       "visited": [
         "82_eridani"
@@ -927,7 +939,7 @@
       "gen": 18,
       "fate": "active",
       "ref": "The Iliad, again",
-      "conflict": "Name collision: a Hector of roughly the 18th generation emails Bill in 2343, but the registry also lists an early Hector destroyed at 82 Eridani. Bill does not recognize the later name and has to look him up (Bk5 ch38), which is strong evidence they are two Bobs rather than one recovered. A third Hector — Hector Rodriguez, human — sits in the Persons register. Whether Taylor meant Bob names to stay unique forever is not stated as a hard rule on the page.",
+      "conflict": "Name collision: a Hector of roughly the 18th generation emails Bill in 2343, but the registry also lists an early Hector destroyed at 82 Eridani. Bill does not recognize the later name and has to look him up (Bk5 ch38), which is strong evidence they are two Bobs rather than one recovered. A third Hector — Hector Rodriguez, human — sits in the Persons register. Corpus re-check 2026-08-23: still no merge. Whether Taylor meant Bob names to stay unique forever is not stated as a hard rule on the page.",
       "spoil": 5,
       "note": "Bill doesn't recognize the name and has to look him up — placing him around the eighteenth generation, and taking the Von Neumann probe mandate seriously. Not Hector Rodriguez (human, Persons register) and not the early Hector lost at 82 Eridani."
     },
@@ -1022,7 +1034,7 @@
       "faction": "Gamers",
       "ref": "Jules Verne",
       "spoil": 4,
-      "note": "On Loki's crew at the 82 Eridani assault, where he worked out that Medeiros was running pre-programmed decision trees rather than fighting live. Stockpiled raw materials at the system's Lagrange points for the colonists who came after, and later shows up in the Gamers' party."
+      "note": "On Loki's crew at the 82 Eridani assault, where he worked out that Medeiros was running pre-programmed decision trees rather than fighting live. Stockpiled raw materials at the system's Lagrange points for the colonists who came after, and later shows up in the Gamers' party. Parentage is Cast of Characters only (Bill's clone, tier T); narrative re-check 2026-08-23 still never restates it on the page."
     },
     {
       "id": "surly",
@@ -1192,14 +1204,14 @@
       "id": "marcus",
       "name": "Marcus",
       "src": "c",
-      "cite": "Bk3 · 9 POV chapters; Bk4 · 1",
+      "cite": "Bk2 ch49 · Mulder, Mar 2195",
       "visited": [
         "eta_cassiopeiae"
       ],
       "fate": "active",
       "ref": "—",
       "spoil": 4,
-      "note": "A POV Bob in books 3 and 4. Not present in any published tree; lineage unrecorded."
+      "note": "First on-page at Poseidon with Mulder and Monty (Bk2 ch49); left as Bob-in-residence when Mulder departs (Bk2 ch62); later a major Poseidon POV across books 3 and 4 (ten chapters). Absent from the Cast of Characters and the printed Genealogy in both book 2 and book 4. Mulder's only named clones in the narrative are Skinner and Jonny — both already under him in the tree. Corpus parentage sweep 2026-08-23: no creation, cohort, or clone language attaches to Marcus anywhere in books 1–5; extract.py lineage cues near his name are unrelated. Soft geography with Mulder's Poseidon work is not an edge. Not found, not asserted absent — Book 6 may yet settle it."
     },
     {
       "id": "andrew",

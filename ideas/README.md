@@ -74,8 +74,9 @@ Provenance registry; spoiler **READ THROUGH**; URLs; cross-links; Sandbox Bob; m
 
 ### Open research (not UI)
 
-Marcus; Jeffrey/Milton/Zeke; Hector collision; Verne narrative confirm (optional); **9** wiki leads (was 12); bio sweep; Book 6 procedure; **grow Persons** as cast weight justifies (portraits later).  
-**2026-08-17:** Icarus+Daedalus → Bill (Bk3 ch6); Isaac priorClaim cleared. See `data/todo.json`.
+Bio sweep (opportunistic — desig exhausted; Linus/Heaven-8 + Mario-four born filled 2026-08-23); Book 6 procedure (+ corpus-claim re-check + open-question re-sweep); **grow Persons** as cast weight justifies (portraits later). Holotank content / Heaven mesh are craft, not research.  
+**2026-08-17:** Icarus+Daedalus → Bill (Bk3 ch6); Isaac priorClaim cleared.  
+**2026-08-23:** Marcus parentage null; **9 wiki leads** null (priorClaim retained); JMZ null; Hector collision documented as standing dual-record; Verne narrative-beyond-Cast closed optional; bio pass recovered Linus vessel + four born dates. See `data/todo.json`.
 
 ---
 
@@ -389,9 +390,11 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ### Resume next session with (pick one)
 
-- Heaven gen-1 3D mesh redo  
+- Light biographical sweep (born / vessel / desig recoveries)  
+- Book 6 prep / release procedure (~2026-09-10)  
 - Gates interaction polish / Chart→Galaxy zoom-out  
-- Genealogy research / Grow Persons / Book 6 prep (~2026-09-10)  
+- Heaven gen-1 3D mesh redo  
+- Grow Persons  
 - Heaven Raid (only if asked)
 
 ---
