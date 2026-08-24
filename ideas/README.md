@@ -12,7 +12,7 @@ This file wins on **current product intent** when it conflicts with older review
 | [`experiments/scene-ee-standoff/README.md`](experiments/scene-ee-standoff/README.md) | Book 1 scene video test: Heaven-1 vs Serra do Mar (Bk1 ch15) |
 | [`experiments/heaven-raid/README.md`](experiments/heaven-raid/README.md) | **Parked PoC** shmup: Heaven vs Empire probes (Galaga×1942). v1 good; develop later. Not a Registry tab. |
 
-**Last handoff write-up:** 2026-08-22 **EOD wrap** — Phases **A → C.2** shipped (World hub, first impression, multi-file dist, 3D Chart, Galaxy→Chart punch-in).  
+**Last handoff write-up:** 2026-08-23 **EOD wrap** — books 1–5 genealogy nulls closed + light bio recoveries (`7c1a2a3`). Phases **A → C.2** already live from prior day.  
 **Primary agent:** Grok / xAI (owner preference: one agent for code, data, tests, Imagine art, and 3D pipeline). **Do not re-litigate “locked” choices out of rigidity** — re-evaluate when quality or product sense says so; keep provenance and **offline** promises (local multi-file OK). Still operating under **`CLAUDE.md`** (no `AGENTS.md` rename yet).
 
 **Owner intent (explicit):**  
@@ -278,7 +278,7 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ### Near-term focus (owner)
 
-**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs. Spatial stack + 3D Chart + Galaxy punch-in are live.
+**Code / data / product first** — console where owner wants it before more Imagine burn. Art and video are parked PoCs. Spatial stack + 3D Chart + Galaxy punch-in are live. Books 1–5 genealogy research nulls are closed (`7c1a2a3`); Book 6 calendar ~2026-09-10.
 
 ### Setup evolution (locked direction) — A→C.2 complete
 
@@ -313,8 +313,8 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 
 ### Research / calendar
 
-20. Genealogy open items in `data/todo.json` (11 open).  
-21. Book 6 release procedure (~2026-09-10).
+20. Opportunistic bio sweep leftovers in `data/todo.json` (6 open / 49 done — genealogy nulls closed).  
+21. Book 6 release procedure + corpus-claim re-check + open-question re-sweep (~2026-09-10).
 
 ### Explicitly deprioritized / wrong
 
@@ -388,15 +388,25 @@ Rules: paraphrase + cite; Ackbar; fan reconstruction labeling; no book prose.
 6. **C.2:** Galaxy punch-in (`e958edb`); remount WebGL after DOM rebuild so punch-in isn’t labels-only (`9a4dc4d`).  
 7. Owner: Chart “looks much better”; good stop after handoff tidy.
 
+---
+
+## 16. Session arc (2026-08-23) — genealogy research wrap
+
+1. Picked up from A→C.2 handoff; owner chose **content research** over craft.  
+2. **Marcus parentage** — full corpus null; cite → Bk2 ch49; todo closed (reopens via Book 6).  
+3. **Batch cleanup:** 9 wiki leads null (priorClaim retained); JMZ null; Hector standing dual-record (conflict on `hector18` only, spoil-safe); Verne-beyond-Cast closed optional.  
+4. **Light bio pass:** designations exhausted (11/11 already held); Linus → `Heaven-8` + vessels register entry; Bashful/Dopey/Sleepy/Hungry → born May 2180.  
+5. Shipped `7c1a2a3` and pushed to `main`.  
+6. Owner: wrap for the day after handoff tidy.
+
 ### Resume next session with (pick one)
 
-- Light biographical sweep (born / vessel / desig recoveries)  
-- Book 6 prep / release procedure (~2026-09-10)  
 - Gates interaction polish / Chart→Galaxy zoom-out  
+- Book 6 prep / release procedure (~2026-09-10)  
+- Opportunistic bio fills / Grow Persons  
 - Heaven gen-1 3D mesh redo  
-- Grow Persons  
 - Heaven Raid (only if asked)
 
 ---
 
-*Handoff for continuous ownership. Session wrapped 2026-08-22 — Phases A → C.2 shipped.*
+*Handoff for continuous ownership. Session wrapped 2026-08-23 — genealogy books 1–5 nulls closed; bio pass partial.*

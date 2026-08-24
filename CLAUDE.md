@@ -13,11 +13,12 @@ owns code, data, tests, and media; suggest improvements freely; “locked”
 choices are not sacred if quality demands change. Living backlog:
 `data/todo.json`. This file stays ground rules and data layout.
 
-**Near-term (2026-08-23):** Phases **A → C.2** shipped. Genealogy books 1–5
-nulls closed (Marcus, wiki leads, JMZ, Hector documented, Verne optional).
-Next: bio sweep / Book 6 prep (~2026-09-10) / Gates polish / Chart→Galaxy
-zoom-out / Heaven mesh. Prefer code/data/console before Imagine burn. Parked:
-EE video, moot populate, Heaven Raid. Read **`ideas/README.md`** §10 + §15.
+**Near-term (2026-08-23 EOD wrap):** Phases **A → C.2** shipped. Genealogy
+books 1–5 nulls closed + light bio recoveries (`7c1a2a3`). Todo 6 open / 49
+done. Next: Gates polish / Chart→Galaxy zoom-out / Book 6 prep (~2026-09-10) /
+opportunistic bio / Heaven mesh. Prefer code/data/console before Imagine burn.
+Parked: EE video, moot populate, Heaven Raid. Read **`ideas/README.md`** §10
++ §16.
 
 **3D holotank assets:** source under `assets/holo-models/*.glb` and
 `assets/holo3d/holo3d.js`; build copies them to `dist/assets/` and the console
@@ -1380,9 +1381,9 @@ register. Each needs its own data file, schema and view, and nothing else.
 survey), In Memorium (`memorium.json`, plus `fate` on each Bob), the blog
 (`blog.json`), the timeline, and the holotank.
 **Still open:** content second passes in `data/todo.json`
-(6 open / 49 done as of 2026-08-23). Genealogy nulls closed for books 1–5
-(Marcus, 9 wiki leads, JMZ, Hector collision documented, Verne optional).
-Remaining: bio sweep; Book 6 trio; holotank craft.
+(6 open / 49 done as of 2026-08-23 EOD). Genealogy nulls closed for books 1–5;
+bio pass partial (`7c1a2a3`). Remaining: opportunistic bio; Book 6 trio;
+holotank craft.
 Spatial rule: **local chart = geometry · gates = topology · galaxy = context**.
 Do not draw wormhole chords on the Chart. Do not invent galactic xyz for
 unlocated termini. See `ideas/wormholes-inventory.md` and Bill’s blog
